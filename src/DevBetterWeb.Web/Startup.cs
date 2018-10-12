@@ -55,12 +55,10 @@ namespace CleanArchitecture.Web
                 {
                     _.AssemblyContainingType(typeof(Startup)); // Web
                     _.AssemblyContainingType(typeof(BaseEntity)); // Core
-                    _.Assembly("CleanArchitecture.Infrastructure"); // Infrastructure
+                    _.AssemblyContainingType(typeof(AppDbContext)); // Infrastructure
                     _.WithDefaultConventions();
                     _.ConnectImplementationsToTypesClosing(typeof(IHandle<>));
                 });
-
-                // TODO: Add Registry Classes to eliminate reference to Infrastructure
 
                 // TODO: Move to Infrastucture Registry
                 config.For<IRepository>().Add<EfRepository>();
