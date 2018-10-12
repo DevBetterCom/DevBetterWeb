@@ -1,27 +1,63 @@
 ﻿@{
-    ViewData["Title"] = "Clean DDD Architecture Sample";
+    ViewData["Title"] = "Developer Career Coaching";
 }
-
 <div class="row">
+    <div class="col-md-3"></div>
     <div class="col-md-6">
-        <h2>To Do Items (MVC)</h2>
-        <ul>
-            <li><a asp-area="" asp-controller="ToDo" asp-action="Populate">Load Sample To Do Items</a></li>
-            <li><a asp-area="" asp-controller="ToDo" asp-action="Index">List To Do Items</a></li>
-            <li><a href="/swagger">API Documentation (Swagger)</a></li>
-        </ul>
-        <h2>To Do Items (Razor Pages)</h2>
-        <ul>
-            <li><a asp-page="/ToDoRazorPage/Populate">Load Sample To Do Items</a></li>
-            <li><a asp-page="/ToDoRazorPage/Index">List To Do Items</a></li>
-        </ul>
+        <h2>You want to accelerate your career</h2>
+        <p>You're a software developer seeking to improve your technical and/or business skills. You feel like you're not advancing quickly. You have some ideas for side projects, but aren't sure how to get started, or which to choose. You're overwhelmed by all the things you might focus your time on learning. <strong>Doing what you've been doing hasn't gotten you to where you want to be.</strong></p>
+        <p>You've tried doing it all on your own - it's challenging. You don't know what you don't know, which makes self-direction difficult. Motivation can be a challenge when you don't have anybody but yourself holding you accountable or modeling the behavior you need to succeed. One-directional tools like podcasts, articles, and online courses are some help, <strong>but they're not tailored to you and your unique situation.</strong></p>
+        <p>You're equally sure that, while a professional career coach would surely help you, <strong>you don't have the time or money ro such a big investment.</strong></p>
+
+        <hr class="spacer" />
+        <h2>Try a new path</h2>
+        <p>Stop going down a path you know isn't working. Doing the same thing over and over and expecting a different result is the definition of lunacy.</p>
+        <blockquote><i>"No matter how far down the wrong path you have gone, turn back now."</i><br />&mdash; Turkish Proverb</blockquote>
+        <p>What if you had the skills you need today to take that job you've been dreaming of? What if you had the confidence to know you can ask for that promotion and expect to get it? What if you had someone who's been where you are pushing you to improve, and cheering you on when you succeed? What if you were able to build up passive income streams so you weren't tied to your current job? Imagine being able to hire an expert coach without a huge investment in time or money who could help with all of these things and more.</p>
+
+        <hr class="spacer" />
+        <h2>devBetter: Live Group Video Coaching</h2>
+        <p>Join a small group of like-minded professionals and become a part of my live group video coaching program, <strong>devBetter</strong>.</p>
+        <p>devBetter is a bi-weekly open-ended monthly subscription service (or annually with 2 months free). Sessions take place at various times to accommodate different time zones and use online videoconferencing software like Zoom. The format is an open Q&amp;A session. You can join live and ask questions, send in questions in advance, or just listen and learn. If you're looking for direction, you'll be given personalized tasks and goals to complete before the next session, when you can report on your progress.</p>
+        <p>Between live sessions, you can watch recorded sessions and participate in the program's private Slack channel.</p>
+
+        <hr class="spacer" />
+        <h2>I'm Ready to Start Down This Path</h2>
+        <p>You can join the devBetter group coaching program today and get immediate access to all recorded sessions and the Slack channel, as well as access to the schedule of upcoming live coaching sessions. The price is just $200/mo, or $2000/yr, which is a fraction of the price of my <a href="https://services-ardalis-com.myshopify.com/collections/mentoring/products/mentoring?variant=10548586759">hourly remote mentoring services</a>.</p>
+
+        <div style="width: 100%; text-align: center;">
+            <button target="_blank"
+                    style="font-family: sans-serif;
+          margin: 0 auto; outline: none;
+          display: block;
+          height: 45px;
+          width: 226px;
+          border-radius: 6px;
+          background: blue;
+          color: white;
+          box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+          font-size: 18px;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;"
+                    class="lp5677200100556800">
+                Join Monthly for $200.00
+            </button>
+            Click the button to join the monthly group immediately, or <a href="https://launchpass.com/p/devbetter">visit the signup page to choose other options</a>, including an annual subscription that includes 2 months free.
+            <br />
+        </div>
+        <p><i>There is no long-term obligation. You can cancel any time.</i></p>
+        <hr class="spacer" />
+        <h2>What do others think?</h2>
+        <p>Don't take my word for it. Here are some kind words from people I've helped:</p>
+        <hr class="spacer" />
+        <blockquote>
+            <p>This is a placeholder for an actual testimonial about my advice and its benefits.</p>
+            <p>&mdash; Steve Smith <img class="circle-image" src="~/images/people/steve_small.jpg"></p>
+        </blockquote>
     </div>
-    <div class="col-md-6">
-        <h2>About the Author</h2>
-        <ul>
-            <li><a href="https://ardalis.com">Blog - Ardalis.com</a></li>
-            <li><a href="https://twitter.com/ardalis">Twitter - @@ardalis</a></li>
-            <li><a href="https://github.com/ardalis">GitHub</a></li>
-        </ul>
-    </div>
+    <div class="col-md-3"></div>
 </div>
+@section scripts {
+    <script src="https://launchpass.com/p/devbetter/embed.js"></script>
+}

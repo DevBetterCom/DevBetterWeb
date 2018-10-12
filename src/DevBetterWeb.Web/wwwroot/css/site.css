@@ -2,6 +2,31 @@
     padding-bottom: 20px;
 }
 
+p {
+    font-size: 16px;
+}
+
+h2::first-letter {
+    color:blue;
+}
+
+footer p {
+    margin-left:10px;
+    font-size: 0.9em;
+}
+
+
+.circle-image {
+    border-radius: 50px;
+    display: block;
+    width: 100px;
+}
+
+.spacer {
+    border-width: 0;
+    margin: 3em;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -10,8 +35,8 @@
 }
 
 .navbar-brand {
-    padding-top:0px;
-    padding-bottom:0px;
+    padding-top:0;
+    padding-bottom:0;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
