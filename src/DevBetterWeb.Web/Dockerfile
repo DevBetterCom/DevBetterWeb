@@ -2,7 +2,7 @@
 # docker build --pull -t web -f src/DevBetterWeb.Web/Dockerfile .
 #
 # RUN COMMAND
-#  docker run --name devbetterweb --rm -it -p 5000:5000 web
+#  docker run --name devbetterweb --rm -it -p 5000:80 web
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 
