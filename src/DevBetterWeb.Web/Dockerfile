@@ -2,7 +2,7 @@
 # docker build --pull -t web -f src/DevBetterWeb.Web/Dockerfile .
 #
 # RUN COMMAND
-#  docker run --name eshopweb --rm -it -p 8000:5106 web
+#  docker run --name devbetterweb --rm -it -p 5000:5000 web
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 
@@ -20,4 +20,4 @@ COPY --from=build /app/src/DevBetterWeb.Web/out ./
 # Optional: Set this here if not setting it from docker-compose.yml
 # ENV ASPNETCORE_ENVIRONMENT Development
 
-ENTRYPOINT["dotnet", "DevBetterWeb.Web.dll"]
+ENTRYPOINT ["dotnet", "DevBetterWeb.Web.dll"]
