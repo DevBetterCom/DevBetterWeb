@@ -121,6 +121,7 @@ header.masthead1 {
 
     .testimonials .testimonial-item {
         max-width: 18rem;
+        margin-bottom: 15px !important;
     }
 
         .testimonials .testimonial-item img {

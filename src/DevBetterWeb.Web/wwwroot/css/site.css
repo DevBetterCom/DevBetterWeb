@@ -6,12 +6,12 @@ p {
     font-size: 16px;
 }
 
-h2::first-letter {
+/*h2::first-letter {
     color:blue;
-}
+}*/
 
 footer p {
-    margin-left:10px;
+    margin-left: 10px;
     font-size: 0.9em;
 }
 
@@ -35,8 +35,8 @@ footer p {
 }
 
 .navbar-brand {
-    padding-top:0;
-    padding-bottom:0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -59,7 +59,7 @@ textarea {
 @media screen and (max-width: 600px) {
     #icon {
         display: block;
-        align-content:center;
+        align-content: center;
     }
 
     #logo {
