@@ -152,3 +152,8 @@ footer.footer {
     padding-top: 4rem;
     padding-bottom: 4rem;
 }
+
+.titlebox {
+    max-width: 100%;
+    height: auto;
+}
