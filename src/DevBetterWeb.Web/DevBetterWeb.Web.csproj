@@ -5,6 +5,7 @@
     <AssemblyName>DevBetterWeb.Web</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>DevBetterWeb.Web</PackageId>
+    <UserSecretsId>27d752ff-6567-4d4a-a3c0-1662e9085350</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,13 +28,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
   </ItemGroup>
 
-  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+  <!--<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="dotnet bundle" />
   </Target>
 
   <ItemGroup>
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <Content Update="Pages\_ViewImports.cshtml">
