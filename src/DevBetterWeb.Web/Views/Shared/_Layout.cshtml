@@ -51,10 +51,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-page="ArchivedVideos/Index">Videos</a></li>
                 </ul>
             </div>
+            <partial name="_LoginPartial" />
         </div>
     </div>
+    <partial name="_CookieConsentPartial" />
     <div class="container body-content">
         @RenderBody()
         <hr />
