@@ -36,11 +36,18 @@ namespace CleanArchitecture.Web
             string dbName = Guid.NewGuid().ToString();
             services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase(dbName));
-                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc()
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddRazorPagesOptions(options =>
+                {
+                    //options.Conventions.AuthorizePage("/Contact");
+                    options.Conventions.AuthorizeFolder("/ArchivedVideos");
+                    //options.Conventions.AllowAnonymousToPage("/Private/PublicPage");
+                    //options.Conventions.AllowAnonymousToFolder("/Private/PublicPages");
+                });
 
             services.AddSwaggerGen(c =>
             {
@@ -88,6 +95,8 @@ namespace CleanArchitecture.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
