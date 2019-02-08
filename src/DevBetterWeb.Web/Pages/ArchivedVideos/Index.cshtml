@@ -1,0 +1,9 @@
+﻿@page
+@model CleanArchitecture.Web.Pages.ArchivedVideos.IndexModel
+<h2>To Do Items (Razor Page)</h2>
+<ul>
+    @foreach (var item in Model.Videos)
+    {
+        <li>@item.Title<br />@item.VideoUrl</li>
+    }
+</ul>

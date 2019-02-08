@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Core.Entities;
 using CleanArchitecture.Infrastructure.Data;
+using System;
 
 namespace CleanArchitecture.Web
 {
@@ -22,6 +23,13 @@ namespace CleanArchitecture.Web
             {
                 Title = "Test Item 2",
                 Description = "Test Description Two"
+            });
+
+            dbContext.ArchiveVideos.Add(new ArchiveVideo()
+            {
+                DateCreated = DateTime.Now,
+                Title = "Test Video",
+                VideoUrl = "http://youtube.com"
             });
             dbContext.SaveChanges();
         }
