@@ -1,24 +1,26 @@
 ﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Core.Interfaces;
+using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CleanArchitecture.Web.Pages.ArchivedVideos
+namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
     public class IndexModel : PageModel
     {
-        private readonly IRepository _repository;
+        private readonly AppDbContext _context;
 
-        public List<ArchiveVideo> Videos { get; set; }
-
-        public IndexModel(IRepository repository)
+        public IndexModel(AppDbContext context)
         {
-            _repository = repository;
+            _context = context;
         }
 
-        public void OnGet()
+        public IList<ArchiveVideo> ArchiveVideo { get; set; }
+
+        public async Task OnGetAsync()
         {
-            Videos = _repository.List<ArchiveVideo>();
+            ArchiveVideo = await _context.ArchiveVideos.ToListAsync();
         }
     }
 }
