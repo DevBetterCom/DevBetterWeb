@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CleanArchitecture.Core.Entities;
+using CleanArchitecture.Infrastructure.Data;
+using CleanArchitecture.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class CreateModel : PageModel
     {
-        private readonly CleanArchitecture.Infrastructure.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public CreateModel(CleanArchitecture.Infrastructure.Data.AppDbContext context)
+        public CreateModel(AppDbContext context)
         {
             _context = context;
         }
