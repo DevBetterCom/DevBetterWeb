@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Core.Interfaces;
+﻿using CleanArchitecture.Core.Entities;
+using CleanArchitecture.Core.Interfaces;
+using CleanArchitecture.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Core.SharedKernel;
 
 namespace CleanArchitecture.Infrastructure.Data
 {
@@ -17,6 +17,7 @@ namespace CleanArchitecture.Infrastructure.Data
         }
 
         public DbSet<ToDoItem> ToDoItems { get; set; }
+        public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
 
         public override int SaveChanges()
         {
