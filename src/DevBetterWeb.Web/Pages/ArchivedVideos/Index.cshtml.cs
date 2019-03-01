@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = "Administrators")]
+    [Authorize(Roles = "Administrators, Members")]
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _context;
