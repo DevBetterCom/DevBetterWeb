@@ -33,10 +33,11 @@ namespace CleanArchitecture.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            string dbName = Guid.NewGuid().ToString();
+            //string dbName = Guid.NewGuid().ToString();
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase(dbName));
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseInMemoryDatabase(dbName));
+                options.UseSqlServer(Configuration
+                    .GetConnectionString("DefaultConnection")));
 
             services.AddMvc()
                 .AddControllersAsServices()
@@ -81,6 +82,7 @@ namespace CleanArchitecture.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
