@@ -4,6 +4,7 @@ using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +33,11 @@ namespace CleanArchitecture.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            string dbName = Guid.NewGuid().ToString();
+            //string dbName = Guid.NewGuid().ToString();
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase(dbName));
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseInMemoryDatabase(dbName));
+                options.UseSqlServer(Configuration
+                    .GetConnectionString("DefaultConnection")));
 
             services.AddMvc()
                 .AddControllersAsServices()
@@ -73,11 +75,14 @@ namespace CleanArchitecture.Web
             return container.GetInstance<IServiceProvider>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IHostingEnvironment env,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -101,6 +106,11 @@ namespace CleanArchitecture.Web
             });
 
             app.UseMvcWithDefaultRoute();
+
+            var task = roleManager.CreateAsync(new IdentityRole(Constants.Roles.ADMINISTRATORS));
+
+            task.Wait();
+
         }
     }
 }
