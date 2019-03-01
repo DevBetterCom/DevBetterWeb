@@ -4,11 +4,7 @@
     ViewData["Title"] = "Index";
 }
 <h2>Index</h2>
-<p>
-    User: @User.Identity.Name
-    Admin? : @User.IsInRole(Constants.Roles.ADMINISTRATORS)
-</p>
-<p>
+<p asp-authorize asp-roles="Administrators">
     <a asp-page="Create">Create New</a>
 </p>
 <table class="table">
@@ -40,9 +36,12 @@
                     @Html.DisplayFor(modelItem => item.VideoUrl)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    <span asp-authorize asp-roles="Administrators">
+                        |
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    </span>
                 </td>
             </tr>
         }

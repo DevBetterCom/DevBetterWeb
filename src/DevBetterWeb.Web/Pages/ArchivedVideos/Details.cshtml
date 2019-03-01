@@ -32,6 +32,8 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideo.Id">Edit</a> |
+    <span asp-authorize asp-roles="Administrators">
+        <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideo.Id">Edit</a> |
+    </span>
     <a asp-page="./Index">Back to List</a>
 </div>
