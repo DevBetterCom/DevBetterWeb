@@ -6,6 +6,8 @@
         {
             public const string ADMINISTRATORS = "Administrators";
             public const string MEMBERS = "Members";
+
+            public const string ADMINISTRATORS_MEMBERS = "Administrators,Members";
         }
     }
 }

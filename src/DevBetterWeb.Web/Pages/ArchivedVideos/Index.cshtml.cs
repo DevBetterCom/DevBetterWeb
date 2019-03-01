@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = Constants.Roles.MEMBERS)]
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS_MEMBERS)]
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _context;
