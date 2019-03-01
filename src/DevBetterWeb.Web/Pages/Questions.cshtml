@@ -1,0 +1,38 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.QuestionsModel
+@{
+    ViewData["Title"] = "Questions";
+}
+<h2>Questions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].QuestionText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].TimestampSeconds)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].ArchiveVideoId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Question)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimestampSeconds)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArchiveVideoId)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
