@@ -16,8 +16,16 @@ namespace CleanArchitecture.Infrastructure.Data
             _dispatcher = dispatcher;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Question>().ToTable("Question");
+        }
+
         public DbSet<ToDoItem> ToDoItems { get; set; }
         public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
+        public DbSet<Question> Questions { get; set; }
 
         public override int SaveChanges()
         {
