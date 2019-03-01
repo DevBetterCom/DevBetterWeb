@@ -2,6 +2,7 @@
 using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Web;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
+    [Authorize(Roles = "Administrators")]
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _context;
