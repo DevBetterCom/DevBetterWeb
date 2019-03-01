@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CleanArchitecture.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class DeleteModel : PageModel
     {
         private readonly CleanArchitecture.Infrastructure.Data.AppDbContext _context;

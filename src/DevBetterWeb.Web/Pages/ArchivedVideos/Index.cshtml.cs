@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Core.Entities;
 using CleanArchitecture.Infrastructure.Data;
-using CleanArchitecture.Web;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = "Administrators, Members")]
+    [Authorize(Roles = Constants.Roles.MEMBERS)]
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _context;
@@ -36,14 +35,18 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             // add specific user to admin role if they're not already
             if (User.Identity.Name == "admin@test.com")
             {
-                if (!await _roleManager.Roles.AnyAsync(r => r.Name == Constants.Roles.ADMINISTRATORS))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(Constants.Roles.ADMINISTRATORS));
-                }
                 if (!User.IsInRole(Constants.Roles.ADMINISTRATORS))
                 {
                     var user = await _userManager.GetUserAsync(User);
                     await _userManager.AddToRoleAsync(user, Constants.Roles.ADMINISTRATORS);
+                }
+            }
+            if (User.Identity.Name == "member@test.com")
+            {
+                if (!User.IsInRole(Constants.Roles.MEMBERS))
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    await _userManager.AddToRoleAsync(user, Constants.Roles.MEMBERS);
                 }
             }
         }

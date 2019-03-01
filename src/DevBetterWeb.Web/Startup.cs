@@ -1,6 +1,7 @@
 ﻿using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Core.SharedKernel;
 using CleanArchitecture.Infrastructure.Data;
+using DevBetterWeb.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -107,7 +108,7 @@ namespace CleanArchitecture.Web
 
             app.UseMvcWithDefaultRoute();
 
-            var task = roleManager.CreateAsync(new IdentityRole(Constants.Roles.ADMINISTRATORS));
+            var task = roleManager.CreateAsync(new IdentityRole(Constants.Roles.MEMBERS));
 
             task.Wait();
 
