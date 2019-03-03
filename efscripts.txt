@@ -1,0 +1,9 @@
+dotnet ef migrations add AddQuestions --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
+
+dotnet ef migrations add InitialModel --context identitydbcontext -o Areas/Identity/Data/Migrations
+
+dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+dotnet ef database update -c identitydbcontext
+
+76040fbe-b7e4-452a-b2aa-e48520c771cf - admin role
+be21ba0d-47b0-45c0-aa15-02fa22e5d7f6 - admin@test.com user
