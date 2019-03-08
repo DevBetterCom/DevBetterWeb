@@ -8,6 +8,5 @@ namespace CleanArchitecture.Core.Entities
         public int ArchiveVideoId { get; set; }
         public string QuestionText { get; set; }
         public int TimestampSeconds { get; set; }
-
     }
 }

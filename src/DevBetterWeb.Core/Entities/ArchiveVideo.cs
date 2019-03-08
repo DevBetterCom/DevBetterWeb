@@ -11,5 +11,14 @@ namespace CleanArchitecture.Core.Entities
 
         public string VideoUrl { get; set; }
         public List<Question> Questions { get; private set; } = new List<Question>();
+
+        public void AddQuestion(Question question)
+        {
+            // TODO: Add Guard Clause
+            if(question != null)
+            {
+                Questions.Add(question);
+            }
+        }
     }
 }
