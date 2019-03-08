@@ -36,9 +36,9 @@ namespace CleanArchitecture.Web
 
             //string dbName = Guid.NewGuid().ToString();
             services.AddDbContext<AppDbContext>(options =>
-                //options.UseInMemoryDatabase(dbName));
-                options.UseSqlServer(Configuration
-                    .GetConnectionString("DefaultConnection")));
+                options.UseInMemoryDatabase("devBetterWeb"));
+                //options.UseSqlServer(Configuration
+                //    .GetConnectionString("DefaultConnection")));
 
             services.AddMvc()
                 .AddControllersAsServices()
