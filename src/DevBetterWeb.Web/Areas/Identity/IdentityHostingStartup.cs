@@ -17,9 +17,9 @@ namespace DevBetterWeb.Web.Areas.Identity
             builder.ConfigureServices((context, services) =>
             {
                 services.AddDbContext<IdentityDbContext>(options =>
-                //options.UseInMemoryDatabase("Identity"));
-                options.UseSqlServer(
-                    context.Configuration.GetConnectionString("IdentityDbContextConnection")));
+                options.UseInMemoryDatabase("Identity"));
+                //options.UseSqlServer(
+                //    context.Configuration.GetConnectionString("IdentityDbContextConnection")));
 
                 services.AddIdentity<ApplicationUser, IdentityRole>()
                     //                 services.AddDefaultIdentity<ApplicationUser>()

@@ -21,7 +21,7 @@ namespace CleanArchitecture.Tests.Integration.Web
             response.EnsureSuccessStatusCode();
             string stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains("CleanArchitecture.Web", stringResponse);
+            Assert.Contains("Developer Career Coaching", stringResponse);
         }
     }
 }
