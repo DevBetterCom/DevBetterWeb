@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -18,12 +19,32 @@ namespace CleanArchitecture.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration config)
+        private bool _isDbContextAdded = false;
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IConfiguration config,
+            ILogger<Startup> logger)
         {
             Configuration = config;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
+
+        public IServiceProvider ConfigureProductionServices(IServiceCollection services)
+        {
+            _logger.LogInformation("Configuring Production Services");
+            if (!_isDbContextAdded)
+            {
+                _logger.LogInformation("Adding real sql server dbContext");
+
+                services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlServer(Configuration
+                        .GetConnectionString("DefaultConnection")));
+                _isDbContextAdded = true;
+            }
+            return ConfigureServices(services);
+        }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -34,11 +55,15 @@ namespace CleanArchitecture.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //string dbName = Guid.NewGuid().ToString();
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase("devBetterWeb"));
-                //options.UseSqlServer(Configuration
-                //    .GetConnectionString("DefaultConnection")));
+            // TODO: Consider changing to check services collection for dbContext
+            if (!_isDbContextAdded)
+            {
+                _logger.LogInformation("Adding in memory dbContext");
+                string dbName = Guid.NewGuid().ToString();
+                services.AddDbContext<AppDbContext>(options =>
+                    options.UseInMemoryDatabase(dbName));
+                _isDbContextAdded = true;
+            }
 
             services.AddMvc()
                 .AddControllersAsServices()

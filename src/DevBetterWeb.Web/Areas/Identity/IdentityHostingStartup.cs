@@ -6,23 +6,39 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
 namespace DevBetterWeb.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
+        private readonly ILogger<IdentityHostingStartup> _logger;
+
+        //public IdentityHostingStartup(ILogger<IdentityHostingStartup> logger)
+        //{
+        //    _logger = logger;
+        //}
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) =>
             {
-                services.AddDbContext<IdentityDbContext>(options =>
-                options.UseInMemoryDatabase("Identity"));
-                //options.UseSqlServer(
-                //    context.Configuration.GetConnectionString("IdentityDbContextConnection")));
+                
+                if (context.HostingEnvironment.EnvironmentName == "Production")
+                {
+                    //_logger.LogInformation("Configuring real SQL SERVER for IDENTITY");
+                    services.AddDbContext<IdentityDbContext>(options =>
+                    options.UseSqlServer(
+                        context.Configuration.GetConnectionString("IdentityDbContextConnection")));
+                }
+                else
+                {
+                    //_logger.LogInformation("Configuring IN MEMORY DB for IDENTITY");
+                    services.AddDbContext<IdentityDbContext>(options =>
+                        options.UseInMemoryDatabase("Identity"));
+                }
 
                 services.AddIdentity<ApplicationUser, IdentityRole>()
-                    //                 services.AddDefaultIdentity<ApplicationUser>()
                     .AddEntityFrameworkStores<IdentityDbContext>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddDefaultTokenProviders();
