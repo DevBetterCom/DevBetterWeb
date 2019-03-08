@@ -10,6 +10,6 @@ namespace CleanArchitecture.Core.Entities
         public DateTimeOffset DateCreated { get; set; }
 
         public string VideoUrl { get; set; }
-        public List<Question> Questions { get; private set; } = new List<Question>();
+        public List<Question> Questions { get; private set; }// = new List<Question>();
     }
 }
