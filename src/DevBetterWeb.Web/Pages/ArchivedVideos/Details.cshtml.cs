@@ -26,7 +26,9 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            ArchiveVideo = await _context.ArchiveVideos.FirstOrDefaultAsync(m => m.Id == id);
+            ArchiveVideo = await _context.ArchiveVideos
+                .Include(v => v.Questions)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ArchiveVideo == null)
             {

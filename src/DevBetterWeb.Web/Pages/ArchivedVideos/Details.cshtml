@@ -8,7 +8,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>ArchiveVideo</h4>
+    <h4>Archive Video</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -28,6 +28,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ArchiveVideo.VideoUrl)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ArchiveVideo.Questions)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ArchiveVideo.Questions, "ListQuestions")
         </dd>
     </dl>
 </div>
