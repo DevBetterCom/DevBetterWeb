@@ -31,24 +31,6 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         public async Task OnGetAsync()
         {
             ArchiveVideo = await _context.ArchiveVideos.ToListAsync();
-
-            // add specific user to admin role if they're not already
-            if (User.Identity.Name == "admin@test.com")
-            {
-                if (!User.IsInRole(Constants.Roles.ADMINISTRATORS))
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    await _userManager.AddToRoleAsync(user, Constants.Roles.ADMINISTRATORS);
-                }
-            }
-            if (User.Identity.Name == "member@test.com")
-            {
-                if (!User.IsInRole(Constants.Roles.MEMBERS))
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    await _userManager.AddToRoleAsync(user, Constants.Roles.MEMBERS);
-                }
-            }
         }
     }
 }

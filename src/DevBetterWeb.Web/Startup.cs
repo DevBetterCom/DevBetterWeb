@@ -102,8 +102,7 @@ namespace CleanArchitecture.Web
         }
 
         public void Configure(IApplicationBuilder app,
-            IHostingEnvironment env,
-            RoleManager<IdentityRole> roleManager)
+            IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -132,11 +131,6 @@ namespace CleanArchitecture.Web
             });
 
             app.UseMvcWithDefaultRoute();
-
-            var task = roleManager.CreateAsync(new IdentityRole(Constants.Roles.MEMBERS));
-
-            task.Wait();
-
         }
     }
 }
