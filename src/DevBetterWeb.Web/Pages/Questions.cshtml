@@ -3,36 +3,23 @@
 @{
     ViewData["Title"] = "Questions";
 }
-<h2>Questions</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].QuestionText)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].TimestampSeconds)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].ArchiveVideoId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Question)
+<h2>Questions Discussed</h2>
+
+@foreach (var video in Model.Videos)
+{
+    <h3>@video.Title</h3>
+
+    <ul>
+        @if(!video.Questions.Any())
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.QuestionText)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimestampSeconds)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ArchiveVideoId)
-                </td>
-            </tr>
+            <strong>No questions for this video.</strong>
         }
-    </tbody>
-</table>
+        @foreach (var item in video.Questions)
+        {
+            <li>
+                @Html.DisplayFor(modelItem => item.QuestionText)<br />
+            <strong>@Html.DisplayFor(modelItem => item.TimestampSeconds)</strong>
+        </li>
+    }
+    </ul>
+}
