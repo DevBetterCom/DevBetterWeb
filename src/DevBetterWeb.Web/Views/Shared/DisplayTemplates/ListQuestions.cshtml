@@ -1,0 +1,12 @@
+﻿@model List<CleanArchitecture.Core.Entities.Question>
+@if (!Model.Any())
+{
+    <p>No questions listed.</p>
+}
+@foreach (var question in Model)
+{
+    <p>
+        <strong>@question.QuestionText</strong><br />
+        <i>@question.TimestampSeconds</i>
+    </p>
+}
