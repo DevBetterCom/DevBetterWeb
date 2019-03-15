@@ -29,6 +29,23 @@
         <dd>
             @Html.DisplayFor(model => model.ArchiveVideo.VideoUrl)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ArchiveVideo.Questions)
+        </dt>
+        <dd>
+            @*@Html.DisplayFor(model => model.ArchiveVideo.Questions)*@
+           @if(!Model.ArchiveVideo.Questions.Any())
+           {
+               <p>No questions listed.</p>
+           }
+            @foreach (var question in Model.ArchiveVideo.Questions)
+            {
+            <p>
+                <strong>@question.QuestionText</strong><br />
+                <i>@question.TimestampSeconds</i>
+            </p>
+            }
+        </dd>
     </dl>
 </div>
 <div>
