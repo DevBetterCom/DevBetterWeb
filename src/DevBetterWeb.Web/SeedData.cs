@@ -1,6 +1,7 @@
 ﻿using CleanArchitecture.Core.Entities;
 using CleanArchitecture.Infrastructure.Data;
 using System;
+using System.Linq;
 
 namespace CleanArchitecture.Web
 {
@@ -8,30 +9,42 @@ namespace CleanArchitecture.Web
     {
         public static void PopulateTestData(AppDbContext dbContext)
         {
-            var toDos = dbContext.ToDoItems;
-            foreach (var item in toDos)
-            {
-                dbContext.Remove(item);
-            }
-            dbContext.SaveChanges();
-            dbContext.ToDoItems.Add(new ToDoItem()
-            {
-                Title = "Test Item 1",
-                Description = "Test Description One"
-            });
-            dbContext.ToDoItems.Add(new ToDoItem()
-            {
-                Title = "Test Item 2",
-                Description = "Test Description Two"
-            });
+            if (dbContext.ArchiveVideos.Any()) return;
 
-            dbContext.ArchiveVideos.Add(new ArchiveVideo()
+            var vid1 = new ArchiveVideo()
             {
-                DateCreated = DateTime.Now,
-                Title = "Test Video",
-                VideoUrl = "http://youtube.com"
-            });
+                Title = "Video One",
+                DateCreated = new DateTime(2019, 3, 8)
+            };
+            var vid2 = new ArchiveVideo()
+            {
+                Title = "Video Two",
+                DateCreated = new DateTime(2019, 3, 15)
+            };
+            var questionA = new Question()
+            {
+                QuestionText = "How do I A?",
+                TimestampSeconds = 30
+            };
+            var questionB = new Question()
+            {
+                QuestionText = "How do I B?",
+                TimestampSeconds = 245
+            };
+            vid1.Questions.Add(questionA);
+            vid1.Questions.Add(questionB);
+
+            dbContext.ArchiveVideos.Add(vid1);
+            dbContext.ArchiveVideos.Add(vid2);
             dbContext.SaveChanges();
+
+            //dbContext.ArchiveVideos.Add(new ArchiveVideo()
+            //{
+            //    DateCreated = DateTime.Now,
+            //    Title = "Test Video",
+            //    VideoUrl = "http://youtube.com"
+            //});
+            //dbContext.SaveChanges();
         }
 
     }
