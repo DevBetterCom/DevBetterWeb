@@ -19,6 +19,11 @@
                 <span asp-validation-for="ArchiveVideo.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ArchiveVideo.ShowNotes" class="control-label"></label>
+                <textarea asp-for="ArchiveVideo.ShowNotes" class="form-control" rows="10" ></textarea>
+                <span asp-validation-for="ArchiveVideo.ShowNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ArchiveVideo.DateCreated" class="control-label"></label>
                 <input asp-for="ArchiveVideo.DateCreated" class="form-control" />
                 <span asp-validation-for="ArchiveVideo.DateCreated" class="text-danger"></span>

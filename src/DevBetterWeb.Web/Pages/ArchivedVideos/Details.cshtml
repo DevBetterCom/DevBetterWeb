@@ -18,6 +18,12 @@
             @Html.DisplayFor(model => model.ArchiveVideo.Title)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.ArchiveVideo.ShowNotes)
+        </dt>
+        <dd>
+            <markdown markdown="ArchiveVideo.ShowNotes" />
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.ArchiveVideo.DateCreated)
         </dt>
         <dd>

@@ -14,6 +14,16 @@ namespace CleanArchitecture.Web
             var vid1 = new ArchiveVideo()
             {
                 Title = "Video One",
+                ShowNotes = @"
+# Video about using markdown in ASP.NET Core
+
+In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. 
+
+## References
+
+- [Steve's Blog](https://ardalis.com)
+- [Google](https://google.com)
+",
                 DateCreated = new DateTime(2019, 3, 8)
             };
             var vid2 = new ArchiveVideo()
