@@ -1,12 +1,10 @@
 ﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+using CleanArchitecture.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
@@ -14,11 +12,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class DeleteModel : PageModel
     {
-        private readonly AppDbContext _context;
+        private readonly IRepository _repository;
 
-        public DeleteModel(AppDbContext context)
+        public DeleteModel(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         protected class DeleteVideoModel
@@ -47,7 +45,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = await _context.ArchiveVideos.FirstOrDefaultAsync(m => m.Id == id);
+            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
 
             if (archiveVideo == null)
             {
@@ -70,12 +68,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = await _context.ArchiveVideos.FindAsync(id);
+            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
 
             if (archiveVideo != null)
             {
-                _context.ArchiveVideos.Remove(archiveVideo);
-                await _context.SaveChangesAsync();
+                _repository.Delete(archiveVideo);
             }
 
             return RedirectToPage("./Index");

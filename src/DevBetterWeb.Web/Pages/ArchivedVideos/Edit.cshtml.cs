@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Core.Entities;
+using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class EditModel : PageModel
     {
-        private readonly AppDbContext _context;
+        private readonly IRepository _repository;
 
-        public EditModel(AppDbContext context)
+        public EditModel(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [BindProperty]
@@ -48,7 +49,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideoEntity = await _context.ArchiveVideos.FirstOrDefaultAsync(m => m.Id == id);
+            var archiveVideoEntity = _repository.GetById<ArchiveVideo>(id.Value);
 
             if (archiveVideoEntity == null)
             {
@@ -72,34 +73,19 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return Page();
             }
 
-            var currentVideoEntity = await _context.ArchiveVideos.FindAsync(ArchiveVideoModel.Id);
+            var currentVideoEntity = _repository.GetById<ArchiveVideo>(ArchiveVideoModel.Id);
+            if(currentVideoEntity == null)
+            {
+                return NotFound();
+            }
 
             currentVideoEntity.ShowNotes = ArchiveVideoModel.ShowNotes;
             currentVideoEntity.Title = ArchiveVideoModel.Title;
             currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ArchiveVideoExists(ArchiveVideoModel.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _repository.Update(currentVideoEntity);
 
             return RedirectToPage("./Index");
-        }
-
-        private bool ArchiveVideoExists(int id)
-        {
-            return _context.ArchiveVideos.Any(e => e.Id == id);
         }
     }
 }
