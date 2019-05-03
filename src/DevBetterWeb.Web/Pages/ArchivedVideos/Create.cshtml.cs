@@ -32,7 +32,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         {
             [Required]
             public string Title { get; set; }
-            [DisplayName("Show Notes")]
+            [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
             public string ShowNotes { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
