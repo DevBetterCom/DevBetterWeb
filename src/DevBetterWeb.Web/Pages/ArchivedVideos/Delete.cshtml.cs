@@ -26,9 +26,9 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public int Id { get; set; }
         }
 
-        protected ArchiveVideoDeleteDTO ArchiveVideoToDelete { get; set; }
+        public ArchiveVideoDeleteDTO ArchiveVideoToDelete { get; set; }
 
-        protected class ArchiveVideoDeleteDTO
+        public class ArchiveVideoDeleteDTO
         {
             public int Id { get; set; }
             public string Title { get; set; }

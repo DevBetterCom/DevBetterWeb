@@ -12,40 +12,40 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideo.Title)
+            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Title)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideo.Title)
+            @Html.DisplayFor(model => model.ArchiveVideoDetails.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideo.ShowNotes)
+            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.ShowNotes)
         </dt>
         <dd>
-            <markdown markdown="ArchiveVideo.ShowNotes" />
+            <markdown markdown="ArchiveVideoDetails.ShowNotes" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideo.DateCreated)
+            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.DateCreated)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideo.DateCreated)
+            @Html.DisplayFor(model => model.ArchiveVideoDetails.DateCreated)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideo.VideoUrl)
+            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.VideoUrl)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideo.VideoUrl)
+            @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideo.Questions)
+            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Questions)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideo.Questions, "ListQuestions")
+            @Html.DisplayFor(model => model.ArchiveVideoDetails.Questions, "ListQuestions")
         </dd>
     </dl>
 </div>
 <div>
     <span asp-authorize asp-roles="Administrators">
-        <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideo.Id">Edit</a> |
+        <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideoDetails.Id">Edit</a> |
     </span>
     <a asp-page="./Index">Back to List</a>
 </div>
