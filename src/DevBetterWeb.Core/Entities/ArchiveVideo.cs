@@ -18,6 +18,7 @@ namespace CleanArchitecture.Core.Entities
 
         [DisplayName("Video URL")]
         public string VideoUrl { get; set; }
+
         public List<Question> Questions { get; private set; } = new List<Question>();
 
         public void AddQuestion(Question question)

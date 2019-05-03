@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Core.Entities;
 using CleanArchitecture.Infrastructure.Data;
-using CleanArchitecture.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,7 +23,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         }
 
         [BindProperty]
-        public ArchiveVideo ArchiveVideo { get; set; }
+        public ArchiveVideoDTO ArchiveVideoModel { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -33,7 +32,15 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return Page();
             }
 
-            _context.ArchiveVideos.Add(ArchiveVideo);
+            var videoEntity = new ArchiveVideo()
+            {
+                DateCreated = ArchiveVideoModel.DateCreated,
+                ShowNotes = ArchiveVideoModel.ShowNotes,
+                Title = ArchiveVideoModel.Title,
+                VideoUrl = ArchiveVideoModel.VideoUrl
+            };
+            
+            _context.ArchiveVideos.Add(videoEntity);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
