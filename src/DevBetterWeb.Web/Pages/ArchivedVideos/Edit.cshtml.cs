@@ -1,8 +1,12 @@
 ﻿using CleanArchitecture.Core.Entities;
+using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,15 +15,31 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class EditModel : PageModel
     {
-        private readonly CleanArchitecture.Infrastructure.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public EditModel(CleanArchitecture.Infrastructure.Data.AppDbContext context)
+        public EditModel(AppDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public ArchiveVideo ArchiveVideo { get; set; }
+        public ArchiveVideoEditDTO ArchiveVideoModel { get; set; }
+
+        public class ArchiveVideoEditDTO
+        {
+            public int Id { get; set; }
+            [Required]
+            public string Title { get; set; }
+            [DisplayName("Show Notes")]
+            public string ShowNotes { get; set; }
+
+            [DisplayName("Date Created")]
+            public DateTimeOffset DateCreated { get; set; }
+
+            [DisplayName("Video URL")]
+            public string VideoUrl { get; set; }
+        }
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,12 +48,20 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            ArchiveVideo = await _context.ArchiveVideos.FirstOrDefaultAsync(m => m.Id == id);
+            var archiveVideoEntity = await _context.ArchiveVideos.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (ArchiveVideo == null)
+            if (archiveVideoEntity == null)
             {
                 return NotFound();
             }
+            ArchiveVideoModel = new ArchiveVideoEditDTO
+            {
+                Id = archiveVideoEntity.Id,
+                DateCreated = archiveVideoEntity.DateCreated,
+                ShowNotes = archiveVideoEntity.ShowNotes,
+                Title = archiveVideoEntity.Title,
+                VideoUrl = archiveVideoEntity.VideoUrl
+            };
             return Page();
         }
 
@@ -44,7 +72,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return Page();
             }
 
-            _context.Attach(ArchiveVideo).State = EntityState.Modified;
+            var currentVideoEntity = await _context.ArchiveVideos.FindAsync(ArchiveVideoModel.Id);
+
+            currentVideoEntity.ShowNotes = ArchiveVideoModel.ShowNotes;
+            currentVideoEntity.Title = ArchiveVideoModel.Title;
+            currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
             try
             {
@@ -52,7 +84,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ArchiveVideoExists(ArchiveVideo.Id))
+                if (!ArchiveVideoExists(ArchiveVideoModel.Id))
                 {
                     return NotFound();
                 }
