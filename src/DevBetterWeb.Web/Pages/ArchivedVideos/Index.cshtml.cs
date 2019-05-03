@@ -36,10 +36,10 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public int Id { get; set; }
             public string Title { get; set; }
 
-            [DisplayName("Date Created")]
+            [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             public DateTimeOffset DateCreated { get; set; }
 
-            [DisplayName("Video URL")]
+            [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
             public string VideoUrl { get; set; }
         }
 
