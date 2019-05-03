@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
@@ -26,11 +29,31 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             _roleManager = roleManager;
         }
 
-        public IList<ArchiveVideo> ArchiveVideo { get; set; }
+        public IList<ArchiveVideoIndexDTO> ArchiveVideoList { get; set; }
+
+        public class ArchiveVideoIndexDTO
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+
+            [DisplayName("Date Created")]
+            public DateTimeOffset DateCreated { get; set; }
+
+            [DisplayName("Video URL")]
+            public string VideoUrl { get; set; }
+        }
 
         public async Task OnGetAsync()
         {
-            ArchiveVideo = await _context.ArchiveVideos.ToListAsync();
+            ArchiveVideoList = await _context.ArchiveVideos
+                .Select(v => new ArchiveVideoIndexDTO
+                {
+                    Id = v.Id,
+                    DateCreated = v.DateCreated,
+                    Title = v.Title,
+                    VideoUrl = v.VideoUrl
+                })
+                .ToListAsync();
         }
     }
 }
