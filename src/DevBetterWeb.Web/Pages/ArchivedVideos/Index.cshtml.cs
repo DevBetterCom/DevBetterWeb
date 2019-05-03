@@ -1,10 +1,7 @@
 ﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using CleanArchitecture.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,17 +13,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS_MEMBERS)]
     public class IndexModel : PageModel
     {
-        private readonly AppDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IRepository _repository;
 
-        public IndexModel(AppDbContext context,
-            UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+        public IndexModel(IRepository repository)
         {
-            _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _repository = repository;
         }
 
         public IList<ArchiveVideoIndexDTO> ArchiveVideoList { get; set; }
@@ -45,7 +36,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         public async Task OnGetAsync()
         {
-            ArchiveVideoList = await _context.ArchiveVideos
+            ArchiveVideoList = _repository.List<ArchiveVideo>() 
                 .Select(v => new ArchiveVideoIndexDTO
                 {
                     Id = v.Id,
@@ -53,7 +44,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                     Title = v.Title,
                     VideoUrl = v.VideoUrl
                 })
-                .ToListAsync();
+                .ToList();
         }
     }
 }

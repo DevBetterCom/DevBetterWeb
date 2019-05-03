@@ -17,6 +17,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS_MEMBERS)]
     public class DetailsModel : PageModel
     {
+        // TODO: Refactor to use repository + specification pattern with Include
         private readonly AppDbContext _context;
 
         public DetailsModel(AppDbContext context)

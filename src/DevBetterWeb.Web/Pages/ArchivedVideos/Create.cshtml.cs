@@ -1,5 +1,5 @@
 ﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+using CleanArchitecture.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,11 +13,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class CreateModel : PageModel
     {
-        private readonly AppDbContext _context;
+        private readonly IRepository _repository;
 
-        public CreateModel(AppDbContext context)
+        public CreateModel(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public IActionResult OnGet()
@@ -57,9 +57,8 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 Title = ArchiveVideoModel.Title,
                 VideoUrl = ArchiveVideoModel.VideoUrl
             };
-            
-            _context.ArchiveVideos.Add(videoEntity);
-            await _context.SaveChangesAsync();
+
+            _repository.Add(videoEntity);
 
             return RedirectToPage("./Index");
         }
