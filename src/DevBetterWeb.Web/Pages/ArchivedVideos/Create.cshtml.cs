@@ -3,6 +3,9 @@ using CleanArchitecture.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
@@ -23,7 +26,22 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         }
 
         [BindProperty]
-        public ArchiveVideoDTO ArchiveVideoModel { get; set; }
+        public ArchiveVideoCreateDTO ArchiveVideoModel { get; set; }
+
+        public class ArchiveVideoCreateDTO
+        {
+            [Required]
+            public string Title { get; set; }
+            [DisplayName("Show Notes")]
+            public string ShowNotes { get; set; }
+
+            [DisplayName("Date Created")]
+            public DateTimeOffset DateCreated { get; set; }
+
+            [DisplayName("Video URL")]
+            public string VideoUrl { get; set; }
+        }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

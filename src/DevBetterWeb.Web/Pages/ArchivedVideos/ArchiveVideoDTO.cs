@@ -6,6 +6,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
     public class ArchiveVideoDTO
     {
+        public int Id { get; set; } // TODO: remove for create
         [Required]
         public string Title { get; set; }
         [DisplayName("Show Notes")]
