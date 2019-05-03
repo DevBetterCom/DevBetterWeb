@@ -11,19 +11,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ArchiveVideo[0].Title)
+                @Html.DisplayNameFor(model => model.ArchiveVideoList[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArchiveVideo[0].DateCreated)
+                @Html.DisplayNameFor(model => model.ArchiveVideoList[0].DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArchiveVideo[0].VideoUrl)
+                @Html.DisplayNameFor(model => model.ArchiveVideoList[0].VideoUrl)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ArchiveVideo)
+        @foreach (var item in Model.ArchiveVideoList)
         {
             <tr>
                 <td>
