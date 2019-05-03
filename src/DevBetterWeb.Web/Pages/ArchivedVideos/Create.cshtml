@@ -7,31 +7,31 @@
 
 <h2>Create</h2>
 
-<h4>ArchiveVideo</h4>
+<h4>Archive Video</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ArchiveVideo.Title" class="control-label"></label>
-                <input asp-for="ArchiveVideo.Title" class="form-control" />
-                <span asp-validation-for="ArchiveVideo.Title" class="text-danger"></span>
+                <label asp-for="ArchiveVideoModel.Title" class="control-label"></label>
+                <input asp-for="ArchiveVideoModel.Title" class="form-control" />
+                <span asp-validation-for="ArchiveVideoModel.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArchiveVideo.ShowNotes" class="control-label"></label>
-                <textarea asp-for="ArchiveVideo.ShowNotes" class="form-control" rows="10" ></textarea>
-                <span asp-validation-for="ArchiveVideo.ShowNotes" class="text-danger"></span>
+                <label asp-for="ArchiveVideoModel.ShowNotes" class="control-label"></label>
+                <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" rows="10" ></textarea>
+                <span asp-validation-for="ArchiveVideoModel.ShowNotes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArchiveVideo.DateCreated" class="control-label"></label>
-                <input asp-for="ArchiveVideo.DateCreated" class="form-control" />
-                <span asp-validation-for="ArchiveVideo.DateCreated" class="text-danger"></span>
+                <label asp-for="ArchiveVideoModel.DateCreated" class="control-label"></label>
+                <input asp-for="ArchiveVideoModel.DateCreated" class="form-control" />
+                <span asp-validation-for="ArchiveVideoModel.DateCreated" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArchiveVideo.VideoUrl" class="control-label"></label>
-                <input asp-for="ArchiveVideo.VideoUrl" class="form-control" />
-                <span asp-validation-for="ArchiveVideo.VideoUrl" class="text-danger"></span>
+                <label asp-for="ArchiveVideoModel.VideoUrl" class="control-label"></label>
+                <input asp-for="ArchiveVideoModel.VideoUrl" class="form-control" />
+                <span asp-validation-for="ArchiveVideoModel.VideoUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

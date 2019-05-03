@@ -23,7 +23,6 @@ namespace CleanArchitecture.Infrastructure.Data
             modelBuilder.Entity<Question>().ToTable("Question");
         }
 
-        public DbSet<ToDoItem> ToDoItems { get; set; }
         public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
         public DbSet<Question> Questions { get; set; }
 

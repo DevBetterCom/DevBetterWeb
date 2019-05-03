@@ -13,7 +13,7 @@ namespace DevBetterWeb.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
-        private readonly ILogger<IdentityHostingStartup> _logger;
+        //private readonly ILogger<IdentityHostingStartup> _logger;
 
         //public IdentityHostingStartup(ILogger<IdentityHostingStartup> logger)
         //{
