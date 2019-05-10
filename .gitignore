@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 /tests/DevBetterWeb.Tests/BuildReports
 Report
+src/DevBetterWeb.Web/appsettings.development.json

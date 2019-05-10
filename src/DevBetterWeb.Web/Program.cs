@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Infrastructure.Data;
+using DevBetterWeb.Web;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore;
@@ -51,6 +52,10 @@ namespace CleanArchitecture.Web
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost
                 .CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-    }
+                .UseStartup<Startup>()
+                .UseKestrel(options =>
+                {
+                    options.Limits.MaxRequestBodySize = Constants.MAX_UPLOAD_FILE_SIZE; //500MB
+                });
+        }
 }
