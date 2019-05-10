@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Web.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
+
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
+    [RequestFormLimits(MultipartBodyLengthLimit = Constants.MAX_UPLOAD_FILE_SIZE)]
     public class UploadModel : PageModel
     {
         private IConfiguration _configuration;
@@ -25,6 +30,25 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         {
         }
 
+        //[RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
+        //[RequestSizeLimit(209715200)]
+        public async Task<IActionResult> OnPost2()
+        {
+            if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
+            {
+                return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
+            }
+
+            var boundary = MultipartRequestHelper.GetBoundary(
+                MediaTypeHeaderValue.Parse(Request.ContentType),
+                new FormOptions().MultipartBoundaryLengthLimit);
+            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
+
+            var section = await reader.ReadNextSectionAsync();
+            return Page();
+        }
+
+        [RequestSizeLimit(Constants.MAX_UPLOAD_FILE_SIZE)]
         public async Task<IActionResult> OnPost(List<IFormFile> files)
         {
             var uploadSuccess = false;
@@ -39,18 +63,18 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 // NOTE: uncomment either OPTION A or OPTION B to use one approach over another
 
                 // OPTION A: convert to byte array before upload
-                using (var ms = new MemoryStream())
-                {
-                    formFile.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    uploadSuccess = await UploadToBlob(formFile.FileName, fileBytes, null);
-                }
+                //using (var ms = new MemoryStream())
+                //{
+                //    formFile.CopyTo(ms);
+                //    var fileBytes = ms.ToArray();
+                //    uploadSuccess = await UploadToBlob(formFile.FileName, fileBytes, null);
+                //}
 
                 // OPTION B: read directly from stream for blob upload      
-                //using (var stream = formFile.OpenReadStream())
-                //{
-                //    uploadSuccess = await UploadToBlob(formFile.FileName, null, stream);
-                //}
+                using (var stream = formFile.OpenReadStream())
+                {
+                    uploadSuccess = await UploadToBlob(formFile.FileName, null, stream);
+                }
 
             }
 
@@ -114,4 +138,51 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         }
     }
+
+    public static class MultipartRequestHelper
+    {
+        // Content-Type: multipart/form-data; boundary="----WebKitFormBoundarymx2fSWqWSd0OxQqq"
+        // The spec says 70 characters is a reasonable limit.
+        public static string GetBoundary(Microsoft.Net.Http.Headers.MediaTypeHeaderValue contentType, int lengthLimit)
+        {
+            var boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary);
+            if (boundary.HasValue)
+            {
+                throw new InvalidDataException("Missing content-type boundary.");
+            }
+
+            if (boundary.Length > lengthLimit)
+            {
+                throw new InvalidDataException(
+                    $"Multipart boundary length limit {lengthLimit} exceeded.");
+            }
+
+            return boundary.Value;
+        }
+
+        public static bool IsMultipartContentType(string contentType)
+        {
+            return !string.IsNullOrEmpty(contentType)
+                   && contentType.IndexOf("multipart/", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public static bool HasFormDataContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue contentDisposition)
+        {
+            // Content-Disposition: form-data; name="key";
+            return contentDisposition != null
+                   && contentDisposition.DispositionType.Equals("form-data")
+                   && !contentDisposition.FileName.HasValue
+                   && !contentDisposition.FileNameStar.HasValue;
+        }
+
+        public static bool HasFileContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue contentDisposition)
+        {
+            // Content-Disposition: form-data; name="myfile1"; filename="Misc 002.jpg"
+            return contentDisposition != null
+                   && contentDisposition.DispositionType.Equals("form-data")
+                   && (!contentDisposition.FileName.HasValue
+                       || contentDisposition.FileNameStar.HasValue);
+        }
+    }
+
 }
