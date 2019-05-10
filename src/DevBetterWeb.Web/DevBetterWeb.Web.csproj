@@ -8,6 +8,12 @@
     <UserSecretsId>27d752ff-6567-4d4a-a3c0-1662e9085350</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.development.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.development.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">

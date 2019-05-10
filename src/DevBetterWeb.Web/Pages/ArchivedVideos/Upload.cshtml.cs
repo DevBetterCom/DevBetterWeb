@@ -25,7 +25,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         {
         }
 
-        public async void OnPost(List<IFormFile> files)
+        public async Task<IActionResult> OnPost(List<IFormFile> files)
         {
             var uploadSuccess = false;
 
@@ -44,7 +44,6 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                     formFile.CopyTo(ms);
                     var fileBytes = ms.ToArray();
                     uploadSuccess = await UploadToBlob(formFile.FileName, fileBytes, null);
-
                 }
 
                 // OPTION B: read directly from stream for blob upload      
@@ -57,9 +56,9 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
             if (uploadSuccess)
             {
-                RedirectToPage("Index");
+                return RedirectToPage("/ArchivedVideos/Index");
             }
-
+            return Page();
         }
 
         private async Task<bool> UploadToBlob(string filename, byte[] imageBuffer = null, Stream stream = null)
@@ -106,11 +105,6 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 }
                 finally
                 {
-                    // OPTIONAL: Clean up resources, e.g. blob container
-                    //if (cloudBlobContainer != null)
-                    //{
-                    //    await cloudBlobContainer.DeleteIfExistsAsync();
-                    //}
                 }
             }
             else
