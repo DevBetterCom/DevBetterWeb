@@ -9,5 +9,7 @@
 
             public const string ADMINISTRATORS_MEMBERS = "Administrators,Members";
         }
+
+        public const int MAX_UPLOAD_FILE_SIZE = 1_512_428_800; // 1500 MB
     }
 }
