@@ -32,8 +32,9 @@
         <dt>
             @Html.DisplayNameFor(model => model.ArchiveVideoDetails.VideoUrl)
         </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
+        <dd><a href="@Model.ArchiveVideoDetails.VideoUrl">
+    @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
+</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Questions)

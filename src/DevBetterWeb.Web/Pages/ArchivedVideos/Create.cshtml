@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ArchiveVideoModel.Title" class="control-label"></label>
@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArchiveVideoModel.ShowNotes" class="control-label"></label>
-                <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" rows="10" ></textarea>
+                <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" rows="10"></textarea>
                 <span asp-validation-for="ArchiveVideoModel.ShowNotes" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,10 +28,16 @@
                 <input asp-for="ArchiveVideoModel.DateCreated" class="form-control" />
                 <span asp-validation-for="ArchiveVideoModel.DateCreated" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="ArchiveVideoModel.VideoUrl" class="control-label"></label>
                 <input asp-for="ArchiveVideoModel.VideoUrl" class="form-control" />
                 <span asp-validation-for="ArchiveVideoModel.VideoUrl" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <div class="col-md-10">
+                    <p>Upload one or more files using this form:</p>
+                    <input type="file" name="files" multiple />
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
