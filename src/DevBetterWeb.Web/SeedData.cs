@@ -24,7 +24,8 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 - [Steve's Blog](https://ardalis.com)
 - [Google](https://google.com)
 ",
-                DateCreated = new DateTime(2019, 3, 8)
+                DateCreated = new DateTime(2019, 3, 8),
+                VideoUrl = "2019-05-17-3.mp4"
             };
             var vid2 = new ArchiveVideo()
             {

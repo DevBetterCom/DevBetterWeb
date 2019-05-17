@@ -4,6 +4,11 @@
 @{
     ViewData["Title"] = "Details";
 }
+@section head {
+    <link href="https://vjs.zencdn.net/7.5.4/video-js.css" rel="stylesheet">
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>}
 
 <h2>Details</h2>
 
@@ -32,9 +37,10 @@
         <dt>
             @Html.DisplayNameFor(model => model.ArchiveVideoDetails.VideoUrl)
         </dt>
-        <dd><a href="@Model.ArchiveVideoDetails.VideoUrl">
-    @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
-</a>
+        <dd>
+            <a href="@Model.ArchiveVideoDetails.VideoUrl">
+                @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
+            </a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Questions)
@@ -45,8 +51,35 @@
     </dl>
 </div>
 <div>
+    <video id='my-video' class='video-js' controls preload='auto' width='960' height='540'
+           poster='MY_VIDEO_POSTER.jpg' data-setup='{ playbackRates: [0.5, 1, 1.5, 2] }'>
+        <source src="//vjs.zencdn.net/v/oceans.mp4" type="vide/mp4">
+        @*<source src='@Model.ArchiveVideoDetails.VideoUrl' type='video/mp4'>*@
+        <source src='MY_VIDEO.webm' type='video/webm'>
+        <p class='vjs-no-js'>
+            To view this video please enable JavaScript, and consider upgrading to a web browser that
+            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+        </p>
+    </video>
+    <video width="480" height="270" controls>
+        <source src="@Model.ArchiveVideoDetails.VideoUrl" type="video/mp4">
+    </video>
+</div>
+<div>
     <span asp-authorize asp-roles="Administrators">
         <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideoDetails.Id">Edit</a> |
     </span>
     <a asp-page="./Index">Back to List</a>
 </div>
+@section scripts {
+    <script type="text/javascript">
+        (function() {
+        videojs('my-video', {
+            playbackRates: [0.5, 1, 1.5, 2],
+            autoplay: true
+});
+
+})();
+    </script>
+    <script src='https://vjs.zencdn.net/7.5.4/video.js'></script>
+}
