@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,10 +20,12 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     {
         // TODO: Refactor to use repository + specification pattern with Include
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public DetailsModel(AppDbContext context)
+        public DetailsModel(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public ArchiveVideoDetailsDTO ArchiveVideoDetails { get; set; }
@@ -60,12 +63,13 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
+            string videoUrl = _configuration["videoUrlPrefix"] + archiveVideoEntity.VideoUrl;
             ArchiveVideoDetails = new ArchiveVideoDetailsDTO
             {
                 DateCreated = archiveVideoEntity.DateCreated,
                 ShowNotes = archiveVideoEntity.ShowNotes,
                 Title = archiveVideoEntity.Title,
-                VideoUrl = archiveVideoEntity.VideoUrl
+                VideoUrl = videoUrl
             };
 
             ArchiveVideoDetails.Questions.AddRange(
