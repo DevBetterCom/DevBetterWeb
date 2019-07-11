@@ -10,18 +10,18 @@ using DevBetterWeb.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevBetterWeb.Web.Controllers
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
     public class AdminController : Controller
     {
-        private readonly IdentityDbContext _identityDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminController(IdentityDbContext identityDbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _identityDbContext = identityDbContext;
             _userManager = userManager;
            _roleManager = roleManager;
         }
@@ -30,8 +30,6 @@ namespace DevBetterWeb.Web.Controllers
         public IActionResult Index()
         {
             var viewModel = new AdminIndexViewModel();
-
-
             viewModel.Users = _userManager.Users.ToList();
             viewModel.Roles = _roleManager.Roles.ToList();
 
@@ -42,7 +40,7 @@ namespace DevBetterWeb.Web.Controllers
         {
             var userViewModel = new UserViewModel();
 
-            userViewModel.User = _identityDbContext.Users.FirstOrDefault(x => x.Id == userId);
+            userViewModel.User = _userManager.Users.FirstOrDefault(x => x.Id == userId);
             return View(userViewModel);
         }
 

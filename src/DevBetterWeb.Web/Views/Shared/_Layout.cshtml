@@ -43,6 +43,10 @@
             </a>
             <a asp-page="/ArchivedVideos/Index">Videos</a>
             <a asp-page="/Questions">Questions</a>
+            @if (User.IsInRole(Constants.Roles.ADMINISTRATORS))
+            {
+                <a asp-controller="Admin" asp-action="index">Admin</a>
+            }
             <partial name="_LoginPartial" />
             <a class="btn btn-primary" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
         </div>
