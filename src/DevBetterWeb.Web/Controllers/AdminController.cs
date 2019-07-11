@@ -53,10 +53,6 @@ namespace DevBetterWeb.Web.Controllers
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
 
             var userIdsInRole = usersInRole.Select(X => X.Id).ToList();
-            
-            //var userIdsOfUsersInRole = _identityDbContext.UserRoles.Where(x => x.RoleId == role.Id).Select(x => x.UserId).ToList();
-            //var usersInRole = _identityDbContext.Users.Where(x => userIdsOfUsersInRole.Contains(x.Id)).ToList();
-
             var usersNotInRole = _userManager.Users.Where(x => !userIdsInRole.Contains(x.Id)).ToList();
 
             var roleViewModel = new RoleViewModel();
@@ -69,18 +65,35 @@ namespace DevBetterWeb.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUserToRole(string userId, string roleId)
+        public async Task<IActionResult> AddUserToRole(string userId, string roleId)
         {
-            var user = _identityDbContext.Users.FirstOrDefault(x => x.Id == userId);
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
 
-            if (user == null)
+            if (user == null || role == null)
             {
                 return BadRequest();
             }
 
+            await _userManager.AddToRoleAsync(user, role.Name);
 
             return RedirectToAction("role", new { roleId });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveUserFromRole(string userId, string roleId)
+        {
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+
+            if (user == null || role == null)
+            {
+                return BadRequest();
+            }
+
+            await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+            return RedirectToAction("role", new { roleId });
         }
     }
 }
