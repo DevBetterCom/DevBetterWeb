@@ -46,7 +46,7 @@ namespace DevBetterWeb.Web.Controllers
 
         public async Task<IActionResult> Role(string roleId)
         {
-            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+            var role = _roleManager.Roles.Single(x => x.Id == roleId);
 
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
 
