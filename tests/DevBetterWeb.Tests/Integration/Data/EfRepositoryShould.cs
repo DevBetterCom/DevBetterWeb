@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Core.Interfaces;
-using CleanArchitecture.Infrastructure.Data;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace CleanArchitecture.Tests.Integration.Data
+namespace DevBetterWeb.Tests.Integration.Data
 {
     public class EfRepositoryShould
     {
@@ -25,7 +25,7 @@ namespace CleanArchitecture.Tests.Integration.Data
             // Create a new options instance telling the context to use an
             // InMemory database and the new service provider.
             var builder = new DbContextOptionsBuilder<AppDbContext>();
-            builder.UseInMemoryDatabase("cleanarchitecture")
+            builder.UseInMemoryDatabase("DevBetterWeb")
                    .UseInternalServiceProvider(serviceProvider);
 
             return builder.Options;

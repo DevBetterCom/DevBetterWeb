@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.SharedKernel;
 using System.Collections.Generic;
 
-namespace CleanArchitecture.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces
 {
     public interface IRepository
     {

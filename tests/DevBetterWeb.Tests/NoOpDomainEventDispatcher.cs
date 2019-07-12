@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Core.Interfaces;
-using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 
-namespace CleanArchitecture.Tests
+namespace DevBetterWeb.Tests
 {
     public class NoOpDomainEventDispatcher : IDomainEventDispatcher
     {

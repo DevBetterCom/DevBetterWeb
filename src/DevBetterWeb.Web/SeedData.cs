@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Infrastructure.Data;
 using System;
 using System.Linq;
 
-namespace CleanArchitecture.Web
+namespace DevBetterWeb.Web
 {
     public static class SeedData
     {

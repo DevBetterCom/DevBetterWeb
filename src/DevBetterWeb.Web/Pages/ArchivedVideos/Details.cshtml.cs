@@ -1,5 +1,5 @@
-﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

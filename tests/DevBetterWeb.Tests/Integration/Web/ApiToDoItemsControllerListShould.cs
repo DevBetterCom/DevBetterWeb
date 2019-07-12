@@ -1,5 +1,5 @@
-﻿using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Web;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Web;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CleanArchitecture.Tests.Integration.Web
+namespace DevBetterWeb.Tests.Integration.Web
 {
 
     public class ApiToDoItemsControllerList : IClassFixture<CustomWebApplicationFactory<Startup>>

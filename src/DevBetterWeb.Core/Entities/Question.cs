@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.SharedKernel;
 
-namespace CleanArchitecture.Core.Entities
+namespace DevBetterWeb.Core.Entities
 {
 
     public class Question : BaseEntity

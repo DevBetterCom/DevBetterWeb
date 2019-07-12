@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.Core.Entities;
-using CleanArchitecture.Infrastructure.Data;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Infrastructure.Data;
 
 namespace DevBetterWeb.Web.Pages
 {
     public class QuestionsModel : PageModel
     {
-        private readonly CleanArchitecture.Infrastructure.Data.AppDbContext _context;
+        private readonly DevBetterWeb.Infrastructure.Data.AppDbContext _context;
 
-        public QuestionsModel(CleanArchitecture.Infrastructure.Data.AppDbContext context)
+        public QuestionsModel(DevBetterWeb.Infrastructure.Data.AppDbContext context)
         {
             _context = context;
         }
