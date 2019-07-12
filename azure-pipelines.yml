@@ -68,7 +68,6 @@ steps:
   displayName: Test
   inputs:
     command: test
-#    projects: '$(Parameters.TestProjects)'
     projects: '**/*[Tt]ests/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --no-build /p:AltCover=true /p:AltCoverForce=true /p:AltCoverCallContext=[Fact] /p:AltCoverXmlReport=..\target\reports\coverage\coverage.opencover.xml --collect "Code Coverage"'
 
@@ -87,9 +86,3 @@ steps:
     summaryFileLocation: '$(build.sourcesdirectory)\tests\target\reports\coverage\Cobertura.xml'
     reportDirectory: '$(build.sourcesdirectory)\tests\target\reports\coverage'    
     
-# Publish
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\Web'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))    
