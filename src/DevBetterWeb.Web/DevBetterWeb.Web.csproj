@@ -22,11 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
-    <ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0" PrivateAssets="All" />
@@ -37,6 +32,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
     <PackageReference Include="TagHelperSamples.Authorization" Version="2.0.37" />
     <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
+    <ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
   </ItemGroup>
 
   <!--<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
