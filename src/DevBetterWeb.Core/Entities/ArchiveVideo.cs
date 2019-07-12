@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
 
-namespace CleanArchitecture.Core.Entities
+namespace DevBetterWeb.Core.Entities
 {
     public class ArchiveVideo : BaseEntity
     {

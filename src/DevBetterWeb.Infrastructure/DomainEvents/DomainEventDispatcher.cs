@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using StructureMap;
-using CleanArchitecture.Core.Interfaces;
-using CleanArchitecture.Core.SharedKernel;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 
-namespace CleanArchitecture.Infrastructure.DomainEvents
+namespace DevBetterWeb.Infrastructure.DomainEvents
 {
     // https://gist.github.com/jbogard/54d6569e883f63afebc7
     // http://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/

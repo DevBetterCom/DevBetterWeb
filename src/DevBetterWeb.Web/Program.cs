@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Infrastructure.Data;
+﻿using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 
-namespace CleanArchitecture.Web
+namespace DevBetterWeb.Web
 {
     public class Program
     {

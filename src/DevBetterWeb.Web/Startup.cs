@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Core.Interfaces;
-using CleanArchitecture.Core.SharedKernel;
-using CleanArchitecture.Infrastructure.Data;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +15,7 @@ using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 
-namespace CleanArchitecture.Web
+namespace DevBetterWeb.Web
 {
     public class Startup
     {

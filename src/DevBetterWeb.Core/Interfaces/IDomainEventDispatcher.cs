@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.SharedKernel;
 
-namespace CleanArchitecture.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces
 {
     public interface IDomainEventDispatcher
     {

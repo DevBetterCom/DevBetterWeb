@@ -1,10 +1,10 @@
-﻿using CleanArchitecture.Core.Interfaces;
-using CleanArchitecture.Core.SharedKernel;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CleanArchitecture.Infrastructure.Data
+namespace DevBetterWeb.Infrastructure.Data
 {
     public class EfRepository : IRepository
     {

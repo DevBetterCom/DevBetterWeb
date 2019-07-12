@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Web;
+﻿using DevBetterWeb.Web;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CleanArchitecture.Tests.Integration.Web
+namespace DevBetterWeb.Tests.Integration.Web
 {
     public class HomeControllerIndexShould : IClassFixture<CustomWebApplicationFactory<Startup>>
     {

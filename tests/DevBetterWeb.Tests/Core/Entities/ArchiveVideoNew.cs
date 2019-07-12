@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Core.Entities;
+﻿using DevBetterWeb.Core.Entities;
 using System;
 using Xunit;
 
-namespace CleanArchitecture.Tests.Core.Entities
+namespace DevBetterWeb.Tests.Core.Entities
 {
     public class ArchiveVideoNew
     {
