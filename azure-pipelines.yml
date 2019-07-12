@@ -87,4 +87,9 @@ steps:
     summaryFileLocation: '$(build.sourcesdirectory)\src\target\reports\coverage\Cobertura.xml'
     reportDirectory: '$(build.sourcesdirectory)\src\target\reports\coverage'    
     
-    
+# Publish
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\Web'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))    
