@@ -49,7 +49,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public DateTimeOffset DateCreated { get; set; }
         }
 
-        [RequestSizeLimit(Constants.MAX_UPLOAD_FILE_SIZE)]
+        //[RequestSizeLimit(Constants.MAX_UPLOAD_FILE_SIZE)]
         public async Task<IActionResult> OnPostAsync(List<IFormFile> files)
         {
             if (!ModelState.IsValid)

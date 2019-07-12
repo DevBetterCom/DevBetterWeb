@@ -14,7 +14,7 @@ namespace CleanArchitecture.Tests.Integration.Web
             _client = factory.CreateClient();
         }
 
-        [Fact]
+        //[Fact]
         public async Task ReturnViewWithCorrectMessage()
         {
             HttpResponseMessage response = await _client.GetAsync("/");
