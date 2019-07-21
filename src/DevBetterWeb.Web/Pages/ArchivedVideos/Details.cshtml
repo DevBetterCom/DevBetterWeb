@@ -8,63 +8,55 @@
     <link href="https://vjs.zencdn.net/7.5.4/video-js.css" rel="stylesheet">
 
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
-    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>}
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+    <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+    <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
 
-<h2>Details</h2>
+}
 
-<div>
-    <h4>Archive Video</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoDetails.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.ShowNotes)
-        </dt>
-        <dd>
-            <markdown markdown="ArchiveVideoDetails.ShowNotes" />
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.DateCreated)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoDetails.DateCreated)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.VideoUrl)
-        </dt>
-        <dd>
-            <a href="@Model.ArchiveVideoDetails.VideoUrl">
-                @Html.DisplayFor(model => model.ArchiveVideoDetails.VideoUrl)
-            </a>
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoDetails.Questions)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoDetails.Questions, "ListQuestions")
-        </dd>
-    </dl>
+
+<h3>@Model.ArchiveVideoDetails.DateCreated.UtcDateTime.ToShortDateString()</h3>
+
+
+
+<video id="vid1" class="azuremediaplayer amp-default-skin" autoplay controls width="100%" poster="poster.jpg" data-setup='{"nativeControlsForTouch": false}'>
+    <source src="@Model.ArchiveVideoDetails.VideoUrl" type="application/vnd.ms-sstr+xml" />
+    <p class="amp-no-js">
+        To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+    </p>
+
+</video>
+
+
+<div class="border bg-light p-3 mt-2">
+    <label class="font-weight-bold">Notes</label>
+    <br />
+    <markdown markdown="ArchiveVideoDetails.ShowNotes" />
 </div>
-<div>
+
+<div class="border bg-light p-3 mt-2">
+    <label class="font-weight-bold">Questions</label>
+    <br />
+    @Html.DisplayFor(model => model.ArchiveVideoDetails.Questions, "ListQuestions")
+</div>
+
+
+@*<div>
     <video id='my-video' class='video-js' controls preload='auto' width='960' height='540'
            poster='MY_VIDEO_POSTER.jpg' data-setup='{ playbackRates: [0.5, 1, 1.5, 2] }'>
         <source src="//vjs.zencdn.net/v/oceans.mp4" type="vide/mp4">
         @*<source src='@Model.ArchiveVideoDetails.VideoUrl' type='video/mp4'>*@
-        <source src='MY_VIDEO.webm' type='video/webm'>
-        <p class='vjs-no-js'>
-            To view this video please enable JavaScript, and consider upgrading to a web browser that
-            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-        </p>
+@*
+<source src='MY_VIDEO.webm' type='video/webm'>
+<p class='vjs-no-js'>
+    To view this video please enable JavaScript, and consider upgrading to a web browser that
+    <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+</p>
     </video>
-    <video width="480" height="270" controls>
-        <source src="@Model.ArchiveVideoDetails.VideoUrl" type="video/mp4">
-    </video>
-</div>
+<video width="480" height="270" controls>
+    <source src="@Model.ArchiveVideoDetails.VideoUrl" type="video/mp4">
+</video>
+</div>*@
 <div>
     <span asp-authorize asp-roles="Administrators">
         <a asp-page="./Edit" asp-route-id="@Model.ArchiveVideoDetails.Id">Edit</a> |
@@ -72,14 +64,14 @@
     <a asp-page="./Index">Back to List</a>
 </div>
 @section scripts {
-    <script type="text/javascript">
-        (function() {
-        videojs('my-video', {
-            playbackRates: [0.5, 1, 1.5, 2],
-            autoplay: true
-});
+    @*<script type="text/javascript">
+        (function () {
+            videojs('my-video', {
+                playbackRates: [0.5, 1, 1.5, 2],
+                autoplay: true
+            });
 
-})();
+        })();
     </script>
-    <script src='https://vjs.zencdn.net/7.5.4/video.js'></script>
+    <script src='https://vjs.zencdn.net/7.5.4/video.js'></script>*@
 }
