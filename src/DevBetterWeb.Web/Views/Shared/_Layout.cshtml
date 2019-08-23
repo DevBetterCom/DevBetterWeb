@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -24,18 +27,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <!--<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />-->
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template -->
+    <link href="/css/site.css" rel="stylesheet" />
+    <link href="/css/landing-page.css" rel="stylesheet">
+    <!-- Facebook -->
+    <meta property="og:title" content="Developer Career Coaching | devBetter with Steve Smith">
+    <meta property="og:site_name" content="Developer Career Coaching - devBetter">
+    <meta property="og:url" content="https://devbetter.com">
+    <meta property="og:description" content="“Plain and simple, Steve has changed my career and I could not encourage someone enough to jump at any opportunity they have to be mentored by him.” — Eric Fleming">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://devbetter.com/images/devBetter_Box_864x488.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@@ardalis">
+    <meta name="twitter:creator" content="@@ardalis">
+    <meta name="twitter:title" content="Developer Career Coaching - devBetter">
+    <meta name="twitter:description" content="“Plain and simple, Steve has changed my career and I could not encourage someone enough to jump at any opportunity they have to be mentored by him.” — Eric Fleming">
+    <meta name="twitter:image" content="https://devbetter.com/images/devBetter_Box_864x488.png">
     @await RenderSectionAsync("head", required: false).ConfigureAwait(false)
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light static-top">
+    <nav class="navbar navbar-light static-top">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
@@ -51,15 +75,41 @@
             <a class="btn btn-primary" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
         </div>
     </nav>
-    
+
     <partial name="_CookieConsentPartial" />
     <div class="container body-content">
         @RenderBody()
-     
+
     </div>
-    @*<footer>
-        <p>&copy; @DateTime.Now.Year devBetter</p>
-    </footer>*@
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+                    <p class="text-muted small mb-4 mb-lg-0">&copy; 2018 devBetter; All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mr-3">
+                            <a href="https://www.facebook.com/StevenAndrewSmith/">
+                                <i class="fab fa-facebook fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mr-3">
+                            <a href="https://twitter.com/ardalis">
+                                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                        <!--<li class="list-inline-item">
+                            <a href="#">
+                                <i class="fab fa-instagram fa-2x fa-fw"></i>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -76,6 +126,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+    <script src="https://launchpass.com/p/devbetter/embed.js"></script>
     @await RenderSectionAsync("scripts", required: false).ConfigureAwait(false)
 </body>
 </html>
