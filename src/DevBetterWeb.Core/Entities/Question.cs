@@ -2,7 +2,6 @@
 
 namespace DevBetterWeb.Core.Entities
 {
-
     public class Question : BaseEntity
     {
         public int ArchiveVideoId { get; set; }
