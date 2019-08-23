@@ -19,6 +19,12 @@ namespace DevBetterWeb.Web
 
 In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. 
 
+<a href="" "" class=""ts"" data-time=""20"">00:20</a>
+
+<a href = "" "" class=""ts"" data-time=""40"">00:40</a>
+
+<a href = "" "" class=""ts"" data-time=""60"">00:60</a>
+
 ## References
 
 - [Steve's Blog](https://ardalis.com)
