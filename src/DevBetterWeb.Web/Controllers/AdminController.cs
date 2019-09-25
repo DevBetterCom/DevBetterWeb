@@ -15,7 +15,7 @@ using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Web.Controllers
 {
-    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+    //[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -27,7 +27,6 @@ namespace DevBetterWeb.Web.Controllers
            _roleManager = roleManager;
         }
 
-
         public IActionResult Index()
         {
             var viewModel = new AdminIndexViewModel();
@@ -37,11 +36,29 @@ namespace DevBetterWeb.Web.Controllers
             return View(viewModel);
         }
 
-        public IActionResult User(string userId)
+        public async Task<IActionResult> User(string userId)
         {
-            var userViewModel = new UserViewModel();
+            var currentUser = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var roles = _roleManager.Roles;
 
-            userViewModel.User = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var unassignedRoles = new List<IdentityRole>();
+            var assignedRoles = new List<IdentityRole>();
+            foreach (var role in roles)
+            {
+                if(! (await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
+                {
+                    unassignedRoles.Add(role);
+                }
+                else
+                {
+                    assignedRoles.Add(role);
+                }
+            }
+
+            var userViewModel = new UserViewModel();
+            userViewModel.User = currentUser;
+            userViewModel.RolesNotAssignedToUser = unassignedRoles.Select(x => new SelectListItem(x.Name, x.Id)).ToList();
+            userViewModel.Roles = assignedRoles.ToList();
             return View(userViewModel);
         }
 
@@ -76,7 +93,7 @@ namespace DevBetterWeb.Web.Controllers
 
             await _userManager.AddToRoleAsync(user, role.Name);
 
-            return RedirectToAction("role", new { roleId });
+            return RedirectToAction("index");
         }
 
         [HttpPost]
@@ -92,7 +109,7 @@ namespace DevBetterWeb.Web.Controllers
 
             await _userManager.RemoveFromRoleAsync(user, role.Name);
 
-            return RedirectToAction("role", new { roleId });
+            return RedirectToAction("index");
         }
     }
 }
