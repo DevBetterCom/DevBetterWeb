@@ -1,0 +1,103 @@
+﻿@model UserViewModel
+
+<h3>Edit User</h3>
+
+
+<div class="row mb-3">
+    <div class="col-4">
+        <div class="border bg-light  p-2">
+            <b>User Name</b>
+        </div>
+        <div class="border border-top-0 p-2">
+            @Model.User.UserName - @Model.User.Email
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="border bg-light p-2">
+            <div class="d-flex">
+                <div class="pt-1">
+                    <b>Roles</b>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRoleModal">Add Role</button>
+                </div>
+            </div>
+        </div>
+        <div class="border border-top-0 p-2">
+
+            @foreach (var role in Model.Roles)
+            {
+                <div class="d-flex mb-2 border p-2 bg-light">
+                    <div class="pt-1"> @role.Name</div>
+                    <div class="ml-auto">
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#removeRoleModal" data-roleId="@role.Id" data-userId="@Model.User.Id" data-roleName="@role.Name">Remove</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* add role modal *@
+<div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="AddUserToRole">
+                <input type="hidden" name="userId" value="@Model.User.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Role</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select asp-items="Model.RolesNotAssignedToUser" name="roleId" class="form-control">
+                        <option>Select</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* remove role modal *@
+<div class="modal fade" id="removeRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-action="RemoveUserFromRole">
+                <input type="hidden" name="userId" value="@Model.User.Id" />
+                <input type="hidden" name="roleId" id="hidRemoveRoleId" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Remove Role From User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        Are you sure you want to remove this role?
+                        <br />
+                        <b><span id="spnRemoveRoleName"></span></b>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Remove Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{ 
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}
