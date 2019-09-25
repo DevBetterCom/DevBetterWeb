@@ -5,3 +5,9 @@
 # DevBetterWeb
 
 A simple web application for devBetter.com
+
+## Development Links
+
+- [Build Pipeline](https://dev.azure.com/ardalis/DevBetterWeb/_build)
+- [Production Site](https://devbetter.com/)
+- [Azure Portal](https://portal.azure.com) - RG: devbetter2-resourcegroup
