@@ -52,9 +52,9 @@ steps:
  # inputs:
  #   versionSpec: 4.9.3
 
-#- task: NuGetCommand@2
- # inputs:
- #   restoreSolution: '$(solution)'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
     
 # Build    
 - task: VSBuild@1
