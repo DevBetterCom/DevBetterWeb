@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DevBetterWeb.Web.Areas.Identity.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

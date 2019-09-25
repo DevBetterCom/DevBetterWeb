@@ -67,7 +67,7 @@
             </a>
             <a asp-page="/ArchivedVideos/Index">Videos</a>
             <a asp-page="/Questions">Questions</a>
-            @if (User.IsInRole(Constants.Roles.ADMINISTRATORS))
+            @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
             {
                 <a asp-controller="Admin" asp-action="index">Admin</a>
             }

@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
     [RequestFormLimits(MultipartBodyLengthLimit = Constants.MAX_UPLOAD_FILE_SIZE)]
-    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class CreateModel : PageModel
     {
         private IConfiguration _configuration;

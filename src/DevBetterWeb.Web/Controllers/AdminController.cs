@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Web.Controllers
 {
-    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
