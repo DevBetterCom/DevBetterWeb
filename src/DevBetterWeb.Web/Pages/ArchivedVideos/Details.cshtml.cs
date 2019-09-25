@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = Constants.Roles.ADMINISTRATORS_MEMBERS)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class DetailsModel : PageModel
     {
         // TODO: Refactor to use repository + specification pattern with Include

@@ -1,19 +1,17 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = Constants.Roles.ADMINISTRATORS)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class EditModel : PageModel
     {
         private readonly IRepository _repository;

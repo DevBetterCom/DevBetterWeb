@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.ArchivedVideos
 {
-    [Authorize(Roles = Constants.Roles.ADMINISTRATORS_MEMBERS)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class IndexModel : PageModel
     {
         private readonly IRepository _repository;
