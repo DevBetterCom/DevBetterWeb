@@ -38,7 +38,7 @@ namespace DevBetterWeb.Web
 
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("DefaultConnection")));
+                        .GetConnectionString("ProductionConnectionString")));
                 _isDbContextAdded = true;
             }
             return ConfigureServices(services);
@@ -56,10 +56,11 @@ namespace DevBetterWeb.Web
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
             {
-                _logger.LogInformation("Adding in memory dbContext");
+                _logger.LogInformation("Adding in localDb dbContext");
                 string dbName = Guid.NewGuid().ToString();
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseInMemoryDatabase(dbName));
+                    options.UseSqlServer(Configuration
+                        .GetConnectionString("LocalDbConnectionString")));
                 _isDbContextAdded = true;
             }
 
