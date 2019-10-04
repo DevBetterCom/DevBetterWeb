@@ -5,6 +5,8 @@ namespace DevBetterWeb.Tests
 {
     public class NoOpDomainEventDispatcher : IDomainEventDispatcher
     {
-        public void Dispatch(BaseDomainEvent domainEvent) { }
+        public void Dispatch<TEvent>(TEvent domainEvent) where TEvent : BaseDomainEvent
+        {
+        }
     }
 }
