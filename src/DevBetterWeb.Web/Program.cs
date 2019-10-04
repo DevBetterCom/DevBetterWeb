@@ -8,12 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = CreateWebHostBuilder(args);
 
@@ -22,32 +23,55 @@ namespace DevBetterWeb.Web
             {
                 env = args[0];
             }
+            Console.WriteLine($"Starting using environment: {env}");
             builder.UseEnvironment(env);
             var host = builder.Build();
 
+            if (env == "Development")
+            {
+                await SeedDatabase(host);
+            }
 
+            host.Run();
+        }
+
+        private static async Task SeedDatabase(IWebHost host)
+        {
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("Seeding database...");
                 try
                 {
                     var context = services.GetRequiredService<AppDbContext>();
-                    SeedData.PopulateTestData(context);
-                    logger.LogInformation("Populated AppDbContext test data.");
+                    if (context.Questions.Any())
+                    {
+                        logger.LogDebug("Database already has data in it.");
+                    }
+                    else
+                    {
+                        SeedData.PopulateTestData(context);
+                        logger.LogDebug("Populated AppDbContext test data.");
+                    }
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    AppIdentityDbContextSeed.SeedAsync(userManager, roleManager).Wait();
-                    logger.LogInformation("Populated AppIdentityDbContext test data.");
+                    if (userManager.Users.Any() || roleManager.Roles.Any())
+                    {
+                        logger.LogDebug("User/Role data already exists.");
+                    }
+                    else
+                    {
+                        await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
+                        logger.LogDebug("Populated AppIdentityDbContext test data.");
+                    }
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "An error occurred while seeding the database.");
                 }
             }
-
-            host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
