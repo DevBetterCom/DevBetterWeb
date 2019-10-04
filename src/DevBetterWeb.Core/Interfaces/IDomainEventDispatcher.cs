@@ -4,6 +4,6 @@ namespace DevBetterWeb.Core.Interfaces
 {
     public interface IDomainEventDispatcher
     {
-        void Dispatch(BaseDomainEvent domainEvent);
+        void Dispatch<TEvent>(TEvent domainEvent) where TEvent : BaseDomainEvent;
     }
 }
