@@ -29,13 +29,14 @@ namespace DevBetterWeb.Web.Areas.Identity
                     //_logger.LogInformation("Configuring real SQL SERVER for IDENTITY");
                     services.AddDbContext<IdentityDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdentityDbContextConnection")));
+                        context.Configuration.GetConnectionString("ProductionConnectionString")));
                 }
                 else
                 {
-                    //_logger.LogInformation("Configuring IN MEMORY DB for IDENTITY");
+                    //_logger.LogInformation("Configuring Local DB for IDENTITY");
                     services.AddDbContext<IdentityDbContext>(options =>
-                        options.UseInMemoryDatabase("Identity"));
+                        options.UseSqlServer(
+                            context.Configuration.GetConnectionString("LocalDbConnectionString")));
                 }
 
                 services.AddIdentity<ApplicationUser, IdentityRole>()
