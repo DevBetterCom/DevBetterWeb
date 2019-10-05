@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using StructureMap;
+using Autofac;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
@@ -10,26 +11,17 @@ namespace DevBetterWeb.Infrastructure.DomainEvents
     // http://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
     public class DomainEventDispatcher : IDomainEventDispatcher
     {
-        private readonly IContainer _container;
+        private readonly ILifetimeScope _scope;
 
-        public DomainEventDispatcher(IContainer container)
+        public DomainEventDispatcher(ILifetimeScope scope)
         {
-            _container = container;
+            _scope = scope;
         }
 
-        public void Dispatch(BaseDomainEvent domainEvent)
+        public void Dispatch<TEvent>(TEvent domainEvent) where TEvent : BaseDomainEvent
         {
-            var handlerType = typeof(IHandle<>).MakeGenericType(domainEvent.GetType());
-            var wrapperType = typeof(DomainEventHandler<>).MakeGenericType(domainEvent.GetType());
-            var handlers = _container.GetAllInstances(handlerType);
-            var wrappedHandlers = handlers
-                .Cast<object>()
-                .Select(handler => (DomainEventHandler)Activator.CreateInstance(wrapperType, handler));
-
-            foreach (var handler in wrappedHandlers)
-            {
-                handler.Handle(domainEvent);
-            }
+            var handlers = _scope.Resolve<IEnumerable<IHandle<TEvent>>>().ToList();
+            handlers.ForEach(handler => handler.Handle(domainEvent));
         }
 
         private abstract class DomainEventHandler

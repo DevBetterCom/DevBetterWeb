@@ -15,7 +15,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -26,6 +26,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("DateCreated");
+
+                    b.Property<string>("ShowNotes");
 
                     b.Property<string>("Title");
 
@@ -42,7 +44,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ArchiveVideoId");
+                    b.Property<int>("ArchiveVideoId");
 
                     b.Property<string>("QuestionText");
 
@@ -55,28 +57,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.ToDoItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.Property<bool>("IsDone");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ToDoItems");
-                });
-
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo")
                         .WithMany("Questions")
-                        .HasForeignKey("ArchiveVideoId");
+                        .HasForeignKey("ArchiveVideoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

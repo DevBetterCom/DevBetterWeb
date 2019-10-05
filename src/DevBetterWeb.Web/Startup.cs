@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace DevBetterWeb.Web
 {
@@ -38,7 +40,7 @@ namespace DevBetterWeb.Web
 
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("DefaultConnection")));
+                        .GetConnectionString("ProductionConnectionString")));
                 _isDbContextAdded = true;
             }
             return ConfigureServices(services);
@@ -56,10 +58,11 @@ namespace DevBetterWeb.Web
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
             {
-                _logger.LogInformation("Adding in memory dbContext");
+                _logger.LogInformation("Adding in localDb dbContext");
                 string dbName = Guid.NewGuid().ToString();
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseInMemoryDatabase(dbName));
+                    options.UseSqlServer(Configuration
+                        .GetConnectionString("DefaultConnectionString")));
                 _isDbContextAdded = true;
             }
 
@@ -76,27 +79,39 @@ namespace DevBetterWeb.Web
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            var container = new Container();
+            services.AddScoped<IRepository, EfRepository>();
 
-            container.Configure(config =>
-            {
-                config.Scan(_ =>
-                {
-                    _.AssemblyContainingType(typeof(Startup)); // Web
-                    _.AssemblyContainingType(typeof(BaseEntity)); // Core
-                    _.AssemblyContainingType(typeof(AppDbContext)); // Infrastructure
-                    _.WithDefaultConventions();
-                    _.ConnectImplementationsToTypesClosing(typeof(IHandle<>));
-                });
+            return BuildDependencyInjectionProvider(services);
+        }
 
-                // TODO: Move to Infrastucture Registry
-                config.For<IRepository>().Add<EfRepository>();
+        private static IServiceProvider BuildDependencyInjectionProvider(IServiceCollection services)
+        {
+            var builder = new ContainerBuilder();
 
-                //Populate the container using the service collection
-                config.Populate(services);
-            });
+            // Populate the container using the service collection
+            builder.Populate(services);
 
-            return container.GetInstance<IServiceProvider>();
+            Assembly webAssembly = Assembly.GetExecutingAssembly();
+            Assembly coreAssembly = Assembly.GetAssembly(typeof(BaseEntity));
+            Assembly infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository)); // TODO: Move to Infrastucture Registry
+
+            // consider replacing with AppDomain.CurrentDomain.GetAssemblies()
+            Assembly[] assemblies = new Assembly[] { webAssembly, coreAssembly, infrastructureAssembly };
+
+            builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
+
+            // register domain event handlers
+            builder.RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(IHandle<>))
+                .InstancePerLifetimeScope();
+
+            // register container with itself so it can be passed to DomainEventDispatcher
+            //IContainer applicationContainer = null;
+            //builder.Register(c => applicationContainer).AsSelf();
+            //applicationContainer = builder.Build();
+
+            var container = builder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         public void Configure(IApplicationBuilder app,

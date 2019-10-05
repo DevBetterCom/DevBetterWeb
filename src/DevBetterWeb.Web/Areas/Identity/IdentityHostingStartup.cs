@@ -19,24 +19,15 @@ namespace DevBetterWeb.Web.Areas.Identity
         //{
         //    _logger = logger;
         //}
+
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) =>
             {
-                
-                if (context.HostingEnvironment.EnvironmentName == "Production")
-                {
-                    //_logger.LogInformation("Configuring real SQL SERVER for IDENTITY");
-                    services.AddDbContext<IdentityDbContext>(options =>
+                //_logger.LogInformation("Configuring Local DB for IDENTITY");
+                services.AddDbContext<IdentityDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdentityDbContextConnection")));
-                }
-                else
-                {
-                    //_logger.LogInformation("Configuring IN MEMORY DB for IDENTITY");
-                    services.AddDbContext<IdentityDbContext>(options =>
-                        options.UseInMemoryDatabase("Identity"));
-                }
+                        context.Configuration.GetConnectionString("DefaultConnectionString")));
 
                 services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDbContext>()
