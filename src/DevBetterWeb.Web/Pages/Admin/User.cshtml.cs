@@ -75,7 +75,7 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
 
             await _userManager.AddToRoleAsync(user, role.Name);
-            return RedirectToPage("./index");
+            return RedirectToPage("./User", new { userId = userId });
         }
 
         public async Task<IActionResult> OnPostRemoveUserFromRole(string userId, string roleId)
@@ -89,7 +89,7 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
 
             await _userManager.RemoveFromRoleAsync(user, role.Name);
-            return RedirectToPage("./index");
+            return RedirectToPage("./User", new { userId = userId});
         }
     }
 }
