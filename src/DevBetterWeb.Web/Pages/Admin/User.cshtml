@@ -8,14 +8,12 @@
 <h3>Edit User</h3>
 
 
-<div class="row mb-3">
-    <div class="col-4">
-        <div class="border bg-light  p-2">
-            <b>User Name</b>
-        </div>
-        <div class="border border-top-0 p-2">
-            @Model.IdentityUser.UserName - @Model.IdentityUser.Email
-        </div>
+<div class="mb-3">
+    <div class="border bg-light  p-2">
+        <b>User</b>
+    </div>
+    <div class="border border-top-0 p-2">
+        @Model.IdentityUser.UserName - @Model.IdentityUser.Email
     </div>
 </div>
 
@@ -36,7 +34,9 @@
             @foreach (var role in Model.Roles)
             {
                 <div class="d-flex mb-2 border p-2 bg-light">
-                    <div class="pt-1"> @role.Name</div>
+                    <div class="pt-1">
+                        <a asp-page="./Role" asp-route-roleId="@role.Id">@role.Name</a>
+                    </div>
                     <div class="ml-auto">
                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#removeRoleModal" data-roleId="@role.Id" data-userId="@Model.IdentityUser.Id" data-roleName="@role.Name">Remove</button>
                     </div>
