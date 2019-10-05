@@ -23,10 +23,12 @@ namespace DevBetterWeb.Web.Pages.Admin
         public List<ApplicationUser> Users { get; set; }
         public List<IdentityRole> Roles { get; set; }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
            Users = _userManager.Users.ToList();
            Roles = _roleManager.Roles.ToList();
+
+            return Page();
         }
     }
 }

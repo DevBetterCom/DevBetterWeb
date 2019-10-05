@@ -27,16 +27,27 @@ namespace DevBetterWeb.Web.Pages.Admin
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
 
 
-        public void OnGet(string userId)
+        public async Task<IActionResult> OnGetAsync(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                NotFound();
+            }
+
             var currentUser = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (currentUser == null)
+            {
+                BadRequest();
+            }
+
             var roles = _roleManager.Roles;
 
             var unassignedRoles = new List<IdentityRole>();
             var assignedRoles = new List<IdentityRole>();
             foreach (var role in roles)
             {
-                if (!(_userManager.GetUsersInRoleAsync(role.Name)).Result.Contains(currentUser))
+                if (! (await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
                 {
                     unassignedRoles.Add(role);
                 }
@@ -49,6 +60,36 @@ namespace DevBetterWeb.Web.Pages.Admin
             IdentityUser = currentUser;
             RolesNotAssignedToUser = unassignedRoles.Select(x => new SelectListItem(x.Name, x.Id)).ToList();
             Roles = assignedRoles.ToList();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
+        {
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+
+            if (user == null || role == null)
+            {
+                return BadRequest();
+            }
+
+            await _userManager.AddToRoleAsync(user, role.Name);
+            return RedirectToPage("./index");
+        }
+
+        public async Task<IActionResult> OnPostRemoveUserFromRole(string userId, string roleId)
+        {
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+
+            if (user == null || role == null)
+            {
+                return BadRequest();
+            }
+
+            await _userManager.RemoveFromRoleAsync(user, role.Name);
+            return RedirectToPage("./index");
         }
     }
 }

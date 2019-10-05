@@ -50,7 +50,7 @@
 <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form asp-action="AddUserToRole">
+            <form asp-page-handler="AddUserToRole">
                 <input type="hidden" name="userId" value="@Model.IdentityUser.Id" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add Role</h5>
@@ -77,7 +77,7 @@
 <div class="modal fade" id="removeRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form asp-action="RemoveUserFromRole">
+            <form asp-page-handler="RemoveUserFromRole">
                 <input type="hidden" name="userId" value="@Model.IdentityUser.Id" />
                 <input type="hidden" name="roleId" id="hidRemoveRoleId" />
                 <div class="modal-header">
