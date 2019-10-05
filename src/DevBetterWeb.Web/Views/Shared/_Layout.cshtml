@@ -69,7 +69,7 @@
             <a asp-page="/Questions">Questions</a>
             @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
             {
-                <a asp-controller="Admin" asp-action="index">Admin</a>
+                <a asp-page="/Admin/Index">Admin</a>
             }
             <partial name="_LoginPartial" />
             <a class="btn btn-primary" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>

@@ -1,0 +1,50 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h3>Admin</h3>
+
+<div class="card-deck mt-2">
+    <div class="card">
+        <div class="card-header">
+            Users
+        </div>
+        <div class="card-body">
+            @foreach (var user in Model.Users)
+            {
+                <div class="d-flex mb-2 border p-2 bg-light">
+                    <div class="pt-2">
+                        @user.Email
+                    </div>
+                    <div class="ml-auto">
+                        <a asp-page="./User" asp-route-userId="@user.Id" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Roles
+        </div>
+        <div class="card-body">
+            @foreach (var role in Model.Roles)
+            {
+                <div class="d-flex mb-2 border p-2 bg-light">
+                    <div class="pt-2">
+                        @role.Name
+                    </div>
+                    <div class="ml-auto">
+                        <a asp-action="role" asp-route-roleId="@role.Id" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
