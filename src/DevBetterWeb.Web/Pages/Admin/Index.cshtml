@@ -1,4 +1,10 @@
-﻿@model AdminIndexViewModel
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
 
 <h3>Admin</h3>
 
@@ -15,7 +21,7 @@
                         @user.Email
                     </div>
                     <div class="ml-auto">
-                        <a asp-action="user" asp-route-userId="@user.Id" class="btn btn-primary">View</a>
+                        <a asp-page="./User" asp-route-userId="@user.Id" class="btn btn-primary">View</a>
                     </div>
                 </div>
             }
@@ -34,10 +40,11 @@
                         @role.Name
                     </div>
                     <div class="ml-auto">
-                        <a asp-action="role" asp-route-roleId="@role.Id" class="btn btn-primary">View</a>
+                        <a asp-page="./Role" asp-route-roleId="@role.Id" class="btn btn-primary">View</a>
                     </div>
                 </div>
             }
         </div>
     </div>
 </div>
+
