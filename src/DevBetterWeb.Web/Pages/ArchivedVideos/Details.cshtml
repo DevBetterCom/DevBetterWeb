@@ -25,7 +25,7 @@
 <div class="border bg-light p-3 mt-2">
     <label class="font-weight-bold">Notes</label>
     <br />
-    
+
     <markdown markdown="ArchiveVideoDetails.ShowNotes" />
 </div>
 
@@ -42,7 +42,16 @@
     <a asp-page="./Index">Back to List</a>
 </div>
 @section scripts {
-    <script type="text/javascript">
+    <script>
+    //    var urlParams = new URLSearchParams(window.location.search);
+    //var startTime = urlParams.get('startTime');
+
+    //var autoPlay = false;
+    //if (startTime) {
+    //    autoplay = true;
+    //}
+
+
         (function () {
             var myPlayer = amp('vid1', { /* Options */
                 "nativeControlsForTouch": false,
@@ -51,22 +60,24 @@
                 width: "100%",
                 poster: ""
             },
-            function () {
-                myPlayer.src([{
-                    src: '@Model.ArchiveVideoDetails.VideoUrl',                    
-                    type: "application/vnd.ms-sstr+xml"
-                }]);
-            });
+                function () {
+                    myPlayer.src([{
+                        src: '@Model.ArchiveVideoDetails.VideoUrl',
+                        type: "application/vnd.ms-sstr+xml"
+                    }]);
+                });
 
-            $('.ts').click(function (e) {     
+            $('.ts').click(function (e) {
                 e.preventDefault();
                 var link = $(e.currentTarget);
                 var time = link.attr('data-time');
                 myPlayer.currentTime(time);
-
             });
+        }) ();
 
-        })();
-
+    //if (startTime) {
+    //    //myPlayer.Play();
+    //    myPlayer.currentTime(time);
+    //}
     </script>
 }
