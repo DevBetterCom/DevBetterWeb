@@ -8,7 +8,6 @@
 
     <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
     <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
-
 }
 
 
@@ -22,18 +21,41 @@
 </video>
 
 
-<div class="border bg-light p-3 mt-2">
-    <label class="font-weight-bold">Notes</label>
-    <br />
-
-    <markdown markdown="ArchiveVideoDetails.ShowNotes" />
+<div class="card mt-2">
+    <div class="card-header p-2">
+        <span class="font-weight-bold">Notes</span>
+    </div>
+    <div class="card-body p-2">
+        <markdown markdown="ArchiveVideoDetails.ShowNotes" />
+    </div>
 </div>
 
-<div class="border bg-light p-3 mt-2">
-    <label class="font-weight-bold">Questions</label>
-    <br />
-    @Html.DisplayFor(model => model.ArchiveVideoDetails.Questions, "ListQuestions")
+<div class="card mt-2">
+    <div class="card-header p-2">
+        <span class="font-weight-bold">Questions Discussed</span>
+    </div>
+    <div class="card-body p-2">
+        @if (!Model.ArchiveVideoDetails.Questions.Any())
+        {
+            <span>No questions for this video.</span>
+        }
+
+        @foreach (var item in Model.ArchiveVideoDetails.Questions)
+        {
+            <div class="border bg-light p-2 mb-2 d-flex">
+
+                <div class="w-75">
+                    @Html.DisplayFor(modelItem => item.QuestionText)
+                </div>
+                <div class="w-25 ml-auto">
+                    <a href="#" class="ts" data-time="@item.TimestampSeconds">Go to clip</a>
+                </div>
+            </div>
+        }
+
+    </div>
 </div>
+
 
 <div>
     <span asp-authorize asp-roles="Administrators">
