@@ -133,5 +133,22 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
             return RedirectToPage("edit", new { id = archiveVideoId });
         }
+
+        public IActionResult OnPostDeleteQuestion(int questionId)
+        {
+            var question = _context.Questions.FirstOrDefault(x => x.Id == questionId);
+
+            if (question == null)
+            {
+                return BadRequest();
+            }
+
+            var archiveVideoId = question.ArchiveVideoId;
+            _context.Questions.Remove(question);
+            _context.SaveChanges();
+
+
+            return RedirectToPage("edit", new { id = question.ArchiveVideoId });
+        }
     }
 }

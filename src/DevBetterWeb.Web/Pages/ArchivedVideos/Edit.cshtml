@@ -86,7 +86,8 @@
                 <span id="questionTimeStamp_@question.Id">@question.TimestampSeconds</span>
             </div>
             <div class="ml-auto">
-                <button class="btn btn-primary editQuestionButton" data-target="#editQuestionModal" data-toggle="modal" data-id="@question.Id">Edit</button>
+                <button class="btn btn-primary btn-sm editQuestionButton" data-target="#editQuestionModal" data-toggle="modal" data-id="@question.Id">Edit</button>
+                <button class="btn btn-danger btn-sm deleteQuestionButton" data-target="#deleteQuestionModal" data-toggle="modal" data-id="@question.Id">Delete</button>
             </div>
         </div>
     }
@@ -130,6 +131,37 @@
     </div>
 </div>
 
+
+
+<!-- edit question Modal -->
+<div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="post" asp-page-handler="DeleteQuestion">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Question</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-danger">
+                        Are you sure you want to delete this question?
+                    </div>
+
+                    <input type="hidden" name="questionId" id="deleteQuestionId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
@@ -149,22 +181,14 @@
                 editQuestionTextInput.val(currentQuestionValueElement.text());
                 editTimeStampInput.val(currentTimeStampValueElement.text());
                 editQuestionId.val(questionId);
-
-
             });
 
+            $('#deleteQuestionModal').on('shown.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var questionId = button.attr('data-id');
 
-            //$('#questionContainer').on('click', '.editQuestionButton', function (event) {
-            //    var button = $(event.currentTarget);
-            //    var questionId = button.attr('data-id');
-
-            //    var currentQuestionValueElement = $('#questionText_' + questionId);
-            //    var currentTimeStampValueElement = $('#questionTimeStamp_' + questionId);
-
-
-
-
-            //});
+                $('#deleteQuestionId').val(questionId);
+            });
         });
     </script>
 }
