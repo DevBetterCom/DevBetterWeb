@@ -48,6 +48,29 @@
 </form>
 
 <h3>Questions</h3>
+<div class="card mb-2">
+    <div class="card-header p-2">
+        <span class="font-weight-bold">Add a question</span>
+    </div>
+
+    <div class="card-body">
+        <form method="post" asp-page-handler="AddQuestion">
+            <input type="hidden" name="archiveVideoId" asp-for="ArchiveVideoModel.Id" />
+            <div class="row">
+                <div class="col-8">
+                    <input style="max-width:100%" type="text" name="questionText" class="form-control" placeholder="Question Text">
+                </div>
+                <div class="col-2">
+                    <input type="text" name="timeStamp" class="form-control" placeholder="TimeStamp">
+                </div>
+                <div class="col-2">
+                    <input type="submit" class="btn btn-success" value="Add" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="questionContainer">
     @foreach (var question in Model.Questions)
     {
@@ -93,10 +116,10 @@
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Timestamp</label>
-                        <input type="text" id="editTimeStampInput" name="timestamp" class="form-control"/>
+                        <input type="text" id="editTimeStampInput" name="timestamp" class="form-control" />
                     </div>
 
-                    <input type="hidden" name="questionId" id="editQuestionId"/>
+                    <input type="hidden" name="questionId" id="editQuestionId" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -138,7 +161,7 @@
             //    var currentQuestionValueElement = $('#questionText_' + questionId);
             //    var currentTimeStampValueElement = $('#questionTimeStamp_' + questionId);
 
-      
+
 
 
             //});

@@ -119,5 +119,19 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
             return RedirectToPage("edit", new { id = question.ArchiveVideoId });
         }
+
+        public IActionResult OnPostAddQuestion(int archiveVideoId, string questionText, int timestamp)
+        {
+            var question = new Question();
+            question.ArchiveVideoId = archiveVideoId;
+            question.QuestionText = questionText;
+            question.TimestampSeconds = timestamp;
+
+            _context.Questions.Add(question);
+
+            _context.SaveChanges();
+
+            return RedirectToPage("edit", new { id = archiveVideoId });
+        }
     }
 }
