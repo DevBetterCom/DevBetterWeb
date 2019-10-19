@@ -30,6 +30,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
         }
 
         public ArchiveVideoDetailsDTO ArchiveVideoDetails { get; set; }
+        public int? StartTime { get; set; }
 
         public class ArchiveVideoDetailsDTO
         {
@@ -46,14 +47,17 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public string VideoUrl { get; set; }
 
             public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
+            
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, int? startTime = null)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            StartTime = startTime;
 
             var archiveVideoEntity = await _context.ArchiveVideos
                 .Include(v => v.Questions)
@@ -70,8 +74,8 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 DateCreated = archiveVideoEntity.DateCreated,
                 ShowNotes = archiveVideoEntity.ShowNotes,
                 Title = archiveVideoEntity.Title,
-                VideoUrl = videoUrl
-            };
+                VideoUrl = videoUrl                
+        };
 
             ArchiveVideoDetails.Questions.AddRange(
                 archiveVideoEntity.Questions
