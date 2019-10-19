@@ -33,25 +33,115 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.ShowNotes" class="control-label"></label>
-                <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" style="max-width: 100%" rows="10"></textarea>
-                <span asp-validation-for="ArchiveVideoModel.ShowNotes" class="text-danger"></span>
-            </div>
+    <div class="">
+        <div class="form-group">
+            <label asp-for="ArchiveVideoModel.ShowNotes" class="control-label"></label>
+            <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" style="max-width: 100%" rows="10"></textarea>
+            <span asp-validation-for="ArchiveVideoModel.ShowNotes" class="text-danger"></span>
         </div>
     </div>
+
     <input type="hidden" asp-for="ArchiveVideoModel.Id" />
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-success" />
     </div>
-
 </form>
+
+<h3>Questions</h3>
+<div id="questionContainer">
+    @foreach (var question in Model.Questions)
+    {
+        <div class="border bg-light p-2 mb-2 d-flex">
+            <div class="w-75 ">
+                <label class="font-weight-bold">Question Text</label>
+                <br />
+                <span id="questionText_@question.Id">@question.QuestionText</span>
+            </div>
+            <div class="">
+                <label class="font-weight-bold">Timestamp</label>
+                <br />
+                <span id="questionTimeStamp_@question.Id">@question.TimestampSeconds</span>
+            </div>
+            <div class="ml-auto">
+                <button class="btn btn-primary editQuestionButton" data-target="#editQuestionModal" data-toggle="modal" data-id="@question.Id">Edit</button>
+            </div>
+        </div>
+    }
+</div>
+
+
 <div>
     <a asp-page="./Index">Back to List</a>
 </div>
 
+
+<!-- edit question Modal -->
+<div class="modal fade" id="editQuestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="post" asp-page-handler="EditQuestion">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Question</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Question Text</label>
+                        <textarea rows="3" class="form-control" id="editQuestionTextInput" name="questionText"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Timestamp</label>
+                        <input type="text" id="editTimeStampInput" name="timestamp" class="form-control"/>
+                    </div>
+
+                    <input type="hidden" name="questionId" id="editQuestionId"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('#editQuestionModal').on('shown.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var questionId = button.attr('data-id');
+
+                var currentQuestionValueElement = $('#questionText_' + questionId);
+                var currentTimeStampValueElement = $('#questionTimeStamp_' + questionId);
+
+                var editQuestionTextInput = $('#editQuestionTextInput');
+                var editTimeStampInput = $('#editTimeStampInput');
+                var editQuestionId = $('#editQuestionId');
+
+                editQuestionTextInput.val(currentQuestionValueElement.text());
+                editTimeStampInput.val(currentTimeStampValueElement.text());
+                editQuestionId.val(questionId);
+
+
+            });
+
+
+            //$('#questionContainer').on('click', '.editQuestionButton', function (event) {
+            //    var button = $(event.currentTarget);
+            //    var questionId = button.attr('data-id');
+
+            //    var currentQuestionValueElement = $('#questionText_' + questionId);
+            //    var currentTimeStampValueElement = $('#questionTimeStamp_' + questionId);
+
+      
+
+
+            //});
+        });
+    </script>
 }
