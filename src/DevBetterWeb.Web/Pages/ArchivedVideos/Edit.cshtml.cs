@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,9 +19,9 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     public class EditModel : PageModel
     {
         private readonly IRepository _repository;
-        private readonly Infrastructure.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public EditModel(IRepository repository, Infrastructure.Data.AppDbContext context)
+        public EditModel(IRepository repository, AppDbContext context)
         {
             _repository = repository;
             _context = context;
@@ -55,8 +56,6 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             {
                 return NotFound();
             }
-
-            //var archiveVideoEntity = _repository.GetById<ArchiveVideo>(id.Value);
 
             var archiveVideoEntity = await _context.ArchiveVideos.AsNoTracking()
                 .Include(v => v.Questions)
