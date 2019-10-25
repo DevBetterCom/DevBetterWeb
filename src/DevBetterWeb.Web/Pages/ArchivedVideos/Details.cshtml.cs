@@ -69,13 +69,15 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             }
 
             string videoUrl = _configuration["videoUrlPrefix"] + archiveVideoEntity.VideoUrl;
+
             ArchiveVideoDetails = new ArchiveVideoDetailsDTO
             {
                 DateCreated = archiveVideoEntity.DateCreated,
                 ShowNotes = archiveVideoEntity.ShowNotes,
                 Title = archiveVideoEntity.Title,
-                VideoUrl = videoUrl                
-        };
+                VideoUrl = videoUrl,
+                Id = archiveVideoEntity.Id
+            };
 
             ArchiveVideoDetails.Questions.AddRange(
                 archiveVideoEntity.Questions
