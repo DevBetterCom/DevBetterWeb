@@ -1,16 +1,19 @@
-﻿@model UserViewModel
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.UserModel
+@{
+    ViewData["Title"] = "User";
+}
+
 
 <h3>Edit User</h3>
 
 
-<div class="row mb-3">
-    <div class="col-4">
-        <div class="border bg-light  p-2">
-            <b>User Name</b>
-        </div>
-        <div class="border border-top-0 p-2">
-            @Model.User.UserName - @Model.User.Email
-        </div>
+<div class="mb-3">
+    <div class="border bg-light  p-2">
+        <b>User</b>
+    </div>
+    <div class="border border-top-0 p-2">
+        @Model.IdentityUser.UserName - @Model.IdentityUser.Email
     </div>
 </div>
 
@@ -31,9 +34,11 @@
             @foreach (var role in Model.Roles)
             {
                 <div class="d-flex mb-2 border p-2 bg-light">
-                    <div class="pt-1"> @role.Name</div>
+                    <div class="pt-1">
+                        <a asp-page="./Role" asp-route-roleId="@role.Id">@role.Name</a>
+                    </div>
                     <div class="ml-auto">
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#removeRoleModal" data-roleId="@role.Id" data-userId="@Model.User.Id" data-roleName="@role.Name">Remove</button>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#removeRoleModal" data-roleId="@role.Id" data-userId="@Model.IdentityUser.Id" data-roleName="@role.Name">Remove</button>
                     </div>
                 </div>
             }
@@ -45,8 +50,8 @@
 <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form asp-action="AddUserToRole">
-                <input type="hidden" name="userId" value="@Model.User.Id" />
+            <form asp-page-handler="AddUserToRole">
+                <input type="hidden" name="userId" value="@Model.IdentityUser.Id" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add Role</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -72,8 +77,8 @@
 <div class="modal fade" id="removeRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form asp-action="RemoveUserFromRole">
-                <input type="hidden" name="userId" value="@Model.User.Id" />
+            <form asp-page-handler="RemoveUserFromRole">
+                <input type="hidden" name="userId" value="@Model.IdentityUser.Id" />
                 <input type="hidden" name="roleId" id="hidRemoveRoleId" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Remove Role From User</h5>
@@ -98,6 +103,6 @@
     </div>
 </div>
 
-@section scripts{ 
+@section scripts{
     <script src="~/js/admin.js" asp-append-version="true"></script>
 }
