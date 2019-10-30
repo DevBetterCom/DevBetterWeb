@@ -15,6 +15,24 @@ footer p {
     font-size: 0.9em;
 }
 
+.github-corner {
+    border-bottom: 0;
+    position: fixed;
+    right: 0;
+    text-decoration: none;
+    top: 0;
+    z-index: 1;
+  }
+.github-corner:hover .octo-arm {
+-webkit-animation: octocat-wave 560ms ease-in-out;
+        animation: octocat-wave 560ms ease-in-out;
+}
+.github-corner svg {
+color: #fff;
+fill: var(--theme-color, #42b983);
+height: 80px;
+width: 80px;
+}
 
 .circle-image {
     border-radius: 50px;
