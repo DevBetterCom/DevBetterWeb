@@ -34,6 +34,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
     <PackageReference Include="TagHelperSamples.Authorization" Version="2.0.37" />
     <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.2.4" />
+    <!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>
