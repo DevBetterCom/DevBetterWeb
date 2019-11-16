@@ -29,7 +29,10 @@ namespace DevBetterWeb.Web.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("DefaultConnectionString")));
 
-                services.AddIdentity<ApplicationUser, IdentityRole>()
+                services.AddIdentity<ApplicationUser, IdentityRole>(x => 
+                        { x.SignIn.RequireConfirmedEmail = true; }
+                        
+                        )                    
                     .AddEntityFrameworkStores<IdentityDbContext>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddDefaultTokenProviders();
