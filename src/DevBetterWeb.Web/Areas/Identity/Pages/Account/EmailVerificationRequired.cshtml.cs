@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 {
-    public class RegistrationSuccessModel : PageModel
+    public class EmailVerificationRequiredModel : PageModel
     {
         public void OnGet()
         {

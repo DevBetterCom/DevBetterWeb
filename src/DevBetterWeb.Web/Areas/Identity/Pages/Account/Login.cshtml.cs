@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text.Encodings.Web;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 {
@@ -17,11 +19,15 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailSender emailSender, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            this._userManager = userManager;
+            this._emailSender = emailSender;
             _logger = logger;
         }
 
@@ -77,8 +83,32 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    
+                    
+                }
+                if (result.IsNotAllowed)
+                {
+                    var user = _userManager.Users.First(x => x.Email == Input.Email);
+                    if (!user.EmailConfirmed)
+                    {
+                        _logger.LogInformation("User logged in, but email has not been confirmed.");
+
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { userId = user.Id, code = code },
+                            protocol: Request.Scheme);
+
+                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        //await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect("~/Identity/Account/EmailVerificationRequired");
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
                 }
                 if (result.RequiresTwoFactor)
                 {
