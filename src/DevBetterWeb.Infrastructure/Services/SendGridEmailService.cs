@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -7,11 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Web.Services
+namespace DevBetterWeb.Infrastructure.Services
 {
-    public class SendGridEmailSender : IEmailSender
+    public class SendGridEmailService : IEmailService
     {
-        public SendGridEmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor)
+        public SendGridEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
             Options = optionsAccessor.Value;
         }

@@ -1,4 +1,4 @@
-﻿namespace DevBetterWeb.Web.Services
+﻿namespace DevBetterWeb.Infrastructure.Services
 {
     public class AuthMessageSenderOptions
     {

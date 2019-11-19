@@ -15,7 +15,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using DevBetterWeb.Web.Services;
+using DevBetterWeb.Infrastructure.Services;
 
 namespace DevBetterWeb.Web
 {
@@ -82,7 +82,7 @@ namespace DevBetterWeb.Web
             });
 
             services.AddScoped<IRepository, EfRepository>();
-            services.AddTransient<IEmailSender, SendGridEmailSender>();
+            services.AddTransient<IEmailService, SendGridEmailService>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             return BuildDependencyInjectionProvider(services);
