@@ -83,8 +83,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    
-                    
+                    return LocalRedirect(returnUrl);
                 }
                 if (result.IsNotAllowed)
                 {

@@ -40,7 +40,7 @@ namespace DevBetterWeb.Infrastructure.Services
             // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
             msg.SetClickTracking(false, false);
 
-            return client.SendEmailAsync(msg);
+             return client.SendEmailAsync(msg);
         }
     }
 }
