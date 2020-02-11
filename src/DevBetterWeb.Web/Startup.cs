@@ -6,25 +6,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Reflection;
 using DevBetterWeb.Infrastructure;
 using Autofac;
+using Microsoft.OpenApi.Models;
 
 namespace DevBetterWeb.Web
 {
     public class Startup
     {
         private bool _isDbContextAdded = false;
-        private readonly ILogger<Startup> _logger;
 
-        public Startup(IConfiguration config,
-            ILogger<Startup> logger)
+        public Startup(IConfiguration config)
         {
             Configuration = config;
-            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -32,10 +28,8 @@ namespace DevBetterWeb.Web
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-            _logger.LogInformation("Configuring Production Services");
             if (!_isDbContextAdded)
             {
-                _logger.LogInformation("Adding real sql server dbContext");
 
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
@@ -57,7 +51,6 @@ namespace DevBetterWeb.Web
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
             {
-                _logger.LogInformation("Adding in localDb dbContext");
                 string dbName = Guid.NewGuid().ToString();
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
@@ -74,7 +67,7 @@ namespace DevBetterWeb.Web
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
             services.AddScoped<IRepository, EfRepository>();

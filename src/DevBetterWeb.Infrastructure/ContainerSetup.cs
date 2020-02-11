@@ -12,25 +12,25 @@ namespace DevBetterWeb.Infrastructure
 {
     public static class ContainerSetup
     {
-        public static IServiceProvider InitializeWeb(Assembly webAssembly, IServiceCollection services) =>
-            new AutofacServiceProvider(BaseAutofacInitialization(setupAction =>
-            {
-                setupAction.Populate(services);
-                setupAction.RegisterAssemblyTypes(webAssembly).AsImplementedInterfaces();
-            }));
+        //public static IServiceProvider InitializeWeb(Assembly webAssembly, IServiceCollection services) =>
+        //    new AutofacServiceProvider(BaseAutofacInitialization(setupAction =>
+        //    {
+        //        setupAction.Populate(services);
+        //        setupAction.RegisterAssemblyTypes(webAssembly).AsImplementedInterfaces();
+        //    }));
 
-        public static IContainer BaseAutofacInitialization(Action<ContainerBuilder> setupAction = null)
-        {
-            var builder = new ContainerBuilder();
+        //public static IContainer BaseAutofacInitialization(Action<ContainerBuilder> setupAction = null)
+        //{
+        //    var builder = new ContainerBuilder();
 
-            var coreAssembly = Assembly.GetAssembly(typeof(Question));
-            var infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository));
-            //var sharedKernelAssembly = Assembly.GetAssembly(typeof(IRepository));
-            builder.RegisterAssemblyTypes(coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
+        //    var coreAssembly = Assembly.GetAssembly(typeof(Question));
+        //    var infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository));
+        //    //var sharedKernelAssembly = Assembly.GetAssembly(typeof(IRepository));
+        //    builder.RegisterAssemblyTypes(coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
 
-            setupAction?.Invoke(builder);
-            return builder.Build();
-        }
+        //    setupAction?.Invoke(builder);
+        //    return builder.Build();
+        //}
 
         public static void InitializeAutofac(this ContainerBuilder builder, Assembly webAssembly)
         {
@@ -40,7 +40,7 @@ namespace DevBetterWeb.Infrastructure
             builder.RegisterAssemblyTypes(webAssembly, coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
 
             //setupAction?.Invoke(builder);
-            builder.Build();
+            //builder.Build();
 
         }
     }
