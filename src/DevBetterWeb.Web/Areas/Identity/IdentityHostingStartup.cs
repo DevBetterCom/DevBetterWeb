@@ -31,7 +31,6 @@ namespace DevBetterWeb.Web.Areas.Identity
 
                 services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDbContext>()
-                    .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddDefaultTokenProviders();
 
                 services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,

@@ -1,19 +1,17 @@
 ﻿using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using System.Reflection;
+using DevBetterWeb.Infrastructure;
+using Autofac;
 
 namespace DevBetterWeb.Web
 {
@@ -30,8 +28,9 @@ namespace DevBetterWeb.Web
         }
 
         public IConfiguration Configuration { get; }
+        public ILifetimeScope AutofacContainer { get; private set; }
 
-        public IServiceProvider ConfigureProductionServices(IServiceCollection services)
+        public void ConfigureProductionServices(IServiceCollection services)
         {
             _logger.LogInformation("Configuring Production Services");
             if (!_isDbContextAdded)
@@ -43,10 +42,10 @@ namespace DevBetterWeb.Web
                         .GetConnectionString("ProductionConnectionString")));
                 _isDbContextAdded = true;
             }
-            return ConfigureServices(services);
+            ConfigureServices(services);
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -68,7 +67,6 @@ namespace DevBetterWeb.Web
 
             services.AddMvc()
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AuthorizeFolder("/ArchivedVideos");
@@ -80,47 +78,19 @@ namespace DevBetterWeb.Web
             });
 
             services.AddScoped<IRepository, EfRepository>();
-
-            return BuildDependencyInjectionProvider(services);
         }
 
-        private static IServiceProvider BuildDependencyInjectionProvider(IServiceCollection services)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
-
-            // Populate the container using the service collection
-            builder.Populate(services);
-
-            Assembly webAssembly = Assembly.GetExecutingAssembly();
-            Assembly coreAssembly = Assembly.GetAssembly(typeof(BaseEntity));
-            Assembly infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository)); // TODO: Move to Infrastucture Registry
-
-            // consider replacing with AppDomain.CurrentDomain.GetAssemblies()
-            Assembly[] assemblies = new Assembly[] { webAssembly, coreAssembly, infrastructureAssembly };
-
-            builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
-
-            // register domain event handlers
-            builder.RegisterAssemblyTypes(assemblies)
-                .AsClosedTypesOf(typeof(IHandle<>))
-                .InstancePerLifetimeScope();
-
-            // register container with itself so it can be passed to DomainEventDispatcher
-            //IContainer applicationContainer = null;
-            //builder.Register(c => applicationContainer).AsSelf();
-            //applicationContainer = builder.Build();
-
-            var container = builder.Build();
-            return new AutofacServiceProvider(container);
+            builder.InitializeAutofac(Assembly.GetExecutingAssembly());
         }
 
         public void Configure(IApplicationBuilder app,
-            IHostingEnvironment env)
+            IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -131,6 +101,8 @@ namespace DevBetterWeb.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             //app.UseCookiePolicy();
+
+            app.UseRouting();
 
             app.UseAuthentication();
 
@@ -143,7 +115,12 @@ namespace DevBetterWeb.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            app.UseMvcWithDefaultRoute();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

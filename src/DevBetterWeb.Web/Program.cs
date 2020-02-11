@@ -1,10 +1,12 @@
-﻿using DevBetterWeb.Infrastructure.Data;
+﻿using Autofac.Extensions.DependencyInjection;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -16,10 +18,10 @@ namespace DevBetterWeb.Web
     {
         public static async Task Main(string[] args)
         {
-            var builder = CreateWebHostBuilder(args);
+            var builder = CreateHostBuilder(args);
 
             string env = "Development";
-            if(args.Any())
+            if (args.Any())
             {
                 env = args[0];
             }
@@ -35,7 +37,7 @@ namespace DevBetterWeb.Web
             host.Run();
         }
 
-        private static async Task SeedDatabase(IWebHost host)
+        private static async Task SeedDatabase(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -74,13 +76,16 @@ namespace DevBetterWeb.Web
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost
-                .CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseKestrel(options =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    options.Limits.MaxRequestBodySize = Constants.MAX_UPLOAD_FILE_SIZE; //500MB
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Limits.MaxRequestBodySize = Constants.MAX_UPLOAD_FILE_SIZE; // 500MB
+                    })
+                    .UseStartup<Startup>();
                 });
-        }
+    }
 }
