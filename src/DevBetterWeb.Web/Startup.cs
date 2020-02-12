@@ -87,6 +87,7 @@ namespace DevBetterWeb.Web
             }
             else
             {
+                throw new Exception("Not in dev mode: " + env.EnvironmentName);
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }

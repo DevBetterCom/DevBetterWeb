@@ -2,11 +2,13 @@
 using Autofac.Extensions.DependencyInjection;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure
 {
@@ -42,6 +44,14 @@ namespace DevBetterWeb.Infrastructure
             //setupAction?.Invoke(builder);
             //builder.Build();
 
+        }
+    }
+
+    public class NoEmailSender : IEmailSender
+    {
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            await Task.CompletedTask;
         }
     }
 }
