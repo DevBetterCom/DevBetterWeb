@@ -20,7 +20,7 @@ namespace DevBetterWeb.Infrastructure.Services
         {
             var response = await Execute(Options.SendGridKey, subject, message, email);
 
-            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+            if(response.StatusCode != System.Net.HttpStatusCode.Accepted)
             {
                 // log or throw
                 throw new Exception("Could not send email: " + await response.Body.ReadAsStringAsync());
@@ -32,7 +32,7 @@ namespace DevBetterWeb.Infrastructure.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("admin@DevBetter.com", "Admin"),
+                From = new EmailAddress("donotreply@devbetter.com", "devBetter Admin"),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
