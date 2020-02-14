@@ -11,6 +11,7 @@ using System.Reflection;
 using DevBetterWeb.Infrastructure;
 using Autofac;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevBetterWeb.Web
 {
@@ -43,7 +44,6 @@ namespace DevBetterWeb.Web
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -59,11 +59,11 @@ namespace DevBetterWeb.Web
             }
 
             services.AddMvc()
-                .AddControllersAsServices()
-                .AddRazorPagesOptions(options =>
-                {
-                    options.Conventions.AuthorizeFolder("/ArchivedVideos");
-                });
+                .AddControllersAsServices();
+                //.AddRazorPagesOptions(options =>
+                //{
+                //    options.Conventions.AuthorizeFolder("/ArchivedVideos");
+                //});
 
             services.AddSwaggerGen(c =>
             {
@@ -87,7 +87,6 @@ namespace DevBetterWeb.Web
             }
             else
             {
-                throw new Exception("Not in dev mode: " + env.EnvironmentName);
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
@@ -99,16 +98,13 @@ namespace DevBetterWeb.Web
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
 
             app.UseEndpoints(endpoints =>
             {

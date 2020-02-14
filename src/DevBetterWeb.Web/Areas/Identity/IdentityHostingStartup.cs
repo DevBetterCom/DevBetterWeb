@@ -2,29 +2,19 @@
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
 namespace DevBetterWeb.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
-        //private readonly ILogger<IdentityHostingStartup> _logger;
-
-        //public IdentityHostingStartup(ILogger<IdentityHostingStartup> logger)
-        //{
-        //    _logger = logger;
-        //}
-
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) =>
             {
-                //_logger.LogInformation("Configuring Local DB for IDENTITY");
                 services.AddDbContext<IdentityDbContext>(options =>
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -32,6 +22,13 @@ namespace DevBetterWeb.Web.Areas.Identity
                 services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDbContext>()
                     .AddDefaultTokenProviders();
+
+                services.ConfigureApplicationCookie(options =>
+                {
+                    options.LoginPath = $"/Identity/Account/Login";
+                    options.LogoutPath = $"/Identity/Account/Logout";
+                    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                });
 
                 services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
                     UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>>();

@@ -10,12 +10,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="appsettings.development.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="appsettings.development.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">
@@ -32,6 +26,7 @@
     <PackageReference Include="Autofac" Version="5.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
@@ -49,14 +44,6 @@
     <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
     <ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
   </ItemGroup>
-
-  <!--<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="dotnet bundle" />
-  </Target>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391" />
-  </ItemGroup>-->
 
   <ItemGroup>
     <Content Update="Pages\_ViewImports.cshtml">
