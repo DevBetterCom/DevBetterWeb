@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Infrastructure;
 using Autofac;
 using Microsoft.OpenApi.Models;
@@ -71,6 +73,8 @@ namespace DevBetterWeb.Web
             });
 
             services.AddScoped<IRepository, EfRepository>();
+            services.AddTransient<IEmailService, SendGridEmailService>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
