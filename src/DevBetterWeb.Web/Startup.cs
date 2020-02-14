@@ -50,6 +50,8 @@ namespace DevBetterWeb.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
+
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
             {
