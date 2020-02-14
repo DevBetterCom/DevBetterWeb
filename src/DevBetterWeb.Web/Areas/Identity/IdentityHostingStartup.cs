@@ -17,7 +17,7 @@ namespace DevBetterWeb.Web.Areas.Identity
             {
                 services.AddDbContext<IdentityDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("DefaultConnectionString")));
+                        context.Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddIdentity<ApplicationUser, IdentityRole>(x => 
                         { x.SignIn.RequireConfirmedEmail = true; }
