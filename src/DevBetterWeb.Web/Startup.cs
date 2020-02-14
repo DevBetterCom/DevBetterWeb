@@ -58,7 +58,7 @@ namespace DevBetterWeb.Web
                 string dbName = Guid.NewGuid().ToString();
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("DefaultConnectionString")));
+                        .GetConnectionString("DefaultConnection")));
                 _isDbContextAdded = true;
             }
 
