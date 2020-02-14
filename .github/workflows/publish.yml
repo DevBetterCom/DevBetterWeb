@@ -4,7 +4,10 @@ env:
   AZURE_WEBAPP_NAME: devbetter2
   AZURE_GROUP_NAME: devbetter2-resourcegroup
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build-and-deploy:
@@ -19,7 +22,7 @@ jobs:
         dotnet-version: 3.1.101
     
     - name: Build and test
-      run: dotnet build --configuration Release
+      run: dotnet test --configuration Release
     - name: publish
       run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
     
