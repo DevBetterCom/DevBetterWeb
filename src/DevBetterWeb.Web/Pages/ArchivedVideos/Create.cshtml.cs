@@ -149,12 +149,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 }
                 catch (StorageException ex)
                 {
-                    throw;
-
-                    return false;
-                }
-                finally
-                {
+                    throw new Exception("Error uploading file.", ex);
                 }
             }
             else
