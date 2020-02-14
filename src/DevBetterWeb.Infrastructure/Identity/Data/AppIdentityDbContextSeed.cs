@@ -1,7 +1,7 @@
 ﻿using DevBetterWeb.Web.Areas.Identity.Data;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Areas.Identity
 {
