@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.Admin
 {
@@ -27,8 +28,8 @@ namespace DevBetterWeb.Web.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync()
         {
-           Users = _userManager.Users.ToList();
-           Roles = _roleManager.Roles.ToList();
+           Users = await _userManager.Users.ToListAsync();
+           Roles = await _roleManager.Roles.ToListAsync();
 
             return Page();
         }

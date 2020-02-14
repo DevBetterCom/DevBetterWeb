@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace DevBetterWeb.Core.Interfaces
 {
+    // TODO: Make async
     public interface IRepository
     {
         T GetById<T>(int id) where T : BaseEntity;
