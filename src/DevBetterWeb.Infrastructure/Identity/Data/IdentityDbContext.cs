@@ -25,6 +25,8 @@ namespace DevBetterWeb.Web.Models
             builder.Entity<ApplicationUser>().Property(x => x.OtherUrl).HasMaxLength(200);
             builder.Entity<ApplicationUser>().Property(x => x.TwitchUrl).HasMaxLength(200);
             builder.Entity<ApplicationUser>().Property(x => x.TwitterUrl).HasMaxLength(200);
+            builder.Entity<ApplicationUser>().Property(x => x.FirstName).HasMaxLength(100);
+            builder.Entity<ApplicationUser>().Property(x => x.LastName).HasMaxLength(100);
 
 
         }
