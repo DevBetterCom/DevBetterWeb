@@ -28,6 +28,7 @@
 
                     <div class="form-group">
                         <label class="font-weight-bold">Address</label>
+                        <span class="text-primary small">Only administrators can view this information</span>
                         <textarea asp-for="UserProfileUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.Address</textarea>
                     </div>
 
@@ -48,31 +49,37 @@
                     <div class="form-group">
                         <label class="font-weight-bold">Blog</label>
                         <input type="text" asp-for="UserProfileUpdateModel.BlogUrl" value="@Model.UserProfileUpdateModel.BlogUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.BlogUrl" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Github</label>
                         <input type="text" asp-for="UserProfileUpdateModel.GithubUrl" value="@Model.UserProfileUpdateModel.GithubUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.GithubUrl" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">LinkedIn</label>
                         <input type="text" asp-for="UserProfileUpdateModel.LinkedInUrl" value="@Model.UserProfileUpdateModel.LinkedInUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.LinkedInUrl" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Twitter</label>
                         <input type="text" asp-for="UserProfileUpdateModel.TwitterUrl" value="@Model.UserProfileUpdateModel.TwitterUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.TwitterUrl" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Twitch</label>
                         <input type="text" asp-for="UserProfileUpdateModel.TwitchUrl" value="@Model.UserProfileUpdateModel.TwitchUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.TwitchUrl" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Other</label>
                         <input type="text" asp-for="UserProfileUpdateModel.OtherUrl" value="@Model.UserProfileUpdateModel.OtherUrl" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.OtherUrl" class="text-danger"></span>
                     </div>
                 </div>
             </div>
