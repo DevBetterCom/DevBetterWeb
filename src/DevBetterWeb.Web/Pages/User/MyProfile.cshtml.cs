@@ -18,14 +18,14 @@ namespace DevBetterWeb.Web.Pages.User
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
 
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+            private readonly UserManager<ApplicationUser> _userManager;
+            private readonly RoleManager<IdentityRole> _roleManager;
 
-        public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-        }
+            public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+            {
+                this._userManager = userManager;
+                this._roleManager = roleManager;
+            }
 
        
 
