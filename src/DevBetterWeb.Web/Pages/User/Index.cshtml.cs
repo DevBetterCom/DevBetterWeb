@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.User
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
