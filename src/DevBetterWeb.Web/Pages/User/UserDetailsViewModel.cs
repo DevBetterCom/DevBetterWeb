@@ -1,4 +1,4 @@
-﻿using DevBetterWeb.Infrastructure.Identity.Data;
+﻿using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using System;
 using System.Collections.Generic;
@@ -23,16 +23,16 @@ namespace DevBetterWeb.Web.Pages.User
 
         }
 
-        public UserDetailsViewModel(ApplicationUser applicationUser)
+        public UserDetailsViewModel(Member member)
         {
-            BlogUrl = applicationUser.BlogUrl;
-            TwitchUrl = applicationUser.TwitchUrl;
-            TwitterUrl = applicationUser.TwitterUrl;
-            GithubUrl = applicationUser.GithubUrl;
-            LinkedInUrl = applicationUser.LinkedInUrl;
-            OtherUrl = applicationUser.OtherUrl;
-            AboutInfo = applicationUser.AboutInfo;
-            Name = applicationUser.UserFullName();
+            BlogUrl = member.BlogUrl;
+            TwitchUrl = member.TwitchUrl;
+            TwitterUrl = member.TwitterUrl;
+            GithubUrl = member.GithubUrl;
+            LinkedInUrl = member.LinkedInUrl;
+            OtherUrl = member.OtherUrl;
+            AboutInfo = member.AboutInfo;
+            Name = member.UserFullName();
         }
     }
 }

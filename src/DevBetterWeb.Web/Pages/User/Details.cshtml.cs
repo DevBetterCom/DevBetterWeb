@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,11 +17,13 @@ namespace DevBetterWeb.Web.Pages.User
         public UserDetailsViewModel UserDetailsViewModel { get; set; }
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _appDbContext;
 
-        public DetailsModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public DetailsModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
+            this._appDbContext = appDbContext;
         }
 
         public async Task OnGet(string id)
@@ -31,7 +34,15 @@ namespace DevBetterWeb.Web.Pages.User
                 BadRequest();
             }
 
-            UserDetailsViewModel = new UserDetailsViewModel(user);
+            var member = _appDbContext.Members.FirstOrDefault(x => x.UserId == user.Id);
+
+            if (member == null)
+            {
+                BadRequest();
+
+            }
+
+            UserDetailsViewModel = new UserDetailsViewModel(member);
         }
     }
 }

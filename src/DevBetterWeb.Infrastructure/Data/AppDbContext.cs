@@ -21,10 +21,21 @@ namespace DevBetterWeb.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Question>().ToTable("Question");
+            modelBuilder.Entity<Member>().Property(x => x.Address).HasMaxLength(500);
+            modelBuilder.Entity<Member>().Property(x => x.BlogUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.GithubUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.LinkedInUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.OtherUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.TwitchUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.TwitterUrl).HasMaxLength(200);
+            modelBuilder.Entity<Member>().Property(x => x.FirstName).HasMaxLength(100);
+            modelBuilder.Entity<Member>().Property(x => x.LastName).HasMaxLength(100);
+            modelBuilder.Entity<Member>().HasKey(x => x.UserId);
         }
 
         public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         public override int SaveChanges()
         {

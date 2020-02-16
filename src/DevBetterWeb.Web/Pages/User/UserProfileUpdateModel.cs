@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Web.Areas.Identity.Data;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Web.Areas.Identity.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -33,18 +34,18 @@ namespace DevBetterWeb.Web.Pages.User
 
         }
 
-        public UserProfileUpdateModel(ApplicationUser applicationUser)
+        public UserProfileUpdateModel(Member member)
         {
-            BlogUrl = applicationUser.BlogUrl;
-            TwitchUrl = applicationUser.TwitchUrl;
-            TwitterUrl = applicationUser.TwitterUrl;
-            GithubUrl = applicationUser.GithubUrl;
-            LinkedInUrl = applicationUser.LinkedInUrl;
-            OtherUrl = applicationUser.OtherUrl;
-            AboutInfo = applicationUser.AboutInfo;
-            FirstName = applicationUser.FirstName;
-            LastName = applicationUser.LastName;
-            Address = applicationUser.Address;
+            BlogUrl = member.BlogUrl;
+            TwitchUrl = member.TwitchUrl;
+            TwitterUrl = member.TwitterUrl;
+            GithubUrl = member.GithubUrl;
+            LinkedInUrl = member.LinkedInUrl;
+            OtherUrl = member.OtherUrl;
+            AboutInfo = member.AboutInfo;
+            FirstName = member.FirstName;
+            LastName = member.LastName;
+            Address = member.Address;
         }
     }
 }

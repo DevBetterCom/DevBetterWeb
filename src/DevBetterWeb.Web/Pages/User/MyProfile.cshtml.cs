@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,12 +21,14 @@ namespace DevBetterWeb.Web.Pages.User
 
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly RoleManager<IdentityRole> _roleManager;
+            private readonly AppDbContext _appDbContext;
 
-            public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
             {
                 this._userManager = userManager;
                 this._roleManager = roleManager;
-            }
+                this._appDbContext = appDbContext;
+        }
 
        
 
@@ -34,7 +37,16 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            UserProfileUpdateModel = new UserProfileUpdateModel(applicationUser);
+            var member = _appDbContext.Members.FirstOrDefault(x => x.UserId == applicationUser.Id);
+
+            if (member == null)
+            {
+                member = new Core.Entities.Member() { UserId = applicationUser.Id };
+                _appDbContext.Members.Add(member);
+                _appDbContext.SaveChanges();
+            }
+
+            UserProfileUpdateModel = new UserProfileUpdateModel(member);
         }
 
         public async Task OnPost()
@@ -48,20 +60,20 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-           
+            var member = _appDbContext.Members.First(x => x.UserId == applicationUser.Id);
 
-            applicationUser.FirstName = UserProfileUpdateModel.FirstName;
-            applicationUser.LastName = UserProfileUpdateModel.LastName;
-            applicationUser.AboutInfo = UserProfileUpdateModel.AboutInfo;
-            applicationUser.Address = UserProfileUpdateModel.Address;
-            applicationUser.BlogUrl = UserProfileUpdateModel.BlogUrl;
-            applicationUser.GithubUrl = UserProfileUpdateModel.GithubUrl;
-            applicationUser.LinkedInUrl = UserProfileUpdateModel.LinkedInUrl;
-            applicationUser.TwitterUrl = UserProfileUpdateModel.TwitterUrl;
-            applicationUser.TwitchUrl = UserProfileUpdateModel.TwitchUrl;
-            applicationUser.OtherUrl = UserProfileUpdateModel.OtherUrl;
+            member.FirstName = UserProfileUpdateModel.FirstName;
+            member.LastName = UserProfileUpdateModel.LastName;
+            member.AboutInfo = UserProfileUpdateModel.AboutInfo;
+            member.Address = UserProfileUpdateModel.Address;
+            member.BlogUrl = UserProfileUpdateModel.BlogUrl;
+            member.GithubUrl = UserProfileUpdateModel.GithubUrl;
+            member.LinkedInUrl = UserProfileUpdateModel.LinkedInUrl;
+            member.TwitterUrl = UserProfileUpdateModel.TwitterUrl;
+            member.TwitchUrl = UserProfileUpdateModel.TwitchUrl;
+            member.OtherUrl = UserProfileUpdateModel.OtherUrl;
 
-            await _userManager.UpdateAsync(applicationUser);
+            _appDbContext.SaveChanges();
         }
     }
 }

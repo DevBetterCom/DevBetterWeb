@@ -18,15 +18,7 @@ namespace DevBetterWeb.Web.Models
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>().Property(x => x.Address).HasMaxLength(500);
-            builder.Entity<ApplicationUser>().Property(x => x.BlogUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.GithubUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.LinkedInUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.OtherUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.TwitchUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.TwitterUrl).HasMaxLength(200);
-            builder.Entity<ApplicationUser>().Property(x => x.FirstName).HasMaxLength(100);
-            builder.Entity<ApplicationUser>().Property(x => x.LastName).HasMaxLength(100);
+          
 
 
         }
