@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200217041536_UpdateMember")]
-    partial class UpdateMember
+    [Migration("20200218011305_MemberEntity")]
+    partial class MemberEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,7 +95,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 

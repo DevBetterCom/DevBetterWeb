@@ -8,6 +8,7 @@ namespace DevBetterWeb.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Member> builder)
         {
+            builder.Property(x => x.UserId).HasMaxLength(500);
             builder.Property(x => x.Address).HasMaxLength(500);
             builder.Property(x => x.BlogUrl).HasMaxLength(200);
             builder.Property(x => x.GithubUrl).HasMaxLength(200);

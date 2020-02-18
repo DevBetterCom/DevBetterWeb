@@ -93,7 +93,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
