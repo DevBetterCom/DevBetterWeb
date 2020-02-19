@@ -63,7 +63,9 @@ namespace DevBetterWeb.Web
             }
 
             services.AddMvc()
-                .AddControllersAsServices();
+                .AddControllersAsServices()
+                .AddRazorRuntimeCompilation();
+
                 //.AddRazorPagesOptions(options =>
                 //{
                 //    options.Conventions.AuthorizeFolder("/ArchivedVideos");
