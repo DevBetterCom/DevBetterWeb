@@ -19,12 +19,12 @@ namespace DevBetterWeb.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Question>().ToTable("Question");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
         public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         public override int SaveChanges()
         {

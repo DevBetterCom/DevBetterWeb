@@ -1,0 +1,20 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Members</h3>
+
+<table class="table table-sm table-striped">
+    <tbody>
+        @foreach (var userKeyValuePair in Model.UserIdsAndNames)
+        {
+            <tr>
+                <td>@userKeyValuePair.Value</td>
+                <td><a class="btn btn-primary btn-sm" asp-page="Details" asp-route-id="@userKeyValuePair.Key">View</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+

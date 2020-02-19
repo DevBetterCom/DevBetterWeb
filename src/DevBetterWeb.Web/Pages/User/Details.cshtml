@@ -1,0 +1,79 @@
+﻿@page "{id}"
+@model DevBetterWeb.Web.Pages.User.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>@Model.UserDetailsViewModel.Name</h3>
+
+<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <b>Links</b>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlogUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.BlogUrl" target="_blank">Blog</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.GithubUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.GithubUrl" target="_blank">GitHub</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.LinkedInUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.LinkedInUrl" target="_blank">LinkedIn</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitchUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.TwitchUrl" target="_blank">Twitch</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitterUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.TwitterUrl" target="_blank">Twitter</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.OtherUrl" target="_blank">@Model.UserDetailsViewModel.OtherUrl</a>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <b>Info</b>
+            </div>
+            <div class="card-body">
+                <div><b>About</b></div>
+                <div class="card">
+                    <div class="card-body">
+                        @Model.UserDetailsViewModel.AboutInfo
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</div>
