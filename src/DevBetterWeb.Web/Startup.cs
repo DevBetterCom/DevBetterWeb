@@ -66,11 +66,6 @@ namespace DevBetterWeb.Web
                 .AddControllersAsServices()
                 .AddRazorRuntimeCompilation();
 
-                //.AddRazorPagesOptions(options =>
-                //{
-                //    options.Conventions.AuthorizeFolder("/ArchivedVideos");
-                //});
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.Admin
 {
@@ -36,14 +37,14 @@ namespace DevBetterWeb.Web.Pages.Admin
                 NotFound();
             }
 
-            var currentUser = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+            var currentUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             if (currentUser == null)
             {
                 BadRequest();
             }
 
-            var roles = _roleManager.Roles;
+            var roles = await _roleManager.Roles.ToListAsync();
 
             var unassignedRoles = new List<IdentityRole>();
             var assignedRoles = new List<IdentityRole>();
@@ -68,8 +69,8 @@ namespace DevBetterWeb.Web.Pages.Admin
 
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
         {
-            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
-            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
 
             if (user == null || role == null)
             {
@@ -82,8 +83,8 @@ namespace DevBetterWeb.Web.Pages.Admin
 
         public async Task<IActionResult> OnPostRemoveUserFromRole(string userId, string roleId)
         {
-            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
-            var role = _roleManager.Roles.FirstOrDefault(x => x.Id == roleId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
 
             if (user == null || role == null)
             {
