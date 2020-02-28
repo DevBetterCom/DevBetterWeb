@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using DevBetterWeb.Core.Interfaces;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 {
@@ -20,14 +21,14 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailService;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailSender emailSender, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
-            this._userManager = userManager;
-            this._emailSender = emailSender;
+            _userManager = userManager;
+            _emailService = emailService;
             _logger = logger;
         }
 
@@ -99,7 +100,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                             values: new { userId = user.Id, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                         //await _signInManager.SignInAsync(user, isPersistent: false);

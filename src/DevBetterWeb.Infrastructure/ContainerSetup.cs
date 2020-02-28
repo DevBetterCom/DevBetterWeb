@@ -47,11 +47,11 @@ namespace DevBetterWeb.Infrastructure
         }
     }
 
-    public class NoEmailSender : IEmailSender
-    {
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
-            await Task.CompletedTask;
-        }
-    }
+    //public class NoEmailSender : IEmailSender
+    //{
+    //    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+    //    {
+    //        await Task.CompletedTask;
+    //    }
+    //}
 }

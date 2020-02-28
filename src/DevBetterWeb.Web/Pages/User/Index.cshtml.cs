@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
@@ -7,13 +6,12 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-    [Authorize]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
