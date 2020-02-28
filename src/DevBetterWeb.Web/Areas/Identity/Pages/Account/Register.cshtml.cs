@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -17,21 +14,18 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailService emailSender)
+            IEmailService emailService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _logger = logger;
-            _emailService = emailSender;
+            _emailService = emailService;
         }
 
         [BindProperty]
@@ -84,7 +78,6 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                     await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect("~/Identity/Account/EmailVerificationRequired");
                 }
                 foreach (var error in result.Errors)

@@ -36,7 +36,7 @@ namespace DevBetterWeb.Web
 
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("ProductionConnectionString")));
+                        .GetConnectionString("DefaultConnection")));
                 _isDbContextAdded = true;
             }
             ConfigureServices(services);
@@ -82,7 +82,8 @@ namespace DevBetterWeb.Web
         }
 
         public void Configure(IApplicationBuilder app,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            AppDbContext migrationContext)
         {
             if (env.EnvironmentName == "Development")
             {
@@ -114,6 +115,11 @@ namespace DevBetterWeb.Web
                 endpoints.MapRazorPages();
                 endpoints.MapDefaultControllerRoute();
             });
+
+            // run migrations automatically on startup
+            //migrationContext.Database.Migrate();
+            //migrationContext = null;
+
         }
     }
 }
