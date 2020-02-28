@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -34,7 +35,7 @@ namespace DevBetterWeb.Web.Pages.User
                 BadRequest();
             }
 
-            var member = _appDbContext.Members.FirstOrDefault(x => x.UserId == user.Id);
+            var member = await _appDbContext.Members.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
             if (member == null)
             {

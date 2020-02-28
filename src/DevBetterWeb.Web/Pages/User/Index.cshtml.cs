@@ -34,7 +34,7 @@ namespace DevBetterWeb.Web.Pages.User
 
             var userIds = usersInRole.Select(x => x.Id).ToList();
 
-            var members = _appDbContext.Members.AsNoTracking().Where(x => userIds.Contains(x.UserId)).ToList();
+            var members = await _appDbContext.Members.AsNoTracking().Where(x => userIds.Contains(x.UserId)).ToListAsync();
 
             UserIdsAndNames = members
                 .OrderBy(x => x.LastName)

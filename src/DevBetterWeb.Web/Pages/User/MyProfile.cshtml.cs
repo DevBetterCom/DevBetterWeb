@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -37,11 +38,14 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var member = _appDbContext.Members.FirstOrDefault(x => x.UserId == applicationUser.Id);
+            var member = await _appDbContext.Members.FirstOrDefaultAsync(x => x.UserId == applicationUser.Id);
 
             if (member == null)
             {
-                member = new Core.Entities.Member() { UserId = applicationUser.Id };
+                member = new Core.Entities.Member() 
+                { 
+                    UserId = applicationUser.Id
+                };
                 _appDbContext.Members.Add(member);
                 _appDbContext.SaveChanges();
             }

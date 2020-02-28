@@ -1,9 +1,4 @@
 ﻿using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Web.Areas.Identity.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.User
 {
