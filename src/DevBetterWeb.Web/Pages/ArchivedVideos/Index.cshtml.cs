@@ -39,7 +39,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         public async Task OnGetAsync()
         {
-            ArchiveVideoList = _repository.List<ArchiveVideo>() 
+            ArchiveVideoList = (await _repository.ListAsync<ArchiveVideo>()) 
                 .Select(v => new ArchiveVideoIndexDTO
                 {
                     Id = v.Id,
