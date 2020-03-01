@@ -4,6 +4,10 @@
     <AssemblyName>DevBetterWeb.Infrastructure</AssemblyName>
     <PackageId>DevBetterWeb.Infrastructure</PackageId>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />

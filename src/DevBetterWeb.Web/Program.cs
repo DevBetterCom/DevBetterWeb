@@ -34,6 +34,7 @@ namespace DevBetterWeb.Web
             //    await SeedDatabase(host);
             //}
 
+            await Task.Delay(1); // get rid of async Main warning
             host.Run();
         }
 
