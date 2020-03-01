@@ -87,7 +87,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return Page();
             }
 
-            var currentVideoEntity = _repository.GetById<ArchiveVideo>(ArchiveVideoModel.Id);
+            var currentVideoEntity = await _repository.GetByIdAsync<ArchiveVideo>(ArchiveVideoModel.Id);
             if(currentVideoEntity == null)
             {
                 return NotFound();

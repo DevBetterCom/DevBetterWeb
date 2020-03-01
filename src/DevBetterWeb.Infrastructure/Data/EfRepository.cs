@@ -3,6 +3,7 @@ using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Data
 {
@@ -15,9 +16,9 @@ namespace DevBetterWeb.Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public T GetById<T>(int id) where T : BaseEntity
+        public Task<T> GetByIdAsync<T>(int id) where T : BaseEntity
         {
-            return _dbContext.Set<T>().SingleOrDefault(e => e.Id == id);
+            return _dbContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
         public List<T> List<T>() where T : BaseEntity

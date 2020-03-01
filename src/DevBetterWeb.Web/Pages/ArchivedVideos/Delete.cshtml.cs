@@ -46,7 +46,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
+            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
 
             if (archiveVideo == null)
             {
@@ -69,7 +69,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
+            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
 
             if (archiveVideo != null)
             {
