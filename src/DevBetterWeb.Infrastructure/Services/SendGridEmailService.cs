@@ -11,13 +11,15 @@ namespace DevBetterWeb.Infrastructure.Services
     {
         public SendGridEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
-            Options = optionsAccessor.Value;
+            // TODO: Add Guard.AgainstNUll(optionsAccessor.Value)
+            Options = optionsAccessor.Value ?? throw new ArgumentNullException(nameof(optionsAccessor));
         }
 
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
+            if (Options.SendGridKey == null) throw new Exception("SendGridKey not set.");
             var response = await Execute(Options.SendGridKey, subject, message, email);
 
             if(response.StatusCode != System.Net.HttpStatusCode.Accepted)
