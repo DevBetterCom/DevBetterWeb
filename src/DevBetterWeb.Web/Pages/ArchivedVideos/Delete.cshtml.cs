@@ -73,7 +73,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
             if (archiveVideo != null)
             {
-                _repository.Delete(archiveVideo);
+                await _repository.DeleteAsync(archiveVideo);
             }
 
             return RedirectToPage("./Index");

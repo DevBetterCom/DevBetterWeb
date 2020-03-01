@@ -26,24 +26,24 @@ namespace DevBetterWeb.Infrastructure.Data
             return _dbContext.Set<T>().ToListAsync();
         }
 
-        public T Add<T>(T entity) where T : BaseEntity
+        public async Task<T> AddAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return entity;
         }
 
-        public void Delete<T>(T entity) where T : BaseEntity
+        public Task DeleteAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Remove(entity);
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
 
-        public void Update<T>(T entity) where T : BaseEntity
+        public Task UpdateAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

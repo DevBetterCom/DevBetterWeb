@@ -97,7 +97,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             currentVideoEntity.Title = ArchiveVideoModel.Title;
             currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
-            _repository.Update(currentVideoEntity);
+            await _repository.UpdateAsync(currentVideoEntity);
 
             return RedirectToPage("./Index");
         }

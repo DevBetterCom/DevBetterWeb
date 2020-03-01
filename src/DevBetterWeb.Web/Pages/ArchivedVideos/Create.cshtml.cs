@@ -67,7 +67,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 VideoUrl = ""
             };
 
-            _repository.Add(videoEntity);
+            await _repository.AddAsync(videoEntity);
 
             var uploadSuccess = false;
 
@@ -103,7 +103,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             if (uploadSuccess)
             {
                 videoEntity.VideoUrl = fileName;
-                _repository.Update(videoEntity);
+                await _repository.UpdateAsync(videoEntity);
                 return RedirectToPage("/ArchivedVideos/Index");
             }
 
