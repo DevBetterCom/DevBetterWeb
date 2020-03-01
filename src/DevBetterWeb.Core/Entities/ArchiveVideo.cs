@@ -6,10 +6,10 @@ namespace DevBetterWeb.Core.Entities
 {
     public class ArchiveVideo : BaseEntity
     {
-        public string Title { get; set; }
-        public string ShowNotes { get; set; }
+        public string? Title { get; set; }
+        public string? ShowNotes { get; set; }
         public DateTimeOffset DateCreated { get; set; }
-        public string VideoUrl { get; set; }
+        public string? VideoUrl { get; set; }
 
         public List<Question> Questions { get; private set; } = new List<Question>();
 
