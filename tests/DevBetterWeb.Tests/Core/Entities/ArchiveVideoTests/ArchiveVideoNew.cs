@@ -2,9 +2,8 @@
 using System;
 using Xunit;
 
-namespace DevBetterWeb.Tests.Core.Entities
+namespace DevBetterWeb.Tests.Core.Entities.ArchiveVideoTests
 {
-
     public class ArchiveVideoNew
     {
         [Fact]
