@@ -25,18 +25,18 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public int Id { get; set; }
         }
 
-        public ArchiveVideoDeleteDTO ArchiveVideoToDelete { get; set; }
+        public ArchiveVideoDeleteDTO? ArchiveVideoToDelete { get; set; }
 
         public class ArchiveVideoDeleteDTO
         {
             public int Id { get; set; }
-            public string Title { get; set; }
+            public string? Title { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
+            public string? VideoUrl { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -46,7 +46,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
+            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
 
             if (archiveVideo == null)
             {
@@ -69,11 +69,11 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = _repository.GetById<ArchiveVideo>(id.Value);
+            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
 
             if (archiveVideo != null)
             {
-                _repository.Delete(archiveVideo);
+                await _repository.DeleteAsync(archiveVideo);
             }
 
             return RedirectToPage("./Index");

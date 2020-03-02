@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Data;
@@ -13,42 +11,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class MyProfileModel : PageModel
     {
+#nullable disable
         [BindProperty]
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+#nullable enable
 
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AppDbContext _appDbContext;
 
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly RoleManager<IdentityRole> _roleManager;
-            private readonly AppDbContext _appDbContext;
-
-        public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
-            {
-                this._userManager = userManager;
-                this._roleManager = roleManager;
-                this._appDbContext = appDbContext;
+        public MyProfileModel(UserManager<ApplicationUser> userManager, 
+            AppDbContext appDbContext)
+        {
+            _userManager = userManager;
+            _appDbContext = appDbContext;
         }
 
-       
-
-        public async Task OnGet()
+        public async Task OnGetAsync()
         {
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var member = await _appDbContext.Members.FirstOrDefaultAsync(x => x.UserId == applicationUser.Id);
+            var member = await _appDbContext.Members
+                .FirstOrDefaultAsync(member => member.UserId == applicationUser.Id);
 
             if (member == null)
             {
-                member = new Core.Entities.Member() 
-                { 
+                member = new Core.Entities.Member()
+                {
                     UserId = applicationUser.Id
                 };
-                _appDbContext.Members.Add(member);
-                _appDbContext.SaveChanges();
+                _appDbContext.Members!.Add(member);
+                await _appDbContext.SaveChangesAsync();
             }
 
             UserProfileUpdateModel = new UserProfileUpdateModel(member);
@@ -56,17 +52,18 @@ namespace DevBetterWeb.Web.Pages.User
 
         public async Task OnPost()
         {
-
             if (!ModelState.IsValid)
             {
                 return;
             }
-            
+
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var member = _appDbContext.Members.First(x => x.UserId == applicationUser.Id);
+            var member = _appDbContext.Members
+                .First(member => member.UserId == applicationUser.Id);
 
+            // TODO: Replace with AutoMapper or Extension method
             member.FirstName = UserProfileUpdateModel.FirstName;
             member.LastName = UserProfileUpdateModel.LastName;
             member.AboutInfo = UserProfileUpdateModel.AboutInfo;
@@ -78,7 +75,11 @@ namespace DevBetterWeb.Web.Pages.User
             member.TwitchUrl = UserProfileUpdateModel.TwitchUrl;
             member.OtherUrl = UserProfileUpdateModel.OtherUrl;
 
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
+
+            // TODO: Raise event that someone updated profile, so email notification to admins can go out
         }
     }
+
+
 }

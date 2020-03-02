@@ -24,7 +24,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
         private readonly IEmailService _emailService;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IEmailService emailService,
+            ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -32,31 +35,33 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
+#nullable disable
         [BindProperty]
         public InputModel Input { get; set; }
+#nullable enable
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
 
         [TempData]
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public class InputModel
         {
             [Required]
             [EmailAddress]
-            public string Email { get; set; }
+            public string? Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string? Password { get; set; }
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string? returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -73,7 +78,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
@@ -100,6 +105,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                             values: new { userId = user.Id, code = code },
                             protocol: Request.Scheme);
 
+                        if (Input.Email == null) throw new Exception("Email is required.");
                         await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 

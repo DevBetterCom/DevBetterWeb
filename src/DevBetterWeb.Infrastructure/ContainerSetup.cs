@@ -36,9 +36,12 @@ namespace DevBetterWeb.Infrastructure
 
         public static void InitializeAutofac(this ContainerBuilder builder, Assembly webAssembly)
         {
-            var coreAssembly = Assembly.GetAssembly(typeof(Question));
-            var infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository));
+            var coreAssembly = Assembly.GetAssembly(typeof(Question)) ?? throw new Exception("Assembly not found.");
+            var infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository)) ?? throw new Exception("Assembly not found.");
             //var sharedKernelAssembly = Assembly.GetAssembly(typeof(IRepository));
+
+            // Add Guard.AgainstNull for core and infra assemblies
+
             builder.RegisterAssemblyTypes(webAssembly, coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
 
             //setupAction?.Invoke(builder);

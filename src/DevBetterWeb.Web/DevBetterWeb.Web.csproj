@@ -4,11 +4,16 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>DevBetterWeb.Web</AssemblyName>
     <OutputType>Exe</OutputType>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <PackageId>DevBetterWeb.Web</PackageId>
     <UserSecretsId>27d752ff-6567-4d4a-a3c0-1662e9085350</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />
     <PackageReference Include="Sendgrid" Version="9.12.6" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />

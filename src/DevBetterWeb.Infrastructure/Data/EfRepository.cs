@@ -1,8 +1,10 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using Ardalis.Specification;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Data
 {
@@ -15,34 +17,48 @@ namespace DevBetterWeb.Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public T GetById<T>(int id) where T : BaseEntity
+        public Task<T> GetByIdAsync<T>(int id) where T : BaseEntity
         {
-            return _dbContext.Set<T>().SingleOrDefault(e => e.Id == id);
+            return _dbContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public List<T> List<T>() where T : BaseEntity
+        public Task<T> GetBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
         {
-            return _dbContext.Set<T>().ToList();
+            return EfSpecificationEvaluator<T, int>
+                .GetQuery(_dbContext.Set<T>(), spec)
+                .SingleOrDefaultAsync();
         }
 
-        public T Add<T>(T entity) where T : BaseEntity
+        public Task<List<T>> ListAsync<T>() where T : BaseEntity
+        {
+            return _dbContext.Set<T>().ToListAsync();
+        }
+
+        public Task<List<T>> ListBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        {
+            return EfSpecificationEvaluator<T, int>
+                .GetQuery(_dbContext.Set<T>(), spec)
+                .ToListAsync();
+        }
+
+        public async Task<T> AddAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return entity;
         }
 
-        public void Delete<T>(T entity) where T : BaseEntity
+        public Task DeleteAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Remove(entity);
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
 
-        public void Update<T>(T entity) where T : BaseEntity
+        public Task UpdateAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

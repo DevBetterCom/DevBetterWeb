@@ -1,10 +1,10 @@
-﻿@page "{id}"
+﻿@page "{userId}"
 @model DevBetterWeb.Web.Pages.User.DetailsModel
 @{
     ViewData["Title"] = "Details";
 }
 
-<h3>@Model.UserDetailsViewModel.Name</h3>
+<h3>@Model!.UserDetailsViewModel!.Name</h3>
 
 <div class="row">
     <div class="col-6">
