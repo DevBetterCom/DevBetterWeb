@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Data;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.User
@@ -30,9 +26,8 @@ namespace DevBetterWeb.Web.Pages.User
             //    BadRequest();
             //}
 
-            // TODO: Add Specification support for this so we don't pull whole table into memory
-            var member = (await _repository.ListAsync<Member>())
-                .FirstOrDefault(member => member.UserId == userId);
+            var spec = new MemberByUserIdSpec(userId);
+            var member = await _repository.GetBySpecAsync(spec);
 
             if (member == null)
             {
