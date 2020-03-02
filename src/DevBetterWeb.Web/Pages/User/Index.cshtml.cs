@@ -15,21 +15,23 @@ namespace DevBetterWeb.Web.Pages.User
     public class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _appDbContext;
 
         public List<KeyValuePair<string, string>> UserIdsAndNames { get; set; } = new List<KeyValuePair<string, string>>();
 
-        public IndexModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
+        public IndexModel(UserManager<ApplicationUser> userManager, 
+            AppDbContext appDbContext)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._appDbContext = appDbContext;
+            _userManager = userManager;
+            _appDbContext = appDbContext;
         }
+
         public async Task OnGet()
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
 
+            // TODO: Write a LINQ join for this
+            // TODO: See if we can use a specification here
             var userIds = usersInRole.Select(x => x.Id).ToList();
 #nullable disable
             var members = await _appDbContext.Members.AsNoTracking()

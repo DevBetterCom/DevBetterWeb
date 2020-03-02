@@ -14,6 +14,7 @@ using DevBetterWeb.Infrastructure;
 using Autofac;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace DevBetterWeb.Web
 {
@@ -61,6 +62,8 @@ namespace DevBetterWeb.Web
                         .GetConnectionString("DefaultConnection")));
                 _isDbContextAdded = true;
             }
+
+            services.AddMediatR(typeof(Startup).Assembly);
 
             services.AddMvc()
                 .AddControllersAsServices()

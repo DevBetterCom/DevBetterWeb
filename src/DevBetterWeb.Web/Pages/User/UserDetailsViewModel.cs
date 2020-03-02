@@ -15,7 +15,6 @@ namespace DevBetterWeb.Web.Pages.User
 
         public UserDetailsViewModel()
         {
-
         }
 
         public UserDetailsViewModel(Member member)
