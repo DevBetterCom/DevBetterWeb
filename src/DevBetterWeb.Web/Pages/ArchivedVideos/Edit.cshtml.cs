@@ -27,28 +27,28 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             _context = context;
         }
 
+#nullable disable
         [BindProperty]
         public ArchiveVideoEditDTO ArchiveVideoModel { get; set; }
-        public List<Question> Questions { get; set; }
+#nullable enable
+        public List<Question> Questions { get; set; } = new List<Question>();
 
 
         public class ArchiveVideoEditDTO
         {
             public int Id { get; set; }
             [Required]
-            public string Title { get; set; }
+            public string? Title { get; set; }
             [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-            public string ShowNotes { get; set; }
+            public string? ShowNotes { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode =true)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
-
+            public string? VideoUrl { get; set; }
         }
-
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

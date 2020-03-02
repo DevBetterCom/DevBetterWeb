@@ -27,7 +27,7 @@ namespace DevBetterWeb.Web
         }
 
         public IConfiguration Configuration { get; }
-        public ILifetimeScope AutofacContainer { get; private set; }
+        public ILifetimeScope? AutofacContainer { get; private set; }
 
         public void ConfigureProductionServices(IServiceCollection services)
         {

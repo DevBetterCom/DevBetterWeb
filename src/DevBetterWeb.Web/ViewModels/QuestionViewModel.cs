@@ -2,7 +2,7 @@
 {
     public class QuestionViewModel
     {
-        public string QuestionText { get; set; }
+        public string? QuestionText { get; set; }
         public int TimestampSeconds { get; set; }
     }
 }

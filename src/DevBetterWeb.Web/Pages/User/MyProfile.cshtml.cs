@@ -17,22 +17,23 @@ namespace DevBetterWeb.Web.Pages.User
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class MyProfileModel : PageModel
     {
+#nullable disable
         [BindProperty]
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+#nullable enable
 
-
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly RoleManager<IdentityRole> _roleManager;
-            private readonly AppDbContext _appDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _appDbContext;
 
         public MyProfileModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
-            {
-                this._userManager = userManager;
-                this._roleManager = roleManager;
-                this._appDbContext = appDbContext;
+        {
+            this._userManager = userManager;
+            this._roleManager = roleManager;
+            this._appDbContext = appDbContext;
         }
 
-       
+
 
         public async Task OnGet()
         {
@@ -43,8 +44,8 @@ namespace DevBetterWeb.Web.Pages.User
 
             if (member == null)
             {
-                member = new Core.Entities.Member() 
-                { 
+                member = new Core.Entities.Member()
+                {
                     UserId = applicationUser.Id
                 };
                 _appDbContext.Members.Add(member);
@@ -61,7 +62,7 @@ namespace DevBetterWeb.Web.Pages.User
             {
                 return;
             }
-            
+
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 

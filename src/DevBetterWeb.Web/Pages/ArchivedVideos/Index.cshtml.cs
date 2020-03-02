@@ -22,30 +22,30 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             _repository = repository;
         }
 
-        public IList<ArchiveVideoIndexDTO> ArchiveVideoList { get; set; }
+        public IList<ArchiveVideoIndexDTO> ArchiveVideoList { get; set; } = new List<ArchiveVideoIndexDTO>();
 
         public class ArchiveVideoIndexDTO
         {
             public int Id { get; set; }
-            public string Title { get; set; }
+            public string? Title { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
+            public string? VideoUrl { get; set; }
         }
 
         public async Task OnGetAsync()
         {
             ArchiveVideoList = (await _repository.ListAsync<ArchiveVideo>()) 
-                .Select(v => new ArchiveVideoIndexDTO
+                .Select(video => new ArchiveVideoIndexDTO
                 {
-                    Id = v.Id,
-                    DateCreated = v.DateCreated,
-                    Title = v.Title,
-                    VideoUrl = v.VideoUrl
+                    Id = video.Id,
+                    DateCreated = video.DateCreated,
+                    Title = video.Title,
+                    VideoUrl = video.VideoUrl
                 })
                 .ToList();
         }

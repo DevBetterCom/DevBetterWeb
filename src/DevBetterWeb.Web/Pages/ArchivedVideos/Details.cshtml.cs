@@ -29,22 +29,22 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             _configuration = configuration;
         }
 
-        public ArchiveVideoDetailsDTO ArchiveVideoDetails { get; set; }
+        public ArchiveVideoDetailsDTO? ArchiveVideoDetails { get; set; }
         public int? StartTime { get; set; }
 
         public class ArchiveVideoDetailsDTO
         {
             public int Id { get; set; }
             [Required]
-            public string Title { get; set; }
+            public string? Title { get; set; }
             [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-            public string ShowNotes { get; set; }
+            public string? ShowNotes { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
+            public string? VideoUrl { get; set; }
 
             public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
             

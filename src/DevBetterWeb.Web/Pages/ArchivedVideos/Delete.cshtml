@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "Delete";
+    if (Model is null) throw new Exception("Model is null.");
+    if (Model.ArchiveVideoToDelete is null) throw new Exception("ArchiveVideoToDelete is null.");
+
 }
 
 <h2>Delete</h2>
@@ -13,27 +16,27 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete.Title)
+            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete!.Title)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoToDelete.Title)
+            @Html.DisplayFor(model => model.ArchiveVideoToDelete!.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete.DateCreated)
+            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete!.DateCreated)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoToDelete.DateCreated)
+            @Html.DisplayFor(model => model.ArchiveVideoToDelete!.DateCreated)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete.VideoUrl)
+            @Html.DisplayNameFor(model => model.ArchiveVideoToDelete!.VideoUrl)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ArchiveVideoToDelete.VideoUrl)
+            @Html.DisplayFor(model => model.ArchiveVideoToDelete!.VideoUrl)
         </dd>
     </dl>
-    
+
     <form method="post">
-        <input type="hidden" asp-for="ArchiveVideoToDelete.Id" />
+        <input type="hidden" asp-for="ArchiveVideoToDelete!.Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-page="./Index">Back to List</a>
     </form>

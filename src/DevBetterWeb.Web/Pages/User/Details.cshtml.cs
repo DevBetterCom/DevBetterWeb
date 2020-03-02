@@ -15,7 +15,7 @@ namespace DevBetterWeb.Web.Pages.User
     [Authorize]
     public class DetailsModel : PageModel
     {
-        public UserDetailsViewModel UserDetailsViewModel { get; set; }
+        public UserDetailsViewModel? UserDetailsViewModel { get; set; }
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _appDbContext;
@@ -33,17 +33,19 @@ namespace DevBetterWeb.Web.Pages.User
             if (user == null)
             {
                 BadRequest();
+                // TODO: How to notify compiler that user can't be null after this?
             }
 
+#nullable disable
             var member = await _appDbContext.Members.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
             if (member == null)
             {
                 BadRequest();
-
             }
 
             UserDetailsViewModel = new UserDetailsViewModel(member);
+#nullable enable
         }
     }
 }

@@ -23,8 +23,8 @@ namespace DevBetterWeb.Web.Pages.Admin
             this._roleManager = roleManager;
         }
 
-        public List<ApplicationUser> Users { get; set; }
-        public List<IdentityRole> Roles { get; set; }
+        public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+        public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
 
         public async Task<IActionResult> OnGetAsync()
         {

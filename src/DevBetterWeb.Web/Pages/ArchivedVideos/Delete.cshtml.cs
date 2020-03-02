@@ -25,18 +25,18 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public int Id { get; set; }
         }
 
-        public ArchiveVideoDeleteDTO ArchiveVideoToDelete { get; set; }
+        public ArchiveVideoDeleteDTO? ArchiveVideoToDelete { get; set; }
 
         public class ArchiveVideoDeleteDTO
         {
             public int Id { get; set; }
-            public string Title { get; set; }
+            public string? Title { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
+            public string? VideoUrl { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)

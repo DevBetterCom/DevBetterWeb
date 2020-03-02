@@ -4,14 +4,14 @@ namespace DevBetterWeb.Web.Pages.User
 {
     public class UserDetailsViewModel
     {
-        public string Name { get; set; }
-        public string LinkedInUrl { get; set; }
-        public string TwitterUrl { get; set; }
-        public string GithubUrl { get; set; }
-        public string BlogUrl { get; set; }
-        public string TwitchUrl { get; set; }
-        public string OtherUrl { get; set; }
-        public string AboutInfo { get; set; }
+        public string? Name { get; set; }
+        public string? LinkedInUrl { get; set; }
+        public string? TwitterUrl { get; set; }
+        public string? GithubUrl { get; set; }
+        public string? BlogUrl { get; set; }
+        public string? TwitchUrl { get; set; }
+        public string? OtherUrl { get; set; }
+        public string? AboutInfo { get; set; }
 
         public UserDetailsViewModel()
         {

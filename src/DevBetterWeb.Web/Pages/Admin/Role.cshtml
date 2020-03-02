@@ -13,7 +13,7 @@
             <b>Role</b>
         </div>
         <div class="border border-top-0 p-2">
-            @Model.Role.Name
+            @Model?.Role?.Name
         </div>
 </div>
 
@@ -31,7 +31,7 @@
         </div>
         <div class="border border-top-0 p-2">
 
-            @foreach (var user in Model.UsersInRole)
+            @foreach (var user in Model!.UsersInRole)
             {
                 <div class="d-flex mb-2 border p-2 bg-light">
                     <div class="pt-1">
@@ -51,7 +51,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form asp-page-handler="AddUserToRole">
-                <input type="hidden" name="roleId" value="@Model.Role.Id" />
+                <input type="hidden" name="roleId" value="@Model.Role!.Id" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -78,7 +78,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form asp-page-handler="RemoveUserFromRole">
-                <input type="hidden" name="roleId" value="@Model.Role.Id" />
+                <input type="hidden" name="roleId" value="@Model.Role!.Id" />
                 <input type="hidden" name="userId" id="hidRemoveUserId" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Remove User From Role</h5>

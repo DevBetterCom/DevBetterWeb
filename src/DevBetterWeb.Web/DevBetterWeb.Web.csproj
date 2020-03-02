@@ -4,7 +4,8 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>DevBetterWeb.Web</AssemblyName>
     <OutputType>Exe</OutputType>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <PackageId>DevBetterWeb.Web</PackageId>
     <UserSecretsId>27d752ff-6567-4d4a-a3c0-1662e9085350</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>

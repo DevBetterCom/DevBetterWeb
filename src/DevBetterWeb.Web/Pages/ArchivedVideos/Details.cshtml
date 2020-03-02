@@ -11,7 +11,7 @@
 }
 
 
-<h3>@Model.ArchiveVideoDetails.DateCreated.UtcDateTime.ToShortDateString()</h3>
+<h3>@Model.ArchiveVideoDetails!.DateCreated.UtcDateTime.ToShortDateString()</h3>
 
 
 <video id="vid1" class="azuremediaplayer amp-default-skin">
@@ -26,7 +26,7 @@
         <span class="font-weight-bold">Notes</span>
     </div>
     <div class="card-body p-2">
-        <markdown markdown="ArchiveVideoDetails.ShowNotes" />
+        <markdown markdown="ArchiveVideoDetails!.ShowNotes" />
     </div>
 </div>
 

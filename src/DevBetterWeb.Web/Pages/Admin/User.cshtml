@@ -13,7 +13,7 @@
         <b>User</b>
     </div>
     <div class="border border-top-0 p-2">
-        @Model.IdentityUser.UserName - @Model.IdentityUser.Email
+        @Model?.IdentityUser?.UserName - @Model?.IdentityUser?.Email
     </div>
 </div>
 
@@ -30,9 +30,14 @@
             </div>
         </div>
         <div class="border border-top-0 p-2">
-
+            @{ 
+                if (Model is null) throw new Exception("Model is null.");
+                if (Model.Roles is null) throw new Exception("Roles are null");
+                if (Model.IdentityUser is null) throw new Exception("IdentityUser is null");
+            }
             @foreach (var role in Model.Roles)
             {
+                if (role == null) throw new Exception("role is null");
                 <div class="d-flex mb-2 border p-2 bg-light">
                     <div class="pt-1">
                         <a asp-page="./Role" asp-route-roleId="@role.Id">@role.Name</a>

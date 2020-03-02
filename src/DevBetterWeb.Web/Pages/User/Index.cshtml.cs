@@ -18,7 +18,7 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _appDbContext;
 
-        public List<KeyValuePair<string, string>> UserIdsAndNames { get; set; }
+        public List<KeyValuePair<string, string>> UserIdsAndNames { get; set; } = new List<KeyValuePair<string, string>>();
 
         public IndexModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
         {
@@ -31,13 +31,15 @@ namespace DevBetterWeb.Web.Pages.User
             var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
 
             var userIds = usersInRole.Select(x => x.Id).ToList();
-
-            var members = await _appDbContext.Members.AsNoTracking().Where(x => userIds.Contains(x.UserId)).ToListAsync();
+#nullable disable
+            var members = await _appDbContext.Members.AsNoTracking()
+                .Where(member => userIds.Contains(member.UserId)).ToListAsync();
 
             UserIdsAndNames = members
-                .OrderBy(x => x.LastName)
-                .Select(x => new KeyValuePair<string, string>(x.UserId, x.UserFullName()))                
+                .OrderBy(member => member.LastName)
+                .Select(member => new KeyValuePair<string, string>(member.UserId, member.UserFullName()))                
                 .ToList();
+#nullable enable
 
         }
     }
