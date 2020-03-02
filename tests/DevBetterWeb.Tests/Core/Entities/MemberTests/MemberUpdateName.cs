@@ -6,6 +6,7 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
+
     public class MemberUpdateName
     {
         private string _initialFirstName = "";
@@ -46,6 +47,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
 
             Assert.Same(member, eventCreated.Member);
+            Assert.Equal("Name", eventCreated.UpdateDetails);
         }
 
         [Fact]
@@ -58,6 +60,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
 
             Assert.Same(member, eventCreated.Member);
+            Assert.Equal("Name", eventCreated.UpdateDetails);
         }
 
         [Fact]
@@ -67,6 +70,20 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             member.UpdateName(_initialFirstName, _initialLastName);
 
             Assert.Empty(member.Events);
+        }
+
+        [Fact]
+        public void RecordsEventWithAppendedDetailsIfOtherThingsChanged()
+        {
+            string newLastName = Guid.NewGuid().ToString();
+
+            var member = GetMemberWithDefaultName();
+            member.UpdateAddress("new address");
+            member.UpdateName(_initialFirstName, newLastName);
+            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+
+            Assert.Same(member, eventCreated.Member);
+            Assert.Equal("Address,Name", eventCreated.UpdateDetails);
         }
     }
 }
