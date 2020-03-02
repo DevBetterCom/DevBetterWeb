@@ -34,6 +34,8 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
     </environment>
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <!--<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />-->
@@ -85,7 +87,7 @@
     </nav>
 
     <partial name="_CookieConsentPartial" />
-    <div class="container body-content">
+    <div class="container-fluid body-content">
         @RenderBody()
 
     </div>
@@ -134,6 +136,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <script src="https://launchpass.com/p/devbetter/embed.js"></script>
     @await RenderSectionAsync("scripts", required: false).ConfigureAwait(false)
 </body>

@@ -8,43 +8,56 @@
 
 <h3>Admin</h3>
 
-<div class="card-deck mt-2">
-    <div class="card">
-        <div class="card-header">
-            Users
-        </div>
-        <div class="card-body">
-            @foreach (var user in Model.Users)
-            {
-                <div class="d-flex mb-2 border p-2 bg-light">
-                    <div class="pt-2">
-                        @user.Email
-                    </div>
-                    <div class="ml-auto">
-                        <a asp-page="./User" asp-route-userId="@user.Id" class="btn btn-primary">View</a>
-                    </div>
-                </div>
-            }
-        </div>
+<div class="d-flex">
+    <div class="w-50 mr-2">
+        <table class="table table-striped table-bordered" id="usersTable">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th></th>
+                </tr>
+            </thead>  
+            <tbody>
+                @foreach (var userWithRole in Model.UsersWithRoles)
+                {
+                    <tr>
+                        <td>@userWithRole.User.Email</td>
+                        <td>
+                            @foreach (var role in userWithRole.Roles )
+                            {                              
+                                <span class="mr-2 badge badge-pill badge-info">@role</span>
+                            }
+                        </td>
+                        <td>  <a asp-page="./User" asp-route-userId="@userWithRole.User.Id" class="">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-
-    <div class="card">
-        <div class="card-header">
-            Roles
-        </div>
-        <div class="card-body">
-            @foreach (var role in Model.Roles)
-            {
-                <div class="d-flex mb-2 border p-2 bg-light">
-                    <div class="pt-2">
-                        @role.Name
+    <div class="w-50">
+        <div class="card">
+            <div class="card-header">
+                Roles
+            </div>
+            <div class="card-body">
+                @foreach (var role in Model.Roles)
+                {
+                    <div class="d-flex mb-2 border p-2 bg-light">
+                        <div class="pt-2">
+                            @role.Name
+                        </div>
+                        <div class="ml-auto">
+                            <a asp-page="./Role" asp-route-roleId="@role.Id" class="btn btn-primary btn-sm">View</a>
+                        </div>
                     </div>
-                    <div class="ml-auto">
-                        <a asp-page="./Role" asp-route-roleId="@role.Id" class="btn btn-primary">View</a>
-                    </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>
 
+
+@section scripts{ 
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}
