@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using Ardalis.Specification;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace DevBetterWeb.Infrastructure.Data
         public Task<T> GetByIdAsync<T>(int id) where T : BaseEntity
         {
             return _dbContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<T> GetBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        {
+            return await EfSpecificationEvaluator<T, int>
+                .GetQuery(_dbContext.Set<T>(), spec)
+                .SingleOrDefaultAsync();
         }
 
         public Task<List<T>> ListAsync<T>() where T : BaseEntity

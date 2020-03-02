@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.SharedKernel;
+﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
 
@@ -15,11 +16,8 @@ namespace DevBetterWeb.Core.Entities
 
         public void AddQuestion(Question question)
         {
-            // TODO: Add Guard Clause
-            if(question != null)
-            {
-                Questions.Add(question);
-            }
+            Guard.Against.Null(question, nameof(question));
+            Questions.Add(question);
         }
     }
 }

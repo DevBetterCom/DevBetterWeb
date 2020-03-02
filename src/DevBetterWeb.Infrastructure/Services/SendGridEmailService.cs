@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Core.Interfaces;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -11,8 +12,8 @@ namespace DevBetterWeb.Infrastructure.Services
     {
         public SendGridEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
-            // TODO: Add Guard.AgainstNUll(optionsAccessor.Value)
-            Options = optionsAccessor.Value ?? throw new ArgumentNullException(nameof(optionsAccessor));
+            Guard.Against.Null(optionsAccessor.Value, nameof(optionsAccessor.Value));
+            Options = optionsAccessor.Value;
         }
 
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
