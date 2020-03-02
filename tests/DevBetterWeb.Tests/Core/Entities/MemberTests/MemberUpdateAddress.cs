@@ -57,7 +57,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         [Fact]
         public void RecordsEventWithAppendedDetailsIfOtherThingsChanged()
         {
-            string newAddress= Guid.NewGuid().ToString();
+            string newAddress = Guid.NewGuid().ToString();
 
             var member = GetMemberWithDefaultAddress();
             member.UpdateName("kylo", "ren");
