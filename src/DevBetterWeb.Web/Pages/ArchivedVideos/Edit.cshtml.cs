@@ -127,7 +127,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             question.QuestionText = questionText;
             question.TimestampSeconds = timestamp;
 
-            _context.Questions.Add(question);
+            _context.Questions!.Add(question);
 
             _context.SaveChanges();
 
@@ -136,7 +136,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         public IActionResult OnPostDeleteQuestion(int questionId)
         {
-            var question = _context.Questions.FirstOrDefault(x => x.Id == questionId);
+            var question = _context.Questions!.FirstOrDefault(x => x.Id == questionId);
 
             if (question == null)
             {
@@ -144,7 +144,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             }
 
             var archiveVideoId = question.ArchiveVideoId;
-            _context.Questions.Remove(question);
+            _context.Questions!.Remove(question);
             _context.SaveChanges();
 
 

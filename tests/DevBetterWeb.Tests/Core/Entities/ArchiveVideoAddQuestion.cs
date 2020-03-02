@@ -1,4 +1,5 @@
 ﻿using DevBetterWeb.Core.Entities;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -7,13 +8,11 @@ namespace DevBetterWeb.Tests.Core.Entities
     public class ArchiveVideoAddQuestion
     {
         [Fact]
-        public void DoesNothingGivenNullQuestion()
+        public void ThrowsArgumentNullExceptionGivenNullQuestion()
         {
             var video = new ArchiveVideo();
 
-            video.AddQuestion(null);
-
-            Assert.Empty(video.Questions);
+            var exception = Assert.Throws<ArgumentNullException>(() => video.AddQuestion(null));
         }
 
         [Fact]

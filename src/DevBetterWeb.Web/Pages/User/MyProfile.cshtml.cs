@@ -43,7 +43,7 @@ namespace DevBetterWeb.Web.Pages.User
                 {
                     UserId = applicationUser.Id
                 };
-                _appDbContext.Members.Add(member);
+                _appDbContext.Members!.Add(member);
                 await _appDbContext.SaveChangesAsync();
             }
 

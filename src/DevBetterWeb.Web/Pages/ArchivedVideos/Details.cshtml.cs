@@ -1,5 +1,7 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -19,14 +21,14 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class DetailsModel : PageModel
     {
-        // TODO: Refactor to use repository + specification pattern with Include
-        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IRepository _repository;
 
-        public DetailsModel(AppDbContext context, IConfiguration configuration)
+        public DetailsModel(IConfiguration configuration,
+            IRepository repository)
         {
-            _context = context;
             _configuration = configuration;
+            _repository = repository;
         }
 
         public ArchiveVideoDetailsDTO? ArchiveVideoDetails { get; set; }
@@ -47,7 +49,6 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             public string? VideoUrl { get; set; }
 
             public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
-            
         }
 
         public async Task<IActionResult> OnGetAsync(int? id, int? startTime = null)
@@ -59,9 +60,8 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
             StartTime = startTime;
 
-            var archiveVideoEntity = await _context.ArchiveVideos
-                .Include(v => v.Questions)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var spec = new ArchiveVideoWithQuestionsSpec(id.Value);
+            var archiveVideoEntity = await _repository.GetBySpecAsync(spec);
 
             if (archiveVideoEntity == null)
             {

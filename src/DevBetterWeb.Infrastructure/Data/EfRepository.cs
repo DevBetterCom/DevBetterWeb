@@ -22,9 +22,9 @@ namespace DevBetterWeb.Infrastructure.Data
             return _dbContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<T> GetBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        public Task<T> GetBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
         {
-            return await EfSpecificationEvaluator<T, int>
+            return EfSpecificationEvaluator<T, int>
                 .GetQuery(_dbContext.Set<T>(), spec)
                 .SingleOrDefaultAsync();
         }
@@ -32,6 +32,13 @@ namespace DevBetterWeb.Infrastructure.Data
         public Task<List<T>> ListAsync<T>() where T : BaseEntity
         {
             return _dbContext.Set<T>().ToListAsync();
+        }
+
+        public Task<List<T>> ListBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        {
+            return EfSpecificationEvaluator<T, int>
+                .GetQuery(_dbContext.Set<T>(), spec)
+                .ToListAsync();
         }
 
         public async Task<T> AddAsync<T>(T entity) where T : BaseEntity

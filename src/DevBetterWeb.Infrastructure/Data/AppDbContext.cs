@@ -23,12 +23,9 @@ namespace DevBetterWeb.Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
-        // TODO: Google how DbContext/DbSet deals with NRTs
-#nullable disable
-        public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Member> Members { get; set; }
-#nullable enable
+        public DbSet<ArchiveVideo>? ArchiveVideos { get; set; }
+        public DbSet<Question>? Questions { get; set; }
+        public DbSet<Member>? Members { get; set; }
 
         public override int SaveChanges()
         {

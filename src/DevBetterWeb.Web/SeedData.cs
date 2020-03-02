@@ -51,7 +51,7 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
             vid1.Questions.Add(questionA);
             vid1.Questions.Add(questionB);
 
-            dbContext.ArchiveVideos.Add(vid1);
+            dbContext.ArchiveVideos!.Add(vid1);
             dbContext.ArchiveVideos.Add(vid2);
             dbContext.SaveChanges();
 

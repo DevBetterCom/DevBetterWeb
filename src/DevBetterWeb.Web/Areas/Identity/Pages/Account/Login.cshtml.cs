@@ -49,7 +49,6 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            // TODO: See how [Required] and nullable work together
             [Required]
             [EmailAddress]
             public string? Email { get; set; }
