@@ -4,6 +4,7 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Core.Entities
 {
+
     public class ArchiveVideoNew
     {
         [Fact]
