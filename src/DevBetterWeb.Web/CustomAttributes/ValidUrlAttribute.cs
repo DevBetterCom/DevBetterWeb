@@ -28,7 +28,7 @@ namespace DevBetterWeb.Web
             }
 
 
-            var isValueUrl = Uri.TryCreate(url, UriKind.Absolute, out Uri uri);          
+            var isValueUrl = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri);          
 
             if (isValueUrl)
             {

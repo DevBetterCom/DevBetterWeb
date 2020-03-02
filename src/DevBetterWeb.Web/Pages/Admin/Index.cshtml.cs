@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +19,22 @@ namespace DevBetterWeb.Web.Pages.Admin
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public IndexModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public IndexModel(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public List<ApplicationUser> Users { get; set; }
-        public List<IdentityRole> Roles { get; set; }
+        public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+        public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
 
         public async Task<IActionResult> OnGetAsync()
         {
            Users = await _userManager.Users.ToListAsync();
-           Roles = await _roleManager.Roles.ToListAsync();
+           Roles = await _roleManager.Roles.ToListAsync();            
 
-            return Page();
+           return Page();
         }
     }
 }

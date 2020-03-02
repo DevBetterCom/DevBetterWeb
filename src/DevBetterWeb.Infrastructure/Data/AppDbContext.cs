@@ -10,7 +10,8 @@ namespace DevBetterWeb.Infrastructure.Data
     {
         private readonly IDomainEventDispatcher _dispatcher;
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IDomainEventDispatcher dispatcher)
+        public AppDbContext(DbContextOptions<AppDbContext> options,
+            IDomainEventDispatcher dispatcher)
             : base(options)
         {
             _dispatcher = dispatcher;
@@ -22,9 +23,9 @@ namespace DevBetterWeb.Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
-        public DbSet<ArchiveVideo> ArchiveVideos { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Member> Members { get; set; }
+        public DbSet<ArchiveVideo>? ArchiveVideos { get; set; }
+        public DbSet<Question>? Questions { get; set; }
+        public DbSet<Member>? Members { get; set; }
 
         public override int SaveChanges()
         {

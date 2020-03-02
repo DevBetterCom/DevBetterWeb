@@ -36,15 +36,17 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             return Page();
         }
 
+#nullable disable
         [BindProperty]
         public ArchiveVideoCreateDTO ArchiveVideoModel { get; set; }
+#nullable enable
 
         public class ArchiveVideoCreateDTO
         {
             [Required]
-            public string Title { get; set; }
+            public string? Title { get; set; }
             [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-            public string ShowNotes { get; set; }
+            public string? ShowNotes { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -67,7 +69,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 VideoUrl = ""
             };
 
-            _repository.Add(videoEntity);
+            await _repository.AddAsync(videoEntity);
 
             var uploadSuccess = false;
 
@@ -103,7 +105,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             if (uploadSuccess)
             {
                 videoEntity.VideoUrl = fileName;
-                _repository.Update(videoEntity);
+                await _repository.UpdateAsync(videoEntity);
                 return RedirectToPage("/ArchivedVideos/Index");
             }
 
@@ -111,10 +113,10 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             return RedirectToPage("./Index");
         }
 
-        private async Task<bool> UploadToBlob(string filename, byte[] imageBuffer = null, Stream stream = null)
+        private async Task<bool> UploadToBlob(string filename, byte[]? imageBuffer = null, Stream? stream = null)
         {
-            CloudStorageAccount storageAccount = null;
-            CloudBlobContainer cloudBlobContainer = null;
+            CloudStorageAccount? storageAccount = null;
+            CloudBlobContainer? cloudBlobContainer = null;
             string storageConnectionString = _configuration["storageconnectionstring"];
 
             // Check whether the connection string can be parsed.

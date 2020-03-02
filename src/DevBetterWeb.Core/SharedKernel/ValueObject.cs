@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-
-
 namespace DevBetterWeb.Core.SharedKernel
 {
     // source: https://github.com/jhewlett/ValueObject
     public abstract class ValueObject : IEquatable<ValueObject>
     {
-        private List<PropertyInfo> properties;
-        private List<FieldInfo> fields;
+        private List<PropertyInfo>? properties;
+        private List<FieldInfo>? fields;
 
         public static bool operator ==(ValueObject obj1, ValueObject obj2)
         {

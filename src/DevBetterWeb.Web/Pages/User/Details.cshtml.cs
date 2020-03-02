@@ -1,49 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DevBetterWeb.Infrastructure.Data;
-using DevBetterWeb.Web.Areas.Identity.Data;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
     [Authorize]
     public class DetailsModel : PageModel
     {
-        public UserDetailsViewModel UserDetailsViewModel { get; set; }
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly AppDbContext _appDbContext;
+        public UserDetailsViewModel? UserDetailsViewModel { get; set; }
+        private readonly IRepository _repository;
 
-        public DetailsModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext appDbContext)
+        public DetailsModel(IRepository repository)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._appDbContext = appDbContext;
+            _repository = repository;
         }
 
-        public async Task OnGet(string id)
+        public async Task OnGet(string userId)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                BadRequest();
-            }
+            // I don't think we need this - SAS
+            //var user = await _userManager.FindByIdAsync(id);
+            //if (user == null)
+            //{
+            //    BadRequest();
+            //}
 
-            var member = await _appDbContext.Members.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var spec = new MemberByUserIdSpec(userId);
+            var member = await _repository.GetBySpecAsync(spec);
 
             if (member == null)
             {
+                // TODO: Add logging
                 BadRequest();
-
             }
 
-            UserDetailsViewModel = new UserDetailsViewModel(member);
+            UserDetailsViewModel = new UserDetailsViewModel(member!);
         }
     }
 }

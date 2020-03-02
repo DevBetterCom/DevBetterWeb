@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Core.Interfaces;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -11,6 +12,7 @@ namespace DevBetterWeb.Infrastructure.Services
     {
         public SendGridEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
+            Guard.Against.Null(optionsAccessor.Value, nameof(optionsAccessor.Value));
             Options = optionsAccessor.Value;
         }
 
@@ -18,6 +20,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
+            if (Options.SendGridKey == null) throw new Exception("SendGridKey not set.");
             var response = await Execute(Options.SendGridKey, subject, message, email);
 
             if(response.StatusCode != System.Net.HttpStatusCode.Accepted)

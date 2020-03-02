@@ -3,6 +3,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>DevBetterWeb.Infrastructure</AssemblyName>
     <PackageId>DevBetterWeb.Infrastructure</PackageId>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>

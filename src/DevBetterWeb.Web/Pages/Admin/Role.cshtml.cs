@@ -24,9 +24,9 @@ namespace DevBetterWeb.Web.Pages.Admin
             _roleManager = roleManager;
 
         }
-        public IdentityRole Role { get; set; }
-        public List<ApplicationUser> UsersInRole { get; set; }
-        public List<SelectListItem> UsersNotInRole { get; set; }
+        public IdentityRole? Role { get; set; }
+        public List<ApplicationUser> UsersInRole { get; set; } = new List<ApplicationUser>();
+        public List<SelectListItem> UsersNotInRole { get; set; } = new List<SelectListItem>();
 
         public async Task<IActionResult> OnGetAsync(string roleId)
         {

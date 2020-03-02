@@ -27,28 +27,28 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             _context = context;
         }
 
+#nullable disable
         [BindProperty]
         public ArchiveVideoEditDTO ArchiveVideoModel { get; set; }
-        public List<Question> Questions { get; set; }
+#nullable enable
+        public List<Question> Questions { get; set; } = new List<Question>();
 
 
         public class ArchiveVideoEditDTO
         {
             public int Id { get; set; }
             [Required]
-            public string Title { get; set; }
+            public string? Title { get; set; }
             [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-            public string ShowNotes { get; set; }
+            public string? ShowNotes { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
             [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode =true)]
             public DateTimeOffset DateCreated { get; set; }
 
             [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-            public string VideoUrl { get; set; }
-
+            public string? VideoUrl { get; set; }
         }
-
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -87,7 +87,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
                 return Page();
             }
 
-            var currentVideoEntity = _repository.GetById<ArchiveVideo>(ArchiveVideoModel.Id);
+            var currentVideoEntity = await _repository.GetByIdAsync<ArchiveVideo>(ArchiveVideoModel.Id);
             if(currentVideoEntity == null)
             {
                 return NotFound();
@@ -97,7 +97,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             currentVideoEntity.Title = ArchiveVideoModel.Title;
             currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
-            _repository.Update(currentVideoEntity);
+            await _repository.UpdateAsync(currentVideoEntity);
 
             return RedirectToPage("./Index");
         }
@@ -127,7 +127,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             question.QuestionText = questionText;
             question.TimestampSeconds = timestamp;
 
-            _context.Questions.Add(question);
+            _context.Questions!.Add(question);
 
             _context.SaveChanges();
 
@@ -136,7 +136,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         public IActionResult OnPostDeleteQuestion(int questionId)
         {
-            var question = _context.Questions.FirstOrDefault(x => x.Id == questionId);
+            var question = _context.Questions!.FirstOrDefault(x => x.Id == questionId);
 
             if (question == null)
             {
@@ -144,7 +144,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             }
 
             var archiveVideoId = question.ArchiveVideoId;
-            _context.Questions.Remove(question);
+            _context.Questions!.Remove(question);
             _context.SaveChanges();
 
 

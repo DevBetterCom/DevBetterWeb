@@ -24,7 +24,7 @@ namespace DevBetterWeb.Web.Pages.Admin
             this._roleManager = roleManager;
         }
 
-        public IdentityUser IdentityUser { get; set; }
+        public IdentityUser? IdentityUser { get; set; }
 
         public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
@@ -41,7 +41,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
             if (currentUser == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             var roles = await _roleManager.Roles.ToListAsync();
