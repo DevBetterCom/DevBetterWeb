@@ -6,7 +6,13 @@
 
 <h3>Members</h3>
 
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped" id="membersTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (var userKeyValuePair in Model.UserIdsAndNames)
         {
@@ -18,3 +24,7 @@
     </tbody>
 </table>
 
+@section scripts{ 
+
+<script src="~/js/members.js" asp-append-version="true"></script>
+}
