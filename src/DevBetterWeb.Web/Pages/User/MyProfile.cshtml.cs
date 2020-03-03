@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -20,13 +22,16 @@ namespace DevBetterWeb.Web.Pages.User
 #nullable enable
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AppDbContext _appDbContext;
+        private readonly IMemberRegistrationService _memberRegistrationService;
+        private readonly IRepository _repository;
 
         public MyProfileModel(UserManager<ApplicationUser> userManager, 
-            AppDbContext appDbContext)
+            IMemberRegistrationService memberRegistrationService,
+            IRepository repository)
         {
             _userManager = userManager;
-            _appDbContext = appDbContext;
+            _memberRegistrationService = memberRegistrationService;
+            _repository = repository;
         }
 
         public async Task OnGetAsync()
@@ -34,17 +39,12 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var member = await _appDbContext.Members
-                .FirstOrDefaultAsync(member => member.UserId == applicationUser.Id);
+            var spec = new MemberByUserIdSpec(applicationUser.Id);
+            var member = await _repository.GetBySpecAsync(spec);
 
             if (member == null)
             {
-                member = new Core.Entities.Member()
-                {
-                    UserId = applicationUser.Id
-                };
-                _appDbContext.Members!.Add(member);
-                await _appDbContext.SaveChangesAsync();
+                member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
             }
 
             UserProfileUpdateModel = new UserProfileUpdateModel(member);
@@ -52,34 +52,21 @@ namespace DevBetterWeb.Web.Pages.User
 
         public async Task OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return;
-            }
+            if (!ModelState.IsValid) return;
 
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var member = _appDbContext.Members
-                .First(member => member.UserId == applicationUser.Id);
+            var spec = new MemberByUserIdSpec(applicationUser.Id);
+            var member = await _repository.GetBySpecAsync(spec);
 
-            // TODO: Replace with AutoMapper or Extension method
-            member.FirstName = UserProfileUpdateModel.FirstName;
-            member.LastName = UserProfileUpdateModel.LastName;
-            member.AboutInfo = UserProfileUpdateModel.AboutInfo;
-            member.Address = UserProfileUpdateModel.Address;
-            member.BlogUrl = UserProfileUpdateModel.BlogUrl;
-            member.GithubUrl = UserProfileUpdateModel.GithubUrl;
-            member.LinkedInUrl = UserProfileUpdateModel.LinkedInUrl;
-            member.TwitterUrl = UserProfileUpdateModel.TwitterUrl;
-            member.TwitchUrl = UserProfileUpdateModel.TwitchUrl;
-            member.OtherUrl = UserProfileUpdateModel.OtherUrl;
+            member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName);
+            member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
+            member.UpdateAddress(UserProfileUpdateModel.Address);
+            member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
+                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitterUrl, UserProfileUpdateModel.TwitterUrl);
 
-            await _appDbContext.SaveChangesAsync();
-
-            // TODO: Raise event that someone updated profile, so email notification to admins can go out
+            await _repository.UpdateAsync(member);
         }
     }
-
-
 }
