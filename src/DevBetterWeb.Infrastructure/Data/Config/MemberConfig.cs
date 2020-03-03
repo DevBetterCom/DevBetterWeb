@@ -11,7 +11,7 @@ namespace DevBetterWeb.Infrastructure.Data.Config
             builder.Property(x => x.UserId).HasMaxLength(500);
             builder.Property(x => x.Address).HasMaxLength(500);
             builder.Property(x => x.BlogUrl).HasMaxLength(200);
-            builder.Property(x => x.GithubUrl).HasMaxLength(200);
+            builder.Property(x => x.GitHubUrl).HasMaxLength(200);
             builder.Property(x => x.LinkedInUrl).HasMaxLength(200);
             builder.Property(x => x.OtherUrl).HasMaxLength(200);
             builder.Property(x => x.TwitchUrl).HasMaxLength(200);
