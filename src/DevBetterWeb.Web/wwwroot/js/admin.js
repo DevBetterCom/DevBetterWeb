@@ -1,8 +1,6 @@
 ﻿$(function () {
 
     $('#usersTable').DataTable();
-    $('#clientsGridView').DataTable();
-
 
     $('#removeUserModal').on('show.bs.modal', function (e) {
         var button = $(e.relatedTarget);
