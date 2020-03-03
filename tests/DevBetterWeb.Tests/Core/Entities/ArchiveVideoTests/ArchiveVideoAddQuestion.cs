@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace DevBetterWeb.Tests.Core.Entities
+namespace DevBetterWeb.Tests.Core.Entities.ArchiveVideoTests
 {
     public class ArchiveVideoAddQuestion
     {
