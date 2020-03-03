@@ -39,7 +39,7 @@ namespace DevBetterWeb.Web.Pages.User
             BlogUrl = member.BlogUrl;
             TwitchUrl = member.TwitchUrl;
             TwitterUrl = member.TwitterUrl;
-            GithubUrl = member.GithubUrl;
+            GithubUrl = member.GitHubUrl;
             LinkedInUrl = member.LinkedInUrl;
             OtherUrl = member.OtherUrl;
             AboutInfo = member.AboutInfo;

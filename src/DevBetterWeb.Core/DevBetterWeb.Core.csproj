@@ -26,9 +26,4 @@
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Events\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
