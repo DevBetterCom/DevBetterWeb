@@ -2,6 +2,7 @@
 
 namespace DevBetterWeb.Web.Controllers
 {
+    // TODO: Get rid of these in favor or pure razor pages?
     public class HomeController : Controller
     {
         public IActionResult Index()

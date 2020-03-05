@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,18 +18,21 @@ namespace DevBetterWeb.Web.Pages.Admin
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserRoleUpdateService _userRoleUpdateService;
 
-        public UserModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserModel(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IUserRoleUpdateService userRoleUpdateService)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _userRoleUpdateService = userRoleUpdateService;
         }
 
         public IdentityUser? IdentityUser { get; set; }
 
         public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
-
 
         public async Task<IActionResult> OnGetAsync(string userId)
         {
@@ -41,7 +45,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
             if (currentUser == null)
             {
-                return BadRequest();
+                return BadRequest(); // TODO: Why is this a return but NotFound above isn't?
             }
 
             var roles = await _roleManager.Roles.ToListAsync();
@@ -69,30 +73,14 @@ namespace DevBetterWeb.Web.Pages.Admin
 
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
-
-            if (user == null || role == null)
-            {
-                return BadRequest();
-            }
-
-            await _userManager.AddToRoleAsync(user, role.Name);
-            return RedirectToPage("./User", new { userId = userId });
+            await _userRoleUpdateService.AddUserToRoleAsync(userId, roleId);
+            return RedirectToPage("./User", new { userId });
         }
 
-        public async Task<IActionResult> OnPostRemoveUserFromRole(string userId, string roleId)
+        public async Task<IActionResult> OnPostRemoveUserFromRoleAsync(string userId, string roleId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
-
-            if (user == null || role == null)
-            {
-                return BadRequest();
-            }
-
-            await _userManager.RemoveFromRoleAsync(user, role.Name);
-            return RedirectToPage("./User", new { userId = userId});
+            await _userRoleUpdateService.RemoveUserFromRoleAsync(userId, roleId);
+            return RedirectToPage("./User", new { userId });
         }
     }
 }
