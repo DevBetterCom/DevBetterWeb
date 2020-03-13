@@ -1,9 +1,10 @@
 ﻿using DevBetterWeb.Core.SharedKernel;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Interfaces
 {
     public interface IDomainEventDispatcher
     {
-        void Dispatch<TEvent>(TEvent domainEvent) where TEvent : BaseDomainEvent;
+        Task Dispatch(BaseDomainEvent domainEvent);
     }
 }

@@ -12,7 +12,7 @@ namespace DevBetterWeb.Tests.Integration.Data
 {
     public class EfRepositoryShould
     {
-        private AppDbContext _dbContext;
+        private AppDbContext? _dbContext;
 
         private static DbContextOptions<AppDbContext> CreateNewContextOptions()
         {

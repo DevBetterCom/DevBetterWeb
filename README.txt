@@ -1,3 +1,5 @@
+NOTE (13 March 2020): We're not using containers currently, nor Azure DevOps. We're using GitHub Actions and Azure App Service.
+
 Azure Container Registry Instructions
 
 devbetterregistry.azurecr.io
