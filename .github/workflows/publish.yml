@@ -1,8 +1,8 @@
 name: publish
 
 env:
-  AZURE_WEBAPP_NAME: devbetter2
-  AZURE_GROUP_NAME: devbetter2-resourcegroup
+  AZURE_WEBAPP_NAME: devBetter
+  AZURE_GROUP_NAME: DevBetterGroup
 
 on:
   push:
