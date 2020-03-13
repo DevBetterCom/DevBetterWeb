@@ -3,6 +3,8 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Data
 {
@@ -27,9 +29,12 @@ namespace DevBetterWeb.Infrastructure.Data
         public DbSet<Question>? Questions { get; set; }
         public DbSet<Member>? Members { get; set; }
 
-        public override int SaveChanges()
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            int result = base.SaveChanges();
+            int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            // ignore events if no dispatcher provided
+            if (_dispatcher == null) return result;
 
             // dispatch events only if save was successful
             var entitiesWithEvents = ChangeTracker.Entries<BaseEntity>()
@@ -43,11 +48,16 @@ namespace DevBetterWeb.Infrastructure.Data
                 entity.Events.Clear();
                 foreach (var domainEvent in events)
                 {
-                    _dispatcher.Dispatch(domainEvent);
+                    await _dispatcher.Dispatch(domainEvent).ConfigureAwait(false);
                 }
             }
 
             return result;
+        }
+
+        public override int SaveChanges()
+        {
+            return SaveChangesAsync().GetAwaiter().GetResult();
         }
     }
 }
