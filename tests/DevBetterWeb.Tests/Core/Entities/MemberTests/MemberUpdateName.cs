@@ -44,7 +44,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             var member = GetMemberWithDefaultName();
             member.UpdateName(newFirstName, _initialLastName);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name", eventCreated.UpdateDetails);
@@ -57,7 +57,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             var member = GetMemberWithDefaultName();
             member.UpdateName(_initialFirstName, newLastName);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name", eventCreated.UpdateDetails);
@@ -80,7 +80,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             var member = GetMemberWithDefaultName();
             member.UpdateAddress("new address");
             member.UpdateName(_initialFirstName, newLastName);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Address,Name", eventCreated.UpdateDetails);
