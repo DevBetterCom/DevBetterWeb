@@ -2,6 +2,7 @@ dotnet ef migrations add AddQuestions --context appdbcontext -p ../DevBetterWeb.
 
 dotnet ef migrations add InitialModel --context identitydbcontext -o Areas/Identity/Data/Migrations
 
+-- RUN THIS FROM THE WEB PROJECT FOLDER
 dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
 
 ##run this from the infrastructure project directory to update the identity data
