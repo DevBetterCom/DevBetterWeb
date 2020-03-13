@@ -59,7 +59,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialTwitterUrl);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Links", eventCreated.UpdateDetails);
@@ -94,7 +94,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialTwitterUrl);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name,AboutInfo,Address,Links", eventCreated.UpdateDetails);

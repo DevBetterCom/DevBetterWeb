@@ -35,7 +35,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         {
             var member = MemberHelpers.CreateWithInternalConstructor();
 
-            var eventCreated = member.Events.FirstOrDefault() as NewMemberCreatedEvent;
+            var eventCreated = (NewMemberCreatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
         }

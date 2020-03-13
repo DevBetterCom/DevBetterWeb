@@ -8,6 +8,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     {
         public const string TEST_USER_ID = "TestUserId";
 
+#nullable disable
         public static Member CreateWithDefaultConstructor()
         {
             return (Member)Activator.CreateInstance(typeof(Member), true);

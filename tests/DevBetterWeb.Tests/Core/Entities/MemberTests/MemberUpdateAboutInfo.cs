@@ -14,7 +14,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         {
             _initialAboutInfo = Guid.NewGuid().ToString();
 
-            var member = MemberHelpers.CreateWithDefaultConstructor();
+            Member? member = MemberHelpers.CreateWithDefaultConstructor();
             member.UpdateAboutInfo(_initialAboutInfo);
             member.Events.Clear();
 
@@ -39,7 +39,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             var member = GetMemberWithDefaultAboutInfo();
             member.UpdateAboutInfo(newAboutInfo);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("AboutInfo", eventCreated.UpdateDetails);
@@ -62,7 +62,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             var member = GetMemberWithDefaultAboutInfo();
             member.UpdateName("kylo", "ren");
             member.UpdateAboutInfo(newAboutInfo);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name,AboutInfo", eventCreated.UpdateDetails);
