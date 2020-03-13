@@ -25,7 +25,7 @@ namespace DevBetterWeb.Web.Pages.User
             _userManager = userManager;
             _appDbContext = appDbContext;
         }
-
+         
         public async Task OnGet()
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);

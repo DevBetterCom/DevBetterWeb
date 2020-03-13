@@ -53,6 +53,22 @@ textarea {
     display: block;
 }
 
+.join {
+    font-family: sans-serif;
+    margin: 0 auto;
+    outline: none;
+    display: block;
+    height: 45px;
+    width: 227px;
+    border-radius: 6px;
+    background: blue;
+    color: white;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}s
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 600px) {

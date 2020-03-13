@@ -39,7 +39,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             var member = GetMemberWithDefaultAddress();
             member.UpdateAddress(newAddress);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Address", eventCreated.UpdateDetails);
@@ -62,11 +62,10 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
             var member = GetMemberWithDefaultAddress();
             member.UpdateName("kylo", "ren");
             member.UpdateAddress(newAddress);
-            var eventCreated = member.Events.FirstOrDefault() as MemberUpdatedEvent;
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name,Address", eventCreated.UpdateDetails);
         }
-
     }
 }
