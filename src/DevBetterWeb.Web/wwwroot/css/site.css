@@ -68,7 +68,7 @@ textarea {
     font-weight: 700;
     border: none;
     cursor: pointer;
-}s
+}
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 600px) {
