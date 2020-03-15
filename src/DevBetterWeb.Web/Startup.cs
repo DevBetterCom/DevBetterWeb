@@ -15,16 +15,19 @@ using Autofac;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using System.Linq;
 
 namespace DevBetterWeb.Web
 {
     public class Startup
     {
         private bool _isDbContextAdded = false;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration config, IWebHostEnvironment env)
         {
             Configuration = config;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -75,13 +78,18 @@ namespace DevBetterWeb.Web
             });
 
             services.AddScoped<IRepository, EfRepository>();
-            services.AddTransient<IEmailService, SendGridEmailService>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.InitializeAutofac(Assembly.GetExecutingAssembly());
+            if (_env.EnvironmentName == "Development")
+            {
+                // last registration wins
+                builder.RegisterType<NoOpEmailService>().As<IEmailService>();
+            }
+
         }
 
         public void Configure(IApplicationBuilder app,
