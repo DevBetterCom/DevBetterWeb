@@ -5,5 +5,18 @@
     <div class="alert alert-success">
         <h3>Email Verification Required</h3>
         <p>An email has been sent to the address associated with your account.  Please follow the instructions in the email to complete the email verification process.</p>
+        @if (!Model.VerificationEmailSent)
+        {
+        <form method="post">
+            <h4>Request another verification email.</h4>
+            <hr />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Send Verification Email</button>
+            </div>
+        </form>
+        } else
+        {
+            <h4>Verification email sent!</h4>
+        }
     </div>
 }
