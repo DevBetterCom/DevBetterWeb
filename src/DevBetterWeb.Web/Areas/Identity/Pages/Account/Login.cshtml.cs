@@ -102,7 +102,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                         var callbackUrl = Url.Page(
                             "/Account/ConfirmEmail",
                             pageHandler: null,
-                            values: new { userId = user.Id, code = code },
+                            values: new { userId = user.Id, code },
                             protocol: Request.Scheme);
 
                         if (Input.Email == null) throw new Exception("Email is required.");
