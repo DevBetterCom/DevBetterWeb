@@ -53,6 +53,8 @@ namespace DevBetterWeb.Web.Pages.User
         public async Task OnPost()
         {
             if (!ModelState.IsValid) return;
+            // TODO: consider only getting the user alias not the whole URL for social media links
+            // TODO: assess risk of XSS attacks and how to mitigate
 
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
