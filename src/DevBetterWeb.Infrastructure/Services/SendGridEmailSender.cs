@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Services
@@ -8,9 +9,9 @@ namespace DevBetterWeb.Infrastructure.Services
     /// </summary>
     public class SendGridEmailSender : IEmailSender
     {
-        private readonly SendGridEmailService _emailService;
+        private readonly IEmailService _emailService;
 
-        public SendGridEmailSender(SendGridEmailService emailService)
+        public SendGridEmailSender(IEmailService emailService)
         {
             _emailService = emailService;
         }
