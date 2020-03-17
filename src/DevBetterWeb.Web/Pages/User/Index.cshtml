@@ -17,7 +17,7 @@
         @foreach (var member in Model.Members)
         {
             <tr>
-                <td><a asp-page="/User/Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
+                <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
                 <td>
                     <a href="@member.BlogUrl"><i class="fas fa-blog fa-2x fa-fw"></i></a>
                     <a href="@member.TwitterUrl"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
