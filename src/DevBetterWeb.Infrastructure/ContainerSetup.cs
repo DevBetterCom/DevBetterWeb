@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.DomainEvents;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,26 +15,6 @@ namespace DevBetterWeb.Infrastructure
 {
     public static class ContainerSetup
     {
-        //public static IServiceProvider InitializeWeb(Assembly webAssembly, IServiceCollection services) =>
-        //    new AutofacServiceProvider(BaseAutofacInitialization(setupAction =>
-        //    {
-        //        setupAction.Populate(services);
-        //        setupAction.RegisterAssemblyTypes(webAssembly).AsImplementedInterfaces();
-        //    }));
-
-        //public static IContainer BaseAutofacInitialization(Action<ContainerBuilder> setupAction = null)
-        //{
-        //    var builder = new ContainerBuilder();
-
-        //    var coreAssembly = Assembly.GetAssembly(typeof(Question));
-        //    var infrastructureAssembly = Assembly.GetAssembly(typeof(EfRepository));
-        //    //var sharedKernelAssembly = Assembly.GetAssembly(typeof(IRepository));
-        //    builder.RegisterAssemblyTypes(coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
-
-        //    setupAction?.Invoke(builder);
-        //    return builder.Build();
-        //}
-
         public static void InitializeAutofac(this ContainerBuilder builder, Assembly webAssembly)
         {
             var coreAssembly = Assembly.GetAssembly(typeof(Question)) ?? throw new Exception("Assembly not found.");
@@ -44,17 +25,12 @@ namespace DevBetterWeb.Infrastructure
 
             builder.RegisterAssemblyTypes(webAssembly, coreAssembly, infrastructureAssembly).AsImplementedInterfaces();
 
+            // register specific types
+            builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
+
             //setupAction?.Invoke(builder);
             //builder.Build();
 
         }
     }
-
-    //public class NoEmailSender : IEmailSender
-    //{
-    //    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
 }
