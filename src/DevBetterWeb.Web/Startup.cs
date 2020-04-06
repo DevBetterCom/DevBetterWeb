@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Linq;
 using DevBetterWeb.Infrastructure.Handlers;
+using Ardalis.ListStartupServices;
+using System.Collections.Generic;
 
 namespace DevBetterWeb.Web
 {
@@ -55,9 +57,8 @@ namespace DevBetterWeb.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
+            //services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
 
-            services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
 
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
@@ -82,6 +83,14 @@ namespace DevBetterWeb.Web
 
             services.AddScoped<IRepository, EfRepository>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<DiscordWebhookUrls>(Configuration);
+
+            // list services
+            services.Configure<ServiceConfig>(config =>
+            {
+                config.Services = new List<ServiceDescriptor>(services);
+                config.Path = "/allmyservices";
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -102,6 +111,7 @@ namespace DevBetterWeb.Web
             if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
+                app.UseShowAllServicesMiddleware();
             }
             else
             {
