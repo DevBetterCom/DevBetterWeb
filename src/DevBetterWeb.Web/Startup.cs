@@ -57,8 +57,8 @@ namespace DevBetterWeb.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-
+            services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
+            services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
 
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)
@@ -82,8 +82,7 @@ namespace DevBetterWeb.Web
             });
 
             services.AddScoped<IRepository, EfRepository>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
-            services.Configure<DiscordWebhookUrls>(Configuration);
+//            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             // list services
             services.Configure<ServiceConfig>(config =>
