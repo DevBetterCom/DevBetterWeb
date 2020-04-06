@@ -26,7 +26,7 @@ namespace DevBetterWeb.Infrastructure.Services
             foreach(var emailAddress in usersInAdminRole.Select(user => user.Email))
             {
                 string subject = $"[devBetter] New Member {domainEvent.Member.UserFullName()}";
-                string message = "A new Member has signed up and added their membership profile."; // TODO: Add more member details to email
+                string message = $"A new Member with id {domainEvent.Member.UserId} has signed up and added their membership profile."; 
                 await _emailService.SendEmailAsync(emailAddress, subject, message);
             }
         }
