@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using System.Linq;
+using DevBetterWeb.Infrastructure.Handlers;
 
 namespace DevBetterWeb.Web
 {
@@ -55,6 +56,8 @@ namespace DevBetterWeb.Web
             });
 
             services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
+
+            services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
 
             // TODO: Consider changing to check services collection for dbContext
             if (!_isDbContextAdded)

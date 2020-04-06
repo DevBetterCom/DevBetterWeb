@@ -68,10 +68,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
                 _logger.LogInformation("Sending password reset request with URL " + callbackUrl);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                //await _emailSender.SendEmailAsync(
+                //    Input.Email,
+                //    "Reset Password",
+                //    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 var newEvent = new PasswordResetEvent(Input.Email!);
                 await _dispatcher.Dispatch(newEvent);
