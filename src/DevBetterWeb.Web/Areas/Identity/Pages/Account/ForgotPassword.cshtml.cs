@@ -66,7 +66,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                     values: new { code },
                     protocol: Request.Scheme);
 
-                _logger.LogWarning("Sending password reset request with URL " + callbackUrl);
+                _logger.LogInformation("Sending password reset request with URL " + callbackUrl);
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
