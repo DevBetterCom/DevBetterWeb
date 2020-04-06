@@ -18,6 +18,7 @@ namespace DevBetterWeb.Core.Handlers
         {
             _logger = logger;
             Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
+            Guard.Against.NullOrEmpty(optionsAccessor.Value.AdminUpdates, "AdminUpdates");
 
             _webhookUrl = optionsAccessor.Value.AdminUpdates!;
         }
