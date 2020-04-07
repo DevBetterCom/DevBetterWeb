@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 {
-    [Authorize]
+    // [Authorize] This page should allow anonymous otherwise un verified users can't see it.
     public class EmailVerificationRequiredModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
