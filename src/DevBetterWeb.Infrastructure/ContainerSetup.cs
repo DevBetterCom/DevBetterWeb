@@ -2,6 +2,7 @@
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DomainEvents;
+using DevBetterWeb.Infrastructure.Services;
 using System;
 using System.Reflection;
 
@@ -19,6 +20,7 @@ namespace DevBetterWeb.Infrastructure
 
             // register specific types
             builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
+            builder.RegisterType<Webhook>().InstancePerDependency();
         }
     }
 }

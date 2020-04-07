@@ -1,4 +1,4 @@
-﻿namespace DevBetterWeb.Infrastructure.Handlers
+﻿namespace DevBetterWeb.Infrastructure.Services
 {
     public class DiscordWebhookUrls
     {
