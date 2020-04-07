@@ -52,6 +52,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     _logger.LogWarning($"User {Input!.Email} does not exist or is not confirmed.");
+
+                    var noUserEvent = new InvalidUserEvent(Input!.Email!);
+                    await _dispatcher.Dispatch(noUserEvent);
+
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
