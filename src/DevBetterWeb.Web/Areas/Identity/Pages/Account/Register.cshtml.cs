@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Core.Interfaces;
 using System;
+using DevBetterWeb.Core.Events;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 {
@@ -18,15 +19,18 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
+        private readonly IDomainEventDispatcher _dispatcher;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             ILogger<RegisterModel> logger,
-            IEmailService emailService)
+            IEmailService emailService,
+            IDomainEventDispatcher dispatcher)
         {
             _userManager = userManager;
             _logger = logger;
             _emailService = emailService;
+            _dispatcher = dispatcher;
         }
 
         [BindProperty]
@@ -69,6 +73,9 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    var newUserEvent = new NewUserRegisteredEvent(Input.Email!);
+                    await _dispatcher.Dispatch(newUserEvent);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(
