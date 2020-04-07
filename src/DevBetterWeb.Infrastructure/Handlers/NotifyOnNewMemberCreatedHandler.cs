@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Infrastructure.Handlers
 {
     public class NotifyOnNewMemberCreatedHandler : IHandle<NewMemberCreatedEvent>
     {
@@ -19,6 +19,7 @@ namespace DevBetterWeb.Infrastructure.Services
             _userManager = userManager;
             _emailService = emailService;
         }
+
         public async Task Handle(NewMemberCreatedEvent domainEvent)
         {
             var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);

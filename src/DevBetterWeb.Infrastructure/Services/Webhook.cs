@@ -1,14 +1,18 @@
-﻿using Discord;
+﻿using Ardalis.GuardClauses;
+using Discord;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Handlers
+namespace DevBetterWeb.Infrastructure.Services
 {
     /// <summary>
     /// https://github.com/Hellsing/DiscordWebhook/blob/master/Webhook.cs
+    /// This works but I don't like that the service and the state are in the same type; 
+    /// services injected via DI should be stateless
     /// </summary>
     [JsonObject]
     public class Webhook
@@ -27,6 +31,15 @@ namespace DevBetterWeb.Core.Handlers
         public bool IsTTS { get; set; }
         [JsonProperty("embeds")]
         public List<Embed> Embeds { get; set; } = new List<Embed>();
+
+        public Webhook(IOptions<DiscordWebhookUrls> optionsAccessor)
+        {
+            Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
+            Guard.Against.NullOrEmpty(optionsAccessor.Value.AdminUpdates, "AdminUpdates");
+
+            _httpClient = new HttpClient();
+            _webhookUrl = optionsAccessor.Value.AdminUpdates;
+        }
 
         public Webhook(string webhookUrl)
         {

@@ -98,9 +98,8 @@ namespace DevBetterWeb.Web
             if (_env.EnvironmentName == "Development")
             {
                 // last registration wins
-                // builder.RegisterType<NoOpEmailService>().As<IEmailService>();
+                builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
             }
-
         }
 
         public void Configure(IApplicationBuilder app,

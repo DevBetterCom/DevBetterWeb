@@ -96,7 +96,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                     var user = _userManager.Users.First(x => x.Email == Input.Email);
                     if (!user.EmailConfirmed)
                     {
-                        _logger.LogInformation("User logged in, but email has not been confirmed.");
+                        _logger.LogInformation($"User {user.Email} logged in, but email has not been confirmed.");
 
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Page(
@@ -123,12 +123,12 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning($"User account {Input.Email} locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, $"Invalid login attempt by user {Input.Email}.");
                     return Page();
                 }
             }
