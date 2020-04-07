@@ -86,7 +86,13 @@ namespace DevBetterWeb.Web
                     {
                         serverOptions.Limits.MaxRequestBodySize = Constants.MAX_UPLOAD_FILE_SIZE; // 500MB
                     })
-                    .UseStartup<Startup>();
+                    .UseStartup<Startup>()
+                    .ConfigureLogging(logging =>
+                    {
+                        logging.ClearProviders();
+                        logging.AddConsole();
+                        logging.AddAzureWebAppDiagnostics();
+                    });
                 });
     }
 }
