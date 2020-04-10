@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +19,15 @@ namespace DevBetterWeb.Web.Pages.Admin
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IDomainEventDispatcher _dispatcher;
 
-        public RoleModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public RoleModel(UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager,
+            IDomainEventDispatcher dispatcher)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-
+            _dispatcher = dispatcher;
         }
         public IdentityRole? Role { get; set; }
         public List<ApplicationUser> UsersInRole { get; set; } = new List<ApplicationUser>();
@@ -60,6 +65,10 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
 
             await _userManager.AddToRoleAsync(user, role.Name);
+
+            var userAddedToRoleEvent = new UserAddedToRoleEvent(user.Email, role.Name);
+            await _dispatcher.Dispatch(userAddedToRoleEvent);
+
             return RedirectToPage("./Role", new { roleId });
         }
 
@@ -74,6 +83,10 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
 
             await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+            var userRemovedEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
+            await _dispatcher.Dispatch(userRemovedEvent);
+
             return RedirectToPage("./Role", new { roleId });
         }
     }
