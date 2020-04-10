@@ -15,7 +15,6 @@ namespace DevBetterWeb.Web.Pages
 
         public QuestionsModel(AppDbContext context)
         {
-            Guard.Against.Null(context, nameof(context));
             _context = context;
         }
 
