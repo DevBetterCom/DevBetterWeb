@@ -19,15 +19,15 @@ namespace DevBetterWeb.Web.Pages.Admin
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IDomainEventDispatcher _dispatcher;
+        private readonly IUserRoleMembershipService _userRoleMembershipService;
 
         public UserModel(UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager,
-            IDomainEventDispatcher dispatcher)
+            IUserRoleMembershipService userRoleMembershipService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _dispatcher = dispatcher;
+            _userRoleMembershipService = userRoleMembershipService;
         }
 
         public IdentityUser? IdentityUser { get; set; }
@@ -75,36 +75,14 @@ namespace DevBetterWeb.Web.Pages.Admin
 
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
-
-            if (user == null || role == null)
-            {
-                return BadRequest();
-            }
-
-            await _userManager.AddToRoleAsync(user, role.Name);
-
-            var userAddedToRoleEvent = new UserAddedToRoleEvent(user.Email, role.Name);
-            await _dispatcher.Dispatch(userAddedToRoleEvent);
+            await _userRoleMembershipService.AddUserToRoleAsync(userId, roleId);
 
             return RedirectToPage("./User", new { userId = userId });
         }
 
         public async Task<IActionResult> OnPostRemoveUserFromRole(string userId, string roleId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
-
-            if (user == null || role == null)
-            {
-                return BadRequest();
-            }
-
-            await _userManager.RemoveFromRoleAsync(user, role.Name);
-
-            var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
-            await _dispatcher.Dispatch(userRemovedFromRoleEvent);
+            await _userRoleMembershipService.RemoveUserFromRoleAsync(userId, roleId);
 
             return RedirectToPage("./User", new { userId = userId});
         }
