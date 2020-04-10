@@ -24,6 +24,8 @@ namespace DevBetterWeb.Web
 {
     public class Startup
     {
+        public const string DEFAULT_CONNECTION_STRING_NAME = "DefaultConnection";
+
         private bool _isDbContextAdded = false;
         private readonly IWebHostEnvironment _env;
 
@@ -40,10 +42,9 @@ namespace DevBetterWeb.Web
         {
             if (!_isDbContextAdded)
             {
-
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("DefaultConnection")));
+                        .GetConnectionString(DEFAULT_CONNECTION_STRING_NAME)));
                 _isDbContextAdded = true;
             }
             ConfigureServices(services);
@@ -66,7 +67,7 @@ namespace DevBetterWeb.Web
                 string dbName = Guid.NewGuid().ToString();
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration
-                        .GetConnectionString("DefaultConnection")));
+                        .GetConnectionString(DEFAULT_CONNECTION_STRING_NAME)));
                 _isDbContextAdded = true;
             }
 
