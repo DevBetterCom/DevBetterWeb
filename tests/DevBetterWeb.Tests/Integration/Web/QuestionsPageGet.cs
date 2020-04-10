@@ -5,11 +5,11 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Integration.Web
 {
-    public class HomeControllerIndex : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class QuestionsPageGet : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
 
-        public HomeControllerIndex(CustomWebApplicationFactory<Startup> factory)
+        public QuestionsPageGet(CustomWebApplicationFactory<Startup> factory)
         {
             _client = factory.CreateClient();
         }
@@ -17,11 +17,11 @@ namespace DevBetterWeb.Tests.Integration.Web
         [Fact]
         public async Task ReturnsViewWithCorrectMessage()
         {
-            HttpResponseMessage response = await _client.GetAsync("/");
+            HttpResponseMessage response = await _client.GetAsync("/Questions");
             response.EnsureSuccessStatusCode();
             string stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains("Developer Career Coaching", stringResponse);
+            Assert.Contains("Questions Discussed", stringResponse);
         }
     }
 }
