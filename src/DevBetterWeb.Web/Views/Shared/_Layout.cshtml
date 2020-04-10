@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using DevBetterWeb.Web.Areas.Identity.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -57,31 +62,38 @@
     @await RenderSectionAsync("head", required: false).ConfigureAwait(false)
 </head>
 <body>
-    <nav class="navbar navbar-light static-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
-                <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
-            </a>
-            <a asp-page="/ArchivedVideos/Index">Videos</a>
-            <a asp-page="/Questions">Questions</a>
-            @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-            {
-                <a asp-page="/Admin/Index">Admin</a>
-            }
+    <nav class="navbar navbar-light static-top navbar-expand-md">
+        <a class="navbar-brand" href="/">
+            <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
+            <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#devBetterNavBar" aria-controls="devBetterNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="devBetterNavBar">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link text-primary" asp-page="/ArchivedVideos/Index">Videos</a>
+                <a class="nav-item nav-link text-primary" asp-page="/Questions">Questions</a>
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <a asp-page="/User/MyProfile">My Profile</a>
-                <a asp-page="/User/Index">Members</a>
-            }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="nav-item nav-link text-primary" asp-page="/User/Index">Members</a>
+                }
 
+                @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
+                {
+                    <a class="nav-item nav-link text-primary" asp-page="/Admin/Index">Admin</a>
+                }
 
-            <partial name="_LoginPartial" />
-            @if (!User.IsInRole(AuthConstants.Roles.MEMBERS) && !User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-            {
-            <a class="btn btn-primary" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
-            }
+            </div>
+
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link text-primary" href="https://github.com/ardalis/devbetterweb"><i class="fab fa-github"></i></a>   
+                
+                <partial name="_LoginPartial" />
+
+                <a class="btn btn-primary nav-item" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
+            </div>
         </div>
     </nav>
 
@@ -130,13 +142,13 @@
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
-            asp-fallback-src="~/lib/popperJs/umd/popper.min.js">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+                asp-fallback-src="~/lib/popperJs/umd/popper.min.js">
         </script>
         <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        </script>       
+        </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
