@@ -5,21 +5,24 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-            </li>
-        </ul>
-    </form>
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user text-primary"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <h6 class="dropdown-header">@UserManager.GetUserName(User)</h6>
+
+            <a class="dropdown-item text-primary" asp-page="/User/MyProfile">My Profile</a>
+
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm" class="form-inline">
+                <button type="submit" class="dropdown-item text-primary">Logout</button>
+            </form>
+        </div>
+    </div>
+
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-        <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
-    </ul>
+    <a class="nav-item nav-link text-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <a class="nav-item nav-link text-primary" asp-area="Identity" asp-page="/Account/Register">Register</a>
 }
