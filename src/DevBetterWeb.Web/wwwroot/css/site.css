@@ -81,3 +81,18 @@ textarea {
         display: none;
     }
 }
+
+
+/*on large screens, show the github corner link.  on smaller/monbile screens, just show the nav link*/
+#githubNavLink{
+    display:none;
+}
+
+@media only screen and (max-width: 1225px) {
+    .github-corner {
+        display: none;
+    }
+    #githubNavLink{
+        display: inline;
+    }
+}

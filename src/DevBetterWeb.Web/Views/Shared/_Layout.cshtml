@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using DevBetterWeb.Web.Areas.Identity.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -40,6 +45,7 @@
     <!-- Custom styles for this template -->
     <link href="/css/site.css" rel="stylesheet" />
     <link href="/css/landing-page.css" rel="stylesheet">
+
     <!-- Facebook -->
     <meta property="og:title" content="Developer Career Coaching | devBetter with Steve Smith">
     <meta property="og:site_name" content="Developer Career Coaching - devBetter">
@@ -57,36 +63,86 @@
     @await RenderSectionAsync("head", required: false).ConfigureAwait(false)
 </head>
 <body>
-    <nav class="navbar navbar-light static-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
-                <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
-            </a>
-            <a asp-page="/ArchivedVideos/Index">Videos</a>
-            <a asp-page="/Questions">Questions</a>
-            @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-            {
-                <a asp-page="/Admin/Index">Admin</a>
-            }
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <a asp-page="/User/MyProfile">My Profile</a>
-                <a asp-page="/User/Index">Members</a>
-            }
+    <nav class="navbar navbar-light static-top navbar-expand-md">
+        <div class="navbar-brand d-flex">
+            <div>
+               
+            </div>
+          
 
+            <div>
+                <a class="" href="/">
+                    <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
+                    <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
+                </a>
+            </div>
+        </div>
+      
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#devBetterNavBar" aria-controls="devBetterNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="devBetterNavBar">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link text-primary" asp-page="/ArchivedVideos/Index">Videos</a>
+                <a class="nav-item nav-link text-primary" asp-page="/Questions">Questions</a>
 
-            <partial name="_LoginPartial" />
-            @if (!User.IsInRole(AuthConstants.Roles.MEMBERS) && !User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-            {
-            <a class="btn btn-primary" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
-            }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="nav-item nav-link text-primary" asp-page="/User/Index">Members</a>
+                }
+
+                @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
+                {
+                    <a class="nav-item nav-link text-primary" asp-page="/Admin/Index">Admin</a>
+                }
+
+            </div>
+
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link text-primary" id="githubNavLink" href="https://github.com/ardalis/devbetterweb"><i class="fab fa-github"></i></a>
+                <partial name="_LoginPartial" />
+
+                <a class="btn btn-primary nav-item" href="https://launchpass.com/p/devbetter" target="_blank">Join Now</a>
+            </div>
+            <div class="navbar-nav">
+
+            </div>
         </div>
     </nav>
 
     <partial name="_CookieConsentPartial" />
     <div class="container-fluid body-content">
+
+        <!-- http://tholman.com/github-corners/ -->
+
+        <a href="https://github.com/ardalis/devbetterweb" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+        <style>
+            .github-corner:hover .octo-arm {
+                animation: octocat-wave 560ms ease-in-out
+            }
+            @@keyframes octocat-wave {
+                0%, 100% {
+                    transform: rotate(0)
+                }
+                20%, 60% {
+                    transform: rotate(-25deg)
+                }
+                40%, 80% {
+                    transform: rotate(10deg)
+                }
+            }
+            @@media (max-width:500px) {
+                .github-corner:hover .octo-arm {
+                    animation: none
+                }
+                .github-corner .octo-arm {
+                    animation: octocat-wave 560ms ease-in-out
+                }
+            }
+        </style>
+
         @RenderBody()
 
     </div>
@@ -130,13 +186,13 @@
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
-            asp-fallback-src="~/lib/popperJs/umd/popper.min.js">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+                asp-fallback-src="~/lib/popperJs/umd/popper.min.js">
         </script>
         <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        </script>       
+        </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
