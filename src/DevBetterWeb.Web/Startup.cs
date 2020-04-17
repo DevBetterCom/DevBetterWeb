@@ -95,16 +95,7 @@ namespace DevBetterWeb.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.InitializeAutofac(Assembly.GetExecutingAssembly());
-            if (_env.EnvironmentName == "Development")
-            {
-                // last registration wins
-                builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
-            }
-            else
-            {
-                builder.RegisterType<SendGridEmailService>().As<IEmailService>();
-            }
+            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
         }
 
         public void Configure(IApplicationBuilder app,
