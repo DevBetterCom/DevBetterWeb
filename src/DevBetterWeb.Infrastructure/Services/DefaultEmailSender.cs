@@ -7,11 +7,11 @@ namespace DevBetterWeb.Infrastructure.Services
     /// <summary>
     /// Used by Forgot Password and similar Identity features
     /// </summary>
-    public class SendGridEmailSender : IEmailSender
+    public class DefaultEmailSender : IEmailSender
     {
         private readonly IEmailService _emailService;
 
-        public SendGridEmailSender(IEmailService emailService)
+        public DefaultEmailSender(IEmailService emailService)
         {
             _emailService = emailService;
         }
