@@ -17,8 +17,6 @@ namespace DevBetterWeb.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            RegisterCommonDependencies(builder);
-
             if (_isDevelopment)
             {
                 RegisterDevelopmentOnlyDependencies(builder);
@@ -27,6 +25,7 @@ namespace DevBetterWeb.Infrastructure
             {
                 RegisterProductionOnlyDependencies(builder);
             }
+            RegisterCommonDependencies(builder);
         }
 
         private void RegisterCommonDependencies(ContainerBuilder builder)
@@ -36,6 +35,8 @@ namespace DevBetterWeb.Infrastructure
             builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
             builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
             builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
+
+            builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
         }
 
         private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
