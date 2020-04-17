@@ -101,6 +101,10 @@ namespace DevBetterWeb.Web
                 // last registration wins
                 builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
             }
+            else
+            {
+                builder.RegisterType<SendGridEmailService>().As<IEmailService>();
+            }
         }
 
         public void Configure(IApplicationBuilder app,
