@@ -32,4 +32,3 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 ## Development Links
 
 - [Production Site](https://devbetter.com/)
-- [Azure Portal](https://portal.azure.com)
