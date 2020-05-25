@@ -3,6 +3,7 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Services;
+using Discord;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace DevBetterWeb.Infrastructure
@@ -35,6 +36,7 @@ namespace DevBetterWeb.Infrastructure
             builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
             builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
             builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
+            builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>().As<IUserRoleMembershipService>();
 
             builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
         }
