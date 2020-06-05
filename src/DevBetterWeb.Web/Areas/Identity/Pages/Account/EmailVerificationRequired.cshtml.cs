@@ -28,9 +28,16 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
+        [BindProperty]
+        public string Email { get; set; } = "";
+
         public async Task OnPostAsync()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            VerificationEmailSent = true;
+
+            string email = User?.Identity?.Name ?? Email;
+            var user = await _userManager.FindByNameAsync(email);
+            if (user is null) return;
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
