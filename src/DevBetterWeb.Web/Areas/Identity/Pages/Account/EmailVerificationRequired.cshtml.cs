@@ -45,7 +45,8 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 values: new { userId = user.Id, code },
                 protocol: Request.Scheme);
 
-            await _emailService.SendEmailAsync(user.Email, "Confirm your email",
+            _logger.LogInformation($"Sending email to {email} with verification link.");
+            await _emailService.SendEmailAsync(email, "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
         }
     }
