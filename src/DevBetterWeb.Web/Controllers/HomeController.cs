@@ -9,15 +9,12 @@ namespace DevBetterWeb.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IExceptionHandlerPathFeature _exceptionHandlerPathFeature;
         private readonly IDomainEventDispatcher _dispatcher;
 
         public HomeController(IWebHostEnvironment webHostEnvironment,
-            IExceptionHandlerPathFeature exceptionHandlerPathFeature,
             IDomainEventDispatcher dispatcher)
         {
             _webHostEnvironment = webHostEnvironment;
-            _exceptionHandlerPathFeature = exceptionHandlerPathFeature;
             _dispatcher = dispatcher;
         }
 
@@ -29,9 +26,12 @@ namespace DevBetterWeb.Web.Controllers
 
         public IActionResult Error()
         {
-            if(_exceptionHandlerPathFeature != null)
+            var feature = HttpContext
+              .Features
+              .Get<IExceptionHandlerPathFeature>();
+            if (feature != null)
             {
-                var exceptionEvent = new SiteErrorOccurredEvent(_exceptionHandlerPathFeature.Error);
+                var exceptionEvent = new SiteErrorOccurredEvent(feature.Error);
                 _dispatcher.Dispatch(exceptionEvent);
             }
             return View();
