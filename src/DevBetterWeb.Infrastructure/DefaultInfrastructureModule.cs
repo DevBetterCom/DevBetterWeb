@@ -39,6 +39,9 @@ namespace DevBetterWeb.Infrastructure
             builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>().As<IUserRoleMembershipService>();
 
             builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
+
+            builder.RegisterAssemblyTypes(this.ThisAssembly)
+                .AsClosedTypesOf(typeof(IHandle<>));
         }
 
         private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
