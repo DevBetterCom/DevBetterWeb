@@ -36,7 +36,8 @@ namespace DevBetterWeb.Infrastructure
             builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
             builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
             builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
-            builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>().As<IUserRoleMembershipService>();
+            builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
+                .As<IUserRoleMembershipService>();
 
             builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
 

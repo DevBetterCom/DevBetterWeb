@@ -20,9 +20,9 @@ namespace DevBetterWeb.Web.Areas.Identity
                         context.Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddIdentity<ApplicationUser, IdentityRole>(x => 
-                        { x.SignIn.RequireConfirmedEmail = true; }
-                        
-                        )                    
+                        { 
+                            x.SignIn.RequireConfirmedEmail = true; 
+                        })                    
                     .AddEntityFrameworkStores<IdentityDbContext>()
                     .AddDefaultTokenProviders();
 
