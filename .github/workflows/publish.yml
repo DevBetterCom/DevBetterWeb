@@ -26,14 +26,7 @@ jobs:
     - name: publish
       run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
     
-    - name: Login
-      uses: azure/login@v1
+    - name: publish to azure     
+    - uses: azure/webapps-deploy@v2
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-    # deploy web app using Azure credentials
-    - name: 'Azure webapp deploy'
-      uses: azure/webapps-deploy@v1
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: './WebApp' 
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
