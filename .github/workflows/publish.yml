@@ -27,6 +27,6 @@ jobs:
       run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
     
     - name: publish to azure     
-    - uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v2
       with:
         publish-profile: ${{ secrets.azureWebAppPublishProfile }}
