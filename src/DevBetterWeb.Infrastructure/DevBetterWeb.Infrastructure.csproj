@@ -10,6 +10,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200721234839_AddSubscription.cs" />
+    <Compile Remove="Data\Migrations\20200721234839_AddSubscription.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200721235253_SubscriptionEntity.cs" />
+    <Compile Remove="Data\Migrations\20200721235253_SubscriptionEntity.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
