@@ -28,6 +28,7 @@ namespace DevBetterWeb.Infrastructure.Data
         public DbSet<ArchiveVideo>? ArchiveVideos { get; set; }
         public DbSet<Question>? Questions { get; set; }
         public DbSet<Member>? Members { get; set; }
+        public DbSet<Subscription>? Subscriptions { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
