@@ -26,6 +26,8 @@ namespace DevBetterWeb.Web.Pages.User
         [ValidUrl]
         public string? TwitchUrl { get; set; }
         [ValidUrl]
+        public string? YouTubeUrl { get; set; }
+        [ValidUrl]
         public string? OtherUrl { get; set; }
         public string? AboutInfo { get; set; }
 
@@ -38,6 +40,7 @@ namespace DevBetterWeb.Web.Pages.User
         {
             BlogUrl = member.BlogUrl;
             TwitchUrl = member.TwitchUrl;
+            YouTubeUrl = member.YouTubeUrl;
             TwitterUrl = member.TwitterUrl;
             GithubUrl = member.GitHubUrl;
             LinkedInUrl = member.LinkedInUrl;

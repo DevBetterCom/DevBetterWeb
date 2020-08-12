@@ -33,6 +33,7 @@ namespace DevBetterWeb.Core.Entities
         public string? LinkedInUrl { get; private set; }
         public string? OtherUrl { get; private set; }
         public string? TwitchUrl { get; private set; }
+        public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
@@ -89,6 +90,7 @@ namespace DevBetterWeb.Core.Entities
             string? linkedInUrl,
             string? otherUrl,
             string? twitchUrl,
+            string? youtubeUrl,
             string? twitterUrl)
         {
             bool valueChanged = false;
@@ -115,6 +117,11 @@ namespace DevBetterWeb.Core.Entities
             if (TwitchUrl != twitchUrl)
             {
                 TwitchUrl = twitchUrl;
+                valueChanged = true;
+            }
+            if (YouTubeUrl != youtubeUrl)
+            {
+                YouTubeUrl = youtubeUrl;
                 valueChanged = true;
             }
             if (TwitterUrl != twitterUrl)
