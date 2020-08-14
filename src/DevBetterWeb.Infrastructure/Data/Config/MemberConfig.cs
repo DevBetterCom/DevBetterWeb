@@ -6,16 +6,18 @@ namespace DevBetterWeb.Infrastructure.Data.Config
 {
     public class MemberConfig : IEntityTypeConfiguration<Member>
     {
+
         public void Configure(EntityTypeBuilder<Member> builder)
         {
             builder.Property(x => x.UserId).HasMaxLength(500);
             builder.Property(x => x.Address).HasMaxLength(500);
-            builder.Property(x => x.BlogUrl).HasMaxLength(200);
-            builder.Property(x => x.GitHubUrl).HasMaxLength(200);
-            builder.Property(x => x.LinkedInUrl).HasMaxLength(200);
-            builder.Property(x => x.OtherUrl).HasMaxLength(200);
-            builder.Property(x => x.TwitchUrl).HasMaxLength(200);
-            builder.Property(x => x.TwitterUrl).HasMaxLength(200);
+            builder.Property(x => x.BlogUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.GitHubUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.LinkedInUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.OtherUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.TwitchUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.TwitterUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+            builder.Property(x => x.YouTubeUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
             builder.Property(x => x.FirstName).HasMaxLength(100);
             builder.Property(x => x.LastName).HasMaxLength(100);
         }
