@@ -35,8 +35,20 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 ## EF Migrations Commands
 
+Add a new migration:
+
+```powershell
+dotnet ef migrations add MIGRATIONNAME -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
+```
+
 Update AppDbContext model:
 
-```
+```powershell
 dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+```
+
+Generate Idempotent Update Script (for production):
+
+```powershell
+dotnet ef migrations script -c AppDbContext -i -o migrate.sql -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
 ```
