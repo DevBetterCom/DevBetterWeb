@@ -28,6 +28,7 @@ namespace DevBetterWeb.Web.Areas.Identity
 
                 services.ConfigureApplicationCookie(options =>
                 {
+                    options.Cookie.Name = "DevBetterAuth";
                     options.LoginPath = $"/Identity/Account/Login";
                     options.LogoutPath = $"/Identity/Account/Logout";
                     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
