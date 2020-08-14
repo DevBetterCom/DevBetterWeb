@@ -32,3 +32,11 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 ## Development Links
 
 - [Production Site](https://devbetter.com/)
+
+## EF Migrations Commands
+
+Update AppDbContext model:
+
+```
+dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+```
