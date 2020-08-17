@@ -332,3 +332,5 @@ ASALocalRun/
 Report
 src/DevBetterWeb.Web/appsettings.development.json
 az-create.txt
+DevBetterWeb/src/DevBetterWeb.Web/web.config
+
