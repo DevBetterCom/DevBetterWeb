@@ -55,6 +55,7 @@ namespace DevBetterWeb.Web.Pages.User
             public string? LinkedInUrl { get; private set; }
             public string? OtherUrl { get; private set; }
             public string? TwitchUrl { get; private set; }
+            public string? YouTubeUrl { get; private set; }
             public string? TwitterUrl { get; private set; }
 
             public static MemberLinksDTO FromMemberEntity(Member member)
@@ -67,6 +68,7 @@ namespace DevBetterWeb.Web.Pages.User
                     LinkedInUrl = member.LinkedInUrl,
                     OtherUrl = member.OtherUrl,
                     TwitchUrl = member.TwitchUrl,
+                    YouTubeUrl = member.YouTubeUrl,
                     TwitterUrl = member.TwitterUrl,
                     UserId = member.UserId
                 };
