@@ -87,10 +87,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("PEFriendCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("PEUsername")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("TwitchUrl")
                         .HasColumnType("nvarchar(200)")

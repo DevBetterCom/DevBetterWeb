@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200819182400_PEFriendAddedOnMember")]
-    partial class PEFriendAddedOnMember
+    [Migration("20200819200212_PEInfoAddedToMember")]
+    partial class PEInfoAddedToMember
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -89,7 +89,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("PEFriendCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PEUsername")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("TwitchUrl")
                         .HasColumnType("nvarchar(200)")
