@@ -37,6 +37,16 @@
                         <textarea asp-for="UserProfileUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.AboutInfo</textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label class="font-weight-bold">Project Euler Username</label>
+                        <input asp-for="UserProfileUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEUsername" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="font-weight-bold">Project Euler Friend Code</label>
+                        <input asp-for="UserProfileUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEFriendCode" />
+                    </div>
+
                 </div>
             </div>
         </div>

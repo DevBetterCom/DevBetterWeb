@@ -27,6 +27,8 @@ namespace DevBetterWeb.Core.Entities
         public string? LastName { get; private set; }
         public string? AboutInfo { get; private set; }
         public string? Address { get; private set; }
+        public string? PEFriendCode { get; private set; }
+        public string? PEUsername { get; private set; }
 
         public string? BlogUrl { get; private set; }
         public string? GitHubUrl { get; private set; }
@@ -83,6 +85,26 @@ namespace DevBetterWeb.Core.Entities
 
             AboutInfo = aboutInfo;
             CreateOrUpdateUpdateEvent(nameof(AboutInfo));
+        }
+        public void UpdatePEInfo(string? peFriendCode, string? peUsername)
+        {
+            bool valueChanged = false;
+
+            if (PEFriendCode != peFriendCode)
+            {
+                PEFriendCode = peFriendCode;
+                valueChanged = true;
+            }
+            if(PEUsername != peUsername)
+            {
+                PEUsername = peUsername;
+                valueChanged = true;
+            }
+
+            if(valueChanged)
+            {
+                CreateOrUpdateUpdateEvent("ProjectEuler");
+            }
         }
 
         public void UpdateLinks(string? blogUrl,
