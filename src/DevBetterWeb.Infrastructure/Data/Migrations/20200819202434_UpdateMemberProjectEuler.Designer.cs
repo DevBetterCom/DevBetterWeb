@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200819200212_PEInfoAddedToMember")]
-    partial class PEInfoAddedToMember
+    [Migration("20200819202434_UpdateMemberProjectEuler")]
+    partial class UpdateMemberProjectEuler
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
