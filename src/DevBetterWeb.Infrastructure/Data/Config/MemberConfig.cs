@@ -18,8 +18,10 @@ namespace DevBetterWeb.Infrastructure.Data.Config
             builder.Property(x => x.TwitchUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
             builder.Property(x => x.TwitterUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
             builder.Property(x => x.YouTubeUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
-            builder.Property(x => x.FirstName).HasMaxLength(100);
-            builder.Property(x => x.LastName).HasMaxLength(100);
+            builder.Property(x => x.FirstName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+            builder.Property(x => x.LastName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+            builder.Property(x => x.PEFriendCode).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+            builder.Property(x => x.PEUsername).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
         }
     }
 }
