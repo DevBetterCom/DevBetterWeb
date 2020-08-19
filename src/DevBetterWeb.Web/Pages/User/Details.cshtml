@@ -48,6 +48,20 @@
                     </div>
                 }
 
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
+                {
+                <div class="mb-2">
+                    @if ("@member.YouTubeUrl".Contains("?"))
+                    {
+                        <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
+                    }
+                    else
+                    {
+                        <a href="@Model.UserDetailsViewModel.YouTubeUrl?sub_confirmation=1" target="_blank">YouTube</a>
+                    }
+                </div>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
                 {
                     <div class="mb-2">
@@ -81,6 +95,12 @@
                             @Model.UserDetailsViewModel.PEFriendCode
                         </div>
                     </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
+            {
+                <div>
+                    <img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge"/>
                 </div>
             }
         </div>
