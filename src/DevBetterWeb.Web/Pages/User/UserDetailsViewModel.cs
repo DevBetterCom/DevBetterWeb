@@ -12,6 +12,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? TwitchUrl { get; set; }
         public string? OtherUrl { get; set; }
         public string? AboutInfo { get; set; }
+        public string? PEFriendCode { get; set; }
 
         public UserDetailsViewModel()
         {
@@ -27,6 +28,7 @@ namespace DevBetterWeb.Web.Pages.User
             OtherUrl = member.OtherUrl;
             AboutInfo = member.AboutInfo;
             Name = member.UserFullName();
+            PEFriendCode = member.PEFriendCode;
         }
     }
 }
