@@ -27,7 +27,13 @@ namespace DevBetterWeb.Web.Pages.User
             TwitterUrl = member.TwitterUrl;
             GithubUrl = member.GitHubUrl;
             LinkedInUrl = member.LinkedInUrl;
+
             YouTubeUrl = member.YouTubeUrl;
+            if(!(string.IsNullOrEmpty(YouTubeUrl)) && !(YouTubeUrl.Contains("?")))
+                    {
+                        YouTubeUrl = YouTubeUrl + "?sub_confirmation=1";
+                    }
+
             OtherUrl = member.OtherUrl;
             AboutInfo = member.AboutInfo;
             Name = member.UserFullName();
