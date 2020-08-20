@@ -3,10 +3,11 @@ using DevBetterWeb.Core.Events;
 using System;
 using System.Linq;
 using Xunit;
+using static DevBetterWeb.Web.Pages.User.IndexModel;
 
 namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
-    public class MemberUpdateAboutInfo
+    public class MemberLinksDtoFromMemberEntity
     {
         private string _initialAboutInfo = "";
 
@@ -66,6 +67,38 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             Assert.Same(member, eventCreated.Member);
             Assert.Equal("Name,AboutInfo", eventCreated.UpdateDetails);
+        }
+
+        [Fact]
+        public void ReturnsInputYouTubeUrlIfContainsQuestionMark()
+        {
+            var member = MemberHelpers.CreateWithDefaultConstructor();
+
+            member.UpdateLinks(null, null, null, null, null, "https://www.youtube.com/ardalis?", null);
+
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
+
+            MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
+
+            var result = dto.YouTubeUrl;
+
+            Assert.Equal("https://www.youtube.com/ardalis?", result);
+        }
+
+        [Fact]
+        public void ReturnsAlteredYouTubeUrlIfContainsNoQuestionMark()
+        {
+            var member = MemberHelpers.CreateWithDefaultConstructor();
+
+            member.UpdateLinks(null, null, null, null, null, "https://www.youtube.com/ardalis", null);
+
+            var eventCreated = (MemberUpdatedEvent)member.Events.First();
+
+            MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
+
+            var result = dto.YouTubeUrl;
+
+            Assert.Equal("https://www.youtube.com/ardalis?sub_confirmation=1", result);
         }
 
     }
