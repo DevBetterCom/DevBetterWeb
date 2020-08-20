@@ -51,14 +51,9 @@
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
                 {
                 <div class="mb-2">
-                    @if ("@member.YouTubeUrl".Contains("?"))
-                    {
-                        <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
-                    }
-                    else
-                    {
-                        <a href="@Model.UserDetailsViewModel.YouTubeUrl?sub_confirmation=1" target="_blank">YouTube</a>
-                    }
+                    
+                    <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
+                    
                 </div>
                 }
 
