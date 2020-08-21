@@ -59,8 +59,9 @@ namespace DevBetterWeb.Web.Pages.User
             public string? TwitterUrl { get; private set; }
 
             public static MemberLinksDTO FromMemberEntity(Member member)
-            {
-                return new MemberLinksDTO
+            { 
+
+                var dto = new MemberLinksDTO
                 {
                     FullName = member.UserFullName(),
                     BlogUrl = member.BlogUrl,
@@ -70,8 +71,15 @@ namespace DevBetterWeb.Web.Pages.User
                     TwitchUrl = member.TwitchUrl,
                     YouTubeUrl = member.YouTubeUrl,
                     TwitterUrl = member.TwitterUrl,
-                    UserId = member.UserId
+                    UserId = member.UserId                 
                 };
+
+                if (!(string.IsNullOrEmpty(dto.YouTubeUrl)) && !(dto.YouTubeUrl.Contains("?")))
+                {
+                    dto.YouTubeUrl = dto.YouTubeUrl + "?sub_confirmation=1";
+                }
+
+                return dto;
             }
         }
     }
