@@ -74,15 +74,15 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         {
             var member = MemberHelpers.CreateWithDefaultConstructor();
 
-            member.UpdateLinks(null, null, null, null, null, "https://www.youtube.com/ardalis?", null);
+            string youtubeInput = "https://www.youtube.com/ardalis?";
 
-            var eventCreated = (MemberUpdatedEvent)member.Events.First();
+            member.UpdateLinks(null, null, null, null, null, youtubeInput, null);
 
             MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
             var result = dto.YouTubeUrl;
 
-            Assert.Equal("https://www.youtube.com/ardalis?", result);
+            Assert.Equal(youtubeInput, result);
         }
 
         [Fact]
@@ -90,15 +90,15 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         {
             var member = MemberHelpers.CreateWithDefaultConstructor();
 
-            member.UpdateLinks(null, null, null, null, null, "https://www.youtube.com/ardalis", null);
+            string youtubeInput = "https://www.youtube.com/ardalis";
 
-            var eventCreated = (MemberUpdatedEvent)member.Events.First();
+            member.UpdateLinks(null, null, null, null, null, youtubeInput, null);
 
             MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
             var result = dto.YouTubeUrl;
 
-            Assert.Equal("https://www.youtube.com/ardalis?sub_confirmation=1", result);
+            Assert.Equal(youtubeInput + "?sub_confirmation=1", result);
         }
 
     }
