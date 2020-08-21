@@ -96,3 +96,9 @@ textarea {
         display: inline;
     }
 }
+
+/* Here are presets for Project Euler badge size in members list*/
+ProjectEulerBadge{
+    width:135px;
+    height:40px;
+}
