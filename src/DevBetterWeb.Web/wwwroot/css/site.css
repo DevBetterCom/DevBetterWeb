@@ -38,6 +38,12 @@ footer p {
     padding-bottom: 0;
 }
 
+/* Here are presets for Project Euler badge size in members list*/
+.projectEulerBadge {
+    max-width: 135px;
+    /*max-height: 40px;*/
+}
+
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
 select,
@@ -97,8 +103,3 @@ textarea {
     }
 }
 
-/* Here are presets for Project Euler badge size in members list*/
-ProjectEulerBadge{
-    width:135px;
-    height:40px;
-}
