@@ -27,14 +27,15 @@
                 <a href="@member.TwitchUrl"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
                 <a href="@member.YouTubeUrl"><i class="fab fa-youtube-square fa-2x fa-fw"></i></a>
                 <a href="@member.OtherUrl"><i class="fas fa-link fa-2x fa-fw"></i></a>
-            </td>
-            <td align="right">
+            
                 @if (!string.IsNullOrEmpty(member.PEUsername))
                 {
-                    <img src=@member.PEBadgeURL alt="Project Euler Badge" />
+                    <img src=@member.PEBadgeURL height=40 width=135 alt="Project Euler Badge" align="right" />
                 }
+            
             </td>
-           
+
+
         </tr>
         }
     </tbody>
