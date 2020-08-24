@@ -16,9 +16,14 @@ namespace DevBetterWeb.Core.Handlers
 
         public async Task Handle(MemberUpdatedEvent memberUpdatedEvent)
         {
-            _webhook.Content = $"User {memberUpdatedEvent.Member.FirstName} {memberUpdatedEvent.Member.LastName} just updated their profile. " +
-                $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.Id}.";
+            _webhook.Content = returnWebhookMessageString(memberUpdatedEvent);
             await _webhook.Send();
+        }
+
+        public static string returnWebhookMessageString(MemberUpdatedEvent memberUpdatedEvent)
+        {
+            return $"User {memberUpdatedEvent.Member.FirstName} {memberUpdatedEvent.Member.LastName} just updated their profile. " +
+                $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.Id}.";
         }
     }
 }
