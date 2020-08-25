@@ -23,7 +23,7 @@ namespace DevBetterWeb.Core.Handlers
         public static string returnWebhookMessageString(MemberUpdatedEvent memberUpdatedEvent)
         {
             return $"User {memberUpdatedEvent.Member.FirstName} {memberUpdatedEvent.Member.LastName} just updated their profile. " +
-                $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.Id}.";
+                $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.UserId}.";
         }
     }
 }

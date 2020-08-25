@@ -15,11 +15,13 @@ namespace DevBetterWeb.Tests.Integration.Web
         [Fact]
         public void ReturnsProperMessageString()
         {
-            Member member = MemberHelpers.CreateWithDefaultConstructor();
+            Member member = MemberHelpers.CreateWithInternalConstructor();
+            member.UpdateName("Steve", "Smith");
+
             MemberUpdatedEvent memberEvent = new MemberUpdatedEvent(member, "Links");
 
             var output = DiscordLogUserUpdateHandler.returnWebhookMessageString(memberEvent);
-            var expected = $"User {memberEvent.Member.FirstName} {memberEvent.Member.LastName} just updated their profile. Check it out here: https://devbetter.com/User/Details/{memberEvent.Member.Id}.";
+            var expected = $"User Steve Smith just updated their profile. Check it out here: https://devbetter.com/User/Details/TestUserId.";
 
             Assert.Equal(expected, output);
 
