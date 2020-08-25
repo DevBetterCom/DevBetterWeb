@@ -38,7 +38,10 @@ namespace DevBetterWeb.Web.Pages.User
             AboutInfo = member.AboutInfo;
             Name = member.UserFullName();
             PEFriendCode = member.PEFriendCode;
-            PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png";
+            if (!(string.IsNullOrEmpty(member.PEUsername)))
+            {
+                PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png";
+            }
         }
     }
 }
