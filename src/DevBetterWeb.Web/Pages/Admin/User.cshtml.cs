@@ -1,6 +1,6 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,17 +21,17 @@ namespace DevBetterWeb.Web.Pages.Admin
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserRoleMembershipService _userRoleMembershipService;
-        private readonly AppDbContext _context;
+        private readonly IRepository _repository;
 
         public UserModel(UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager,
             IUserRoleMembershipService userRoleMembershipService,
-            AppDbContext context)
+            IRepository repository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userRoleMembershipService = userRoleMembershipService;
-            _context = context;
+            _repository = repository;
         }
 
         public IdentityUser? IdentityUser { get; set; }
@@ -74,11 +74,11 @@ namespace DevBetterWeb.Web.Pages.Admin
             RolesNotAssignedToUser = unassignedRoles.Select(x => new SelectListItem(x.Name, x.Id)).ToList();
             Roles = assignedRoles.ToList();
 
-            var subscriptions = await _context.Subscriptions
-                                                .Where(x => x.Member.UserId == userId)
-                                                .OrderBy(x => x.StartDate)
-                                                .ToListAsync();
-            
+            var memberByUserSpec = new MemberByUserIdSpec(userId);
+            var member = await _repository.GetBySpecAsync(memberByUserSpec);
+            var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
+            var subscriptions = await _repository.ListBySpecAsync(subscriptionByMemberSpec);
+
             foreach (var subscription in subscriptions)
             {
                 Subscriptions.Add(new SubscriptionDTO()
