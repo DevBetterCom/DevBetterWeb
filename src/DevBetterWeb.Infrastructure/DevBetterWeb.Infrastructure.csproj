@@ -15,6 +15,12 @@
     <Compile Remove="Data\Migrations\20200721234839_AddSubscription.Designer.cs" />
     <Compile Remove="Data\Migrations\20200721235253_SubscriptionEntity.cs" />
     <Compile Remove="Data\Migrations\20200721235253_SubscriptionEntity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200721235905_SubscriptionEntity.cs" />
+    <Compile Remove="Data\Migrations\20200721235905_SubscriptionEntity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200727201459_UpdateSubscription.cs" />
+    <Compile Remove="Data\Migrations\20200727201459_UpdateSubscription.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200727230839_UpdateSubscriptionWithMember.cs" />
+    <Compile Remove="Data\Migrations\20200727230839_UpdateSubscriptionWithMember.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +40,5 @@
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="Autofac" Version="5.1.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 </Project>

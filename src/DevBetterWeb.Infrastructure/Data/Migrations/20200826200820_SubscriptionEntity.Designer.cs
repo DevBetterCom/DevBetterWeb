@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200721235905_SubscriptionEntity")]
+    [Migration("20200826200820_SubscriptionEntity")]
     partial class SubscriptionEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,7 +138,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("MemberId")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -164,7 +164,9 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Member", null)
                         .WithMany("Subscriptions")
-                        .HasForeignKey("MemberId");
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
