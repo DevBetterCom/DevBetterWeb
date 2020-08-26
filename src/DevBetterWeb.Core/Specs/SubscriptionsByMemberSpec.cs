@@ -5,9 +5,9 @@ namespace DevBetterWeb.Core.Specs
 {
     public class SubscriptionsByMemberSpec : BaseSpecification<Subscription>
     {
-        public SubscriptionsByMemberSpec(string userId)
+        public SubscriptionsByMemberSpec(int memberId)
         {
-            AddCriteria(subscription => subscription.MemberId.ToString() == userId);
+            AddCriteria(subscription => subscription.MemberId == memberId);
             ApplyOrderBy(subscription => subscription.StartDate);
         }
     }
