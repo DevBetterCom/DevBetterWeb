@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h3>Members</h3>
 
 <table class="table table-sm table-striped" id="membersTable">
@@ -16,17 +17,26 @@
     <tbody>
         @foreach (var member in Model.Members)
         {
-            <tr>
-                <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
-                <td>
-                    <a href="@member.BlogUrl"><i class="fas fa-blog fa-2x fa-fw"></i></a>
-                    <a href="@member.TwitterUrl"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
-                    <a href="@member.LinkedInUrl"><i class="fab fa-linkedin fa-2x fa-fw"></i></a>
-                    <a href="@member.GitHubUrl"><i class="fab fa-github-square fa-2x fa-fw"></i></a>
-                    <a href="@member.TwitchUrl"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
-                    <a href="@member.OtherUrl"><i class="fas fa-link fa-2x fa-fw"></i></a>
-                </td>
-            </tr>
+        <tr>
+            <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
+            <td>
+                <a href="@member.BlogUrl" target="_blank"><i class="fas fa-blog fa-2x fa-fw"></i></a>
+                <a href="@member.TwitterUrl" target="_blank"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
+                <a href="@member.LinkedInUrl" target="_blank"><i class="fab fa-linkedin fa-2x fa-fw"></i></a>
+                <a href="@member.GitHubUrl" target="_blank"><i class="fab fa-github-square fa-2x fa-fw"></i></a>
+                <a href="@member.TwitchUrl" target="_blank"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
+                <a href="@member.YouTubeUrl" target="_blank"><i class="fab fa-youtube-square fa-2x fa-fw"></i></a>
+                <a href="@member.OtherUrl" target="_blank"><i class="fas fa-link fa-2x fa-fw"></i></a>
+            
+                @if (!string.IsNullOrEmpty(member.PEUsername))
+                {
+                    <img class="projectEulerBadge" src="@member.PEBadgeURL" alt="Project Euler Badge" align="right" />
+                }
+            
+            </td>
+
+
+        </tr>
         }
     </tbody>
 </table>

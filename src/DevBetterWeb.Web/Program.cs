@@ -21,10 +21,10 @@ namespace DevBetterWeb.Web
             var builder = CreateHostBuilder(args);
 
             //string env = "Development";
-            //if (args.Any())
-            //{
-            //    env = args[0];
-            //}
+            ////if (args.Any())
+            ////{
+            ////    env = args[0];
+            ////}
             //Console.WriteLine($"Starting using environment: {env}");
             //builder.UseEnvironment(env);
             var host = builder.Build();

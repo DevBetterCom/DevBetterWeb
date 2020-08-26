@@ -20,13 +20,13 @@ namespace DevBetterWeb.Web.Pages.User
 
         public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
 
-        public IndexModel(UserManager<ApplicationUser> userManager, 
+        public IndexModel(UserManager<ApplicationUser> userManager,
             AppDbContext appDbContext)
         {
             _userManager = userManager;
             _appDbContext = appDbContext;
         }
-         
+
         public async Task OnGet()
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
@@ -55,11 +55,15 @@ namespace DevBetterWeb.Web.Pages.User
             public string? LinkedInUrl { get; private set; }
             public string? OtherUrl { get; private set; }
             public string? TwitchUrl { get; private set; }
+            public string? YouTubeUrl { get; private set; }
             public string? TwitterUrl { get; private set; }
+            public string? PEUsername { get; private set; }
+            public string? PEBadgeURL { get; private set; }
 
             public static MemberLinksDTO FromMemberEntity(Member member)
             {
-                return new MemberLinksDTO
+
+                var dto = new MemberLinksDTO
                 {
                     FullName = member.UserFullName(),
                     BlogUrl = member.BlogUrl,
@@ -67,12 +71,22 @@ namespace DevBetterWeb.Web.Pages.User
                     LinkedInUrl = member.LinkedInUrl,
                     OtherUrl = member.OtherUrl,
                     TwitchUrl = member.TwitchUrl,
+                    YouTubeUrl = member.YouTubeUrl,
                     TwitterUrl = member.TwitterUrl,
-                    UserId = member.UserId
+                    UserId = member.UserId,
+                    PEUsername = member.PEUsername,
+                    PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png"
                 };
+
+                if (!(string.IsNullOrEmpty(dto.YouTubeUrl)) && !(dto.YouTubeUrl.Contains("?")))
+                {
+                    dto.YouTubeUrl = dto.YouTubeUrl + "?sub_confirmation=1";
+                }
+
+                return dto;
             }
         }
     }
 
-   
+
 }

@@ -13,6 +13,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         private string _initialLinkedInUrl = "";
         private string _initialOtherUrl = "";
         private string _initialTwitchUrl = "";
+        private string _initialYouTubeUrl = "";
         private string _initialTwitterUrl = "";
 
         private Member GetMemberWithDefaultLinks()
@@ -25,6 +26,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialLinkedInUrl,
                 _initialOtherUrl,
                 _initialTwitchUrl,
+                _initialYouTubeUrl,
                 _initialTwitterUrl);
             member.Events.Clear();
 
@@ -42,6 +44,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialLinkedInUrl,
                 _initialOtherUrl,
                 _initialTwitchUrl,
+                _initialYouTubeUrl,
                 _initialTwitterUrl);
 
             Assert.Equal(newLink, member.BlogUrl);
@@ -58,6 +61,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialLinkedInUrl,
                 _initialOtherUrl,
                 _initialTwitchUrl,
+                _initialYouTubeUrl,
                 _initialTwitterUrl);
             var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
@@ -74,6 +78,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialLinkedInUrl,
                 _initialOtherUrl,
                 _initialTwitchUrl,
+                _initialYouTubeUrl,
                 _initialTwitterUrl);
 
             Assert.Empty(member.Events);
@@ -93,6 +98,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialLinkedInUrl,
                 _initialOtherUrl,
                 _initialTwitchUrl,
+                _initialYouTubeUrl,
                 _initialTwitterUrl);
             var eventCreated = (MemberUpdatedEvent)member.Events.First();
 

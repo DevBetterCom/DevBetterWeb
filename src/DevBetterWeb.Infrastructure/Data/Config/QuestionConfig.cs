@@ -11,6 +11,5 @@ namespace DevBetterWeb.Infrastructure.Data.Config
             builder.Property(x => x.QuestionText).HasMaxLength(500);
             builder.ToTable("Question");
         }
-
     }
 }

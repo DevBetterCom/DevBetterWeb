@@ -48,6 +48,15 @@
                     </div>
                 }
 
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
+                {
+                <div class="mb-2">
+                    
+                    <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
+                    
+                </div>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
                 {
                     <div class="mb-2">
@@ -71,9 +80,24 @@
                         @Model.UserDetailsViewModel.AboutInfo
                     </div>
                 </div>
-                
-
             </div>
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
+            {
+                <div class="card-body">
+                    <div><b>Project Euler Friend Code </b></div>
+                    <div class="card">
+                        <div class="card-body" style="white-space: pre-line;">
+                            @Model.UserDetailsViewModel.PEFriendCode
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
+            {
+                <div>
+                    <img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge"/>
+                </div>
+            }
         </div>
     </div>
 </div>

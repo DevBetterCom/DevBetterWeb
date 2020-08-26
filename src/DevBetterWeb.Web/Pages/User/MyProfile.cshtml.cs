@@ -62,11 +62,12 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetBySpecAsync(spec);
 
-            member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName);
+            member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
+            member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
             member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
             member.UpdateAddress(UserProfileUpdateModel.Address);
             member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.TwitterUrl);
+                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
 
             await _repository.UpdateAsync(member);
         }

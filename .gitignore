@@ -52,7 +52,6 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-**/Properties/launchSettings.json
 
 # StyleCop
 StyleCopReport.xml
@@ -332,3 +331,6 @@ ASALocalRun/
 Report
 src/DevBetterWeb.Web/appsettings.development.json
 az-create.txt
+src/DevBetterWeb.Web/web.config
+
+
