@@ -70,7 +70,7 @@
                     if (subscription == null) throw new Exception("subscription is null");
                     <div class="d-flex mb-2 border p-2 bg-light">
                         <div class="pt-1">
-                            <a>@subscription.StartDate :: @((subscription.EndDate != null) ? subscription.EndDate.ToString() : "Present")</a>
+                            <a>@subscription.StartDate.ToString("MMMM dd yyyy") - @((subscription.EndDate != null) ? ((DateTime)subscription.EndDate).ToString("MMMM dd yyyy") : "Present")</a>
                         </div>
                         <div class="ml-auto">
                            @* <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#removeRoleModal" data-roleId="@role.Id" data-userId="@Model.IdentityUser.Id" data-roleName="@role.Name">Remove</button>*@
