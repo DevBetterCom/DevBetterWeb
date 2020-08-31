@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +39,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         public IdentityUser? IdentityUser { get; set; }
         public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
+        public SubscriptionDTO Subscription { get; set; } = new SubscriptionDTO();
         public List<SubscriptionDTO> Subscriptions { get; set; } = new List<SubscriptionDTO>();
 
 
@@ -90,6 +93,11 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
 
             return Page();
+        }
+
+        public void OnPostAddSubscription(string userId, SubscriptionDTO subscription)
+        {
+            
         }
 
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
