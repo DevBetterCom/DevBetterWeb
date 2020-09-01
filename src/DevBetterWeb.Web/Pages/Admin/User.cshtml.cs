@@ -1,4 +1,5 @@
 ﻿using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Web.Areas.Identity.Data;
@@ -112,6 +113,24 @@ namespace DevBetterWeb.Web.Pages.Admin
             await _userRoleMembershipService.RemoveUserFromRoleAsync(userId, roleId);
 
             return RedirectToPage("./User", new { userId = userId});
+        }
+
+        public async Task<IActionResult> OnPostDeleteSubscriptionAsync(string userId, int subscriptionId)
+        {
+            var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
+            await _repository.DeleteAsync(subscriptionEntity);
+
+            return RedirectToPage("./User", new { userId = userId });
+        }
+
+        public async Task<IActionResult> OnPostEditSubscriptionAsync(string userId, int subscriptionId, SubscriptionDTO subscription)
+        {
+            var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
+            subscriptionEntity.StartDate = subscription.StartDate;
+            subscriptionEntity.EndDate = subscription.EndDate;
+            await _repository.UpdateAsync(subscriptionEntity);
+
+            return RedirectToPage("./User", new { userId = userId });
         }
 
         public class SubscriptionDTO
