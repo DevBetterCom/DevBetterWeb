@@ -61,7 +61,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
             StartTime = startTime;
 
             var spec = new ArchiveVideoWithQuestionsSpec(id.Value);
-            var archiveVideoEntity = await _repository.GetBySpecAsync(spec);
+            var archiveVideoEntity = await _repository.GetAsync(spec);
 
             if (archiveVideoEntity == null)
             {

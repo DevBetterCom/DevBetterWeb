@@ -1,4 +1,5 @@
 ﻿using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
@@ -17,28 +18,26 @@ namespace DevBetterWeb.Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public Task<T> GetByIdAsync<T>(int id) where T : BaseEntity
+        public async Task<T> GetByIdAsync<T>(int id) where T : BaseEntity
         {
-            return _dbContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
+            return await _dbContext.Set<T>().AsQueryable().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public Task<T> GetBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        public async Task<T> GetAsync<T>(ISpecification<T> spec) where T : BaseEntity
         {
-            return EfSpecificationEvaluator<T, int>
-                .GetQuery(_dbContext.Set<T>(), spec)
-                .SingleOrDefaultAsync();
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.SingleOrDefaultAsync();
         }
 
-        public Task<List<T>> ListAsync<T>() where T : BaseEntity
+        public async Task<List<T>> ListAsync<T>() where T : BaseEntity
         {
-            return _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().AsQueryable().ToListAsync();
         }
 
-        public Task<List<T>> ListBySpecAsync<T>(ISpecification<T> spec) where T : BaseEntity
+        public async Task<List<T>> ListAsync<T>(ISpecification<T> spec) where T : BaseEntity
         {
-            return EfSpecificationEvaluator<T, int>
-                .GetQuery(_dbContext.Set<T>(), spec)
-                .ToListAsync();
+            var specificationResult = ApplySpecification(spec);
+            return await specificationResult.ToListAsync();
         }
 
         public async Task<T> AddAsync<T>(T entity) where T : BaseEntity
@@ -49,16 +48,22 @@ namespace DevBetterWeb.Infrastructure.Data
             return entity;
         }
 
-        public Task DeleteAsync<T>(T entity) where T : BaseEntity
+        public async Task DeleteAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task UpdateAsync<T>(T entity) where T : BaseEntity
+        public async Task UpdateAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            return _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private IQueryable<T> ApplySpecification<T>(ISpecification<T> spec) where T : BaseEntity
+        {
+            var evaluator = new SpecificationEvaluator<T>();
+            return evaluator.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
         }
     }
 }

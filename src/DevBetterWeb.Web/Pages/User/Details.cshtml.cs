@@ -27,7 +27,7 @@ namespace DevBetterWeb.Web.Pages.User
             //}
 
             var spec = new MemberByUserIdSpec(userId);
-            var member = await _repository.GetBySpecAsync(spec);
+            var member = await _repository.GetAsync(spec);
 
             if (member == null)
             {
