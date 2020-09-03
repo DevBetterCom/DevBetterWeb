@@ -13,6 +13,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? YouTubeUrl { get; set; }
         public string? OtherUrl { get; set; }
         public string? AboutInfo { get; set; }
+        public string? Address { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEBadgeURL { get; set; }
 
@@ -30,12 +31,13 @@ namespace DevBetterWeb.Web.Pages.User
 
             YouTubeUrl = member.YouTubeUrl;
             if(!(string.IsNullOrEmpty(YouTubeUrl)) && !(YouTubeUrl.Contains("?")))
-                    {
-                        YouTubeUrl = YouTubeUrl + "?sub_confirmation=1";
-                    }
+            {
+                YouTubeUrl = YouTubeUrl + "?sub_confirmation=1";
+            }
 
             OtherUrl = member.OtherUrl;
             AboutInfo = member.AboutInfo;
+            Address = member.Address;
             Name = member.UserFullName();
             PEFriendCode = member.PEFriendCode;
             if (!(string.IsNullOrEmpty(member.PEUsername)))

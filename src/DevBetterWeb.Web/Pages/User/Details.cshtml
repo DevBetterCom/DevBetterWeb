@@ -10,6 +10,46 @@
     <div class="col-6">
         <div class="card">
             <div class="card-header">
+                <b>Info</b>
+            </div>
+            <div asp-authorize asp-roles="@DevBetterWeb.Core.AuthConstants.Roles.ADMINISTRATORS" class="card-body">
+                <div><b>Shipping Address</b></div>
+                <div class="card">
+                    <div class="card-body" style="white-space: pre-line;">
+                        @Model.UserDetailsViewModel.Address
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div><b>About</b></div>
+                <div class="card">
+                    <div class="card-body" style="white-space: pre-line;">
+                        @Model.UserDetailsViewModel.AboutInfo
+                    </div>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
+            {
+                <div class="card-body">
+                    <div><b>Project Euler Friend Code </b></div>
+                    <div class="card">
+                        <div class="card-body" style="white-space: pre-line;">
+                            @Model.UserDetailsViewModel.PEFriendCode
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
+            {
+                <div>
+                    <img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge" />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
                 <b>Links</b>
             </div>
             <div class="card-body">
@@ -50,11 +90,11 @@
 
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
                 {
-                <div class="mb-2">
-                    
-                    <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
-                    
-                </div>
+                    <div class="mb-2">
+
+                        <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
+
+                    </div>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
@@ -66,38 +106,6 @@
 
 
             </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                <b>Info</b>
-            </div>
-            <div class="card-body">
-                <div><b>About</b></div>
-                <div class="card">
-                    <div class="card-body" style="white-space: pre-line;">
-                        @Model.UserDetailsViewModel.AboutInfo
-                    </div>
-                </div>
-            </div>
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
-            {
-                <div class="card-body">
-                    <div><b>Project Euler Friend Code </b></div>
-                    <div class="card">
-                        <div class="card-body" style="white-space: pre-line;">
-                            @Model.UserDetailsViewModel.PEFriendCode
-                        </div>
-                    </div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
-            {
-                <div>
-                    <img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge"/>
-                </div>
-            }
         </div>
     </div>
 </div>
