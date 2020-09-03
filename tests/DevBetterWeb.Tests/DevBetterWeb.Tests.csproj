@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="altcover" Version="4.0.644" />
-    <PackageReference Include="coverlet.msbuild" Version="2.3.1">
+    <PackageReference Include="altcover" Version="7.1.782" />
+    <PackageReference Include="coverlet.msbuild" Version="2.9.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -40,7 +40,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="Moq" Version="4.8.2" />
+    <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="ReportGenerator" Version="4.2.5" />
     <PackageReference Include="xunit" Version="2.4.1" />
