@@ -27,12 +27,19 @@
                 <a href="@member.TwitchUrl" target="_blank"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
                 <a href="@member.YouTubeUrl" target="_blank"><i class="fab fa-youtube-square fa-2x fa-fw"></i></a>
                 <a href="@member.OtherUrl" target="_blank"><i class="fas fa-link fa-2x fa-fw"></i></a>
-            
+                @if (!String.IsNullOrEmpty(member.Address))
+                {
+                    <i title="Shipping Address" class="fas fa-map-marker fa-2x fa-fw"></i>
+                }
+                else
+                {
+                    <i title="Shipping Address" class="fas fa-map-marker-alt fa-2x fa-fw"></i>
+                }
                 @if (!string.IsNullOrEmpty(member.PEUsername))
                 {
                     <img class="projectEulerBadge" src="@member.PEBadgeURL" alt="Project Euler Badge" align="right" />
                 }
-            
+
             </td>
 
 

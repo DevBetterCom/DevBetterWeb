@@ -59,6 +59,7 @@ namespace DevBetterWeb.Web.Pages.User
             public string? TwitterUrl { get; private set; }
             public string? PEUsername { get; private set; }
             public string? PEBadgeURL { get; private set; }
+            public string? Address { get; private set; }
 
             public static MemberLinksDTO FromMemberEntity(Member member)
             {
@@ -75,7 +76,8 @@ namespace DevBetterWeb.Web.Pages.User
                     TwitterUrl = member.TwitterUrl,
                     UserId = member.UserId,
                     PEUsername = member.PEUsername,
-                    PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png"
+                    PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png",
+                    Address = member.Address
                 };
 
                 if (!(string.IsNullOrEmpty(dto.YouTubeUrl)) && !(dto.YouTubeUrl.Contains("?")))

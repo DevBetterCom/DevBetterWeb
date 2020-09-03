@@ -42,7 +42,7 @@
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="TagHelperSamples.Authorization" Version="2.0.37" />
+    <PackageReference Include="TagHelperSamples.Authorization" Version="3.0.56" />
     <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.2.4" />
     <!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" />
