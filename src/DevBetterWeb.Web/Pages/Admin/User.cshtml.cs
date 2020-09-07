@@ -42,6 +42,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
         public SubscriptionDTO Subscription { get; set; } = new SubscriptionDTO();
         public List<SubscriptionDTO> Subscriptions { get; set; } = new List<SubscriptionDTO>();
+        public double TotalDaysInAllSubscriptions { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(string userId, string? errorMessage = null, string? errorKey = null)
@@ -91,6 +92,9 @@ namespace DevBetterWeb.Web.Pages.Admin
                     StartDate = subscription.Dates.StartDate,
                     EndDate = subscription.Dates.EndDate,
                 });
+
+                var totalDaysInSubscription = subscription.Dates.EndDate != null ? ((DateTime)subscription.Dates.EndDate - subscription.Dates.StartDate).TotalDays : (DateTime.Today - subscription.Dates.StartDate).TotalDays;
+                TotalDaysInAllSubscriptions += totalDaysInSubscription;
             }
 
             if (!string.IsNullOrEmpty(errorMessage) && !string.IsNullOrEmpty(errorKey))
@@ -108,7 +112,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
             if (subscription.EndDate < subscription.StartDate)
             {
-                return RedirectToPage("./User", new { userId = userId, errorMessage = e.Message, errorKey = "InvalidSubscription" });
+                return RedirectToPage("./User", new { userId = userId, errorMessage = "The end date cannot be before the start date", errorKey = "InvalidSubscription" });
             }
 
             try
