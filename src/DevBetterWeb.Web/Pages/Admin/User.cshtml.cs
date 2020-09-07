@@ -105,6 +105,12 @@ namespace DevBetterWeb.Web.Pages.Admin
         {
             var memberByUserSpec = new MemberByUserIdSpec(userId);
             var member = await _repository.GetBySpecAsync(memberByUserSpec);
+
+            if (subscription.EndDate < subscription.StartDate)
+            {
+                return RedirectToPage("./User", new { userId = userId, errorMessage = e.Message, errorKey = "InvalidSubscription" });
+            }
+
             try
             {
                 await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
