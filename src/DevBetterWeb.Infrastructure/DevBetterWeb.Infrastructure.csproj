@@ -21,6 +21,10 @@
     <Compile Remove="Data\Migrations\20200727201459_UpdateSubscription.Designer.cs" />
     <Compile Remove="Data\Migrations\20200727230839_UpdateSubscriptionWithMember.cs" />
     <Compile Remove="Data\Migrations\20200727230839_UpdateSubscriptionWithMember.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200831170242_AddDateTimeRangeValueObject.cs" />
+    <Compile Remove="Data\Migrations\20200831170242_AddDateTimeRangeValueObject.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200902200108_AddDateTimeRangeValueObject.cs" />
+    <Compile Remove="Data\Migrations\20200902200108_AddDateTimeRangeValueObject.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

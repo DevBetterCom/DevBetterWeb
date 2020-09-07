@@ -2,6 +2,7 @@
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,10 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +36,7 @@ namespace DevBetterWeb.Web.Pages.Admin
             _repository = repository;
         }
 
+        
         public IdentityUser? IdentityUser { get; set; }
         public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
         public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
@@ -44,7 +44,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         public List<SubscriptionDTO> Subscriptions { get; set; } = new List<SubscriptionDTO>();
 
 
-        public async Task<IActionResult> OnGetAsync(string userId)
+        public async Task<IActionResult> OnGetAsync(string userId, string? errorMessage = null, string? errorKey = null)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -88,17 +88,33 @@ namespace DevBetterWeb.Web.Pages.Admin
                 Subscriptions.Add(new SubscriptionDTO()
                 {
                     Id = subscription.Id,
-                    StartDate = subscription.StartDate,
-                    EndDate = subscription.EndDate
+                    StartDate = subscription.Dates.StartDate,
+                    EndDate = subscription.Dates.EndDate,
                 });
+            }
+
+            if (!string.IsNullOrEmpty(errorMessage) && !string.IsNullOrEmpty(errorKey))
+            {
+                ModelState.AddModelError(errorKey, errorMessage);
             }
 
             return Page();
         }
 
-        public void OnPostAddSubscription(string userId, SubscriptionDTO subscription)
+        public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
         {
-            
+            var memberByUserSpec = new MemberByUserIdSpec(userId);
+            var member = await _repository.GetBySpecAsync(memberByUserSpec);
+            try
+            {
+                await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
+            }
+            catch (ArgumentException e)
+            {
+                return RedirectToPage("./User", new { userId = userId, errorMessage = e.Message, errorKey = "InvalidSubscription" });
+            }
+
+            return RedirectToPage("./User", new { userId = userId });
         }
 
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
@@ -126,8 +142,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         public async Task<IActionResult> OnPostEditSubscriptionAsync(string userId, int subscriptionId, SubscriptionDTO subscription)
         {
             var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
-            subscriptionEntity.StartDate = subscription.StartDate;
-            subscriptionEntity.EndDate = subscription.EndDate;
+            subscriptionEntity.Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate);
             await _repository.UpdateAsync(subscriptionEntity);
 
             return RedirectToPage("./User", new { userId = userId });

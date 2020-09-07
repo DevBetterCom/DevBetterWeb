@@ -17,6 +17,8 @@
     </div>
 </div>
 
+
+
 <div style="display: grid; grid-template-columns: auto auto; grid-column-gap: 20px;">
     <div class="row">
         <div class="col-12">
@@ -64,6 +66,7 @@
                     </div>
                 </div>
             </div>
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             <div class="border border-top-0 p-2">
                 @foreach (var subscription in Model.Subscriptions)
                 {
