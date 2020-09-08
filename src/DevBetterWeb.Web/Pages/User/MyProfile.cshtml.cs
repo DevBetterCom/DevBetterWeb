@@ -40,7 +40,7 @@ namespace DevBetterWeb.Web.Pages.User
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
             var spec = new MemberByUserIdSpec(applicationUser.Id);
-            var member = await _repository.GetBySpecAsync(spec);
+            var member = await _repository.GetAsync(spec);
 
             if (member == null)
             {
@@ -60,7 +60,7 @@ namespace DevBetterWeb.Web.Pages.User
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
             var spec = new MemberByUserIdSpec(applicationUser.Id);
-            var member = await _repository.GetBySpecAsync(spec);
+            var member = await _repository.GetAsync(spec);
 
             member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
             member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
