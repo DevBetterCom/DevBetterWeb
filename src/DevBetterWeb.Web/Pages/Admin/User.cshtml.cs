@@ -100,24 +100,6 @@ namespace DevBetterWeb.Web.Pages.Admin
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
-        {
-            var memberByUserSpec = new MemberByUserIdSpec(userId);
-            var member = await _repository.GetAsync(memberByUserSpec);
-
-            try
-            {
-                await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
-            }
-            catch (ArgumentException e)
-            {
-                ModelState.AddModelError("InvalidSubscription", e.Message);
-                return BadRequest(ModelState);
-            }
-
-            return RedirectToPage("./User", new { userId = userId });
-        }
-
         public async Task<IActionResult> OnPostAddUserToRoleAsync(string userId, string roleId)
         {
             await _userRoleMembershipService.AddUserToRoleAsync(userId, roleId);
@@ -130,6 +112,39 @@ namespace DevBetterWeb.Web.Pages.Admin
             await _userRoleMembershipService.RemoveUserFromRoleAsync(userId, roleId);
 
             return RedirectToPage("./User", new { userId = userId});
+        }
+
+        public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
+        {
+            var memberByUserSpec = new MemberByUserIdSpec(userId);
+            var member = await _repository.GetAsync(memberByUserSpec);
+            var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
+            var subscriptionsFromDb = await _repository.ListAsync(subscriptionByMemberSpec);
+
+            // return error message if new subscription overlaps an existing subscription
+            foreach (var subscriptionFromDb in subscriptionsFromDb)
+            {
+                if ((subscription.StartDate >= subscriptionFromDb.Dates.StartDate && subscription.StartDate <= subscriptionFromDb.Dates.EndDate) ||
+                    (subscription.EndDate >= subscriptionFromDb.Dates.StartDate && subscription.EndDate <= subscriptionFromDb.Dates.EndDate))
+                {
+                    ModelState.AddModelError("OverlappingSubscription", "Subscriptions cannot overlap");
+                    return BadRequest(ModelState);
+                }
+            }
+            
+            try
+            {
+                await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
+            }
+
+            //DateTimeRange throws an error if EndDate is prior to StartDate
+            catch (ArgumentException e)
+            {
+                ModelState.AddModelError("InvalidSubscription", e.Message);
+                return BadRequest(ModelState);
+            }
+
+            return RedirectToPage("./User", new { userId = userId });
         }
 
         public async Task<IActionResult> OnPostDeleteSubscriptionAsync(string userId, int subscriptionId)
