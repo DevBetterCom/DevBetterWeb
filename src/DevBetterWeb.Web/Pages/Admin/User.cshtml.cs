@@ -45,7 +45,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         public double TotalDaysInAllSubscriptions { get; set; }
 
 
-        public async Task<IActionResult> OnGetAsync(string userId, string? errorMessage = null, string? errorKey = null)
+        public async Task<IActionResult> OnGetAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -80,9 +80,9 @@ namespace DevBetterWeb.Web.Pages.Admin
             Roles = assignedRoles.ToList();
 
             var memberByUserSpec = new MemberByUserIdSpec(userId);
-            var member = await _repository.GetBySpecAsync(memberByUserSpec);
+            var member = await _repository.GetAsync(memberByUserSpec);
             var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
-            var subscriptions = await _repository.ListBySpecAsync(subscriptionByMemberSpec);
+            var subscriptions = await _repository.ListAsync(subscriptionByMemberSpec);
 
             foreach (var subscription in subscriptions)
             {
@@ -97,23 +97,13 @@ namespace DevBetterWeb.Web.Pages.Admin
                 TotalDaysInAllSubscriptions += totalDaysInSubscription;
             }
 
-            if (!string.IsNullOrEmpty(errorMessage) && !string.IsNullOrEmpty(errorKey))
-            {
-                ModelState.AddModelError(errorKey, errorMessage);
-            }
-
             return Page();
         }
 
         public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
         {
             var memberByUserSpec = new MemberByUserIdSpec(userId);
-            var member = await _repository.GetBySpecAsync(memberByUserSpec);
-
-            if (subscription.EndDate < subscription.StartDate)
-            {
-                return RedirectToPage("./User", new { userId = userId, errorMessage = "The end date cannot be before the start date", errorKey = "InvalidSubscription" });
-            }
+            var member = await _repository.GetAsync(memberByUserSpec);
 
             try
             {
@@ -121,7 +111,8 @@ namespace DevBetterWeb.Web.Pages.Admin
             }
             catch (ArgumentException e)
             {
-                return RedirectToPage("./User", new { userId = userId, errorMessage = e.Message, errorKey = "InvalidSubscription" });
+                ModelState.AddModelError("InvalidSubscription", e.Message);
+                return BadRequest(ModelState);
             }
 
             return RedirectToPage("./User", new { userId = userId });
