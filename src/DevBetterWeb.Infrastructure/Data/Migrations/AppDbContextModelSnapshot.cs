@@ -15,7 +15,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -45,6 +45,30 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("ArchiveVideos");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PurchaseUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
                 {
                     b.Property<int>("Id")
@@ -62,6 +86,9 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<string>("BlogUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
+
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -113,6 +140,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookId");
+
                     b.ToTable("Members");
                 });
 
@@ -138,6 +167,13 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.HasIndex("ArchiveVideoId");
 
                     b.ToTable("Question");
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.Book", null)
+                        .WithMany("MembersHaveRead")
+                        .HasForeignKey("BookId");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
