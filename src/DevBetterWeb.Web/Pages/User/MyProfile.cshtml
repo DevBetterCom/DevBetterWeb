@@ -41,7 +41,7 @@
                         <label class="font-weight-bold">Project Euler Username</label>
                         <input asp-for="UserProfileUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEUsername" />
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="font-weight-bold">Project Euler Friend Code</label>
                         <input asp-for="UserProfileUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEFriendCode" />
@@ -49,8 +49,6 @@
 
                 </div>
             </div>
-        </div>
-        <div class="col-5">
             <div class="card">
                 <div class="card-header">
                     <b>Links</b>
@@ -85,7 +83,7 @@
                         <input type="text" asp-for="UserProfileUpdateModel.TwitchUrl" value="@Model.UserProfileUpdateModel.TwitchUrl" class="form-control form-control-sm" />
                         <span asp-validation-for="UserProfileUpdateModel.TwitchUrl" class="text-danger"></span>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="font-weight-bold">YouTube</label>
                         <input type="text" asp-for="UserProfileUpdateModel.YouTubeUrl" value="@Model.UserProfileUpdateModel.YouTubeUrl" class="form-control form-control-sm" />
@@ -99,6 +97,31 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-header">
+                    <b>Books</b>
+                </div>
+                @if (Model.UserProfileUpdateModel.BooksAvailable != null)
+                {
+                    foreach (var book in Model.UserProfileUpdateModel.BooksAvailable)
+                    {
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold" for="@book.Title">
+                                @book.ToString()
+                            </label>
+                            <input type="checkbox" id="@book.Title" checked />
+                            <!--="(Model.UserProfileUpdateModel.BooksRead != null && Model.UserProfileUpdateModel.BooksRead.Contains(BookMember x => x.Book = book))"-->
+                            <span></span>
+                        </div>
+                    </div>
+                    }
+                }
+            </div>
+
         </div>
     </div>
 

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
@@ -24,14 +26,16 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemberRegistrationService _memberRegistrationService;
         private readonly IRepository _repository;
+        private readonly AppDbContext _appDbContext;
 
         public MyProfileModel(UserManager<ApplicationUser> userManager, 
             IMemberRegistrationService memberRegistrationService,
-            IRepository repository)
+            IRepository repository, AppDbContext appDbContext)
         {
             _userManager = userManager;
             _memberRegistrationService = memberRegistrationService;
             _repository = repository;
+            _appDbContext = appDbContext;
         }
 
         public async Task OnGetAsync()
@@ -62,12 +66,17 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
+            // generate list of books available
+
+            List<Book>? query = _appDbContext.Books.ToList();
+
             member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
             member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
             member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
             member.UpdateAddress(UserProfileUpdateModel.Address);
             member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
                 UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
+            member.UpdateBooks(UserProfileUpdateModel.BooksRead, query);
 
             await _repository.UpdateAsync(member);
         }

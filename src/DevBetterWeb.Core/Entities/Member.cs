@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.SharedKernel;
 using System;
+using System.Collections.Generic;
 
 namespace DevBetterWeb.Core.Entities
 {
@@ -37,6 +38,9 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitchUrl { get; private set; }
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
+
+        public List<BookMember>? BooksRead { get; private set; } = new List<BookMember>();
+        public List<Book>? BooksAvailable { get; private set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -154,6 +158,28 @@ namespace DevBetterWeb.Core.Entities
             if (valueChanged)
             {
                 CreateOrUpdateUpdateEvent("Links");
+            }
+        }
+
+        public void UpdateBooks(List<BookMember>? booksRead, List<Book> booksAvailable)
+        {
+            bool valueChanged = false;
+            
+            if (BooksRead != booksRead)
+            {
+                BooksRead = booksRead;
+                valueChanged = true;
+            }
+
+            if(BooksAvailable != booksAvailable)
+            {
+                BooksAvailable = booksAvailable;
+                valueChanged = true;
+            }
+
+            if(valueChanged)
+            {
+                CreateOrUpdateUpdateEvent("Books");
             }
         }
 
