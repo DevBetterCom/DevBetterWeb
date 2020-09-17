@@ -38,7 +38,6 @@ namespace DevBetterWeb.Web.Pages.User
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
         public List<BookMember>? BooksRead { get; set; }
-        public List<Book>? BooksAvailable { get; set; } 
 
         public UserProfileUpdateModel()
         {
@@ -47,6 +46,7 @@ namespace DevBetterWeb.Web.Pages.User
 
         public UserProfileUpdateModel(Member member)
         {
+
             BlogUrl = member.BlogUrl;
             TwitchUrl = member.TwitchUrl;
             YouTubeUrl = member.YouTubeUrl;
@@ -61,8 +61,26 @@ namespace DevBetterWeb.Web.Pages.User
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
             BooksRead = member.BooksRead;
-            BooksAvailable = member.BooksAvailable;
 
-            }
         }
+
+        public bool HasReadBook(Book book)
+        {
+            if (BooksRead == null)
+            {
+                return false;
+            }
+
+            foreach (BookMember bookMember in BooksRead)
+            {
+                if (bookMember != null && bookMember.Book != null && bookMember.Book.Equals(book))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
+}

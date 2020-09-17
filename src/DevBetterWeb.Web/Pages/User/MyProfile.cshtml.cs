@@ -21,6 +21,7 @@ namespace DevBetterWeb.Web.Pages.User
 #nullable disable
         [BindProperty]
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+        public List<Book> Books = new List<Book> { new Book { Author = "Test", Title = "TestTitle" } };
 #nullable enable
 
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,6 +37,8 @@ namespace DevBetterWeb.Web.Pages.User
             _memberRegistrationService = memberRegistrationService;
             _repository = repository;
             _appDbContext = appDbContext;
+            Books = _appDbContext.Books.ToList();
+
         }
 
         public async Task OnGetAsync()
@@ -66,17 +69,13 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            // generate list of books available
-
-            List<Book>? query = _appDbContext.Books.ToList();
-
             member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
             member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
             member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
             member.UpdateAddress(UserProfileUpdateModel.Address);
             member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
                 UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
-            member.UpdateBooks(UserProfileUpdateModel.BooksRead, query);
+            member.UpdateBooks(UserProfileUpdateModel.BooksRead);
 
             await _repository.UpdateAsync(member);
         }

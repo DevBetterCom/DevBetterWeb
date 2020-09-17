@@ -40,7 +40,6 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitterUrl { get; private set; }
 
         public List<BookMember>? BooksRead { get; private set; } = new List<BookMember>();
-        public List<Book>? BooksAvailable { get; private set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -161,25 +160,13 @@ namespace DevBetterWeb.Core.Entities
             }
         }
 
-        public void UpdateBooks(List<BookMember>? booksRead, List<Book> booksAvailable)
+        public void UpdateBooks(List<BookMember>? booksRead)
         {
-            bool valueChanged = false;
-            
             if (BooksRead != booksRead)
             {
                 BooksRead = booksRead;
-                valueChanged = true;
-            }
-
-            if(BooksAvailable != booksAvailable)
-            {
-                BooksAvailable = booksAvailable;
-                valueChanged = true;
-            }
-
-            if(valueChanged)
-            {
                 CreateOrUpdateUpdateEvent("Books");
+
             }
         }
 

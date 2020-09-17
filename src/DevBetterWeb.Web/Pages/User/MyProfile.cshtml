@@ -104,18 +104,16 @@
                 <div class="card-header">
                     <b>Books</b>
                 </div>
-                @if (Model.UserProfileUpdateModel.BooksAvailable != null)
+                @if (Model.Books != null)
                 {
-                    foreach (var book in Model.UserProfileUpdateModel.BooksAvailable)
+                    foreach (var book in Model.Books)
                     {
                     <div class="card-body">
                         <div class="form-group">
                             <label class="font-weight-bold" for="@book.Title">
                                 @book.ToString()
                             </label>
-                            <input type="checkbox" id="@book.Title" checked />
-                            <!--="(Model.UserProfileUpdateModel.BooksRead != null && Model.UserProfileUpdateModel.BooksRead.Contains(BookMember x => x.Book = book))"-->
-                            <span></span>
+                            <input type="checkbox" id="@book.Title" checked="@Model.UserProfileUpdateModel.HasReadBook(book)"/>
                         </div>
                     </div>
                     }
