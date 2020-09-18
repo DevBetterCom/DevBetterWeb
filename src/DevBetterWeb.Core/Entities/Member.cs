@@ -2,6 +2,7 @@
 using DevBetterWeb.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
 {
@@ -39,7 +40,7 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public List<BookMember>? BooksRead { get; private set; } = new List<BookMember>();
+        public List<BookMember> BooksRead { get; private set; } = new List<BookMember>();
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -160,13 +161,33 @@ namespace DevBetterWeb.Core.Entities
             }
         }
 
-        public void UpdateBooks(List<BookMember>? booksRead)
+        public void UpdateBooks(List<BookMember> booksRead)
         {
             if (BooksRead != booksRead)
             {
                 BooksRead = booksRead;
                 CreateOrUpdateUpdateEvent("Books");
+            }
+        }
 
+        public void AddBookRead(Book book)
+        {
+
+            if (!BooksRead.Any(br => br.Book.Id == book.Id))
+            {
+                BooksRead.Add(new BookMember { Book = book, Member = this });
+                CreateOrUpdateUpdateEvent("Books");
+            }
+        }
+
+        public void RemoveBookRead(Book book)
+        {
+            var bookToRemove = BooksRead.FirstOrDefault(br => br.Book.Id == book.Id);
+
+            if (bookToRemove != null)
+            {
+                BooksRead.Remove(bookToRemove);
+                CreateOrUpdateUpdateEvent("Books");
             }
         }
 

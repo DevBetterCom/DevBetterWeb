@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200911171442_Initial")]
+    [Migration("20200918212011_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,20 +55,39 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
 
                     b.Property<string>("PurchaseUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookMember", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "MemberId");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("BookMember");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
@@ -88,9 +107,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<string>("BlogUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
-
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -142,8 +158,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
                     b.ToTable("Members");
                 });
 
@@ -171,11 +185,19 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookMember", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.Book", null)
-                        .WithMany("MembersHaveRead")
-                        .HasForeignKey("BookId");
+                    b.HasOne("DevBetterWeb.Core.Entities.Book", "Book")
+                        .WithMany("MembersWhoHaveRead")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DevBetterWeb.Core.Entities.Member", "Member")
+                        .WithMany("BooksRead")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>

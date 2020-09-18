@@ -60,9 +60,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<int?>("MemberId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PurchaseUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
@@ -73,27 +70,18 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MemberId");
-
                     b.ToTable("Books");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.BookMember", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BookId")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MemberId")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
+                    b.HasKey("BookId", "MemberId");
 
                     b.HasIndex("MemberId");
 
@@ -195,22 +183,19 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Book", b =>
-                {
-                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
-                        .WithMany("BooksAvailable")
-                        .HasForeignKey("MemberId");
-                });
-
             modelBuilder.Entity("DevBetterWeb.Core.Entities.BookMember", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Book", "Book")
                         .WithMany("MembersWhoHaveRead")
-                        .HasForeignKey("BookId");
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DevBetterWeb.Core.Entities.Member", "Member")
                         .WithMany("BooksRead")
-                        .HasForeignKey("MemberId");
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>

@@ -9,8 +9,15 @@ namespace DevBetterWeb.Infrastructure.Data.Config
 
         public void Configure(EntityTypeBuilder<BookMember> builder)
         {
-            builder.HasOne(x => x.Member);
-            builder.HasOne(x => x.Book);
+            builder.HasKey(x => new { x.BookId, x.MemberId });
+
+            builder.HasOne(bookmember => bookmember.Book)
+                .WithMany(b => b.MembersWhoHaveRead)
+                .HasForeignKey(b => b.BookId);
+
+            builder.HasOne(bookmember => bookmember.Member)
+                .WithMany(m => m.BooksRead)
+                .HasForeignKey(m => m.MemberId);
         }
     }
 }

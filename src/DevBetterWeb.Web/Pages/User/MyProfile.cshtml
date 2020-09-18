@@ -49,6 +49,9 @@
 
                 </div>
             </div>
+
+        </div>
+        <div class="col-5">
             <div class="card">
                 <div class="card-header">
                     <b>Links</b>
@@ -98,26 +101,38 @@
                 </div>
             </div>
 
-        </div>
-        <div class="col-5">
+            <br />
+
             <div class="card">
                 <div class="card-header">
                     <b>Books</b>
                 </div>
-                @if (Model.Books != null)
+                @if (Model.UserProfileUpdateModel.BooksRead != null && Model.UserProfileUpdateModel.BooksRead.Count > 0)
                 {
-                    foreach (var book in Model.Books)
+                    foreach (var book in Model.UserProfileUpdateModel.BooksRead)
                     {
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="font-weight-bold" for="@book.Title">
-                                @book.ToString()
-                            </label>
-                            <input type="checkbox" id="@book.Title" checked="@Model.UserProfileUpdateModel.HasReadBook(book)"/>
+                        <div class="card-body">
+                                    @book.Book.ToString()
                         </div>
-                    </div>
                     }
                 }
+                else
+                {
+                    <div class="card-body">You haven't read any books yet. Add one below!</div>
+                }
+                <div class="card-body">
+                    <label for="addBooks">Select a book below to add it to your list.</label>
+                    <select asp-for="UserProfileUpdateModel.AddedBook"  id="addBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
+                        {
+                            if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                    </select>
+                </div>
             </div>
 
         </div>
