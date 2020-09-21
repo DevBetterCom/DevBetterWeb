@@ -74,7 +74,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var newUserEvent = new NewUserRegisteredEvent(Input.Email!);
+                    var newUserEvent = new NewUserRegisteredEvent(Input.Email!, Request.HttpContext.Connection.RemoteIpAddress.ToString());
                     await _dispatcher.Dispatch(newUserEvent);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
