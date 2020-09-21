@@ -107,13 +107,17 @@
                 <div class="card-header">
                     <b>Books</b>
                 </div>
-                @if (Model.UserProfileUpdateModel.BooksRead != null && Model.UserProfileUpdateModel.BooksRead.Count > 0)
+                @if (Model.UserProfileUpdateModel.BooksRead.Count > 0)
                 {
-                    foreach (var book in Model.UserProfileUpdateModel.BooksRead)
+                    @foreach (var book in Model.Books)
                     {
-                        <div class="card-body">
-                                    @book.Book.ToString()
-                        </div>
+                        if (Model.UserProfileUpdateModel.HasReadBook(book))
+                        {
+                            <div class="card-body">
+                                @book.ToString()
+                            </div>
+
+                        }
                     }
                 }
                 else
@@ -122,7 +126,7 @@
                 }
                 <div class="card-body">
                     <label for="addBooks">Select a book below to add it to your list.</label>
-                    <select asp-for="UserProfileUpdateModel.AddedBook"  id="addBooks">
+                    <select asp-for="UserProfileUpdateModel.AddedBook" id="addBooks">
                         <option value="">None</option>
                         @foreach (var book in Model.Books)
                         {

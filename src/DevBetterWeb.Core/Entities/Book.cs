@@ -10,7 +10,7 @@ namespace DevBetterWeb.Core.Entities
         public string? Details { get; set; }
         public string? PurchaseUrl { get; set; }
 
-        public List<BookMember> MembersWhoHaveRead { get; private set; } = new List<BookMember>();
+        public List<BookMember> MembersWhoHaveRead { get; } = new List<BookMember>();
 
         public override string ToString()
         {

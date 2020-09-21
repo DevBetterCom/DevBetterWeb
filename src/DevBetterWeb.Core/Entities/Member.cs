@@ -40,7 +40,7 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public List<BookMember> BooksRead { get; private set; } = new List<BookMember>();
+        public List<BookMember> BooksRead { get; } = new List<BookMember>();
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -161,6 +161,7 @@ namespace DevBetterWeb.Core.Entities
             }
         }
 
+        /**
         public void UpdateBooks(List<BookMember> booksRead)
         {
             if (BooksRead != booksRead)
@@ -169,6 +170,7 @@ namespace DevBetterWeb.Core.Entities
                 CreateOrUpdateUpdateEvent("Books");
             }
         }
+        **/
 
         public void AddBookRead(Book book)
         {
