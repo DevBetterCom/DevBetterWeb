@@ -37,7 +37,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
-        public List<BookMember> BooksRead { get; set; } = new List<BookMember>();
+        public ICollection<Book> BooksRead { get; set; } = new List<Book>();
         public int? AddedBook { get; set; }
 
         public UserProfileUpdateModel()
@@ -72,9 +72,9 @@ namespace DevBetterWeb.Web.Pages.User
                 return false;
             }
 
-            foreach (BookMember bookMember in BooksRead)
+            foreach (Book Book in BooksRead)
             {
-                if (bookMember != null && bookMember.Book != null && bookMember.Book.Equals(book))
+                if (Book != null && Book.Equals(book))
                 {
                     return true;
                 }

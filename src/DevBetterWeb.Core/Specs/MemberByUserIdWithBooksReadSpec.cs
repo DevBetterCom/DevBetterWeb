@@ -12,8 +12,8 @@ namespace DevBetterWeb.Core.Specs
             UserId = userId;
 
             Query.Where(member => member.UserId == userId);
-            Query.Include(member => member.BooksRead)
-                .ThenInclude(booksread => booksread.Book);
+            Query.Include("BooksRead");
+                //.ThenInclude(booksread => booksread.Book);
         }
     }
 }

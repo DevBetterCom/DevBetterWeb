@@ -2,6 +2,7 @@
 using DevBetterWeb.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
@@ -11,6 +12,11 @@ namespace DevBetterWeb.Core.Entities
         private Member()
         {
             UserId = "";
+
+            BooksRead = new JoinCollectionFacade<Book, BookMember>(
+                BookMembers,
+                bm => bm.Book,
+                b => new BookMember { Member = this, Book = b });
         }
 
         /// <summary>
@@ -22,6 +28,11 @@ namespace DevBetterWeb.Core.Entities
         {
             UserId = userId;
             Events.Add(new NewMemberCreatedEvent(this));
+
+            BooksRead = new JoinCollectionFacade<Book, BookMember>(
+                BookMembers,
+                bm => bm.Book,
+                b => new BookMember { Member = this, Book = b });
         }
 
         public string UserId { get; private set; }
@@ -40,7 +51,10 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public List<BookMember> BooksRead { get; } = new List<BookMember>();
+        public ICollection<BookMember> BookMembers { get; } = new List<BookMember>();
+
+        [NotMapped]
+        public ICollection<Book> BooksRead { get; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -175,23 +189,23 @@ namespace DevBetterWeb.Core.Entities
         public void AddBookRead(Book book)
         {
 
-            if (!BooksRead.Any(br => br.Book.Id == book.Id))
+            if (!(BooksRead.Any(br => br.Id == book.Id)))
             {
-                BooksRead.Add(new BookMember { Book = book, Member = this });
+                BooksRead.Add(book);
                 CreateOrUpdateUpdateEvent("Books");
             }
         }
 
-        public void RemoveBookRead(Book book)
-        {
-            var bookToRemove = BooksRead.FirstOrDefault(br => br.Book.Id == book.Id);
+        //public void RemoveBookRead(Book book)
+        //{
+        //    var bookToRemove = BooksRead.FirstOrDefault(br => br.Id == book.Id);
 
-            if (bookToRemove != null)
-            {
-                BooksRead.Remove(bookToRemove);
-                CreateOrUpdateUpdateEvent("Books");
-            }
-        }
+        //    if (bookToRemove != null)
+        //    {
+        //        BookMembers.Remove(bookToRemove);
+        //        CreateOrUpdateUpdateEvent("Books");
+        //    }
+        //}
 
         private void CreateOrUpdateUpdateEvent(string updateDetails)
         {

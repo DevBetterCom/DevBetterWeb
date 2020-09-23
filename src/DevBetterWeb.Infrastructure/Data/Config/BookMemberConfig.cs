@@ -12,11 +12,11 @@ namespace DevBetterWeb.Infrastructure.Data.Config
             builder.HasKey(x => new { x.BookId, x.MemberId });
 
             builder.HasOne(bookmember => bookmember.Book)
-                .WithMany(b => b.MembersWhoHaveRead)
+                .WithMany("BookMembers")
                 .HasForeignKey(b => b.BookId);
 
             builder.HasOne(bookmember => bookmember.Member)
-                .WithMany(m => m.BooksRead)
+                .WithMany("BookMembers")
                 .HasForeignKey(m => m.MemberId);
         }
     }

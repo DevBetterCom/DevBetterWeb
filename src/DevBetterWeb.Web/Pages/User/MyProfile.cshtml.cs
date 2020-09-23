@@ -5,6 +5,7 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -28,14 +29,16 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemberRegistrationService _memberRegistrationService;
         private readonly IRepository _repository;
+        private readonly AppDbContext _appDbContext;
 
         public MyProfileModel(UserManager<ApplicationUser> userManager, 
             IMemberRegistrationService memberRegistrationService,
-            IRepository repository)
+            IRepository repository, AppDbContext appDbContext)
         {
             _userManager = userManager;
             _memberRegistrationService = memberRegistrationService;
             _repository = repository;
+            _appDbContext = appDbContext;
         }
 
         public async Task OnGetAsync()
@@ -43,8 +46,13 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
+
+            //    var member = await _appDbContext.Members
+            //.Include(member => member.BooksRead)
+            //.ThenInclude(bookMember => bookMember.Book)
+            //.FirstOrDefaultAsync(m => m.UserId == applicationUser.Id);
 
             if (member == null)
             {
@@ -65,7 +73,7 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
             if (UserProfileUpdateModel.AddedBook.HasValue)
