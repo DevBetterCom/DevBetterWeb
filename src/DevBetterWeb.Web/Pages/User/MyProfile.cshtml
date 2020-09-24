@@ -107,7 +107,7 @@
                 <div class="card-header">
                     <b>Books</b>
                 </div>
-                @if (Model.UserProfileUpdateModel.BooksRead.Count > 0)
+                @if (Model.UserProfileUpdateModel.BooksRead.Any())
                 {
                     @foreach (var book in Model.Books)
                     {
@@ -132,7 +132,7 @@
                         {
                             if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
                             {
-                                <option value="@book">@book.ToString()</option>
+                                <option value="@book.Id">@book.ToString()</option>
                             }
                         }
                     </select>

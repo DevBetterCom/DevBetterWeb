@@ -1,6 +1,4 @@
-﻿using DevBetterWeb.Core.SharedKernel;
-
-namespace DevBetterWeb.Core.Entities
+﻿namespace DevBetterWeb.Core.Entities
 {
     public class BookMember
     {

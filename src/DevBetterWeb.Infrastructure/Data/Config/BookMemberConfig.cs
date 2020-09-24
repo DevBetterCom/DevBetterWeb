@@ -11,13 +11,13 @@ namespace DevBetterWeb.Infrastructure.Data.Config
         {
             builder.HasKey(x => new { x.BookId, x.MemberId });
 
-            builder.HasOne(bookmember => bookmember.Book)
-                .WithMany("BookMembers")
-                .HasForeignKey(b => b.BookId);
+            //builder.HasOne(bookmember => bookmember.Book)
+            //    .WithMany("BookMembers")
+            //    .HasForeignKey(b => b.BookId);
 
-            builder.HasOne(bookmember => bookmember.Member)
-                .WithMany("BookMembers")
-                .HasForeignKey(m => m.MemberId);
+            //builder.HasOne(bookmember => bookmember.Member)
+            //    .WithMany("BookMembers")
+            //    .HasForeignKey(m => m.MemberId);
         }
     }
 }

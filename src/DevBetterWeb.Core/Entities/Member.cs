@@ -9,14 +9,14 @@ namespace DevBetterWeb.Core.Entities
 {
     public class Member : BaseEntity
     {
-        private Member()
+        public Member()
         {
             UserId = "";
 
-            BooksRead = new JoinCollectionFacade<Book, BookMember>(
-                BookMembers,
-                bm => bm.Book,
-                b => new BookMember { Member = this, Book = b });
+            //BooksRead = new JoinCollectionFacade<Book, BookMember>(
+            //    BookMembers,
+            //    bm => bm.Book,
+            //    b => new BookMember { Member = this, Book = b });
         }
 
         /// <summary>
@@ -29,10 +29,10 @@ namespace DevBetterWeb.Core.Entities
             UserId = userId;
             Events.Add(new NewMemberCreatedEvent(this));
 
-            BooksRead = new JoinCollectionFacade<Book, BookMember>(
-                BookMembers,
-                bm => bm.Book,
-                b => new BookMember { Member = this, Book = b });
+            //BooksRead = new JoinCollectionFacade<Book, BookMember>(
+            //    BookMembers,
+            //    bm => bm.Book,
+            //    b => new BookMember { Member = this, Book = b });
         }
 
         public string UserId { get; private set; }
@@ -51,10 +51,10 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public ICollection<BookMember> BookMembers { get; } = new List<BookMember>();
+        public ICollection<BookMember>? BookMembers { get; }// = new List<BookMember>();
 
-        [NotMapped]
-        public ICollection<Book> BooksRead { get; }
+        //[NotMapped]
+        //public ICollection<Book> BooksRead { get; set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -189,11 +189,11 @@ namespace DevBetterWeb.Core.Entities
         public void AddBookRead(Book book)
         {
 
-            if (!(BooksRead.Any(br => br.Id == book.Id)))
-            {
-                BooksRead.Add(book);
-                CreateOrUpdateUpdateEvent("Books");
-            }
+            //if (!BooksRead.Any(br => br.Id == book.Id))
+            //{
+            //    BooksRead.Add(book);
+            //    CreateOrUpdateUpdateEvent("Books");
+            //}
         }
 
         //public void RemoveBookRead(Book book)

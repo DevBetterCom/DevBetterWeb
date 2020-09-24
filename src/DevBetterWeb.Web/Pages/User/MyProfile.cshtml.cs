@@ -49,10 +49,17 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            //    var member = await _appDbContext.Members
-            //.Include(member => member.BooksRead)
-            //.ThenInclude(bookMember => bookMember.Book)
-            //.FirstOrDefaultAsync(m => m.UserId == applicationUser.Id);
+            var books = await _appDbContext.Books
+                .Include(book => book.BookMembers)
+                .ThenInclude(bookMember => bookMember.Member)
+                .ToListAsync();
+
+            var members = await _appDbContext.Members
+                .Include(member => member.BookMembers)
+                .ThenInclude(bookMember => bookMember.Book)
+                .ToListAsync();
+
+
 
             if (member == null)
             {
@@ -79,10 +86,8 @@ namespace DevBetterWeb.Web.Pages.User
             if (UserProfileUpdateModel.AddedBook.HasValue)
             {
                 AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
-                if (AddedBook != null)
-                {
-                    member.AddBookRead(AddedBook);
-                }
+
+                member.AddBookRead(AddedBook);
             }
 
             member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
@@ -92,6 +97,7 @@ namespace DevBetterWeb.Web.Pages.User
             member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
                 UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
 
+            // this is trying to add to bookmember database - why?
             await _repository.UpdateAsync(member);
         }
     }
