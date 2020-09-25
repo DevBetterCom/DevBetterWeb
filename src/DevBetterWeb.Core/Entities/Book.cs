@@ -17,7 +17,7 @@ namespace DevBetterWeb.Core.Entities
         //        BookMembers,
         //        m => m.Member,
         //        mb => new BookMember { Member = mb, Book = this });
-        public ICollection<Book>? MembersWhoHaveRead { get; } //= new List<BookMember>();
+        public ICollection<Member>? MembersWhoHaveRead { get; } //= new List<BookMember>();
 
         //[NotMapped]
         //public ICollection<Member> MembersWhoHaveRead { get; }
