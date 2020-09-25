@@ -51,7 +51,7 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public ICollection<BookMember>? BookMembers { get; }// = new List<BookMember>();
+        public ICollection<Book>? BooksRead { get; }// = new List<BookMember>();
 
         //[NotMapped]
         //public ICollection<Book> BooksRead { get; set; }
