@@ -20,19 +20,19 @@ namespace DevBetterWeb.Web.Pages.User
         [Required]
         public string? LastName { get; set; }
         public string? Address { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? LinkedInUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? TwitterUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? GithubUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? BlogUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? TwitchUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? YouTubeUrl { get; set; }
-        [ValidUrl]
+        //[ValidUrl]
         public string? OtherUrl { get; set; }
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }

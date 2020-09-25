@@ -9,7 +9,7 @@ namespace DevBetterWeb.Web
     {
         public static void PopulateTestData(AppDbContext dbContext)
         {
-            if (dbContext.ArchiveVideos.Any()) return;
+            if (dbContext.ArchiveVideos!.Any()) return;
 
             var vid1 = new ArchiveVideo()
             {

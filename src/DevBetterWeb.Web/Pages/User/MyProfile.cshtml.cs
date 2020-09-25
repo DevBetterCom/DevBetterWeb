@@ -43,7 +43,7 @@ namespace DevBetterWeb.Web.Pages.User
 
         public async Task OnGetAsync()
         {
-            var currentUserName = User.Identity.Name;
+            var currentUserName = User.Identity!.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
             var spec = new MemberByUserIdSpec(applicationUser.Id);
@@ -77,7 +77,7 @@ namespace DevBetterWeb.Web.Pages.User
             // TODO: consider only getting the user alias not the whole URL for social media links
             // TODO: assess risk of XSS attacks and how to mitigate
 
-            var currentUserName = User.Identity.Name;
+            var currentUserName = User.Identity!.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
             var spec = new MemberByUserIdSpec(applicationUser.Id);
