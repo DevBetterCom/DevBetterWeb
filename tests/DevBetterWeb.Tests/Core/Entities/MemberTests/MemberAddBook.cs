@@ -6,22 +6,11 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public class MemberAddBook
     {
 
-        private Book GetBookToAdd()
-        {
-            return new Book
-            {
-                Title = "Book",
-                Author = "Ilyana Smith",
-                Details = "this is a book",
-                PurchaseUrl = "https://buyabook.com"
-            };
-        }
-
         [Fact]
         public void ShouldAddBookGivenBook()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = GetBookToAdd();
+            Book book = BookHelpers.GetDefaultBook();
 
             member.AddBookRead(book);
 
@@ -32,7 +21,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldDoNothingGivenDuplicateBook()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = GetBookToAdd();
+            Book book = BookHelpers.GetDefaultBook();
 
             member.AddBookRead(book);
             member.AddBookRead(book);
