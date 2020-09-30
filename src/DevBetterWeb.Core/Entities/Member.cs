@@ -51,7 +51,7 @@ namespace DevBetterWeb.Core.Entities
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
 
-        public ICollection<Book>? BooksRead { get; }// = new List<BookMember>();
+        public List<Book>? BooksRead { get; set; } = new List<Book>();
 
         //[NotMapped]
         //public ICollection<Book> BooksRead { get; set; }
@@ -189,11 +189,11 @@ namespace DevBetterWeb.Core.Entities
         public void AddBookRead(Book book)
         {
 
-            //if (!BooksRead.Any(br => br.Id == book.Id))
-            //{
-            //    BooksRead.Add(book);
-            //    CreateOrUpdateUpdateEvent("Books");
-            //}
+            if (!(BooksRead!.Any(b => b.Id == book.Id)))
+            {
+                BooksRead.Add(book);
+                CreateOrUpdateUpdateEvent("Books");
+            }
         }
 
         //public void RemoveBookRead(Book book)

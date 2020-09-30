@@ -109,15 +109,11 @@
                 </div>
                 @if (Model.UserProfileUpdateModel.BooksRead.Any())
                 {
-                    @foreach (var book in Model.Books)
+                    @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
                     {
-                        if (Model.UserProfileUpdateModel.HasReadBook(book))
-                        {
-                            <div class="card-body">
-                                @book.ToString()
-                            </div>
-
-                        }
+                        <div class="card-body">
+                            @book.ToString()
+                        </div>
                     }
                 }
                 else

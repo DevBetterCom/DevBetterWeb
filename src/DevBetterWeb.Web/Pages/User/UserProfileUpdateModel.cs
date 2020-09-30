@@ -37,7 +37,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
-        public ICollection<Book> BooksRead { get; set; } = new List<Book>();
+        public List<Book> BooksRead { get; set; } = new List<Book>();
         public int? AddedBook { get; set; }
 
         public UserProfileUpdateModel()
@@ -61,7 +61,7 @@ namespace DevBetterWeb.Web.Pages.User
             Address = member.Address;
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
-            //BooksRead = member.BooksRead;
+            BooksRead = member.BooksRead!;
             
         }
 

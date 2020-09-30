@@ -46,16 +46,16 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity!.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdSpec(applicationUser.Id);
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            var books = await _appDbContext.Books
-                .Include(book => book.MembersWhoHaveRead)
-                .ToListAsync();
+            //var books = await _appDbContext.Books
+            //    .Include(book => book.MembersWhoHaveRead)
+            //    .ToListAsync();
 
-            var members = await _appDbContext.Members
-                .Include(member => member.BooksRead)
-                .ToListAsync();
+            //var members = await _appDbContext.Members
+            //    .Include(member => member.BooksRead)
+            //    .ToListAsync();
 
 
 
@@ -78,7 +78,7 @@ namespace DevBetterWeb.Web.Pages.User
             var currentUserName = User.Identity!.Name;
             var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdSpec(applicationUser.Id);
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
             if (UserProfileUpdateModel.AddedBook.HasValue)
