@@ -196,16 +196,14 @@ namespace DevBetterWeb.Core.Entities
             }
         }
 
-        //public void RemoveBookRead(Book book)
-        //{
-        //    var bookToRemove = BooksRead.FirstOrDefault(br => br.Id == book.Id);
-
-        //    if (bookToRemove != null)
-        //    {
-        //        BookMembers.Remove(bookToRemove);
-        //        CreateOrUpdateUpdateEvent("Books");
-        //    }
-        //}
+        public void RemoveBookRead(Book book)
+        {
+            if(BooksRead!.Any(b => b.Id == book.Id))
+            {
+                BooksRead.Remove(book);
+                CreateOrUpdateUpdateEvent("Books");
+            }
+        }
 
         private void CreateOrUpdateUpdateEvent(string updateDetails)
         {

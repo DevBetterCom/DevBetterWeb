@@ -112,7 +112,7 @@
                     @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
                     {
                         <div class="card-body">
-                            @book.ToString()
+                            @book.ToString() <i class="fas fa-times"></i>
                         </div>
                     }
                 }
