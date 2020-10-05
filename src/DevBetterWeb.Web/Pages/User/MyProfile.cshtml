@@ -111,9 +111,9 @@
                 {
                     @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
                     {
-                        <div class="card-body">
-                            @book.ToString() <i class="fas fa-times"></i>
-                        </div>
+                        <div class="card-body"><strong>
+                            @book.ToString() <!--<button type="submit" class="btn btn-danger" value="book.Id" asp-for="UserProfileUpdateModel.RemovedBook"><i class="fas fa-times"></i></button>-->
+                        </strong></div>
                     }
                 }
                 else
@@ -127,6 +127,17 @@
                         @foreach (var book in Model.Books)
                         {
                             if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                    </select>
+                    <label for="removeBooks">Select a book below to remove it from your list.</label>
+                    <select asp-for="UserProfileUpdateModel.RemovedBook" id="removeBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
+                        {
+                            if (Model.UserProfileUpdateModel.HasReadBook(book))
                             {
                                 <option value="@book.Id">@book.ToString()</option>
                             }

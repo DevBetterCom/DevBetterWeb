@@ -23,6 +23,7 @@ namespace DevBetterWeb.Web.Pages.User
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
         public List<Book> Books { get; set; } = new List<Book>();
         public Book AddedBook { get; set; }
+        public Book RemovedBook { get; set; }
 
 #nullable enable
 
@@ -86,6 +87,13 @@ namespace DevBetterWeb.Web.Pages.User
                 AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
 
                 member.AddBookRead(AddedBook);
+            }
+
+            if (UserProfileUpdateModel.RemovedBook.HasValue)
+            {
+                RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
+
+                member.RemoveBookRead(RemovedBook);
             }
 
             member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 

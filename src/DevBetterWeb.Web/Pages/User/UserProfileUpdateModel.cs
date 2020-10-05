@@ -39,6 +39,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? PEUsername { get; set; }
         public List<Book> BooksRead { get; set; } = new List<Book>();
         public int? AddedBook { get; set; }
+        public int? RemovedBook { get; set; }
 
         public UserProfileUpdateModel()
         {
