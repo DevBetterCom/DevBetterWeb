@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web
         {
             var builder = CreateHostBuilder(args);
 
-            string env = "Development";
+            //string env = "Development";
             ////if (args.Any())
             ////{
             ////    env = args[0];
@@ -29,10 +29,10 @@ namespace DevBetterWeb.Web
             //builder.UseEnvironment(env);
             var host = builder.Build();
 
-            if (env == "Development")
-            {
-                await SeedDatabase(host);
-            }
+            //if (env == "Development")
+            //{
+            //    await SeedDatabase(host);
+            //}
 
             await Task.Delay(1); // get rid of async Main warning
             host.Run();

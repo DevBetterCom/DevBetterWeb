@@ -9,7 +9,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldDoNothingGivenBookNotInBooksRead()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = BookHelpers.GetDefaultBook();
+            Book book = BookHelpers.GetDefaultTestBook();
 
             member.RemoveBookRead(book);
 
@@ -21,7 +21,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldRemoveBookGivenBook()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = BookHelpers.GetDefaultBook();
+            Book book = BookHelpers.GetDefaultTestBook();
 
             member.AddBookRead(book);
 

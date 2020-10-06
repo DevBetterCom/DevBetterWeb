@@ -11,7 +11,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldAddBookGivenBook()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = BookHelpers.GetDefaultBook();
+            Book book = BookHelpers.GetDefaultTestBook();
 
             member.AddBookRead(book);
 
@@ -22,7 +22,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldDoNothingGivenDuplicateBook()
         {
             Member member = MemberHelpers.CreateWithDefaultConstructor();
-            Book book = BookHelpers.GetDefaultBook();
+            Book book = BookHelpers.GetDefaultTestBook();
 
             member.AddBookRead(book);
             member.AddBookRead(book);

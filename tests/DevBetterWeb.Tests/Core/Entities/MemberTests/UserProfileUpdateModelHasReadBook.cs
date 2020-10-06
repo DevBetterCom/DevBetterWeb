@@ -7,7 +7,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
     public class UserProfileUpdateModelHasReadBook
     {
-        private Book Book { get; } = BookHelpers.GetDefaultBook();
+        private Book Book { get; } = BookHelpers.GetDefaultTestBook();
 
         private UserProfileUpdateModel GetUserProfileUpdateModel()
         {
@@ -47,7 +47,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         public void ShouldReturnTrueIfBooksReadContainsBookAndAnotherBook()
         {
             UserProfileUpdateModel updateModel = GetUserProfileUpdateModelWithBookInBooksRead();
-            updateModel.BooksRead.Add(new DevBetterWeb.Core.Entities.Book { Author = "Steve Smith", Title = "C# stuff", Details = "A book about c#", PurchaseUrl = "https://buyabook.com" });
+            updateModel.BooksRead.Add(BookHelpers.GetDefaultTestBookWithSpecifiedTitle("C# for dummies"));
 
             bool hasReadBook = updateModel.HasReadBook(Book);
 
