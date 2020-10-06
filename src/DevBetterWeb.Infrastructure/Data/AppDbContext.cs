@@ -23,8 +23,6 @@ namespace DevBetterWeb.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Book>().Property(b => b.Title).HasMaxLength(100);
-
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
