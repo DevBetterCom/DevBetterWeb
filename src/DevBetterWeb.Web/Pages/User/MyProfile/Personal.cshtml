@@ -1,0 +1,65 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfilePersonalModel
+@{
+    ViewData["Title"] = "My Profile: Personal";
+}
+
+<h3>My Profile: Personal</h3>
+
+<form method="post">
+    <div class="row">
+        <div class="col-7">
+            <div class="card">
+                <div class="card-header">
+                    <b>Personal</b>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold">First Name</label>
+                        <input asp-for="UserProfileUpdateModel.FirstName" type="text" value="@Model.UserProfileUpdateModel.FirstName" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Last Name</label>
+                        <input asp-for="UserProfileUpdateModel.LastName" type="text" value="@Model.UserProfileUpdateModel.LastName" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserProfileUpdateModel.LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Shipping Address</label>
+                        <span class="text-secondary small">Only administrators can view this information</span>
+                        <textarea asp-for="UserProfileUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.Address</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">About</label>
+                        <textarea asp-for="UserProfileUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.AboutInfo</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Project Euler Username</label>
+                        <input asp-for="UserProfileUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEUsername" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Project Euler Friend Code</label>
+                        <input asp-for="UserProfileUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEFriendCode" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <input type="submit" value="Save" class="btn btn-success" />
+    <br />
+    <br />
+
+    <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+
+
+</form>
+
+

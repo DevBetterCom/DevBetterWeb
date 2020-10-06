@@ -16,12 +16,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DevBetterWeb.Web.Pages.User
 {
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
-    public class MyProfileModel : PageModel
+    public class MyProfileBooksModel : PageModel
     {
 #nullable disable
         [BindProperty]
         public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
         public List<Book> Books { get; set; } = new List<Book>();
+        public Book AddedBook { get; set; }
+        public Book RemovedBook { get; set; }
 
 #nullable enable
 
@@ -30,7 +32,7 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly IRepository _repository;
         private readonly AppDbContext _appDbContext;
 
-        public MyProfileModel(UserManager<ApplicationUser> userManager, 
+        public MyProfileBooksModel(UserManager<ApplicationUser> userManager, 
             IMemberRegistrationService memberRegistrationService,
             IRepository repository, AppDbContext appDbContext)
         {
@@ -68,41 +70,34 @@ namespace DevBetterWeb.Web.Pages.User
             UserProfileUpdateModel = new UserProfileUpdateModel(member);
         }
 
-        //public async Task OnPost()
-        //{
-        //    if (!ModelState.IsValid) return;
-        //    // TODO: consider only getting the user alias not the whole URL for social media links
-        //    // TODO: assess risk of XSS attacks and how to mitigate
+        public async Task OnPost()
+        {
+            if (!ModelState.IsValid) return;
+            // TODO: consider only getting the user alias not the whole URL for social media links
+            // TODO: assess risk of XSS attacks and how to mitigate
 
-        //    var currentUserName = User.Identity!.Name;
-        //    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+            var currentUserName = User.Identity!.Name;
+            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-        //    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-        //    var member = await _repository.GetAsync(spec);
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var member = await _repository.GetAsync(spec);
 
-        //    if (UserProfileUpdateModel.AddedBook.HasValue)
-        //    {
-        //        AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
+            if (UserProfileUpdateModel.AddedBook.HasValue)
+            {
+                AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
 
-        //        member.AddBookRead(AddedBook);
-        //    }
+                member.AddBookRead(AddedBook);
+            }
 
-        //    if (UserProfileUpdateModel.RemovedBook.HasValue)
-        //    {
-        //        RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
+            if (UserProfileUpdateModel.RemovedBook.HasValue)
+            {
+                RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
 
-        //        member.RemoveBookRead(RemovedBook);
-        //    }
+                member.RemoveBookRead(RemovedBook);
+            }
 
-        //    member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
-        //    member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
-        //    member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
-        //    member.UpdateAddress(UserProfileUpdateModel.Address);
-        //    member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-        //        UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
-
-        //    // this is trying to add to bookmember database - why?
-        //    await _repository.UpdateAsync(member);
-        //}
+            // this is trying to add to bookmember database - why?
+            await _repository.UpdateAsync(member);
+        }
     }
 }

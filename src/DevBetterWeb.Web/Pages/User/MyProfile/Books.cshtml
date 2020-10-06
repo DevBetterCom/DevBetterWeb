@@ -1,0 +1,85 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfileBooksModel
+@{
+    ViewData["Title"] = "My Profile: Books";
+}
+
+<h3>My Profile: Books</h3>
+
+<form method="post">
+    <div class="row">
+        <div class="col-7">
+            <div class="card">
+                <div class="card-header">
+                    <b>Books You've Read</b>
+                </div>
+                @if (Model.UserProfileUpdateModel.BooksRead.Any())
+                {
+                    @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
+                    {
+                        <div class="card-body">
+                            <strong>
+                                @book.ToString() <!--<button type="submit" class="btn btn-danger" value="book.Id" asp-for="UserProfileUpdateModel.RemovedBook"><i class="fas fa-times"></i></button>-->
+                            </strong>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card-body">You haven't read any books yet. Time to start reading, or add one!</div>
+                }
+
+            </div>
+
+        </div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-header">
+                    <b>Add Books</b>
+                </div>
+                <div class="card-body">
+                    <label for="addBooks">Select a book to add it to your list.</label>
+                    <select asp-for="UserProfileUpdateModel.AddedBook" id="addBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
+                        {
+                            if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-header">
+                    Remove Books
+                </div>
+                <div class="card-body">
+                    <label for="removeBooks">Select a book to remove it from your list.</label>
+                    <select asp-for="UserProfileUpdateModel.RemovedBook" id="removeBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
+                        {
+                            if (Model.UserProfileUpdateModel.HasReadBook(book))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-success" />
+    <br />
+    <br />
+
+    <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+
+</form>
+
+
