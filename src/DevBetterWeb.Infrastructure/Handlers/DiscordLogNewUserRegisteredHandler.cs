@@ -16,7 +16,7 @@ namespace DevBetterWeb.Core.Handlers
 
         public async Task Handle(NewUserRegisteredEvent domainEvent)
         {
-            _webhook.Content = $"New user registered with email address: {domainEvent.EmailAddress}.";
+            _webhook.Content = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
             await _webhook.Send();
         }
     }
