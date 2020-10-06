@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{5767F6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C18577A9-A101-4654-89A2-CEC4D57B4D0C}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		efscripts.txt = efscripts.txt
 		README.md = README.md
 	EndProjectSection
