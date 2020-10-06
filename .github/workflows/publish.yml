@@ -24,7 +24,7 @@ jobs:
     - name: Build and test
       run: dotnet test --configuration Release
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp --self-contained true
     
     - name: Login
       uses: azure/login@v1
