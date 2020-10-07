@@ -70,9 +70,9 @@ namespace DevBetterWeb.Web.Pages.User
             UserBooksUpdateModel = new UserBooksUpdateModel(member);
         }
 
-        public async Task OnPost()
+        public async Task<ActionResult> OnPost()
         {
-            if (!ModelState.IsValid) return;
+            if (!ModelState.IsValid) return Page();
             // TODO: consider only getting the user alias not the whole URL for social media links
             // TODO: assess risk of XSS attacks and how to mitigate
 
@@ -96,8 +96,9 @@ namespace DevBetterWeb.Web.Pages.User
                 member.RemoveBookRead(RemovedBook);
             }
 
-            // this is trying to add to bookmember database - why?
             await _repository.UpdateAsync(member);
+
+            return RedirectToPage();
         }
     }
 }
