@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web.Pages.User
     {
 #nullable disable
         [BindProperty]
-        public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+        public UserLinksUpdateModel UserLinksUpdateModel { get; set; }
 
 #nullable enable
 
@@ -62,7 +62,7 @@ namespace DevBetterWeb.Web.Pages.User
                 member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
             }
 
-            UserProfileUpdateModel = new UserProfileUpdateModel(member);
+            UserLinksUpdateModel = new UserLinksUpdateModel(member);
         }
 
         public async Task OnPost()
@@ -77,8 +77,8 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
+            member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
+                UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl);
 
             await _repository.UpdateAsync(member);
         }

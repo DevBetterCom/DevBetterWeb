@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web.Pages.User
     {
 #nullable disable
         [BindProperty]
-        public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+        public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; }
 
 #nullable enable
 
@@ -62,7 +62,7 @@ namespace DevBetterWeb.Web.Pages.User
                 member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
             }
 
-            UserProfileUpdateModel = new UserProfileUpdateModel(member);
+            UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
         }
 
         public async Task OnPost()
@@ -77,10 +77,10 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
-            member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
-            member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
-            member.UpdateAddress(UserProfileUpdateModel.Address);
+            member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName); 
+            member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername);
+            member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
+            member.UpdateAddress(UserPersonalUpdateModel.Address);
 
             await _repository.UpdateAsync(member);
         }

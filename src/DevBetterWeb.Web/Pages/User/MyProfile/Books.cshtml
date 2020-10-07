@@ -13,9 +13,9 @@
                 <div class="card-header">
                     <b>Books You've Read</b>
                 </div>
-                @if (Model.UserProfileUpdateModel.BooksRead.Any())
+                @if (Model.UserBooksUpdateModel.BooksRead.Any())
                 {
-                    @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
+                    @foreach (var book in Model.UserBooksUpdateModel.BooksRead)
                     {
                         <div class="card-body">
                             <strong>
@@ -39,11 +39,11 @@
                 </div>
                 <div class="card-body">
                     <label for="addBooks">Select a book to add it to your list.</label>
-                    <select asp-for="UserProfileUpdateModel.AddedBook" id="addBooks">
+                    <select asp-for="UserBooksUpdateModel.AddedBook" id="addBooks">
                         <option value="">None</option>
                         @foreach (var book in Model.Books)
                         {
-                            if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
+                            if (!(Model.UserBooksUpdateModel.HasReadBook(book)))
                             {
                                 <option value="@book.Id">@book.ToString()</option>
                             }
@@ -58,11 +58,11 @@
                 </div>
                 <div class="card-body">
                     <label for="removeBooks">Select a book to remove it from your list.</label>
-                    <select asp-for="UserProfileUpdateModel.RemovedBook" id="removeBooks">
+                    <select asp-for="UserBooksUpdateModel.RemovedBook" id="removeBooks">
                         <option value="">None</option>
                         @foreach (var book in Model.Books)
                         {
-                            if (Model.UserProfileUpdateModel.HasReadBook(book))
+                            if (Model.UserBooksUpdateModel.HasReadBook(book))
                             {
                                 <option value="@book.Id">@book.ToString()</option>
                             }

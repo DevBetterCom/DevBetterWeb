@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web.Pages.User
     {
 #nullable disable
         [BindProperty]
-        public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+        public UserBooksUpdateModel UserBooksUpdateModel { get; set; }
         public List<Book> Books { get; set; } = new List<Book>();
         public Book AddedBook { get; set; }
         public Book RemovedBook { get; set; }
@@ -67,7 +67,7 @@ namespace DevBetterWeb.Web.Pages.User
 
             Books = await _repository.ListAsync<Book>();
 
-            UserProfileUpdateModel = new UserProfileUpdateModel(member);
+            UserBooksUpdateModel = new UserBooksUpdateModel(member);
         }
 
         public async Task OnPost()
@@ -82,16 +82,16 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            if (UserProfileUpdateModel.AddedBook.HasValue)
+            if (UserBooksUpdateModel.AddedBook.HasValue)
             {
-                AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
+                AddedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.AddedBook.Value);
 
                 member.AddBookRead(AddedBook);
             }
 
-            if (UserProfileUpdateModel.RemovedBook.HasValue)
+            if (UserBooksUpdateModel.RemovedBook.HasValue)
             {
-                RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
+                RemovedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.RemovedBook.Value);
 
                 member.RemoveBookRead(RemovedBook);
             }

@@ -16,35 +16,35 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="font-weight-bold">First Name</label>
-                        <input asp-for="UserProfileUpdateModel.FirstName" type="text" value="@Model.UserProfileUpdateModel.FirstName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.FirstName" class="text-danger"></span>
+                        <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Last Name</label>
-                        <input asp-for="UserProfileUpdateModel.LastName" type="text" value="@Model.UserProfileUpdateModel.LastName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.LastName" class="text-danger"></span>
+                        <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm" />
+                        <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Shipping Address</label>
                         <span class="text-secondary small">Only administrators can view this information</span>
-                        <textarea asp-for="UserProfileUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.Address</textarea>
+                        <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">About</label>
-                        <textarea asp-for="UserProfileUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.AboutInfo</textarea>
+                        <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Project Euler Username</label>
-                        <input asp-for="UserProfileUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEUsername" />
+                        <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" />
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Project Euler Friend Code</label>
-                        <input asp-for="UserProfileUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEFriendCode" />
+                        <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" />
                     </div>
 
                 </div>

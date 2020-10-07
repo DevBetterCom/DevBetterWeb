@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web.Pages.User
     {
 #nullable disable
         [BindProperty]
-        public UserProfileUpdateModel UserProfileUpdateModel { get; set; }
+        public UserProfileViewModel UserProfileViewModel { get; set; }
         public List<Book> Books { get; set; } = new List<Book>();
 
 #nullable enable
@@ -65,7 +65,7 @@ namespace DevBetterWeb.Web.Pages.User
 
             Books = await _repository.ListAsync<Book>();
 
-            UserProfileUpdateModel = new UserProfileUpdateModel(member);
+            UserProfileViewModel = new UserProfileViewModel(member);
         }
 
         //public async Task OnPost()
