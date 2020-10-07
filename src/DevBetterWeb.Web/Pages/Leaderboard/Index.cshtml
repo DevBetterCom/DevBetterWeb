@@ -1,0 +1,55 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h3>Leaderboard</h3>
+
+<div class="row">
+    <div class="col-6">
+        <table class="table table-sm table-striped" id="leaderboardTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Number of Books Read</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.Members)
+                {
+                <tr>
+                    <td><a asp-page="./User/Details/" asp-route-userid="@member.UserId">@member.FullName</a></td>
+                    <td>
+                        @member.BooksRead!.Count
+                    </td>
+
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-6">
+         <div class="card">
+             <div class="card-header">Available Books</div>
+             <div class="card-body">
+                 <strong>There are @Model.Books.Count books you can read to contribute to your leaderboard standings:</strong>
+                 <br />
+                 <br />
+                 @foreach(var book in Model.Books)
+                 {
+                     @book.ToString()
+                     <br />
+                 }
+             </div>
+         </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/members.js" asp-append-version="true"></script>
+}
+
