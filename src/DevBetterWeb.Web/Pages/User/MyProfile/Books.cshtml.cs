@@ -70,7 +70,7 @@ namespace DevBetterWeb.Web.Pages.User
             UserBooksUpdateModel = new UserBooksUpdateModel(member);
         }
 
-        public async Task<ActionResult> OnPost()
+        public async Task<ActionResult> OnPostAdd()
         {
             if (!ModelState.IsValid) return Page();
             // TODO: consider only getting the user alias not the whole URL for social media links
@@ -88,6 +88,22 @@ namespace DevBetterWeb.Web.Pages.User
 
                 member.AddBookRead(AddedBook);
             }
+
+            await _repository.UpdateAsync(member);
+
+            return RedirectToPage();
+        }
+        public async Task<ActionResult> OnPostRemove()
+        {
+            if (!ModelState.IsValid) return Page();
+            // TODO: consider only getting the user alias not the whole URL for social media links
+            // TODO: assess risk of XSS attacks and how to mitigate
+
+            var currentUserName = User.Identity!.Name;
+            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var member = await _repository.GetAsync(spec);
 
             if (UserBooksUpdateModel.RemovedBook.HasValue)
             {

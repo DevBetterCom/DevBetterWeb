@@ -6,7 +6,7 @@
 
 <h3>My Profile: Books</h3>
 
-<form method="post">
+
     <div class="row">
         <div class="col-7">
             <div class="card">
@@ -32,54 +32,62 @@
             </div>
 
         </div>
-        <div class="col-5">
-            <div class="card">
-                <div class="card-header">
-                    <b>Add Books</b>
-                </div>
-                <div class="card-body">
-                    <label for="addBooks">Select a book to add it to your list.</label>
-                    <select asp-for="UserBooksUpdateModel.AddedBook" id="addBooks">
-                        <option value="">None</option>
-                        @foreach (var book in Model.Books)
-                        {
-                            if (!(Model.UserBooksUpdateModel.HasReadBook(book)))
-                            {
-                                <option value="@book.Id">@book.ToString()</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-            <br />
-            <div class="card">
-                <div class="card-header">
-                    Remove Books
-                </div>
-                <div class="card-body">
-                    <label for="removeBooks">Select a book to remove it from your list.</label>
-                    <select asp-for="UserBooksUpdateModel.RemovedBook" id="removeBooks">
-                        <option value="">None</option>
-                        @foreach (var book in Model.Books)
-                        {
-                            if (Model.UserBooksUpdateModel.HasReadBook(book))
-                            {
-                                <option value="@book.Id">@book.ToString()</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
 
+        <div class="col-5">
+            <form method="post" asp-page-handler="add">
+                <div class="card">
+                    <div class="card-header">
+                        <b>Add Books</b>
+                    </div>
+                    <div class="card-body">
+                        <label for="addBooks">Select a book to add it to your list.</label>
+                        <select asp-for="UserBooksUpdateModel.AddedBook" id="addBooks">
+                            <option value="">None</option>
+                            @foreach (var book in Model.Books)
+                            {
+                                if (!(Model.UserBooksUpdateModel.HasReadBook(book)))
+                                {
+                                    <option value="@book.Id">@book.ToString()</option>
+                                }
+                            }
+                        </select>
+                        <br />
+                        <br />
+                        <input type="submit" value="Add" class="btn btn-success" />
+                    </div>
+                </div>
+            </form>
+            <br />
+            <form method="post" asp-page-handler="remove">
+                <div class="card">
+                    <div class="card-header">
+                        Remove Books
+                    </div>
+                    <div class="card-body">
+                        <label for="removeBooks">Select a book to remove it from your list.</label>
+                        <select asp-for="UserBooksUpdateModel.RemovedBook" id="removeBooks">
+                            <option value="">None</option>
+                            @foreach (var book in Model.Books)
+                            {
+                                if (Model.UserBooksUpdateModel.HasReadBook(book))
+                                {
+                                    <option value="@book.Id">@book.ToString()</option>
+                                }
+                            }
+                        </select>
+                        <br />
+                        <br />
+                        <input type="submit" value="Remove" class="btn btn-success" />
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <input type="submit" value="Save" class="btn btn-success" />
     <br />
     <br />
 
     <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
 
-</form>
 
 
