@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using System.Collections.Generic;
+using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -16,6 +17,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? Address { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEBadgeURL { get; set; }
+    public List<Book> BooksRead { get; set; } = new List<Book>();
 
         public UserDetailsViewModel()
         {
@@ -44,6 +46,8 @@ namespace DevBetterWeb.Web.Pages.User
             {
                 PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png";
             }
+
+      BooksRead = member.BooksRead!;
         }
     }
 }
