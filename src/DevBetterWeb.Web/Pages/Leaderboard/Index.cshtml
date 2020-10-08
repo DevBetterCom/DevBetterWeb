@@ -20,7 +20,7 @@
                 @foreach (var member in Model.Members)
                 {
                 <tr>
-                    <td><a asp-page="./User/Details/" asp-route-userid="@member.UserId">@member.FullName</a></td>
+                    <td><a asp-page="/User/Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
                     <td>
                         @member.BooksRead!.Count
                     </td>
@@ -41,7 +41,7 @@
                  <br />
                  @foreach(var book in Model.Books)
                  {
-                     @book.ToString()
+                     <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
                      <br />
                  }
              </div>

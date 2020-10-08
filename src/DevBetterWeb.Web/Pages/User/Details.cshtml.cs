@@ -9,7 +9,9 @@ namespace DevBetterWeb.Web.Pages.User
     [Authorize]
     public class DetailsModel : PageModel
     {
+#pragma warning disable CS0436 // Type conflicts with imported type
         public UserDetailsViewModel? UserDetailsViewModel { get; set; }
+#pragma warning restore CS0436 // Type conflicts with imported type
         private readonly IRepository _repository;
 
         public DetailsModel(IRepository repository)
@@ -35,7 +37,9 @@ namespace DevBetterWeb.Web.Pages.User
                 BadRequest();
             }
 
+#pragma warning disable CS0436 // Type conflicts with imported type
             UserDetailsViewModel = new UserDetailsViewModel(member!);
+#pragma warning restore CS0436 // Type conflicts with imported type
         }
     }
 }
