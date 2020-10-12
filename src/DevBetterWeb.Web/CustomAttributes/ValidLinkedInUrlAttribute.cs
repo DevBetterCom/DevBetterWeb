@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web
 {
-  public class ValidUrlAttribute : ValidationAttribute
+  public class ValidLinkedInUrlAttribute : ValidationAttribute
   {
     public string GetErrorMessage() =>
-    $"You must enter a valid URL";
+    $"You must enter a valid LinkedIn URL";
 
     protected override ValidationResult IsValid(object value,
         ValidationContext validationContext)
@@ -30,12 +26,16 @@ namespace DevBetterWeb.Web
 
       var isValueUrl = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri);
 
-      if (isValueUrl)
+      var isLinkedInUrl = url.ToLower().Contains("linkedin");
+
+      if (isValueUrl && isLinkedInUrl)
       {
         return ValidationResult.Success;
       }
 
       return new ValidationResult(GetErrorMessage());
     }
+
+
   }
-  }
+}

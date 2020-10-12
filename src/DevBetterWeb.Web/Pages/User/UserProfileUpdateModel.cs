@@ -15,21 +15,21 @@ namespace DevBetterWeb.Web.Pages.User
         [Required]
         public string? LastName { get; set; }
         public string? Address { get; set; }
-        [ValidUrl]
+        [ValidLinkedInUrl]
         public string? LinkedInUrl { get; set; }
-        [ValidUrl]
+        [ValidTwitterUrl]
         public string? TwitterUrl { get; set; }
-        [ValidUrl]
+        [ValidGitHubUrl]
         public string? GithubUrl { get; set; }
         [ValidUrl]
         public string? BlogUrl { get; set; }
-        [ValidUrl]
+        [ValidTwitchUrl]
         public string? TwitchUrl { get; set; }
-        [ValidUrl]
+        [ValidYouTubeUrl]
         public string? YouTubeUrl { get; set; }
         [ValidUrl]
         public string? OtherUrl { get; set; }
-    [ValidUrl]
+    [ValidCodinGameUrl]
     public string? CodinGameUrl { get; set; }
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
