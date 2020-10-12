@@ -1,4 +1,4 @@
-dotnet ef migrations add AddQuestions --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
+dotnet ef migrations add AddCodinGameUrl --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
 
 dotnet ef migrations add InitialModel --context identitydbcontext -o Areas/Identity/Data/Migrations
 

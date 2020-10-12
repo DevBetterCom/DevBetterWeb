@@ -37,6 +37,7 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitchUrl { get; private set; }
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
+    public string? CodinGameUrl { get; private set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
 
@@ -113,7 +114,8 @@ namespace DevBetterWeb.Core.Entities
             string? otherUrl,
             string? twitchUrl,
             string? youtubeUrl,
-            string? twitterUrl)
+            string? twitterUrl,
+            string? codinGameUrl)
         {
             bool valueChanged = false;
             if (BlogUrl != blogUrl)
@@ -146,12 +148,17 @@ namespace DevBetterWeb.Core.Entities
                 YouTubeUrl = youtubeUrl;
                 valueChanged = true;
             }
-            if (TwitterUrl != twitterUrl)
-            {
-                TwitterUrl = twitterUrl;
-                valueChanged = true;
-            }
-            if (valueChanged)
+      if (TwitterUrl != twitterUrl)
+      {
+        TwitterUrl = twitterUrl;
+        valueChanged = true;
+      }
+      if (CodinGameUrl != codinGameUrl)
+      {
+        CodinGameUrl = codinGameUrl;
+        valueChanged = true;
+      }
+      if (valueChanged)
             {
                 CreateOrUpdateUpdateEvent("Links");
             }

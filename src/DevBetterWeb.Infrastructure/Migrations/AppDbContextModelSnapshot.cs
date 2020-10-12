@@ -4,20 +4,18 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DevBetterWeb.Infrastructure.Data.Migrations
+namespace DevBetterWeb.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200812181103_YouTubeAddedToMember")]
-    partial class YouTubeAddedToMember
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -35,10 +33,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("VideoUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
@@ -60,6 +60,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(500);
 
                     b.Property<string>("BlogUrl")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("CodinGameUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
@@ -86,6 +90,14 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
+                    b.Property<string>("PEFriendCode")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PEUsername")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<string>("TwitchUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
@@ -100,7 +112,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(500);
 
                     b.Property<string>("YouTubeUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 

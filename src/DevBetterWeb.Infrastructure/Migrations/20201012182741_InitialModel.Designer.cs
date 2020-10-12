@@ -7,17 +7,17 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DevBetterWeb.Infrastructure.Data.Migrations
+namespace DevBetterWeb.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200814201153_FixColumnWidths")]
-    partial class FixColumnWidths
+    [Migration("20201012182741_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -65,6 +65,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
+                    b.Property<string>("CodinGameUrl")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -87,6 +91,14 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<string>("OtherUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
+
+                    b.Property<string>("PEFriendCode")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PEUsername")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("TwitchUrl")
                         .HasColumnType("nvarchar(200)")

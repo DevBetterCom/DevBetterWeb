@@ -10,6 +10,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20201012182603_InitialModel.cs" />
+    <Compile Remove="Migrations\20201012182603_InitialModel.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />

@@ -15,6 +15,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
         private string _initialTwitchUrl = "";
         private string _initialYouTubeUrl = "";
         private string _initialTwitterUrl = "";
+    private string _initialCodinGameUrl = "";
 
         private Member GetMemberWithDefaultLinks()
         {
@@ -27,7 +28,8 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialYouTubeUrl,
-                _initialTwitterUrl);
+                _initialTwitterUrl,
+                _initialCodinGameUrl);
             member.Events.Clear();
 
             return member;
@@ -45,7 +47,8 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialYouTubeUrl,
-                _initialTwitterUrl);
+                _initialTwitterUrl,
+                _initialCodinGameUrl);
 
             Assert.Equal(newLink, member.BlogUrl);
         }
@@ -62,7 +65,8 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialYouTubeUrl,
-                _initialTwitterUrl);
+                _initialTwitterUrl,
+                _initialCodinGameUrl);
             var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);
@@ -79,7 +83,8 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialYouTubeUrl,
-                _initialTwitterUrl);
+                _initialTwitterUrl,
+                _initialCodinGameUrl);
 
             Assert.Empty(member.Events);
         }
@@ -99,7 +104,8 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
                 _initialOtherUrl,
                 _initialTwitchUrl,
                 _initialYouTubeUrl,
-                _initialTwitterUrl);
+                _initialTwitterUrl,
+                _initialCodinGameUrl);
             var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
             Assert.Same(member, eventCreated.Member);

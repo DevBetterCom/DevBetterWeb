@@ -16,6 +16,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? Address { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEBadgeURL { get; set; }
+    public string? CodinGameUrl { get; set; }
 
         public UserDetailsViewModel()
         {
@@ -44,6 +45,7 @@ namespace DevBetterWeb.Web.Pages.User
             {
                 PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png";
             }
+      CodinGameUrl = member.CodinGameUrl;
         }
     }
 }

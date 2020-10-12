@@ -67,7 +67,7 @@ namespace DevBetterWeb.Web.Pages.User
             member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
             member.UpdateAddress(UserProfileUpdateModel.Address);
             member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
+                UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl, UserProfileUpdateModel.CodinGameUrl);
 
             await _repository.UpdateAsync(member);
         }

@@ -22,6 +22,7 @@ namespace DevBetterWeb.Infrastructure.Data.Config
             builder.Property(x => x.LastName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
             builder.Property(x => x.PEFriendCode).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
             builder.Property(x => x.PEUsername).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+      builder.Property(x => x.CodinGameUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
         }
     }
 }

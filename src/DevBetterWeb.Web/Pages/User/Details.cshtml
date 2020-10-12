@@ -60,6 +60,13 @@
                     </div>
                 }
 
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.CodinGameUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.CodinGameUrl" target="_blank">CodinGame</a>
+                    </div>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.GithubUrl))
                 {
                     <div class="mb-2">
