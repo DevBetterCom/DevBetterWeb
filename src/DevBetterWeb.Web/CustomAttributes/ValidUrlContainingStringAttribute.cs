@@ -3,10 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevBetterWeb.Web
 {
-  public class ValidGitHubUrlAttribute : ValidationAttribute
+  public class ValidUrlContainingStringAttribute : ValidationAttribute
   {
+
+    public string _inputString { get; set; }
+
+    public ValidUrlContainingStringAttribute(string inputString)
+    {
+      _inputString = inputString;
+    }
+
     public string GetErrorMessage() =>
-    $"You must enter a valid GitHub URL";
+    $"You must enter a valid " + _inputString + " URL";
 
     protected override ValidationResult IsValid(object value,
         ValidationContext validationContext)
@@ -26,9 +34,9 @@ namespace DevBetterWeb.Web
 
       var isValueUrl = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri);
 
-      var isGitHubUrl = url.ToLower().Contains("github");
+      var containsInputString = url.ToLower().Contains(_inputString.ToLower());
 
-      if (isValueUrl && isGitHubUrl)
+      if (isValueUrl && containsInputString)
       {
         return ValidationResult.Success;
       }
