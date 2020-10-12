@@ -20,7 +20,9 @@
                 @foreach (var member in Model.Members)
                 {
                 <tr>
-                    <td><a asp-page="/User/Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
+                    <td>
+                        @member.FullName
+                    </td>
                     <td>
                         @member.BooksRead!.Count
                     </td>
