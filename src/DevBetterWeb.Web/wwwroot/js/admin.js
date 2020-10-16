@@ -22,6 +22,28 @@
         $('#hidRemoveRoleId').val(roleId);
     });
 
-  
+    $('#deleteSubscriptionModal').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+
+        var subscriptionId = button.attr('data-subscriptionId');
+        var startDate = button.attr('data-startDate');
+        var endDate = button.attr('data-endDate');
+
+        $('#hidDeleteSubscriptionId').val(subscriptionId);
+        $('#spnDeleteSubscriptionStartDate').html(startDate);
+        $('#spnDeleteSubscriptionEndDate').html(endDate);
+    });
+
+    $('#editSubscriptionModal').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+
+        var subscriptionId = button.attr('data-subscriptionId');
+        var startDate = button.attr('data-startDate');
+        var endDate = button.attr('data-endDate');
+
+        $('#hidEditSubscriptionId').val(subscriptionId);
+        $('#inputEditSubscriptionStartDate').val(startDate);
+        $('#inputEditSubscriptionEndDate').val(endDate);
+    })
 
 });
