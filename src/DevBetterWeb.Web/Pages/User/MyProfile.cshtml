@@ -6,103 +6,187 @@
 
 <h3>My Profile</h3>
 
-<form method="post">
-    <div class="row">
-        <div class="col-7">
-            <div class="card">
-                <div class="card-header">
-                    <b>Personal</b>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                <b>Personal</b>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="font-weight-bold">First Name</label>
+                    <p>@Model.UserProfileViewModel.FirstName</p>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">First Name</label>
-                        <input asp-for="UserProfileUpdateModel.FirstName" type="text" value="@Model.UserProfileUpdateModel.FirstName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.FirstName" class="text-danger"></span>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Last Name</label>
-                        <input asp-for="UserProfileUpdateModel.LastName" type="text" value="@Model.UserProfileUpdateModel.LastName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.LastName" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">Shipping Address</label>
-                        <span class="text-secondary small">Only administrators can view this information</span>
-                        <textarea asp-for="UserProfileUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.Address</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">About</label>
-                        <textarea asp-for="UserProfileUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserProfileUpdateModel.AboutInfo</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">Project Euler Username</label>
-                        <input asp-for="UserProfileUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEUsername" />
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="font-weight-bold">Project Euler Friend Code</label>
-                        <input asp-for="UserProfileUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserProfileUpdateModel.PEFriendCode" />
-                    </div>
-
+                <div class="form-group">
+                    <label class="font-weight-bold">Last Name</label>
+                    <p>@Model.UserProfileViewModel.LastName</p>
                 </div>
+
+                <div class="form-group">
+                    <label class="font-weight-bold">Shipping Address</label>
+                    <span class="text-secondary small">Only administrators can view this information</span>
+                    @if (Model.UserProfileViewModel.Address == null)
+                    {
+                        <p>none</p>
+                    }
+                    else
+                    {
+                        <p>@Model.UserProfileViewModel.Address</p>
+                    }
+                </div>
+
+                <label class="font-weight-bold">About</label>
+                @if (Model.UserProfileViewModel.AboutInfo == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.AboutInfo</p>
+                }
+
+                <label class="font-weight-bold">Project Euler Username</label>
+                @if (Model.UserProfileViewModel.PEUsername == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.PEUsername</p>
+                }
+
+                <label class="font-weight-bold">Project Euler Friend Code</label>
+                @if (Model.UserProfileViewModel.PEFriendCode == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.PEFriendCode</p>
+                }
+
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Personal">Edit</a>
+
             </div>
         </div>
-        <div class="col-5">
-            <div class="card">
-                <div class="card-header">
-                    <b>Links</b>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">Blog</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.BlogUrl" value="@Model.UserProfileUpdateModel.BlogUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.BlogUrl" class="text-danger"></span>
-                    </div>
+        <br />
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Github</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.GithubUrl" value="@Model.UserProfileUpdateModel.GithubUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.GithubUrl" class="text-danger"></span>
+        <div class="card">
+            <div class="card-header">
+                <b>Books You've Read</b>
+            </div>
+            @if (Model.UserProfileViewModel.BooksRead.Any())
+            {
+                @foreach (var book in Model.UserProfileViewModel.BooksRead)
+                {
+                    <div class="card-body">
+                        <strong>
+                            @book.ToString()
+                        </strong>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="card-body">You haven't read any books yet. Add one below!</div>
+            }
+            <div class="card-body">
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">LinkedIn</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.LinkedInUrl" value="@Model.UserProfileUpdateModel.LinkedInUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.LinkedInUrl" class="text-danger"></span>
-                    </div>
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Books">Edit</a>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Twitter</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.TwitterUrl" value="@Model.UserProfileUpdateModel.TwitterUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.TwitterUrl" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">Twitch</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.TwitchUrl" value="@Model.UserProfileUpdateModel.TwitchUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.TwitchUrl" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="font-weight-bold">YouTube</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.YouTubeUrl" value="@Model.UserProfileUpdateModel.YouTubeUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.YouTubeUrl" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">Other</label>
-                        <input type="text" asp-for="UserProfileUpdateModel.OtherUrl" value="@Model.UserProfileUpdateModel.OtherUrl" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserProfileUpdateModel.OtherUrl" class="text-danger"></span>
-                    </div>
-                </div>
             </div>
         </div>
+
+
     </div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-header">
+                <b>Links</b>
+            </div>
+            <div class="card-body">
 
-   <input type="submit" value="Save" class="btn btn-success" />
-</form>
+                <label class="font-weight-bold">Blog</label>
+                @if (Model.UserProfileViewModel.BlogUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.BlogUrl</p>
+                }
+
+                <label class="font-weight-bold">Github</label>
+                @if (Model.UserProfileViewModel.GithubUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.GithubUrl</p>
+                }
+
+                <label class="font-weight-bold">LinkedIn</label>
+                @if (Model.UserProfileViewModel.LinkedInUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.LinkedInUrl</p>
+                }
+
+                <label class="font-weight-bold">Twitter</label>
+                @if (Model.UserProfileViewModel.TwitterUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.TwitterUrl</p>
+                }
+
+                <label class="font-weight-bold">Twitch</label>
+                @if (Model.UserProfileViewModel.TwitchUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.TwitchUrl</p>
+                }
+
+                <label class="font-weight-bold">YouTube</label>
+                @if (Model.UserProfileViewModel.YouTubeUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.YouTubeUrl</p>
+                }
+
+                <label class="font-weight-bold">Other</label>
+                @if (Model.UserProfileViewModel.OtherUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.OtherUrl</p>
+                }
+
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
 
 

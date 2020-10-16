@@ -2,14 +2,21 @@
 using DevBetterWeb.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
 {
     public class Member : BaseEntity
     {
-        private Member()
+        public Member()
         {
             UserId = "";
+
+            //BooksRead = new JoinCollectionFacade<Book, BookMember>(
+            //    BookMembers,
+            //    bm => bm.Book,
+            //    b => new BookMember { Member = this, Book = b });
         }
 
         /// <summary>
@@ -21,6 +28,11 @@ namespace DevBetterWeb.Core.Entities
         {
             UserId = userId;
             Events.Add(new NewMemberCreatedEvent(this));
+
+            //BooksRead = new JoinCollectionFacade<Book, BookMember>(
+            //    BookMembers,
+            //    bm => bm.Book,
+            //    b => new BookMember { Member = this, Book = b });
         }
 
         public string UserId { get; private set; }
@@ -38,6 +50,11 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitchUrl { get; private set; }
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
+
+        public List<Book>? BooksRead { get; set; } = new List<Book>();
+
+        //[NotMapped]
+        //public ICollection<Book> BooksRead { get; set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
         public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
@@ -157,6 +174,36 @@ namespace DevBetterWeb.Core.Entities
             if (valueChanged)
             {
                 CreateOrUpdateUpdateEvent("Links");
+            }
+        }
+
+        /**
+        public void UpdateBooks(List<BookMember> booksRead)
+        {
+            if (BooksRead != booksRead)
+            {
+                BooksRead = booksRead;
+                CreateOrUpdateUpdateEvent("Books");
+            }
+        }
+        **/
+
+        public void AddBookRead(Book book)
+        {
+
+            if (!(BooksRead!.Any(b => b.Id == book.Id)))
+            {
+                BooksRead.Add(book);
+                CreateOrUpdateUpdateEvent("Books");
+            }
+        }
+
+        public void RemoveBookRead(Book book)
+        {
+            if(BooksRead!.Any(b => b.Id == book.Id))
+            {
+                BooksRead.Remove(book);
+                CreateOrUpdateUpdateEvent("Books");
             }
         }
 

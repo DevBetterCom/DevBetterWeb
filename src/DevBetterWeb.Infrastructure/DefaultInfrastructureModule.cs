@@ -32,12 +32,12 @@ namespace DevBetterWeb.Infrastructure
         private void RegisterCommonDependencies(ContainerBuilder builder)
         {
             builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
-            builder.RegisterType<Webhook>().InstancePerDependency();
             builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
             builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
             builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
             builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
                 .As<IUserRoleMembershipService>();
+            builder.RegisterType<Webhook>().InstancePerDependency();
 
             builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
 
@@ -53,6 +53,7 @@ namespace DevBetterWeb.Infrastructure
         private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
         {
             builder.RegisterType<SendGridEmailService>().As<IEmailService>();
+
         }
 
     }

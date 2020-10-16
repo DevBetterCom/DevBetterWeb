@@ -9,7 +9,7 @@ namespace DevBetterWeb.Web
     {
         public static void PopulateTestData(AppDbContext dbContext)
         {
-            if (dbContext.ArchiveVideos.Any()) return;
+            if (dbContext.ArchiveVideos!.Any()) return;
 
             var vid1 = new ArchiveVideo()
             {
@@ -53,6 +53,14 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 
             dbContext.ArchiveVideos!.Add(vid1);
             dbContext.ArchiveVideos.Add(vid2);
+
+            dbContext.Books!.Add(new Book
+            {
+                Author = "Steve Smith",
+                Title = "ASP.NET By Example",
+                PurchaseUrl = "https://ardalis.com",
+                Details = "A classic."
+            });
             dbContext.SaveChanges();
 
             //dbContext.ArchiveVideos.Add(new ArchiveVideo()

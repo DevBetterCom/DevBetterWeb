@@ -16,12 +16,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DevBetterWeb.Web.Pages.User
 {
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
-    public class MyProfileModel : PageModel
+    public class MyProfileBooksModel : PageModel
     {
 #nullable disable
         [BindProperty]
-        public UserProfileViewModel UserProfileViewModel { get; set; }
+        public UserBooksUpdateModel UserBooksUpdateModel { get; set; }
         public List<Book> Books { get; set; } = new List<Book>();
+        public Book AddedBook { get; set; }
+        public Book RemovedBook { get; set; }
 
 #nullable enable
 
@@ -30,7 +32,7 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly IRepository _repository;
         private readonly AppDbContext _appDbContext;
 
-        public MyProfileModel(UserManager<ApplicationUser> userManager, 
+        public MyProfileBooksModel(UserManager<ApplicationUser> userManager, 
             IMemberRegistrationService memberRegistrationService,
             IRepository repository, AppDbContext appDbContext)
         {
@@ -65,44 +67,54 @@ namespace DevBetterWeb.Web.Pages.User
 
             Books = await _repository.ListAsync<Book>();
 
-            UserProfileViewModel = new UserProfileViewModel(member);
+            UserBooksUpdateModel = new UserBooksUpdateModel(member);
         }
 
-        //public async Task OnPost()
-        //{
-        //    if (!ModelState.IsValid) return;
-        //    // TODO: consider only getting the user alias not the whole URL for social media links
-        //    // TODO: assess risk of XSS attacks and how to mitigate
+        public async Task<ActionResult> OnPostAdd()
+        {
+            if (!ModelState.IsValid) return Page();
+            // TODO: consider only getting the user alias not the whole URL for social media links
+            // TODO: assess risk of XSS attacks and how to mitigate
 
-        //    var currentUserName = User.Identity!.Name;
-        //    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+            var currentUserName = User.Identity!.Name;
+            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-        //    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-        //    var member = await _repository.GetAsync(spec);
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var member = await _repository.GetAsync(spec);
 
-        //    if (UserProfileUpdateModel.AddedBook.HasValue)
-        //    {
-        //        AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
+            if (UserBooksUpdateModel.AddedBook.HasValue)
+            {
+                AddedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.AddedBook.Value);
 
-        //        member.AddBookRead(AddedBook);
-        //    }
+                member.AddBookRead(AddedBook);
+            }
 
-        //    if (UserProfileUpdateModel.RemovedBook.HasValue)
-        //    {
-        //        RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
+            await _repository.UpdateAsync(member);
 
-        //        member.RemoveBookRead(RemovedBook);
-        //    }
+            return RedirectToPage();
+        }
+        public async Task<ActionResult> OnPostRemove()
+        {
+            if (!ModelState.IsValid) return Page();
+            // TODO: consider only getting the user alias not the whole URL for social media links
+            // TODO: assess risk of XSS attacks and how to mitigate
 
-        //    member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
-        //    member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
-        //    member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
-        //    member.UpdateAddress(UserProfileUpdateModel.Address);
-        //    member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-        //        UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
+            var currentUserName = User.Identity!.Name;
+            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-        //    // this is trying to add to bookmember database - why?
-        //    await _repository.UpdateAsync(member);
-        //}
+            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+            var member = await _repository.GetAsync(spec);
+
+            if (UserBooksUpdateModel.RemovedBook.HasValue)
+            {
+                RemovedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.RemovedBook.Value);
+
+                member.RemoveBookRead(RemovedBook);
+            }
+
+            await _repository.UpdateAsync(member);
+
+            return RedirectToPage();
+        }
     }
 }
