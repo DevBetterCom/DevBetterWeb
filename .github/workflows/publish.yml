@@ -25,15 +25,16 @@ jobs:
       run: dotnet test --configuration Release
     - name: publish
       run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
-    
-    - name: Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+# disabled while manually publishing .net 5 RC to Azure Web App via Visual Studio
+#    - name: Login
+#      uses: azure/login@v1
+#      with:
+#        creds: ${{ secrets.AZURE_CREDENTIALS }}
       
     # deploy web app using Azure credentials
-    - name: 'Azure webapp deploy'
-      uses: azure/webapps-deploy@v1
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: './WebApp' 
+#    - name: 'Azure webapp deploy'
+#      uses: azure/webapps-deploy@v1
+#      with:
+#        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#        package: './WebApp' 

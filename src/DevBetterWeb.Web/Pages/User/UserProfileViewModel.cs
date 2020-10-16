@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-    public class UserProfileUpdateModel
+    public class UserProfileViewModel
     {
 
         [Required]
@@ -40,13 +40,14 @@ namespace DevBetterWeb.Web.Pages.User
         public List<Book> BooksRead { get; set; } = new List<Book>();
         public int? AddedBook { get; set; }
         public int? RemovedBook { get; set; }
+        public UserBooksUpdateModel userBooksUpdateModel { get; set; } = new UserBooksUpdateModel();
 
-        public UserProfileUpdateModel()
+        public UserProfileViewModel()
         {
 
         }
 
-        public UserProfileUpdateModel(Member member)
+        public UserProfileViewModel(Member member)
         {
 
             BlogUrl = member.BlogUrl;
@@ -63,25 +64,7 @@ namespace DevBetterWeb.Web.Pages.User
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
             BooksRead = member.BooksRead!;
-            
-        }
 
-        public bool HasReadBook(Book book)
-        {
-            if (BooksRead == null)
-            {
-                return false;
-            }
-
-            foreach (Book Book in BooksRead)
-            {
-                if (Book != null && Book.Equals(book))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
     }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DevBetterWeb.Infrastructure.Data.Migrations
+namespace DevBetterWeb.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -183,6 +183,23 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("BookMember", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Book", null)
@@ -207,9 +224,45 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
+                        {
+                            b1.Property<int>("SubscriptionId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime?>("EndDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("StartDate")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("SubscriptionDates");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId");
+                        });
+
+                    b.Navigation("Dates")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.ArchiveVideo", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
+                {
+                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }
