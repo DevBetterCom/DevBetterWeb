@@ -50,6 +50,7 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitchUrl { get; private set; }
         public string? YouTubeUrl { get; private set; }
         public string? TwitterUrl { get; private set; }
+    public string? CodinGameUrl { get; private set; }
 
         public List<Book>? BooksRead { get; set; } = new List<Book>();
 
@@ -128,6 +129,7 @@ namespace DevBetterWeb.Core.Entities
         }
 
         public void UpdateLinks(string? blogUrl,
+          string? codinGameUrl,
             string? gitHubUrl,
             string? linkedInUrl,
             string? otherUrl,
@@ -136,12 +138,17 @@ namespace DevBetterWeb.Core.Entities
             string? twitterUrl)
         {
             bool valueChanged = false;
-            if (BlogUrl != blogUrl)
-            {
-                BlogUrl = blogUrl;
-                valueChanged = true;
-            }
-            if (GitHubUrl != gitHubUrl)
+      if (BlogUrl != blogUrl)
+      {
+        BlogUrl = blogUrl;
+        valueChanged = true;
+      }
+      if (CodinGameUrl != codinGameUrl)
+      {
+        CodinGameUrl = codinGameUrl;
+        valueChanged = true;
+      }
+      if (GitHubUrl != gitHubUrl)
             {
                 GitHubUrl = gitHubUrl;
                 valueChanged = true;

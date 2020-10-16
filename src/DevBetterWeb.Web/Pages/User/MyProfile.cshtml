@@ -119,7 +119,17 @@
                     <p>@Model.UserProfileViewModel.BlogUrl</p>
                 }
 
-                <label class="font-weight-bold">Github</label>
+                <label class="font-weight-bold">CodinGame</label>
+                @if (Model.UserProfileViewModel.CodinGameUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.CodinGameUrl</p>
+                }
+
+                <label class="font-weight-bold">GitHub</label>
                 @if (Model.UserProfileViewModel.GithubUrl == null)
                 {
                     <p>none</p>
@@ -182,6 +192,7 @@
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
 
             </div>
+            </div>
 
             <br />
 
@@ -189,48 +200,24 @@
                 <div class="card-header">
                     <b>Books</b>
                 </div>
-                @if (Model.UserProfileUpdateModel.BooksRead.Any())
+                <div class="card-body">
+                @if (Model.UserProfileViewModel.BooksRead.Any())
                 {
-                    @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
+                    @foreach (var book in Model.UserProfileViewModel.BooksRead)
                     {
-                        <div class="card-body"><strong>
+                            <strong>
                                 @book.ToString()
-                                <!--<button type="submit" class="btn btn-danger" value="book.Id" asp-for="UserProfileUpdateModel.RemovedBook"><i class="fas fa-times"></i></button>-->
-                            </strong></div>
+                            </strong>
                     }
                 }
                 else
                 {
                     <div class="card-body">You haven't read any books yet. Add one below!</div>
                 }
-                <div class="card-body">
-                    <label for="addBooks">Select a book below to add it to your list.</label>
-                    <select asp-for="UserProfileUpdateModel.AddedBook" id="addBooks">
-                        <option value="">None</option>
-                        @foreach (var book in Model.Books)
-                        {
-                            if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
-                            {
-                                <option value="@book.Id">@book.ToString()</option>
-                            }
-                        }
-                            </select>
-                            <label for="removeBooks">Select a book below to remove it from your list.</label>
-                            <select asp-for="UserProfileUpdateModel.RemovedBook" id="removeBooks">
-                                <option value="">None</option>
-                                @foreach (var book in Model.Books)
-                        {
-                            if (Model.UserProfileUpdateModel.HasReadBook(book))
-                            {
-                                <option value="@book.Id">@book.ToString()</option>
-                            }
-                        }
-                            </select>
-                        </div>
-                    </div>
 
-                </div>
-
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Books">Edit</a>
 
             </div>
+
+        </div>
         </div>

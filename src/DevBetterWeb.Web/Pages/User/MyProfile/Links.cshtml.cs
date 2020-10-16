@@ -77,7 +77,7 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
+            member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
                 UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl);
 
             await _repository.UpdateAsync(member);

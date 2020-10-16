@@ -29,6 +29,8 @@ namespace DevBetterWeb.Web.Pages.User
         public string? YouTubeUrl { get; set; }
         [ValidUrl]
         public string? OtherUrl { get; set; }
+    [ValidUrl]
+    public string? CodinGameUrl { get; set; }
 
         public UserLinksUpdateModel()
         {
@@ -45,6 +47,7 @@ namespace DevBetterWeb.Web.Pages.User
             GithubUrl = member.GitHubUrl;
             LinkedInUrl = member.LinkedInUrl;
             OtherUrl = member.OtherUrl;
+      CodinGameUrl = member.CodinGameUrl;
         }
 
     }
