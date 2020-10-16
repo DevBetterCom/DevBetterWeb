@@ -23,16 +23,19 @@ namespace DevBetterWeb.Web.Pages.Admin
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
+    private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository _repository;
 
     public UserModel(UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IUserRoleMembershipService userRoleMembershipService,
+        IMemberRegistrationService memberRegistrationService,
         IRepository repository)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _userRoleMembershipService = userRoleMembershipService;
+      _memberRegistrationService = memberRegistrationService;
       _repository = repository;
     }
 
@@ -122,6 +125,12 @@ namespace DevBetterWeb.Web.Pages.Admin
     {
       var memberByUserSpec = new MemberByUserIdSpec(userId);
       var member = await _repository.GetAsync(memberByUserSpec);
+
+      if (member == null)
+      {
+        member = await _memberRegistrationService.RegisterMemberAsync(userId);
+      }
+
       var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
       var subscriptionsFromDb = await _repository.ListAsync(subscriptionByMemberSpec);
 
