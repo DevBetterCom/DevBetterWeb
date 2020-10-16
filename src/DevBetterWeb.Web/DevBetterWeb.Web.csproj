@@ -12,7 +12,7 @@
 		<IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<WarningsAsErrors />
 	</PropertyGroup>
 
