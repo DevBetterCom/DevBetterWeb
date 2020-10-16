@@ -15,21 +15,21 @@ namespace DevBetterWeb.Web.Pages.User
     public class UserLinksUpdateModel
     {
 
-        [ValidUrl]
+        [ValidUrlContainingString("LinkedIn")]
         public string? LinkedInUrl { get; set; }
-        [ValidUrl]
+        [ValidUrlContainingString("Twitter")]
         public string? TwitterUrl { get; set; }
-        [ValidUrl]
-        public string? GithubUrl { get; set; }
+    [ValidUrlContainingString("GitHub")]
+    public string? GithubUrl { get; set; }
         [ValidUrl]
         public string? BlogUrl { get; set; }
-        [ValidUrl]
-        public string? TwitchUrl { get; set; }
-        [ValidUrl]
-        public string? YouTubeUrl { get; set; }
+    [ValidUrlContainingString("Twitch")]
+    public string? TwitchUrl { get; set; }
+    [ValidUrlContainingString("YouTube")]
+    public string? YouTubeUrl { get; set; }
         [ValidUrl]
         public string? OtherUrl { get; set; }
-    [ValidUrl]
+    [ValidUrlContainingString("CodinGame")]
     public string? CodinGameUrl { get; set; }
 
         public UserLinksUpdateModel()
