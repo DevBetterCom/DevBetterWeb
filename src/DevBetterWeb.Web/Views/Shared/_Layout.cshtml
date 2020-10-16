@@ -90,12 +90,12 @@
                 <a class="nav-item nav-link text-primary" asp-page="/ArchivedVideos/Index">Videos</a>
                 <a class="nav-item nav-link text-primary" asp-page="/Questions">Questions</a>
 
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity!.IsAuthenticated)
                 {
                     <a class="nav-item nav-link text-primary" asp-page="/User/Index">Members</a>
                 }
 
-                @if (User.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
+                @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
                 {
                     <a class="nav-item nav-link text-primary" asp-page="/Admin/Index">Admin</a>
                 }

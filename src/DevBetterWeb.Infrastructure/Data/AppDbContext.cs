@@ -22,12 +22,14 @@ namespace DevBetterWeb.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
         public DbSet<ArchiveVideo>? ArchiveVideos { get; set; }
         public DbSet<Question>? Questions { get; set; }
         public DbSet<Member>? Members { get; set; }
+        public DbSet<Book>? Books { get; set; }
         public DbSet<Subscription>? Subscriptions { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

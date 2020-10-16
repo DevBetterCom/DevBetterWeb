@@ -48,7 +48,7 @@ namespace DevBetterWeb.Web
                 try
                 {
                     var context = services.GetRequiredService<AppDbContext>();
-                    if (context.Questions.Any())
+                    if (context.Questions!.Any())
                     {
                         logger.LogDebug("Database already has data in it.");
                     }

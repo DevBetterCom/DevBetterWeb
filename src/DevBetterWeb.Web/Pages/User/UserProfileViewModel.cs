@@ -1,5 +1,9 @@
 ﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,8 +12,9 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-    public class UserProfileUpdateModel
+    public class UserProfileViewModel
     {
+
         [Required]
         public string? FirstName { get; set; }
         [Required]
@@ -32,14 +37,19 @@ namespace DevBetterWeb.Web.Pages.User
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
+        public List<Book> BooksRead { get; set; } = new List<Book>();
+        public int? AddedBook { get; set; }
+        public int? RemovedBook { get; set; }
+        public UserBooksUpdateModel userBooksUpdateModel { get; set; } = new UserBooksUpdateModel();
 
-        public UserProfileUpdateModel()
+        public UserProfileViewModel()
         {
 
         }
 
-        public UserProfileUpdateModel(Member member)
+        public UserProfileViewModel(Member member)
         {
+
             BlogUrl = member.BlogUrl;
             TwitchUrl = member.TwitchUrl;
             YouTubeUrl = member.YouTubeUrl;
@@ -53,6 +63,9 @@ namespace DevBetterWeb.Web.Pages.User
             Address = member.Address;
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
+            BooksRead = member.BooksRead!;
+            
         }
+
     }
 }

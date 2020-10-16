@@ -104,7 +104,7 @@ namespace DevBetterWeb.Web.Pages.ArchivedVideos
 
         public IActionResult OnPostEditQuestion(int questionId, string questionText, int timestamp)
         {
-            var question = _context.Questions.FirstOrDefault(x => x.Id == questionId);
+            var question = _context.Questions!.FirstOrDefault(x => x.Id == questionId);
 
             if (question == null)
             {

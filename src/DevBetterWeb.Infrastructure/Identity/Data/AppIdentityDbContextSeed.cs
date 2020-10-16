@@ -16,13 +16,13 @@ namespace DevBetterWeb.Web.Areas.Identity
             string defaultUserName = "demouser@microsoft.com";
             string defaultPassword = AuthConstants.DEFAULT_PASSWORD;
 
-            var defaultUser = new ApplicationUser { UserName = defaultUserName, Email = defaultUserName };
+            var defaultUser = new ApplicationUser { UserName = defaultUserName, Email = defaultUserName, EmailConfirmed = true };
             await userManager.CreateAsync(defaultUser, AuthConstants.DEFAULT_PASSWORD);
             defaultUser = await userManager.FindByNameAsync(defaultUserName);
             await userManager.AddToRoleAsync(defaultUser, AuthConstants.Roles.MEMBERS);
 
             string adminUserName = "admin@test.com";
-            var adminUser = new ApplicationUser { UserName = adminUserName, Email = adminUserName };
+            var adminUser = new ApplicationUser { UserName = adminUserName, Email = adminUserName, EmailConfirmed = true };
             await userManager.CreateAsync(adminUser, defaultPassword);
             adminUser = await userManager.FindByNameAsync(adminUserName);
 

@@ -3,7 +3,7 @@ using System;
 
 namespace DevBetterWeb.Core.ValueObjects
 {
-    public class DateTimeRange : ValueObject
+    public class DateTimeRange //: ValueObject
     {
         public DateTime StartDate { get; private set; }
         public DateTime? EndDate { get; private set; }

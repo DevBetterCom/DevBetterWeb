@@ -3,7 +3,7 @@
 #
 # RUN COMMAND
 #  docker run --name devbetterweb --rm -it -p 5000:80 web
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM microsoft/dotnet:5.0-sdk AS build
 WORKDIR /app
 
 COPY *.sln .
@@ -13,7 +13,7 @@ RUN dotnet restore
 
 RUN dotnet publish -c Release -o out
 
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
+FROM microsoft/dotnet:5.0-aspnetcore-runtime AS runtime
 WORKDIR /app
 COPY --from=build /app/src/DevBetterWeb.Web/out ./
 
