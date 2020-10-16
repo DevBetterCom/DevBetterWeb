@@ -2,13 +2,13 @@
 
 namespace DevBetterWeb.Core.Events
 {
-    public class InvalidUserEvent : BaseDomainEvent
+  public class InvalidUserEvent : BaseDomainEvent
+  {
+    public InvalidUserEvent(string emailAddress)
     {
-        public InvalidUserEvent(string emailAddress)
-        {
-            EmailAddress = emailAddress;
-        }
-
-        public string EmailAddress { get; }
+      EmailAddress = emailAddress;
     }
+
+    public string EmailAddress { get; }
+  }
 }

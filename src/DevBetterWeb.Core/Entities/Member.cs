@@ -57,6 +57,8 @@ namespace DevBetterWeb.Core.Entities
         //public ICollection<Book> BooksRead { get; set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
+        public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+
 
         public string UserFullName()
         {
