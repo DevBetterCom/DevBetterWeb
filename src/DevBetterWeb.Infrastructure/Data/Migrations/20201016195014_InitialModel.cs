@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DevBetterWeb.Infrastructure.Migrations
+namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
