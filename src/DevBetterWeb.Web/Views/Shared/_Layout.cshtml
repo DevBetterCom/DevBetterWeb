@@ -93,6 +93,7 @@
                 @if (User.Identity!.IsAuthenticated)
                 {
                     <a class="nav-item nav-link text-primary" asp-page="/User/Index">Members</a>
+                    <a class="nav-item nav-link text-primary" asp-page="/Leaderboard/Index">Leaderboard</a>
                 }
 
                 @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))

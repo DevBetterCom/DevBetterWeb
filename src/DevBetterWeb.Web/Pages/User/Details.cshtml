@@ -107,5 +107,35 @@
 
             </div>
         </div>
+        <br />
+        <div class="card">
+            <div class="card-header">
+                <b>Books</b>
+            </div>
+            <div class="card-body">
+
+                @if (Model.UserDetailsViewModel.BooksRead.Count() == 0)
+                {
+                    <div>@Model.UserDetailsViewModel.Name has not read any books yet.</div>
+
+                }
+                else if (Model.UserDetailsViewModel.BooksRead.Count() == 1)
+                {
+                    <div>@Model.UserDetailsViewModel.Name has read 1 book:</div>
+
+                }
+                else
+                {
+                    <div>@Model.UserDetailsViewModel.Name has read @Model.UserDetailsViewModel.BooksRead.Count() books:</div>
+                }
+
+                @foreach (var book in Model.UserDetailsViewModel.BooksRead)
+                {
+                    <a asp-page="/Leaderboard/BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
+                }
+
+                </>
+            </div>
+        </div>
     </div>
 </div>

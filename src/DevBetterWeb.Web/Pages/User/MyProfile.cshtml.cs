@@ -30,7 +30,7 @@ namespace DevBetterWeb.Web.Pages.User
         private readonly IRepository _repository;
         private readonly AppDbContext _appDbContext;
 
-        public MyProfileModel(UserManager<ApplicationUser> userManager, 
+        public MyProfileModel(UserManager<ApplicationUser> userManager,
             IMemberRegistrationService memberRegistrationService,
             IRepository repository, AppDbContext appDbContext)
         {

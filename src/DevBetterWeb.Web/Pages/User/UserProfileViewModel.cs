@@ -64,7 +64,7 @@ namespace DevBetterWeb.Web.Pages.User
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
             BooksRead = member.BooksRead!;
-            
+
         }
 
     }

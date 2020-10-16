@@ -70,6 +70,7 @@
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Personal">Edit</a>
 
             </div>
+
         </div>
         <br />
 
@@ -181,12 +182,55 @@
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
 
             </div>
+
+            <br />
+
+            <div class="card">
+                <div class="card-header">
+                    <b>Books</b>
+                </div>
+                @if (Model.UserProfileUpdateModel.BooksRead.Any())
+                {
+                    @foreach (var book in Model.UserProfileUpdateModel.BooksRead)
+                    {
+                        <div class="card-body"><strong>
+                                @book.ToString()
+                                <!--<button type="submit" class="btn btn-danger" value="book.Id" asp-for="UserProfileUpdateModel.RemovedBook"><i class="fas fa-times"></i></button>-->
+                            </strong></div>
+                    }
+                }
+                else
+                {
+                    <div class="card-body">You haven't read any books yet. Add one below!</div>
+                }
+                <div class="card-body">
+                    <label for="addBooks">Select a book below to add it to your list.</label>
+                    <select asp-for="UserProfileUpdateModel.AddedBook" id="addBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
+                        {
+                            if (!(Model.UserProfileUpdateModel.HasReadBook(book)))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                            </select>
+                            <label for="removeBooks">Select a book below to remove it from your list.</label>
+                            <select asp-for="UserProfileUpdateModel.RemovedBook" id="removeBooks">
+                                <option value="">None</option>
+                                @foreach (var book in Model.Books)
+                        {
+                            if (Model.UserProfileUpdateModel.HasReadBook(book))
+                            {
+                                <option value="@book.Id">@book.ToString()</option>
+                            }
+                        }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
         </div>
-
-
-    </div>
-</div>
-
-
-
-
