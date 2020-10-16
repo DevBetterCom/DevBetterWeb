@@ -18,6 +18,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? PEFriendCode { get; set; }
         public string? PEBadgeURL { get; set; }
     public List<Book> BooksRead { get; set; } = new List<Book>();
+    public string? CodinGameUrl { get; set; }
 
         public UserDetailsViewModel()
         {
@@ -30,6 +31,7 @@ namespace DevBetterWeb.Web.Pages.User
             TwitterUrl = member.TwitterUrl;
             GithubUrl = member.GitHubUrl;
             LinkedInUrl = member.LinkedInUrl;
+      CodinGameUrl = member.CodinGameUrl;
 
             YouTubeUrl = member.YouTubeUrl;
             if(!(string.IsNullOrEmpty(YouTubeUrl)) && !(YouTubeUrl.Contains("?")))

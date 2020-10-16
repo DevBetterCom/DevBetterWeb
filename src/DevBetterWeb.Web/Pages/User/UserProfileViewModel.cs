@@ -34,6 +34,8 @@ namespace DevBetterWeb.Web.Pages.User
         public string? YouTubeUrl { get; set; }
         [ValidUrl]
         public string? OtherUrl { get; set; }
+    [ValidUrl]
+    public string? CodinGameUrl { get; set; }
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
@@ -51,6 +53,7 @@ namespace DevBetterWeb.Web.Pages.User
         {
 
             BlogUrl = member.BlogUrl;
+      CodinGameUrl = member.CodinGameUrl;
             TwitchUrl = member.TwitchUrl;
             YouTubeUrl = member.YouTubeUrl;
             TwitterUrl = member.TwitterUrl;

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200925211743_properManyToManyNow")]
-    partial class properManyToManyNow
+    [Migration("20201016200028_CodinGameUrl")]
+    partial class CodinGameUrl
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
+                .HasAnnotation("ProductVersion", "5.0.0-rc.2.20475.6");
 
             modelBuilder.Entity("BookMember", b =>
                 {
@@ -108,6 +108,9 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("CodinGameUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -185,6 +188,23 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("BookMember", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Book", null)
@@ -209,9 +229,45 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
+                        {
+                            b1.Property<int>("SubscriptionId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime?>("EndDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("StartDate")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("SubscriptionDates");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId");
+                        });
+
+                    b.Navigation("Dates")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.ArchiveVideo", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
+                {
+                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }
