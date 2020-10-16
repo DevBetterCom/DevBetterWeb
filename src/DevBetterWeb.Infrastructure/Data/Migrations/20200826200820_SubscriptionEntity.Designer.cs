@@ -4,14 +4,16 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200826200820_SubscriptionEntity")]
+    partial class SubscriptionEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,12 +35,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VideoUrl")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -86,14 +86,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<string>("PEFriendCode")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("PEUsername")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
                     b.Property<string>("TwitchUrl")
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
@@ -106,10 +98,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
-
-                    b.Property<string>("YouTubeUrl")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
@@ -147,8 +135,14 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -173,25 +167,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
-                        {
-                            b1.Property<int>("SubscriptionId")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTime?>("EndDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime>("StartDate")
-                                .HasColumnType("datetime2");
-
-                            b1.HasKey("SubscriptionId");
-
-                            b1.ToTable("SubscriptionDates");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SubscriptionId");
-                        });
                 });
 #pragma warning restore 612, 618
         }

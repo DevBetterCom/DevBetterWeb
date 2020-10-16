@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.SharedKernel;
 using System;
+using System.Collections.Generic;
 
 namespace DevBetterWeb.Core.Entities
 {
@@ -39,6 +40,8 @@ namespace DevBetterWeb.Core.Entities
         public string? TwitterUrl { get; private set; }
 
         public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
+        public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+
 
         public string UserFullName()
         {
