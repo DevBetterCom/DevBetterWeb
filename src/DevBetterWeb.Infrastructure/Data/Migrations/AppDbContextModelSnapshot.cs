@@ -183,77 +183,78 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("BookMember", b =>
-                {
-                    b.HasOne("DevBetterWeb.Core.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksReadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+      modelBuilder.Entity("BookMember", b =>
+          {
+            b.HasOne("DevBetterWeb.Core.Entities.Book", null)
+                .WithMany()
+                .HasForeignKey("BooksReadId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
-                        .WithMany()
-                        .HasForeignKey("MembersWhoHaveReadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            b.HasOne("DevBetterWeb.Core.Entities.Member", null)
+                .WithMany()
+                .HasForeignKey("MembersWhoHaveReadId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                  b.Property<int>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("int")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
+                  b.Property<int>("MemberId")
+                .HasColumnType("int");
 
-                    b.HasKey("Id");
+                  b.HasKey("Id");
 
-                    b.HasIndex("MemberId");
+                  b.HasIndex("MemberId");
 
-                    b.ToTable("Subscriptions");
+                  b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ArchiveVideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                  b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
+                .WithMany("Questions")
+                .HasForeignKey("ArchiveVideoId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.ArchiveVideo", b =>
                 {
-                    b.Navigation("Questions");
+                  b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                  b.HasOne("DevBetterWeb.Core.Entities.Member", null)
+                .WithMany("Subscriptions")
+                .HasForeignKey("MemberId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
-                        {
-                            b1.Property<int>("SubscriptionId")
-                                .HasColumnType("int");
+                  b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
+                {
+                  b1.Property<int>("SubscriptionId")
+                      .HasColumnType("int");
 
-                            b1.Property<DateTime?>("EndDate")
-                                .HasColumnType("datetime2");
+                  b1.Property<DateTime?>("EndDate")
+                      .HasColumnType("datetime2");
 
-                            b1.Property<DateTime>("StartDate")
-                                .HasColumnType("datetime2");
+                  b1.Property<DateTime>("StartDate")
+                      .HasColumnType("datetime2");
 
-                            b1.HasKey("SubscriptionId");
+                  b1.HasKey("SubscriptionId");
 
-                            b1.ToTable("SubscriptionDates");
+                  b1.ToTable("SubscriptionDates");
 
-                            b1.WithOwner()
-                                .HasForeignKey("SubscriptionId");
-                        });
+                  b1.WithOwner()
+                      .HasForeignKey("SubscriptionId");
                 });
+                });
+          });
 #pragma warning restore 612, 618
         }
     }
