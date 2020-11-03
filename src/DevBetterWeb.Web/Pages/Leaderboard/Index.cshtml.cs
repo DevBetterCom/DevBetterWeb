@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -41,13 +40,17 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       var members = await _appDbContext.Members.AsNoTracking()
           .Where(member => userIds.Contains(member.UserId))
           .OrderByDescending(member => member.BooksRead.Count)
+          .ThenBy(member => member.LastName)
+          .ThenBy(member => member.FirstName)
           .Include(member => member.BooksRead)
           .ToListAsync();
 
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
           .ToList();
 
-      var books = await _appDbContext.Books.AsNoTracking()
+      var books = await _appDbContext.Books.AsQueryable()
+        .OrderBy(book => book.Title)
+        .AsNoTracking()
         .ToListAsync();
 
       Books = books;
@@ -70,7 +73,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           BooksRead = member.BooksRead
         };
 
-        if(dto.BooksRead == null)
+        if (dto.BooksRead == null)
         {
           dto.BooksRead = new List<Book>();
         }
@@ -79,6 +82,4 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       }
     }
   }
-
-
 }
