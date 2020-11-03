@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $('#usersTable').DataTable();
+    $('#usersTable').DataTable({ "pageLength": 25 });
 
     $('#removeUserModal').on('show.bs.modal', function (e) {
         var button = $(e.relatedTarget);
