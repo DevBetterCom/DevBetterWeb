@@ -26,10 +26,12 @@
                 <b>Members who have read @Model.BookDetailsViewModel.Title</b>
             </div>
             <div class="card-body">
-                @foreach(var member in Model.BookDetailsViewModel.MembersWhoHaveRead)
-                {
-                    <a asp-page="/User/Details" asp-route-userId="@member.UserId">@member.FirstName  @member.LastName</a>
-                }
+                <ul>
+                    @foreach (var member in Model.BookDetailsViewModel.MembersWhoHaveRead.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
+                    {
+                    <li><a asp-page="/User/Details" asp-route-userId="@member.UserId">@member.FirstName  @member.LastName</a></li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
