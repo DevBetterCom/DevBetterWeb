@@ -76,7 +76,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             string youtubeInput = "https://www.youtube.com/ardalis?";
 
-            member.UpdateLinks(null, null, null, null, null, youtubeInput, null);
+            member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
 
             MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
@@ -92,7 +92,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
             string youtubeInput = "https://www.youtube.com/ardalis";
 
-            member.UpdateLinks(null, null, null, null, null, youtubeInput, null);
+            member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
 
             MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
