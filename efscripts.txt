@@ -10,7 +10,8 @@ dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevB
 ##run this from the infrastructure project directory to update the identity data
 dotnet ef database update -c IdentityDbContext -s ..\devbetterweb.web\DevBetterWeb.Web.csproj
 
-
+-- GENERATE SCRIPT FOR PROD DB UPDATES
+dotnet ef migrations script  --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj > update.sql
 
 76040fbe-b7e4-452a-b2aa-e48520c771cf - admin role
 be21ba0d-47b0-45c0-aa15-02fa22e5d7f6 - admin@test.com user

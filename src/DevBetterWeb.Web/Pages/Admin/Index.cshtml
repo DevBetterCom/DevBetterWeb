@@ -29,6 +29,7 @@
     <thead>
         <tr>
             <th>Email</th>
+            <th>Confirmed?</th>
             <th>Roles</th>
             <th></th>
         </tr>
@@ -38,6 +39,7 @@
         {
             <tr>
                 <td>@userWithRole.User.Email</td>
+                <td>@userWithRole.User.EmailConfirmed</td>
                 <td>
                     @foreach (var role in userWithRole.Roles)
                     {

@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51814/",
+      "applicationUrl": "http://localhost:5009/",
       "sslPort": 0
     }
   },
@@ -14,7 +14,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:51815/"
+      "applicationUrl": "http://localhost:5010/"
     },
     "DevBetterWeb.Web - PROD": {
       "commandName": "Project",
@@ -22,7 +22,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://localhost:51815/"
+      "applicationUrl": "http://localhost:5011/"
     }
   }
 }
