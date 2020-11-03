@@ -1,5 +1,5 @@
 ﻿$(function () {
 
-    $('#roleTable').DataTable();
+    $('#roleTable').DataTable({ "pageLength": 25 });
 
 });

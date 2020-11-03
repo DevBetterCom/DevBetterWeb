@@ -2,6 +2,7 @@
 @model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
 @{
     ViewData["Title"] = "Index";
+    var rank = 1;
 }
 
 
@@ -12,6 +13,7 @@
         <table class="table table-sm table-striped" id="leaderboardTable">
             <thead>
                 <tr>
+                    <th>Rank</th>
                     <th>Name</th>
                     <th>Number of Books Read</th>
                 </tr>
@@ -20,14 +22,13 @@
                 @foreach (var member in Model.Members)
                 {
                 <tr>
+                    <td>@(rank++)</td>
                     <td>
                         @member.FullName
                     </td>
                     <td>
                         @member.BooksRead!.Count
                     </td>
-
-
                 </tr>
                 }
             </tbody>

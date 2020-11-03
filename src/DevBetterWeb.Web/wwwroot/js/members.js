@@ -1,5 +1,5 @@
 ﻿$(function () {
 
-    $('#membersTable').DataTable();
+    $('#membersTable').DataTable({ "pageLength" : 25 });
 
 });
