@@ -4,7 +4,7 @@ using Xunit;
 namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
 
-    public class MemberAddBook
+  public class MemberAddBook
     {
 
         [Fact]

@@ -25,7 +25,7 @@ namespace DevBetterWeb.Web
         return ValidationResult.Success!;
       }
 
-      if (HasHashtagFourFromEnd(username) && HasFourDigitNumAtEnd(username))
+      if (ValidDiscordUsernameAttributeHelpers.HasHashtagFourFromEnd(username) && ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(username))
       {
         return ValidationResult.Success!;
       }
@@ -33,17 +33,24 @@ namespace DevBetterWeb.Web
       return new ValidationResult(GetErrorMessage());
     }
 
-    private static bool HasFourDigitNumAtEnd(string username)
+
+    
+  }
+
+  public class ValidDiscordUsernameAttributeHelpers
+  {
+    public static bool HasFourDigitNumAtEnd(string username)
     {
       string lastFour = username.Substring(username.Length - 4);
       return int.TryParse(lastFour, out _);
     }
 
-    private static bool HasHashtagFourFromEnd(string username)
+    public static bool HasHashtagFourFromEnd(string username)
     {
       string hopefullyHashtag = username.Substring(username.Length - 5, 1);
 
       return hopefullyHashtag.Equals("#");
     }
+
   }
 }
