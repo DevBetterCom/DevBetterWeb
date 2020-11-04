@@ -1,5 +1,6 @@
 ﻿using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
+using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
 {
