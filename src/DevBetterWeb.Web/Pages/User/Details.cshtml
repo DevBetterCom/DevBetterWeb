@@ -28,6 +28,14 @@
                     </div>
                 </div>
             </div>
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.DiscordUsername))
+            {
+                <div class="card-body">
+                    <b>Discord Username: </b>
+                    @Model.UserDetailsViewModel.DiscordUsername
+                </div>
+            }
+
             @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
             {
                 <div class="card-body">

@@ -23,6 +23,8 @@ namespace DevBetterWeb.Web.Pages.User
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
+    [ValidDiscordUsername]    
+    public string? DiscordUsername { get; set; }
 
         public UserPersonalUpdateModel()
         {
@@ -38,6 +40,7 @@ namespace DevBetterWeb.Web.Pages.User
             Address = member.Address;
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
+      DiscordUsername = member.DiscordUsername;
             
         }
     }

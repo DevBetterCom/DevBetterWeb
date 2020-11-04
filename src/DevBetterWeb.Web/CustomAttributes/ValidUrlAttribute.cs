@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web
 {
-    //TODO get this to work without being commented out
-    public class ValidUrlAttribute : ValidationAttribute
+  //TODO get this to work without being commented out
+  public class ValidUrlAttribute : ValidationAttribute
     {
         public string GetErrorMessage() =>
         $"You must enter a valid URL";

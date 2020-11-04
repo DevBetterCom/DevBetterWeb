@@ -47,6 +47,16 @@
                     <p>@Model.UserProfileViewModel.AboutInfo</p>
                 }
 
+                <label class="font-weight-bold">Discord Username</label>
+                @if (Model.UserProfileViewModel.DiscordUsername == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.DiscordUsername</p>
+                }
+
                 <label class="font-weight-bold">Project Euler Username</label>
                 @if (Model.UserProfileViewModel.PEUsername == null)
                 {
