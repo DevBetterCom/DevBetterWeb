@@ -60,12 +60,13 @@
                         </td>
                         <td></td>
                         <td>
-                            @book.MembersWhoHaveRead!.Count 
-                            @if(book.MembersWhoHaveRead.Count == 1)
+                            @book.MembersWhoHaveRead!.Count
+                            @if (book.MembersWhoHaveRead.Count == 1)
                             {
-                                <a>Member</a>
+                                @Html.Raw("Member");
                             }
-                            else { <a>Members</a>}
+                            else
+                            { @Html.Raw("Members"); }
                         </td>
                     </tr>
                 }
