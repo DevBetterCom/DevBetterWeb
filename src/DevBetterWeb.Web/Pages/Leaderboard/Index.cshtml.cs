@@ -49,7 +49,9 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .ToList();
 
       var books = await _appDbContext.Books.AsQueryable()
-        .OrderBy(book => book.Title)
+        .OrderByDescending(book => book.MembersWhoHaveRead.Count)
+        .ThenBy(book => book.Title)
+        .Include(book => book.MembersWhoHaveRead)
         .AsNoTracking()
         .ToListAsync();
 
