@@ -1,6 +1,6 @@
 
 -- RUN THIS FROM THE WEB PROJECT FOLDER
-dotnet ef migrations add CodinGameUrl --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
+dotnet ef migrations add DiscordUsername --context appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
 
 dotnet ef migrations add InitialModel --context identitydbcontext -o Areas/Identity/Data/Migrations
 
