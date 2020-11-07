@@ -81,6 +81,7 @@ namespace DevBetterWeb.Web.Pages.User
             member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername);
             member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
             member.UpdateAddress(UserPersonalUpdateModel.Address);
+      member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername);
 
             await _repository.UpdateAsync(member);
         }

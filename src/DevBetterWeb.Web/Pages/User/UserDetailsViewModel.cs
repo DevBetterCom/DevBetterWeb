@@ -19,6 +19,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? PEBadgeURL { get; set; }
     public List<Book> BooksRead { get; set; } = new List<Book>();
     public string? CodinGameUrl { get; set; }
+    public string? DiscordUsername { get; set; }
 
         public UserDetailsViewModel()
         {
@@ -50,6 +51,7 @@ namespace DevBetterWeb.Web.Pages.User
             }
 
       BooksRead = member.BooksRead!;
+      DiscordUsername = member.DiscordUsername;
         }
     }
 }

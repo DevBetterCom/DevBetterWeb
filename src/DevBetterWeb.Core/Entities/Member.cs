@@ -50,6 +50,7 @@ namespace DevBetterWeb.Core.Entities
     public string? YouTubeUrl { get; private set; }
     public string? TwitterUrl { get; private set; }
     public string? CodinGameUrl { get; private set; }
+    public string? DiscordUsername { get; private set; }
 
     public List<Book>? BooksRead { get; set; } = new List<Book>();
 
@@ -211,6 +212,14 @@ namespace DevBetterWeb.Core.Entities
         BooksRead.Remove(book);
         CreateOrUpdateUpdateEvent("Books");
       }
+    }
+
+    public void UpdateDiscord(string? discordUsername)
+    {
+      if (DiscordUsername == discordUsername) return;
+
+      DiscordUsername = discordUsername;
+      CreateOrUpdateUpdateEvent("Discord Username");
     }
 
     private void CreateOrUpdateUpdateEvent(string updateDetails)
