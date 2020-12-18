@@ -38,6 +38,7 @@ namespace DevBetterWeb.Infrastructure
           .As<IUserRoleMembershipService>();
       builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
       builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
+      builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
 
       builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
 
