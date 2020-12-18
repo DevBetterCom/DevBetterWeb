@@ -5,22 +5,22 @@ using DevBetterWeb.Infrastructure.Services;
 
 namespace DevBetterWeb.Core.Handlers
 {
-  public class DiscordLogMemberAddBookReadHandler : IHandle<MemberAddedBookReadEvent>
+  public class DiscordLogNewBookAddedToGeneralListHandler : IHandle<NewBookCreatedEvent>
   {
     private readonly BookDiscussionWebhook _webhook;
 
-    public DiscordLogMemberAddBookReadHandler(BookDiscussionWebhook webhook)
+    public DiscordLogNewBookAddedToGeneralListHandler(BookDiscussionWebhook webhook)
     {
       _webhook = webhook;
     }
 
-    public static string returnWebhookMessageString(MemberAddedBookReadEvent domainEvent)
+    public static string returnWebhookMessageString(NewBookCreatedEvent domainEvent)
     {
-      return $"User {domainEvent.Member.FirstName} {domainEvent.Member.LastName} just finished reading {domainEvent.Book.Title}! " +
+      return $"New book added to general book list: {domainEvent.Book.Title}! " +
           $"Check out the leaderboard here: https://devbetter.com/Leaderboard.";
     }
 
-    public Task Handle(MemberAddedBookReadEvent domainEvent)
+    public Task Handle(NewBookCreatedEvent domainEvent)
     {
       _webhook.Content = returnWebhookMessageString(domainEvent);
       return _webhook.Send();
