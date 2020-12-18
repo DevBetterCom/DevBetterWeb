@@ -24,7 +24,6 @@ namespace DevBetterWeb.Web.Pages.Admin.Books
 
     [BindProperty]
     public BookViewModel? Book { get; set; }
-
     public async Task<IActionResult> OnPostAsync()
     {
       if (!ModelState.IsValid)
