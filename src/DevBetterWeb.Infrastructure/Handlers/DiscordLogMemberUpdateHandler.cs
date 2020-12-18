@@ -7,9 +7,9 @@ namespace DevBetterWeb.Core.Handlers
 {
   public class DiscordLogMemberUpdateHandler : IHandle<MemberUpdatedEvent>
   {
-    private readonly AdminUpdatesWebhook _webhook;
+    private readonly DevBetterComNotificationsWebhook _webhook;
 
-    public DiscordLogMemberUpdateHandler(AdminUpdatesWebhook webhook)
+    public DiscordLogMemberUpdateHandler(DevBetterComNotificationsWebhook webhook)
     {
       _webhook = webhook;
     }
