@@ -7,9 +7,9 @@ namespace DevBetterWeb.Core.Handlers
 {
     public class DiscordLogUserRemovedFromRoleHandler : IHandle<UserRemovedFromRoleEvent>
     {
-        private readonly Webhook _webhook;
+        private readonly AdminUpdatesWebhook _webhook;
 
-        public DiscordLogUserRemovedFromRoleHandler(Webhook webhook)
+        public DiscordLogUserRemovedFromRoleHandler(AdminUpdatesWebhook webhook)
         {
             _webhook = webhook;
         }

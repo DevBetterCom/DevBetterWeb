@@ -7,9 +7,9 @@ namespace DevBetterWeb.Core.Handlers
 {
     public class DiscordLogUserAddedToRoleHandler : IHandle<UserAddedToRoleEvent>
     {
-        private readonly Webhook _webhook;
+        private readonly AdminUpdatesWebhook _webhook;
 
-        public DiscordLogUserAddedToRoleHandler(Webhook webhook)
+        public DiscordLogUserAddedToRoleHandler(AdminUpdatesWebhook webhook)
         {
             _webhook = webhook;
         }
