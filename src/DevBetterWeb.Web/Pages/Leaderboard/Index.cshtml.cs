@@ -68,11 +68,11 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
 
       public static MemberLinksDTO FromMemberEntity(Member member)
       {
-
         var dto = new MemberLinksDTO
         {
           FullName = member.UserFullName(),
-          BooksRead = member.BooksRead
+          BooksRead = member.BooksRead,
+          UserId = member.UserId
         };
 
         if (dto.BooksRead == null)
