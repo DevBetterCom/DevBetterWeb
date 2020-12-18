@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Web.Pages.User
@@ -27,6 +28,8 @@ namespace DevBetterWeb.Web.Pages.User
 
     public UserDetailsViewModel(Member member)
     {
+      Guard.Against.Null(member, nameof(member));
+
       BlogUrl = member.BlogUrl;
       TwitchUrl = member.TwitchUrl;
       TwitterUrl = member.TwitterUrl;
