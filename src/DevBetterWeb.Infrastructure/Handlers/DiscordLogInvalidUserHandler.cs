@@ -7,9 +7,9 @@ namespace DevBetterWeb.Core.Handlers
 {
     public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
     {
-        private readonly Webhook _webhook;
+        private readonly AdminUpdatesWebhook _webhook;
 
-        public DiscordLogInvalidUserHandler(Webhook webhook)
+        public DiscordLogInvalidUserHandler(AdminUpdatesWebhook webhook)
         {
             _webhook = webhook;
         }
