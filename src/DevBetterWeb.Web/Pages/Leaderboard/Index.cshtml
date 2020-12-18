@@ -27,7 +27,7 @@
                 <tr>
                     <td>@(rank++)</td>
                     <td>
-                        @member.FullName
+                        <a href="/User/Details/@member.UserId">@member.FullName</a>
                     </td>
                     <td>
                         @member.BooksRead!.Count
