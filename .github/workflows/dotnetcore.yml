@@ -12,7 +12,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 5.0.101
     - name: Build and Test with dotnet
       run: dotnet test --configuration Release
     
