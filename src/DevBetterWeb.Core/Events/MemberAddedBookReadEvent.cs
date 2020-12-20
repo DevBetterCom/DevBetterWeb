@@ -3,13 +3,15 @@ using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Events
 {
-  public class NewBookCreatedEvent : BaseDomainEvent
+  public class MemberAddedBookReadEvent : BaseDomainEvent
   {
-    public NewBookCreatedEvent(Book book)
+    public MemberAddedBookReadEvent(Member member, Book book)
     {
+      Member = member;
       Book = book;
     }
 
+    public Member Member { get; }
     public Book Book { get; }
   }
 }

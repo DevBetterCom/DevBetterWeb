@@ -3,58 +3,59 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Services;
-using Discord;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace DevBetterWeb.Infrastructure
 {
-    public class DefaultInfrastructureModule : Module
+  public class DefaultInfrastructureModule : Module
+  {
+    private bool _isDevelopment = false;
+    public DefaultInfrastructureModule(bool isDevelopment)
     {
-        private bool _isDevelopment = false;
-        public DefaultInfrastructureModule(bool isDevelopment)
-        {
-            _isDevelopment = isDevelopment;
-        }
+      _isDevelopment = isDevelopment;
+    }
 
-        protected override void Load(ContainerBuilder builder)
-        {
-            if (_isDevelopment)
-            {
-                RegisterDevelopmentOnlyDependencies(builder);
-            }
-            else
-            {
-                RegisterProductionOnlyDependencies(builder);
-            }
-            RegisterCommonDependencies(builder);
-        }
+    protected override void Load(ContainerBuilder builder)
+    {
+      if (_isDevelopment)
+      {
+        RegisterDevelopmentOnlyDependencies(builder);
+      }
+      else
+      {
+        RegisterProductionOnlyDependencies(builder);
+      }
+      RegisterCommonDependencies(builder);
+    }
 
-        private void RegisterCommonDependencies(ContainerBuilder builder)
-        {
-            builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
-            builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
-            builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
-            builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
-            builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
-                .As<IUserRoleMembershipService>();
-            builder.RegisterType<Webhook>().InstancePerDependency();
+    private void RegisterCommonDependencies(ContainerBuilder builder)
+    {
+      builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
+      builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
+      builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
+      builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
+      builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
+          .As<IUserRoleMembershipService>();
+      builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
+      builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
+      builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
 
-            builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
+      builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
 
-            builder.RegisterAssemblyTypes(this.ThisAssembly)
-                .AsClosedTypesOf(typeof(IHandle<>));
-        }
+      builder.RegisterAssemblyTypes(this.ThisAssembly)
+          .AsClosedTypesOf(typeof(IHandle<>));
+    }
 
-        private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
-        {
-            builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
-        }
+    private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
+    {
+      builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
+    }
 
-        private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
-        {
-            builder.RegisterType<SendGridEmailService>().As<IEmailService>();
-
-        }
+    private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
+    {
+      builder.RegisterType<SendGridEmailService>().As<IEmailService>();
 
     }
+
+  }
 }

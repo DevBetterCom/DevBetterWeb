@@ -47,6 +47,16 @@
                     <p>@Model.UserProfileViewModel.AboutInfo</p>
                 }
 
+                <label class="font-weight-bold">Discord Username</label>
+                @if (Model.UserProfileViewModel.DiscordUsername == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.DiscordUsername</p>
+                }
+
                 <label class="font-weight-bold">Project Euler Username</label>
                 @if (Model.UserProfileViewModel.PEUsername == null)
                 {
@@ -192,31 +202,6 @@
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
 
             </div>
-            </div>
-
-            <br />
-
-            <div class="card">
-                <div class="card-header">
-                    <b>Books</b>
-                </div>
-                <div class="card-body">
-                @if (Model.UserProfileViewModel.BooksRead.Any())
-                {
-                    @foreach (var book in Model.UserProfileViewModel.BooksRead)
-                    {
-                            <strong>
-                                @book.ToString()
-                            </strong>
-                    }
-                }
-                else
-                {
-                    <div class="card-body">You haven't read any books yet. Add one below!</div>
-                }
-
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/Books">Edit</a>
-
             </div>
 
         </div>

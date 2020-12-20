@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -41,13 +40,19 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       var members = await _appDbContext.Members.AsNoTracking()
           .Where(member => userIds.Contains(member.UserId))
           .OrderByDescending(member => member.BooksRead.Count)
+          .ThenBy(member => member.LastName)
+          .ThenBy(member => member.FirstName)
           .Include(member => member.BooksRead)
           .ToListAsync();
 
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
           .ToList();
 
-      var books = await _appDbContext.Books.AsNoTracking()
+      var books = await _appDbContext.Books.AsQueryable()
+        .OrderByDescending(book => book.MembersWhoHaveRead.Count)
+        .ThenBy(book => book.Title)
+        .Include(book => book.MembersWhoHaveRead)
+        .AsNoTracking()
         .ToListAsync();
 
       Books = books;
@@ -63,14 +68,14 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
 
       public static MemberLinksDTO FromMemberEntity(Member member)
       {
-
         var dto = new MemberLinksDTO
         {
           FullName = member.UserFullName(),
-          BooksRead = member.BooksRead
+          BooksRead = member.BooksRead,
+          UserId = member.UserId
         };
 
-        if(dto.BooksRead == null)
+        if (dto.BooksRead == null)
         {
           dto.BooksRead = new List<Book>();
         }
@@ -79,6 +84,4 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       }
     }
   }
-
-
 }

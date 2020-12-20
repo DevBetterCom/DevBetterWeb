@@ -2,16 +2,21 @@
 @model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
 @{
     ViewData["Title"] = "Index";
+    var rank = 1;
+    var bookrank = 1;
 }
 
 
 <h3>Leaderboard</h3>
 
+<p>Learn more about why we are tracking 
+    this <a href="https://www.linkedin.com/pulse/20140716032618-1856486-a-simple-successful-motivation-story/">in this article</a>. The original <a href="https://www.linkedin.com/pulse/developer-reading-list-steve-smith/">reading list from NimblePros can be found here</a>.</p>
 <div class="row">
-    <div class="col-6">
+    <div class="col-5">
         <table class="table table-sm table-striped" id="leaderboardTable">
             <thead>
                 <tr>
+                    <th>Rank</th>
                     <th>Name</th>
                     <th>Number of Books Read</th>
                 </tr>
@@ -20,34 +25,56 @@
                 @foreach (var member in Model.Members)
                 {
                 <tr>
+                    <td>@(rank++)</td>
                     <td>
-                        @member.FullName
+                        <a href="/User/Details/@member.UserId">@member.FullName</a>
                     </td>
                     <td>
                         @member.BooksRead!.Count
                     </td>
-
-
                 </tr>
                 }
             </tbody>
         </table>
     </div>
 
-    <div class="col-6">
-         <div class="card">
-             <div class="card-header">Available Books</div>
-             <div class="card-body">
-                 <strong>There are @Model.Books.Count books you can read to contribute to your leaderboard standings:</strong>
-                 <br />
-                 <br />
-                 @foreach(var book in Model.Books)
-                 {
-                     <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
-                     <br />
-                 }
-             </div>
-         </div>
+    <div class="col-7">
+        <table class="table table-sm table-striped" id="leaderboardBooksTable">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Book</th>
+                    <th></th>
+                    <th></th>
+                    <th>Read by...</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Books)
+                {
+                    <tr>
+                        <td>@(bookrank++)</td>
+                        <td>
+                            <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
+                        </td>
+                        <td>
+                            <a href="@book.PurchaseUrl" target="_blank"><i class="fas fa-shopping-cart"></i></a>
+                        </td>
+                        <td></td>
+                        <td>
+                            @book.MembersWhoHaveRead!.Count
+                            @if (book.MembersWhoHaveRead.Count == 1)
+                            {
+                                @Html.Raw("Member");
+                            }
+                            else
+                            { @Html.Raw("Members"); }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>
 

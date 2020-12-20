@@ -6,88 +6,91 @@
 
 <h3>My Profile: Books</h3>
 
+<p>
+    What does it mean that you've "read" a book? It means you've done more than just pick it up and flip through the pages, or read a chapter or two. You've read substantially all of the book.
+</p>
 
-    <div class="row">
-        <div class="col-7">
-            <div class="card">
-                <div class="card-header">
-                    <b>Books You've Read</b>
-                </div>
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                <b>Books You've Read</b>
+            </div>
+            <div class="card-body">
                 @if (Model.UserBooksUpdateModel.BooksRead.Any())
                 {
+                <ul>
                     @foreach (var book in Model.UserBooksUpdateModel.BooksRead)
                     {
-                        <div class="card-body">
-                            <strong>
-                                @book.ToString() <!--<button type="submit" class="btn btn-danger" value="book.Id" asp-for="UserProfileUpdateModel.RemovedBook"><i class="fas fa-times"></i></button>-->
-                            </strong>
-                        </div>
+                    <li><a href="@book.PurchaseUrl">@book.Title by @book.Author</a></li>
                     }
+                </ul>
                 }
                 else
                 {
-                    <div class="card-body">You haven't read any books yet. Time to start reading, or add one!</div>
+                <strong>You haven't read any books yet. Time to start reading, or add one!</strong>
                 }
-
             </div>
 
         </div>
 
-        <div class="col-5">
-            <form method="post" asp-page-handler="add">
-                <div class="card">
-                    <div class="card-header">
-                        <b>Add Books</b>
-                    </div>
-                    <div class="card-body">
-                        <label for="addBooks">Select a book to add it to your list.</label>
-                        <select asp-for="UserBooksUpdateModel.AddedBook" id="addBooks">
-                            <option value="">None</option>
-                            @foreach (var book in Model.Books)
+    </div>
+
+    <div class="col-5">
+        <form method="post" asp-page-handler="add">
+            <div class="card">
+                <div class="card-header">
+                    <b>Add Books</b>
+                </div>
+                <div class="card-body">
+                    <label for="addBooks">Select a book to add it to your list.</label>
+                    <select asp-for="UserBooksUpdateModel.AddedBook" id="addBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
                             {
                                 if (!(Model.UserBooksUpdateModel.HasReadBook(book)))
                                 {
-                                    <option value="@book.Id">@book.ToString()</option>
+                        <option value="@book.Id">@book.ToString()</option>
                                 }
                             }
-                        </select>
-                        <br />
-                        <br />
-                        <input type="submit" value="Add" class="btn btn-success" />
-                    </div>
+                    </select>
+                    <br />
+                    <br />
+                    <input type="submit" value="Add" class="btn btn-success" />
                 </div>
-            </form>
-            <br />
-            <form method="post" asp-page-handler="remove">
-                <div class="card">
-                    <div class="card-header">
-                        Remove Books
-                    </div>
-                    <div class="card-body">
-                        <label for="removeBooks">Select a book to remove it from your list.</label>
-                        <select asp-for="UserBooksUpdateModel.RemovedBook" id="removeBooks">
-                            <option value="">None</option>
-                            @foreach (var book in Model.Books)
+            </div>
+        </form>
+        <br />
+        <form method="post" asp-page-handler="remove">
+            <div class="card">
+                <div class="card-header">
+                    Remove Books
+                </div>
+                <div class="card-body">
+                    <label for="removeBooks">Select a book to remove it from your list.</label>
+                    <select asp-for="UserBooksUpdateModel.RemovedBook" id="removeBooks">
+                        <option value="">None</option>
+                        @foreach (var book in Model.Books)
                             {
                                 if (Model.UserBooksUpdateModel.HasReadBook(book))
                                 {
-                                    <option value="@book.Id">@book.ToString()</option>
+                        <option value="@book.Id">@book.ToString()</option>
                                 }
                             }
-                        </select>
-                        <br />
-                        <br />
-                        <input type="submit" value="Remove" class="btn btn-success" />
-                    </div>
+                    </select>
+                    <br />
+                    <br />
+                    <input type="submit" value="Remove" class="btn btn-success" />
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+</div>
 
-    <br />
-    <br />
+<br />
+<br />
 
-    <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+<a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
 
 
 

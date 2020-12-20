@@ -1,44 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
 
 namespace DevBetterWeb.Web.Pages.Admin.Books
 {
-    public class CreateModel : PageModel
+  public class CreateModel : PageModel
+  {
+    private readonly IRepository _repository;
+
+    public CreateModel(IRepository repository)
     {
-        private readonly DevBetterWeb.Infrastructure.Data.AppDbContext _context;
-
-        public CreateModel(DevBetterWeb.Infrastructure.Data.AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
-
-        [BindProperty]
-        public Book? Book { get; set; }
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Books!.Add(Book!);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
-        }
+      _repository = repository;
     }
+
+    public IActionResult OnGet()
+    {
+      return Page();
+    }
+
+    [BindProperty]
+    public BookViewModel? Book { get; set; }
+    public async Task<IActionResult> OnPostAsync()
+    {
+      if (!ModelState.IsValid)
+      {
+        return Page();
+      }
+      if (Book == null) return Page();
+
+      var bookEntity = new Book
+      {
+        Author = Book.Author,
+        Details = Book.Details,
+        PurchaseUrl = Book.PurchaseUrl,
+        Title = Book.Title
+      };
+
+      var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
+      bookEntity.Events.Add(bookAddedEvent);
+
+      await _repository.AddAsync(bookEntity);
+
+      return RedirectToPage("./Index");
+    }
+  }
 }

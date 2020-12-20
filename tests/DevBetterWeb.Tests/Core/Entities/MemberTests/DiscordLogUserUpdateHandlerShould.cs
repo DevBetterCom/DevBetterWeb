@@ -20,7 +20,7 @@ namespace DevBetterWeb.Tests.Integration.Web
 
             MemberUpdatedEvent memberEvent = new MemberUpdatedEvent(member, "Links");
 
-            var output = DiscordLogUserUpdateHandler.returnWebhookMessageString(memberEvent);
+            var output = DiscordLogMemberUpdateHandler.returnWebhookMessageString(memberEvent);
             var expected = $"User Steve Smith just updated their profile. Check it out here: https://devbetter.com/User/Details/TestUserId.";
 
             Assert.Equal(expected, output);

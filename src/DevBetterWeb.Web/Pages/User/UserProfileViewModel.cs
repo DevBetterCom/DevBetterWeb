@@ -39,6 +39,7 @@ namespace DevBetterWeb.Web.Pages.User
         public string? AboutInfo { get; set; }
         public string? PEFriendCode { get; set; }
         public string? PEUsername { get; set; }
+    public string? DiscordUsername { get; set; }
         public List<Book> BooksRead { get; set; } = new List<Book>();
         public int? AddedBook { get; set; }
         public int? RemovedBook { get; set; }
@@ -67,6 +68,7 @@ namespace DevBetterWeb.Web.Pages.User
             PEFriendCode = member.PEFriendCode;
             PEUsername = member.PEUsername;
             BooksRead = member.BooksRead!;
+      DiscordUsername = member.DiscordUsername;
 
         }
 
