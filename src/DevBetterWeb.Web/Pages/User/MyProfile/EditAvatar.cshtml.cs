@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -101,9 +104,11 @@ namespace DevBetterWeb.Web.Pages.User
 
         if (stream != null)
         {
+          var modifiedImageStream = ResizeStream(stream);
+
           // OPTION B: pass in memory stream directly
           _logger.LogInformation($"Uploading from Stream.");
-          await cloudBlockBlob.UploadFromStreamAsync(stream);
+          await cloudBlockBlob.UploadFromStreamAsync(modifiedImageStream);
         }
         else
         {
@@ -118,6 +123,25 @@ namespace DevBetterWeb.Web.Pages.User
         _logger.LogError(ex, $"Error uploading file");
         throw new Exception("Error uploading file.", ex);
       }
+    }
+
+    private Stream ResizeStream(Stream stream)
+    {
+      // see: https://stackoverflow.com/a/55395009/13729
+      var cloneStream = new MemoryStream();
+      stream.Position = 0;
+      var image = Image.Load(stream);
+      _logger.LogWarning($"Resizing image. {image.Width} x {image.Height}");
+
+      var jpegEncoder = new JpegEncoder { Quality = 80 };
+      var clone = image.Clone(context => context.Resize(new ResizeOptions
+      {
+        Mode = ResizeMode.Crop,
+        Size = new Size(500, 500)
+      }));
+      clone.Save(cloneStream, jpegEncoder);
+      cloneStream.Position = 0;
+      return cloneStream;
     }
   }
 }
