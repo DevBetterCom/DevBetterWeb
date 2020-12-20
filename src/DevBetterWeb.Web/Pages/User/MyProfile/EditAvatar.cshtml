@@ -1,0 +1,46 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.EditAvatarModel
+@{
+    ViewData["Title"] = "Edit Avatar";
+}
+
+<h3>My Profile: Edit Avatar</h3>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-7">
+            <div class="card">
+                <div class="card-header">
+                    <b>Avatar / Profile Image</b>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <img src="@Model.AvatarUrl" alt="Profile picture" />
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <label>New Avatar File (.jpg)</label>
+                                <div asp-validation-summary="All">
+                                    <span>Please correct the following errors</span>
+                                </div>
+                                <input type="file" asp-for="ImageFile" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <input type="submit" value="Save" class="btn btn-success" />
+    <br />
+    <br />
+
+    <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+
+</form>
+
+

@@ -1,0 +1,123 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using DevBetterWeb.Core;
+using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+
+namespace DevBetterWeb.Web.Pages.User
+{
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  public class EditAvatarModel : PageModel
+  {
+#nullable disable
+    public string AvatarUrl { get; set; }
+
+    // TODO: Consider these attributes - https://stackoverflow.com/a/56592790/13729
+    [BindProperty]
+    public IFormFile ImageFile { get; set; }
+
+#nullable enable
+
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<EditAvatarModel> _logger;
+
+    public EditAvatarModel(UserManager<ApplicationUser> userManager,
+        IConfiguration configuration,
+        ILogger<EditAvatarModel> logger)
+    {
+      _userManager = userManager;
+      _configuration = configuration;
+      _logger = logger;
+    }
+
+    public async Task OnGetAsync()
+    {
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{applicationUser.Id}.jpg";
+      _logger.LogInformation($"Setting AvatarUrl to {AvatarUrl}.");
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+      if (!ModelState.IsValid)
+      {
+        return Page();
+      }
+
+      bool uploadSuccess = false;
+
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{applicationUser.Id}.jpg";
+      string fileName = applicationUser.Id + ".jpg";
+
+      using (var stream = ImageFile.OpenReadStream())
+      {
+        string extension = ImageFile.FileName.Split(".").Last();
+        // TODO: validate if extension is correct
+
+        uploadSuccess = await UploadToBlob(fileName, stream);
+      }
+      return RedirectToPage("./Index");
+    }
+
+    private async Task<bool> UploadToBlob(string filename,
+      Stream stream)
+    {
+      _logger.LogInformation($"Uploading file to blob storage...");
+
+      string storageConnectionString = _configuration["storageconnectionstring"];
+
+      if (!CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
+      {
+        _logger.LogWarning($"Invalid storage connection string.");
+        return false;
+      }
+
+      try
+      {
+        // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
+        CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+
+        // TODO: get container reference name from config
+        var cloudBlobContainer = cloudBlobClient.GetContainerReference("photos");
+
+        // Get a reference to the blob address, then upload the file to the blob.
+        CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
+
+        if (stream != null)
+        {
+          // OPTION B: pass in memory stream directly
+          _logger.LogInformation($"Uploading from Stream.");
+          await cloudBlockBlob.UploadFromStreamAsync(stream);
+        }
+        else
+        {
+          _logger.LogWarning($"Stream is null.");
+          return false;
+        }
+
+        return true;
+      }
+      catch (StorageException ex)
+      {
+        _logger.LogError(ex, $"Error uploading file");
+        throw new Exception("Error uploading file.", ex);
+      }
+    }
+  }
+}
