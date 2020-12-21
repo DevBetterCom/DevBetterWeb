@@ -103,6 +103,20 @@ textarea {
     }
 }
 
+.db-avatar-small {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: #363635;
+    border-width: 8px;
+    border-style: solid;
+    transition-property: all;
+    transition-duration: 800ms;
+}
+.db-avatar-small:hover {
+    filter: grayscale(0%);
+}
+
 /* https://codepen.io/maxdibaxrami/pen/dyGwzrZ */
 .db-avatar {
     left: 50%;
