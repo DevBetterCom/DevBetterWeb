@@ -83,7 +83,7 @@ namespace DevBetterWeb.Web.Pages.User
     {
       _logger.LogInformation($"Uploading file to blob storage...");
 
-      string storageConnectionString = _configuration["storageconnectionstring"];
+      string storageConnectionString = _configuration[Constants.ConfigKeys.FileStorageConnectionString];
 
       if (!CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
       {

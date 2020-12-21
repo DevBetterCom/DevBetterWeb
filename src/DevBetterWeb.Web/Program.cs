@@ -1,4 +1,5 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
