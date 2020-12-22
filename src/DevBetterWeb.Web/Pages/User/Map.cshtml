@@ -3,9 +3,43 @@
 @{
 }
 
-<div>
-    <img src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=1&size=600x300&maptype=roadmap
-                &markers=icon:map-marker.png%7Cmanchester
-                &markers=canada&markers=serbia
-                &key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A">
-</div>
+@*<div>
+        <img src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=1&size=600x900&maptype=roadmap
+                    &markers=icon:map-marker.png%7Cmanchester
+                    &markers=canada
+                    &markers=serbia
+                    &key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A">
+    </div>*@
+
+<div id="dvMap" style="width: 500px; height: 500px"></div>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A"></script>
+<script type="text/javascript">
+        var markers = @Html.Raw(Model.AddressCoordinates.First());
+    window.onload = function () {
+        var mapOptions = {
+            center: new google.maps.LatLng(markers.lat, markers.lng),
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        //var infoWindow = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+
+        //for (i = 0; i < markers.length; i++) {
+        //    var data = markers[i]
+        var myLatlng = new google.maps.LatLng(markers);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            //title: data.title
+        });
+    }
+    //        //(function (marker, data) {
+    //        //    google.maps.event.addListener(marker, "click", function (e) {
+    //        //        infoWindow.setContent(data.description);
+    //        //        infoWindow.open(map, marker);
+    //        //    });
+    //        //})(marker, data);
+    //    }
+    //;
+</script>
