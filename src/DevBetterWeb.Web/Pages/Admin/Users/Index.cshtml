@@ -1,0 +1,62 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.Users.IndexModel
+@{
+}
+
+
+
+<div class="d-flex mb-3">
+    <div class="mr-3">
+        <h3>Users</h3>
+    </div>
+    <div>
+        <div class="dropdown mt-1">
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Roles
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @foreach (var role in Model.Roles)
+                {
+                    <a class="dropdown-item" asp-page="./Role" asp-route-roleId="@role.Id">@role.Name</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-striped table-bordered" id="usersTable">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Confirmed?</th>
+        <th>Roles</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var userWithRole in Model.UsersWithRoles)
+    {
+        <tr>
+            <td>@userWithRole.User.Email</td>
+            <td>@userWithRole.User.EmailConfirmed</td>
+            <td>
+                @foreach (var role in userWithRole.Roles)
+                {
+                    <span class="mr-2 badge badge-pill badge-primary">@role</span>
+                }
+            </td>
+            <td>  <a asp-page="./../User" asp-route-userId="@userWithRole.User.Id" class="">Edit</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <a href="./Admin/Books">
+        Manage Books
+    </a>
+</div>
+
+
+
+@section scripts{
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}
