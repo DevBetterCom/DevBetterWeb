@@ -53,6 +53,10 @@ dotnet ef database update -c IdentityDbContext -s ..\devbetterweb.web\DevBetterW
 
 You should be able to run the application at this point. The default password for seeded accounts is [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Core/AuthConstants.cs#L13). The default users created are [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Infrastructure/Identity/Data/AppIdentityDbContextSeed.cs). Members are created [the first time they visit their edit profile page](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Web/Pages/User/MyProfile/Index.cshtml.cs#L64).
 
+Some actions, such as registering a member, send email notifications. You should run a [local email emulator like SMTP4Dev or Papercut](https://ardalis.com/configuring-a-local-test-email-server/) to capture these, or configure your local environment to use a fake email sender class.
+
+You should create an **appsettings.development.json** file to hold your other connection strings such as for Azure Storage. You can use [Azurite](https://github.com/Azure/Azurite) as a local emulator for this.
+
 ## EF Migrations Commands
 
 Add a new migration:
