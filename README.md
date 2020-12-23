@@ -20,7 +20,8 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 - Update Profile
 - View Member List
-- View Recorded Coaching Sessions
+- View Recorded Coaching Sessions (backlog)
+- View Book Leaderboard (who has read more of the books the group agrees are worth reading)
 
 ### Administrators Only
 
@@ -28,10 +29,33 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 - View Roles
 - Add/Remove Users to Role
 - Add/Remove Roles to User
+- Add/Remove Books
+- Update Member Subscription Dates
 
 ## Development Links
 
 - [Production Site](https://devbetter.com/)
+
+### Building and Running the App Locally
+
+- Clone (or Fork and Clone) the repository locally
+- Run migrations for both AppDbContext and IdentityDbContext
+
+```powershell
+# RUN THIS FROM THE WEB PROJECT FOLDER
+dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+
+# RUN THIS FROM THE INFRASTRUCTURE PROJECT FOLDER
+dotnet ef database update -c IdentityDbContext -s ..\devbetterweb.web\DevBetterWeb.Web.csproj
+```
+
+- Modify Program.cs so that it seeds the database the first time you run (uncomment [this line](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Web/Program.cs#L35))
+
+You should be able to run the application at this point. The default password for seeded accounts is [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Core/AuthConstants.cs#L13). The default users created are [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Infrastructure/Identity/Data/AppIdentityDbContextSeed.cs). Members are created [the first time they visit their edit profile page](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Web/Pages/User/MyProfile/Index.cshtml.cs#L64).
+
+Some actions, such as registering a member, send email notifications. You should run a [local email emulator like SMTP4Dev or Papercut](https://ardalis.com/configuring-a-local-test-email-server/) to capture these, or configure your local environment to use a fake email sender class.
+
+You should create an **appsettings.development.json** file to hold your other connection strings such as for Azure Storage. You can use [Azurite](https://github.com/Azure/Azurite) as a local emulator for this.
 
 ## EF Migrations Commands
 
