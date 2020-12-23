@@ -16,7 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace DevBetterWeb.Web.Pages.ArchivedVideos
+namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
 {
   [RequestFormLimits(MultipartBodyLengthLimit = Constants.MAX_UPLOAD_FILE_SIZE)]
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
