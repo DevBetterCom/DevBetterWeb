@@ -8,6 +8,9 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Drawing;
+using Markdig.Extensions.Tables;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -15,7 +18,7 @@ namespace DevBetterWeb.Web.Pages.User
   {
     private readonly AppDbContext _appDbContext;
 
-    public List<string> AddressCoordinates { get; set; } = new List<string>();
+    public List<MapCoordinate> AddressCoordinates { get; set; } = new List<MapCoordinate>();
 
     public MapModel(AppDbContext appDbContext)
     {
@@ -25,12 +28,13 @@ namespace DevBetterWeb.Web.Pages.User
     {
       var members = await _appDbContext.Members.ToListAsync();
       var memberAddresses = members.Select(m => m.Address);
-      
       foreach (var address in memberAddresses)
       {
         var response = JObject.Parse(await GetMapCoordinates(address));
+        var latcoord = response.SelectToken("results[0].geometry.location.lat").ToObject<decimal>();
+        var lngcoord = response.SelectToken("results[0].geometry.location.lng").ToObject<decimal>();
+        AddressCoordinates.Add(new MapCoordinate(latcoord,lngcoord));
         
-        AddressCoordinates.Add(response.SelectToken("results[0].geometry.location").ToString());
 
 
       }
@@ -58,5 +62,20 @@ namespace DevBetterWeb.Web.Pages.User
         }
       }
     }
+
+    public class MapCoordinate
+    {
+      public decimal Latitude { get; set; }
+
+      public decimal Longitude { get; set; }
+
+      public MapCoordinate(decimal latitude, decimal longitude)
+      {
+        Latitude = latitude;
+        Longitude = longitude;
+      }
+    }
+
+    
   }
 }

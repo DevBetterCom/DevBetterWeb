@@ -1,6 +1,7 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.User.MapModel
 @{
+    
 }
 
 @*<div>
@@ -15,24 +16,26 @@
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A"></script>
 <script type="text/javascript">
-        var markers = @Html.Raw(Model.AddressCoordinates.First());
+    var markers = @Json.Serialize(Model.AddressCoordinates);
+
     window.onload = function () {
         var mapOptions = {
-            center: new google.maps.LatLng(markers.lat, markers.lng),
-            zoom: 8,
+            center: new google.maps.LatLng(markers[0].latitude, markers[0].longitude),
+            zoom: 1,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         //var infoWindow = new google.maps.InfoWindow();
         var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
 
-        //for (i = 0; i < markers.length; i++) {
-        //    var data = markers[i]
-        var myLatlng = new google.maps.LatLng(markers);
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            //title: data.title
-        });
+        for (i = 0; i < markers.length; i++) {
+            var data = markers[i]
+            var myLatlng = new google.maps.LatLng(data.latitude, data.longitude);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                //title: data.title
+            });
+        }
     }
     //        //(function (marker, data) {
     //        //    google.maps.event.addListener(marker, "click", function (e) {
