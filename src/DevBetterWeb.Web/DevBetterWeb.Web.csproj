@@ -15,6 +15,9 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<WarningsAsErrors />
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="Pages\User\map-marker.png" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">

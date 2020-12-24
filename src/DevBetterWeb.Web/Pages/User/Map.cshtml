@@ -12,7 +12,7 @@
                     &key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A">
     </div>*@
 
-<div id="dvMap" style="width: 500px; height: 500px"></div>
+<div id="dvMap" style="width: 1000px; height: 650px;"></div>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A"></script>
 <script type="text/javascript">
@@ -21,11 +21,13 @@
     window.onload = function () {
         var mapOptions = {
             center: new google.maps.LatLng(markers[0].latitude, markers[0].longitude),
-            zoom: 1,
+            zoom: 2,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        //var infoWindow = new google.maps.InfoWindow();
+
         var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+
+        const image = "http://localhost:5010/images/map-marker.png"; 
 
         for (i = 0; i < markers.length; i++) {
             var data = markers[i]
@@ -33,7 +35,9 @@
             var marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
-                //title: data.title
+                animation: google.maps.Animation.DROP,
+                title: "",
+                icon: image,
             });
         }
     }
