@@ -26,9 +26,9 @@ namespace DevBetterWeb.Web.Pages.User
     }
     public async Task OnGet()
     {
-      var members = await _appDbContext.Members.ToListAsync();
-      var memberAddresses = members.Select(m => m.Address);
-      foreach (var address in memberAddresses)
+      var membersAddresses = (await _appDbContext.Members.ToListAsync()).Select(m => m.Address);
+      
+      foreach (var address in membersAddresses)
       {
         var response = JObject.Parse(await GetMapCoordinates(address));
         var latcoord = response.SelectToken("results[0].geometry.location.lat").ToObject<decimal>();
