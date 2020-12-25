@@ -1,4 +1,5 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Areas.Identity.Data;
@@ -20,19 +21,19 @@ namespace DevBetterWeb.Web
         {
             var builder = CreateHostBuilder(args);
 
-           // string env = "Development";
-            ////if (args.Any())
-            ////{
-            ////    env = args[0];
-            ////}
-            //Console.WriteLine($"Starting using environment: {env}");
-            //builder.UseEnvironment(env);
-            var host = builder.Build();
-
-      //if (env == "Development")
+      string env = "Development";
+      //if (args.Any())
       //{
-      //  await SeedDatabase(host);
+      //    env = args[0];
       //}
+      Console.WriteLine($"Starting using environment: {env}");
+      builder.UseEnvironment(env);
+      var host = builder.Build();
+
+      if (env == "Development")
+      {
+        await SeedDatabase(host);
+      }
 
       await Task.Delay(1); // get rid of async Main warning
             host.Run();

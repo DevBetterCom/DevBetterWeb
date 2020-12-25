@@ -103,3 +103,36 @@ textarea {
     }
 }
 
+.db-avatar-small {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: #363635;
+    border-width: 4px;
+    border-style: solid;
+    transition-property: all;
+    transition-duration: 800ms;
+}
+.db-avatar-small:hover {
+    filter: grayscale(0%);
+}
+
+/* https://codepen.io/maxdibaxrami/pen/dyGwzrZ */
+.db-avatar {
+    left: 50%;
+    top: 50%;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    border-color: #363635;
+    border-width: 8px;
+    border-style: solid;
+    filter: grayscale(100%);
+    transition-property: all;
+    transition-duration: 800ms;
+}
+    .db-avatar:hover {
+        transform: rotate(360deg);
+        filter: grayscale(0%);
+    }
+
