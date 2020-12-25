@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
@@ -12,30 +13,33 @@ namespace DevBetterWeb.Web.Pages.User
 {
   public class MapModel : PageModel
   {
-    private readonly AppDbContext _appDbContext;
     public List<MapCoordinates> AddressCoordinates { get; set; } = new List<MapCoordinates>();
+    public IRepository _repository { get; }
     public IConfiguration _configuration { get; }
 
-    public MapModel(AppDbContext appDbContext, IConfiguration configuration)
+    public MapModel(IRepository repository, IConfiguration configuration)
     {
-      _appDbContext = appDbContext;
+      _repository = repository;
       _configuration = configuration;
     }
     public async Task OnGet()
     {
-      var membersAddresses = (await _appDbContext.Members.ToListAsync()).Select(m => m.Address);
+      var membersAddresses = (await _repository.ListAsync<Member>()).Select(m => m.Address);
       
       foreach (var address in membersAddresses)
       {
-        var fullAddressAPIResponse = JObject.Parse(await GetMapCoordinates(address));
-        var latResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lat");
-        var lngResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lng");
-
-        if (latResponse != null && lngResponse != null)
+        if (address is not null)
         {
-          var latitude = latResponse.ToObject<decimal>();
-          var longitude = lngResponse.ToObject<decimal>();
-          AddressCoordinates.Add(new MapCoordinates(latitude, longitude));
+          var fullAddressAPIResponse = JObject.Parse(await GetMapCoordinates(address));
+          var latResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lat");
+          var lngResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lng");
+
+          if (latResponse != null && lngResponse != null)
+          {
+            var latitude = latResponse.ToObject<decimal>();
+            var longitude = lngResponse.ToObject<decimal>();
+            AddressCoordinates.Add(new MapCoordinates(latitude, longitude));
+          }
         }
       }
     }
