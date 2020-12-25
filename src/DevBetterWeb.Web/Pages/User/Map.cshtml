@@ -1,10 +1,15 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.User.MapModel
 
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration _configuration
+
+
+
 <div id="map"  class="col-sm-12"></div>
 
 <script type="text/javascript" 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm2QJJErqEhoJClMjWUSEpNh5KwnSjD1A">
+        src="https://maps.googleapis.com/maps/api/js?key=@_configuration["GoogleMapsAPIKey"]">
 </script>
 
 <script type="text/javascript">
