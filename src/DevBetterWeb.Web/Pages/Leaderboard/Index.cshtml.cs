@@ -46,6 +46,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .ToListAsync();
 
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
+          .Where(m => m.BooksRead.Count > 0)
           .ToList();
 
       var books = await _appDbContext.Books.AsQueryable()
