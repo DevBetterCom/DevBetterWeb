@@ -10,6 +10,7 @@
 <table class="table table-sm table-striped" id="membersTable">
     <thead>
         <tr>
+            <th>Avatar</th>
             <th>Name</th>
             <th>Subscribed<br />Days</th>
             <th></th>
@@ -26,6 +27,7 @@
         @foreach (var member in Model.Members)
         {
         <tr>
+            <td><img src="@string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId)" class="db-avatar-small" height="200" width="200" onerror='epic(this)' alt="Avatar (@member.FullName)" /></td>
             <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
             <td>@member.SubscribedDays</td>
             @if(Model.IsAdministrator)
