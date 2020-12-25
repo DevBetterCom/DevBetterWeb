@@ -103,6 +103,12 @@ textarea {
     }
 }
 
+
+#map{
+    height: 650px;
+}
+
+
 .db-avatar-small {
     height: 50px;
     width: 50px;
@@ -135,4 +141,5 @@ textarea {
         transform: rotate(360deg);
         filter: grayscale(0%);
     }
+
 
