@@ -17,7 +17,6 @@ namespace DevBetterWeb.Web.Pages.User
   public class MapModel : PageModel
   {
     private readonly AppDbContext _appDbContext;
-
     public List<MapCoordinate> AddressCoordinates { get; set; } = new List<MapCoordinate>();
 
     public MapModel(AppDbContext appDbContext)
@@ -30,13 +29,10 @@ namespace DevBetterWeb.Web.Pages.User
       
       foreach (var address in membersAddresses)
       {
-        var response = JObject.Parse(await GetMapCoordinates(address));
-        var latcoord = response.SelectToken("results[0].geometry.location.lat").ToObject<decimal>();
-        var lngcoord = response.SelectToken("results[0].geometry.location.lng").ToObject<decimal>();
-        AddressCoordinates.Add(new MapCoordinate(latcoord,lngcoord));
-        
-
-
+        var fullAddressAPIResponse = JObject.Parse(await GetMapCoordinates(address));
+        var latitude = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lat").ToObject<decimal>();
+        var longitude = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lng").ToObject<decimal>();
+        AddressCoordinates.Add(new MapCoordinate(latitude,longitude));
       }
     }
 
@@ -58,7 +54,7 @@ namespace DevBetterWeb.Web.Pages.User
 
         else
         {
-          return null;
+          throw new Exception("Map API call failed");
         }
       }
     }
