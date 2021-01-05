@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -34,14 +37,20 @@ namespace DevBetterWeb.Web.Pages.User
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly ILogger<EditAvatarModel> _logger;
+    private readonly IDomainEventDispatcher _dispatcher;
+    private readonly IRepository _repository;
 
     public EditAvatarModel(UserManager<ApplicationUser> userManager,
         IConfiguration configuration,
-        ILogger<EditAvatarModel> logger)
+        ILogger<EditAvatarModel> logger,
+        IDomainEventDispatcher dispatcher,
+        IRepository repository)
     {
       _userManager = userManager;
       _configuration = configuration;
       _logger = logger;
+      _dispatcher = dispatcher;
+      _repository = repository;
     }
 
     public async Task OnGetAsync()
@@ -74,6 +83,15 @@ namespace DevBetterWeb.Web.Pages.User
         // TODO: validate if extension is correct
 
         uploadSuccess = await UploadToBlob(fileName, stream);
+
+        if (uploadSuccess)
+        {
+          var spec = new MemberByUserIdSpec(applicationUser.Id);
+          var member = await _repository.GetAsync(spec);
+
+          var memberAvatarUpdatedEvent = new MemberAvatarUpdatedEvent(member);
+          await _dispatcher.Dispatch(memberAvatarUpdatedEvent);
+        }
       }
       return RedirectToPage("./Index");
     }
