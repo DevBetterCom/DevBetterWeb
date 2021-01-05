@@ -26,4 +26,6 @@ namespace DevBetterWeb.Core.Handlers
           $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.UserId}.";
     }
   }
+
+
 }
