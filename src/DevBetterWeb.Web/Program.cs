@@ -19,24 +19,8 @@ namespace DevBetterWeb.Web
     public static async Task Main(string[] args)
     {
       var builder = CreateHostBuilder(args);
-
-      // Don't check this in with anything but Production since it may cause the production
-      // environment to use whatever value is specified here.
-      string env = "Production";
-      if (args.Any())
-      {
-        env = args[0];
-      }
-      Console.WriteLine($"Starting using environment: {env}");
-      builder.UseEnvironment(env);
       var host = builder.Build();
-
-      if (env == "Development")
-      {
-        await SeedDatabase(host);
-      }
-
-      await Task.Delay(1); // get rid of async Main warning
+      await SeedDatabase(host);
       host.Run();
     }
 
