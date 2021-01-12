@@ -14,4 +14,6 @@ namespace DevBetterWeb.Core.Events
     public Member Member { get; }
     public string UpdateDetails { get; internal set; }
   }
+
+
 }
