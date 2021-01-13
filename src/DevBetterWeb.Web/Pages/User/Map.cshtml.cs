@@ -28,18 +28,16 @@ namespace DevBetterWeb.Web.Pages.User
       
       foreach (var address in membersAddresses)
       {
-        if (address is not null)
-        {
-          var fullAddressAPIResponse = JObject.Parse(await GetMapCoordinates(address));
-          var latResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lat");
-          var lngResponse = fullAddressAPIResponse.SelectToken("results[0].geometry.location.lng");
+        var addressParts = address.Split(',');
+        var cityDetailsAPIResponse = JObject.Parse(await GetMapCoordinates(addressParts[1]));
+        var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
+        var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
 
-          if (latResponse != null && lngResponse != null)
-          {
-            var latitude = latResponse.ToObject<decimal>();
-            var longitude = lngResponse.ToObject<decimal>();
-            AddressCoordinates.Add(new MapCoordinates(latitude, longitude));
-          }
+        if (latResponse != null && lngResponse != null)
+        {
+          var latitude = latResponse.ToObject<decimal>();
+          var longitude = lngResponse.ToObject<decimal>();
+          AddressCoordinates.Add(new MapCoordinates(latitude, longitude));
         }
       }
     }
