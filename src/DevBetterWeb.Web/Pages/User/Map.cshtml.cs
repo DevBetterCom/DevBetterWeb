@@ -24,44 +24,21 @@ namespace DevBetterWeb.Web.Pages.User
     }
     public async Task OnGet()
     {
-      var membersAddresses = (await _repository.ListAsync<Member>()).Select(m => m.Address);
-      
-      foreach (var address in membersAddresses)
+      var members = await _repository.ListAsync<Member>();
+
+      // Handle members that are in the database before map functionality is introduced, so they will not trigger the AddressUpdated event
+      foreach (var member in members)
       {
-        var addressParts = address.Split(',');
-        var cityDetailsAPIResponse = JObject.Parse(await GetMapCoordinates(addressParts[1]));
-        var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
-        var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
-
-        if (latResponse != null && lngResponse != null)
+        if (member.Address is not null && (member.CityLatitude is null || member.CityLongitude is null))
         {
-          var latitude = latResponse.ToObject<decimal>();
-          var longitude = lngResponse.ToObject<decimal>();
-          AddressCoordinates.Add(new MapCoordinates(latitude, longitude));
+          member.UpdateMemberCityCoordinates();
+          await _repository.UpdateAsync(member);
         }
-      }
-    }
+      };
 
-    private async Task<string> GetMapCoordinates(string address)
-    {
-      var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={_configuration["GoogleMapsAPIKey"]}";
-
-      using (var client = new HttpClient())
-      {
-        client.BaseAddress = new Uri(url);
-
-        var response = await client.GetAsync(url);
-
-        if (response.IsSuccessStatusCode)
-        {
-          var result = await response.Content.ReadAsStringAsync();
-          return result;
-        }
-        else
-        {
-          throw new Exception("Map API call failed");
-        }
-      }
+      AddressCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
+                                  .Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude))
+                                  .ToList();
     }
   }
 }
