@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
 
@@ -104,5 +105,42 @@ namespace DevBetterWeb.Web.Controllers
     //public string? BasicPrice { get; set; }
     //public string? ProPrice { get; set; }
     //public string? Domain { get; set; }
+  }
+
+
+  [Route("create-payment-intent")]
+  [ApiController]
+  public class PaymentIntentApiController : Controller
+  {
+    [HttpPost]
+    public ActionResult Create(PaymentIntentCreateRequest request)
+    {
+      var paymentIntents = new PaymentIntentService();
+      var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
+      {
+        Amount = CalculateOrderAmount(request.SubscriptionType),
+        Currency = "usd",
+      });
+      return Json(new { clientSecret = paymentIntent.ClientSecret });
+    }
+    private int CalculateOrderAmount(SubscriptionType subscriptionType)
+    {
+      if (subscriptionType.Equals(SubscriptionType.Monthly))
+      {
+        return 20000;
+      }
+
+      return 200000;
+    }
+    public enum SubscriptionType
+    {
+      Monthly,
+      Yearly
+    }
+    public class PaymentIntentCreateRequest
+    {
+      [JsonProperty("items")]
+      public SubscriptionType SubscriptionType { get; set; }
+    }
   }
 }

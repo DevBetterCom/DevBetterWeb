@@ -4,8 +4,10 @@
 }
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/global.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @*<link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/global.css" />*@
     <!-- Load Stripe.js on your website. -->
     <script src="https://js.stripe.com/v3/"></script>
     <!--<script src="./../script.js" defer></script>-->
@@ -18,14 +20,62 @@
             <header class="sr-header">
                 <div class="sr-header__logo"></div>
             </header>
-            <h1>devBetter with Steve Smith</h1>
-            <br />
-            <h2>Get access today! Choose a subscription plan:</h2>
+            <h1>Get access today!</h1>
             <br />
             <p>Members of this channel will fast-track their careers through professional group mentorship. This program is focused exclusively on software developers seeking to maximize their career growth and will cover critical technical and non-technical topics.</p>
             <br />
-            <br />
+            <h3>Choose between two subscription plans:</h3>
             <div class="row">
+                <div class="col-5">
+                    <a class="btn btn-primary" href="/checkout/monthly" role="button"><strong>Monthly Plan: $200 per month</strong></a>
+                </div>
+                <div class="col-5">
+                    <a class="btn btn-primary" href="/checkout/yearly" role="button"><strong>Yearly Plan: $2000 per year</strong></a>
+                </div>
+            </div>
+            <br />
+
+
+            @*<div class="row">
+                <div class="col-5">
+                    <form asp-controller="Payment" asp-action="subscribe" method="post" id="payment-form">
+                        <div class="container">
+                            <div class="form-row">
+                                <label for="card-element">
+                                    Card number
+                                </label>
+                                <div id="card-element">
+
+                                </div>
+
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+                            <div class="form-row">
+                                <label for="email">
+                                    Email
+                                </label>
+                                <div>
+                                    <input name="email" id="email" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="plan">
+                                    Plan
+                                </label>
+                                <div>
+                                    <input type="radio" name="plan" id="planMonthly" value="Monthly" />
+                                    <label for="planMonthly">Monthly - $200 USD per month</label>
+                                    <br />
+                                    <input type="radio" name="plan" id="planYearly" value="Yearly" />
+                                    <label for="planYearly">Yearly - $2,000 USD per year</label>
+                                </div>
+                            </div>
+                            <button>Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+
+
                 <div class="col-5">
                     <div>
                         Monthly plan: $200 per month
@@ -38,9 +88,8 @@
                                 data-name="Monthly Subscription"
                                 data-description="Fast-track your career!">
                         </script>
-                     </form>
-                </div>
-                <div class="col-5">
+                    </form>
+
                     <div>
                         Yearly plan: $2,000 per year
                     </div>
@@ -54,9 +103,9 @@
                         </script>
                     </form>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
-    <div id="error-message" class="error-message"></div>
+    
 </body>
 </html>

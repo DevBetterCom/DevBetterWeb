@@ -26,15 +26,6 @@ namespace DevBetterWeb.Web.Pages.Checkout
     public void OnGet()
     {
     }
-     
-    public void OnPostMonthly()
-    {
 
-    }
-
-    public void OnPostYearly()
-    {
-
-    }
   }
 }
