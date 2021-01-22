@@ -32,7 +32,7 @@ namespace DevBetterWeb.Web.Pages.User
       Guard.Against.Null(member, nameof(member));
 
       // TODO: Get URL format string from central config location
-      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{member.UserId}.jpg";
+      AvatarUrl = string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId);
       BlogUrl = member.BlogUrl;
       TwitchUrl = member.TwitchUrl;
       TwitterUrl = member.TwitterUrl;
