@@ -52,6 +52,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .ThenBy(member => member.FirstName)
           .Include(member => member.BooksRead)
           .ToListAsync();
+#nullable enable
 
       var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
       var alumni = await _repository.ListAsync(alumniSpec);
@@ -64,16 +65,8 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .Where(m => m.BooksRead.Count > 0)
           .ToList();
 
-      var books = await _appDbContext.Books.AsQueryable()
-        .OrderByDescending(book => book.MembersWhoHaveRead.Count)
-        .ThenBy(book => book.Title)
-        .Include(book => book.MembersWhoHaveRead)
-        .AsNoTracking()
-        .ToListAsync();
-
-      Books = books;
-#nullable enable
-
+      var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
+      Books = await _repository.ListAsync(bookSpec);
     }
 
     public class MemberLinksDTO
