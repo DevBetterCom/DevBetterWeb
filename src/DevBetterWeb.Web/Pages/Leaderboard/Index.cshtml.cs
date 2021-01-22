@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -17,17 +19,19 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
   {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly AppDbContext _appDbContext;
+    private readonly IRepository _repository;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
     public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
 
     public IndexModel(UserManager<ApplicationUser> userManager,
-        AppDbContext appDbContext)
+        AppDbContext appDbContext,
+        IRepository repository)
     {
       _userManager = userManager;
       _appDbContext = appDbContext;
-
+      _repository = repository;
     }
 
     public async Task OnGet()
@@ -49,13 +53,8 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .Include(member => member.BooksRead)
           .ToListAsync();
 
-      var alumni = await _appDbContext.Members.AsNoTracking()
-          .Where(member => alumniUserIds.Contains(member.UserId) )
-          .OrderByDescending(member => member.BooksRead.Count)
-          .ThenBy(member => member.LastName)
-          .ThenBy(member => member.FirstName)
-          .Include(member => member.BooksRead)
-          .ToListAsync();
+      var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
+      var alumni = await _repository.ListAsync(alumniSpec);
 
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
           .Where(m => m.BooksRead.Count > 0)
