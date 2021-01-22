@@ -146,11 +146,11 @@
             }
     </style>
     <form id="payment-form">
-        <label for="card-element">Card</label>
+        <label for="card-element" id="cardLabel">Card</label>
         <div id="card-element" class="form-control"><!--Stripe.js injects the Card Element--></div>
         <br />
         <div class="form-row">
-            <label for="email">Email</label>
+            <label for="email" id="emailLabel">Email</label>
         </div>
         <div class="form-row">
             <div style="width:100%;">
@@ -162,7 +162,10 @@
             <div class="spinner hidden" id="spinner"></div>
             <span id="button-text">Subscribe</span>
         </button>
-        <p id="card-errors" role="alert"></p>
+        <p id="card-error" role="alert"></p>
+        <p class="result-message hidden">
+            Payment successful! Please check your email to complete your registration.
+        </p>
 
     </form>
 
@@ -173,7 +176,7 @@
 
     <script defer>
         //var stripe = Stripe(Model.StripePublishableKey);
-        var stripe = Stripe("test public key");
+        var stripe = Stripe("test publishable key");
 
         var purchase = {
             items: 'Yearly'
@@ -254,14 +257,13 @@
         // Shows a success message when the payment is complete
         var orderComplete = function (paymentIntentId) {
             loading(false);
-            document
-                .querySelector(".result-message a")
-                .setAttribute(
-                    "href",
-                    "https://dashboard.stripe.com/test/payments/" + paymentIntentId
-                );
             document.querySelector(".result-message").classList.remove("hidden");
             document.querySelector("button").disabled = true;
+            document.querySelector("#submit").classList.add("hidden");
+            document.querySelector("#card-element").classList.add("hidden");
+            document.querySelector("#email").classList.add("hidden");
+            document.querySelector("#emailLabel").classList.add("hidden");
+            document.querySelector("#cardLabel").classList.add("hidden");
         };
         // Show the customer the error from Stripe if their card fails to charge
         var showError = function (errorMsgText) {
