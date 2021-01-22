@@ -135,7 +135,7 @@ namespace DevBetterWeb.Web
         endpoints.MapDefaultControllerRoute();
       });
 
-      StripeConfiguration.ApiKey = "test secret key here";
+      StripeConfiguration.ApiKey = "test secret key";
 
       // run migrations automatically on startup
       //migrationContext.Database.Migrate();
