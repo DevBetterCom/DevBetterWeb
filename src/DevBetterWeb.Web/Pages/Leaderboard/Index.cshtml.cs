@@ -19,6 +19,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
     private readonly AppDbContext _appDbContext;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
+    public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
 
     public IndexModel(UserManager<ApplicationUser> userManager,
@@ -31,14 +32,25 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
 
     public async Task OnGet()
     {
-      var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+      var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+      var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
 
       // TODO: Write a LINQ join for this
       // TODO: See if we can use a specification here
-      var userIds = usersInRole.Select(x => x.Id).ToList();
+      var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
+      var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 #nullable disable
       var members = await _appDbContext.Members.AsNoTracking()
-          .Where(member => userIds.Contains(member.UserId))
+          .Where(member => memberUserIds.Contains(member.UserId) &&
+            !alumniUserIds.Any(id => id == member.UserId))
+          .OrderByDescending(member => member.BooksRead.Count)
+          .ThenBy(member => member.LastName)
+          .ThenBy(member => member.FirstName)
+          .Include(member => member.BooksRead)
+          .ToListAsync();
+
+      var alumni = await _appDbContext.Members.AsNoTracking()
+          .Where(member => alumniUserIds.Contains(member.UserId) )
           .OrderByDescending(member => member.BooksRead.Count)
           .ThenBy(member => member.LastName)
           .ThenBy(member => member.FirstName)
@@ -46,6 +58,10 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .ToListAsync();
 
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
+          .Where(m => m.BooksRead.Count > 0)
+          .ToList();
+
+      Alumni = alumni.Select(alumni => MemberLinksDTO.FromMemberEntity(alumni))
           .Where(m => m.BooksRead.Count > 0)
           .ToList();
 
