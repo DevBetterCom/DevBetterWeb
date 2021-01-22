@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.Leaderboard
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class IndexModel : PageModel
   {
     private readonly UserManager<ApplicationUser> _userManager;

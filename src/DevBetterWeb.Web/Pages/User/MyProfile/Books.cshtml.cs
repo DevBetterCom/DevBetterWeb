@@ -15,8 +15,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
-    public class MyProfileBooksModel : PageModel
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+  public class MyProfileBooksModel : PageModel
     {
 #nullable disable
         [BindProperty]
