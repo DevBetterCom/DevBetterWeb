@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
@@ -11,12 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
-    public class MyProfilePersonalModel : PageModel
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+  public class MyProfilePersonalModel : PageModel
     {
 #nullable disable
         [BindProperty]

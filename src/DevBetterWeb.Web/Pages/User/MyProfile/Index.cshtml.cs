@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class IndexModel : PageModel
   {
 #nullable disable

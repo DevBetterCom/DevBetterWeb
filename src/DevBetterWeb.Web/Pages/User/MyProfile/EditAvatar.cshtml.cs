@@ -22,7 +22,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class EditAvatarModel : PageModel
   {
 #nullable disable

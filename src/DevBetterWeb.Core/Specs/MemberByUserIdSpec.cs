@@ -3,15 +3,11 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs
 {
-    public class MemberByUserIdSpec : Specification<Member>
+  public class MemberByUserIdSpec : Specification<Member>
+  {
+    public MemberByUserIdSpec(string userId)
     {
-        public string UserId { get; }
-
-        public MemberByUserIdSpec(string userId)
-        {
-            UserId = userId;
-
-            Query.Where(member => member.UserId == userId);
-        }
+      Query.Where(member => member.UserId == userId);
     }
+  }
 }
