@@ -10,19 +10,29 @@
     <div class="col-6">
         <div class="card">
             <div class="card-header">
+                <b>Photo</b>
+            </div>
+            <div class="card-body">
+                <img class="db-avatar" src="@Model.UserDetailsViewModel.AvatarUrl" alt="Profile picture" onerror='epic(this)' />
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
                 <b>Info</b>
             </div>
             <div asp-authorize asp-roles="@DevBetterWeb.Core.AuthConstants.Roles.ADMINISTRATORS" class="card-body">
                 <div><b>Shipping Address</b></div>
                 <div class="card">
-                    <div class="card-body" style="white-space: pre-line;">@Model.UserDetailsViewModel.Address
+                    <div class="card-body" style="white-space: pre-line;">
+                        @Model.UserDetailsViewModel.Address
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div><b>About</b></div>
                 <div class="card">
-                    <div class="card-body" style="white-space: pre-line;">@Model.UserDetailsViewModel.AboutInfo
+                    <div class="card-body" style="white-space: pre-line;">
+                        @Model.UserDetailsViewModel.AboutInfo
                     </div>
                 </div>
             </div>
@@ -39,7 +49,8 @@
                 <div class="card-body">
                     <div><b>Project Euler Friend Code </b></div>
                     <div class="card">
-                        <div class="card-body" style="white-space: pre-line;">@Model.UserDetailsViewModel.PEFriendCode
+                        <div class="card-body" style="white-space: pre-line;">
+                            @Model.UserDetailsViewModel.PEFriendCode
                         </div>
                     </div>
                 </div>
@@ -141,13 +152,13 @@
                     <div>@Model.UserDetailsViewModel.Name has read @Model.UserDetailsViewModel.BooksRead.Count() books:</div>
                 }
 
-            <ul>
-                @foreach (var book in Model.UserDetailsViewModel.BooksRead)
-                {
-                <li><a asp-page="/Leaderboard/BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a></li>
-                }
-            </ul>
-                
+                <ul>
+                    @foreach (var book in Model.UserDetailsViewModel.BooksRead)
+                    {
+                        <li><a asp-page="/Leaderboard/BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a></li>
+                    }
+                </ul>
+
             </div>
         </div>
     </div>
