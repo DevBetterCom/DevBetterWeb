@@ -6,10 +6,15 @@
 
     public decimal Longitude { get; set; }
 
-    public MapCoordinates(decimal latitude, decimal longitude)
+    public string MemberFullName { get; set; }
+
+    public bool IsClickedMember { get; set; }
+
+    public MapCoordinates(decimal latitude, decimal longitude, string memberFullName)
     {
       Latitude = latitude;
       Longitude = longitude;
+      MemberFullName = memberFullName;
     }
   }
 }

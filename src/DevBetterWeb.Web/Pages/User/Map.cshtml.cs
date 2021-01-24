@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 
 namespace DevBetterWeb.Web.Pages.User
 {
   public class MapModel : PageModel
   {
-    public List<MapCoordinates> AddressCoordinates { get; set; } = new List<MapCoordinates>();
+    public List<MapCoordinates> MemberCoordinates { get; set; } = new List<MapCoordinates>();
     public IRepository _repository { get; }
     public IConfiguration _configuration { get; }
 
@@ -22,7 +19,7 @@ namespace DevBetterWeb.Web.Pages.User
       _repository = repository;
       _configuration = configuration;
     }
-    public async Task OnGet()
+    public async Task OnGet(string userId)
     {
       var members = await _repository.ListAsync<Member>();
 
@@ -36,9 +33,16 @@ namespace DevBetterWeb.Web.Pages.User
         }
       };
 
-      AddressCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
-                                  .Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude))
+      MemberCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
+                                  .Select(m => GetCoordinates(m, userId))
                                   .ToList();
+    }
+
+    private MapCoordinates GetCoordinates(Member member, string userId)
+    {
+      var coordinates = new MapCoordinates((decimal)member.CityLatitude, (decimal)member.CityLongitude, member.UserFullName());
+      if (member.UserId == userId) coordinates.IsClickedMember = true;
+      return coordinates;
     }
   }
 }
