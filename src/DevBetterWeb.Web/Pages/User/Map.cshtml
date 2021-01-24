@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{userId}"
 @model DevBetterWeb.Web.Pages.User.MapModel
 
 @using Microsoft.Extensions.Configuration;
@@ -24,6 +24,7 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
+        var memberInfoPopup = new google.maps.InfoWindow();
         var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
         const image = "/images/map-marker.png"; 
@@ -37,6 +38,12 @@
                 animation: google.maps.Animation.DROP,
                 icon: image,
             });
+            (function (mapPin, marker) {
+                google.maps.event.addListener(mapPin, "click", function (e) {
+                    memberInfoPopup.setContent(marker.memberFullName);
+                    memberInfoPopup.open(map, mapPin);
+                });
+            })(mapPin, marker);
         }
     }
     

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 
 namespace DevBetterWeb.Web.Pages.User
 {
@@ -22,7 +19,7 @@ namespace DevBetterWeb.Web.Pages.User
       _repository = repository;
       _configuration = configuration;
     }
-    public async Task OnGet()
+    public async Task OnGet(string userId)
     {
       var members = await _repository.ListAsync<Member>();
 
@@ -37,7 +34,7 @@ namespace DevBetterWeb.Web.Pages.User
       };
 
       AddressCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
-                                  .Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude))
+                                  .Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude, m.UserFullName()))
                                   .ToList();
     }
   }
