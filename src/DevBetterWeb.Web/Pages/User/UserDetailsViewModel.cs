@@ -7,6 +7,7 @@ namespace DevBetterWeb.Web.Pages.User
   public class UserDetailsViewModel
   {
     public string? Name { get; set; }
+    public string? AvatarUrl { get; set; }
     public string? LinkedInUrl { get; set; }
     public string? TwitterUrl { get; set; }
     public string? GithubUrl { get; set; }
@@ -30,6 +31,8 @@ namespace DevBetterWeb.Web.Pages.User
     {
       Guard.Against.Null(member, nameof(member));
 
+      // TODO: Get URL format string from central config location
+      AvatarUrl = string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId);
       BlogUrl = member.BlogUrl;
       TwitchUrl = member.TwitchUrl;
       TwitterUrl = member.TwitterUrl;
