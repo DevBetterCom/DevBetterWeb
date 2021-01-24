@@ -8,7 +8,7 @@
 
     public string MemberFullName { get; set; }
 
-    public bool IsSelectedMember { get; set; }
+    public bool IsClickedMember { get; set; }
 
     public MapCoordinates(decimal latitude, decimal longitude, string memberFullName)
     {
