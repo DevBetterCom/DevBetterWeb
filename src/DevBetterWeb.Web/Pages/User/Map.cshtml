@@ -14,7 +14,7 @@
 
 <script type="text/javascript">
 
-    var markers = @Json.Serialize(Model.MemberCoordinates);
+    var coordinatesCollection = @Json.Serialize(Model.MemberCoordinates);
 
     window.onload = function () {
 
@@ -29,28 +29,28 @@
 
         const image = "/images/map-marker.png"; 
 
-        for (i = 0; i < markers.length; i++) {
-            var marker = markers[i]
-            var myLatlng = new google.maps.LatLng(marker.latitude, marker.longitude);
-            var mapPin = new google.maps.Marker({
+        for (i = 0; i < coordinatesCollection.length; i++) {
+            var coordinates = coordinatesCollection[i]
+            var myLatlng = new google.maps.LatLng(coordinates.latitude, coordinates.longitude);
+            var marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
                 animation: google.maps.Animation.DROP,
                 icon: image,
-                title: marker.memberFullName,
+                title: coordinates.memberFullName,
             });
 
-            if (marker.isClickedMember == true) {
-                mapPin.setAnimation(google.maps.Animation.BOUNCE);
+            if (coordinates.isClickedMember == true) {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
             }
 
-            (function (mapPin, marker) {
-                google.maps.event.addListener(mapPin, "click", function (e) {
-                    mapPin.setAnimation(null);
-                    memberInfoPopup.setContent(marker.memberFullName);
-                    memberInfoPopup.open(map, mapPin);
+            (function (marker, coordinates) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    marker.setAnimation(null);
+                    memberInfoPopup.setContent(coordinates.memberFullName);
+                    memberInfoPopup.open(map, marker);
                 });
-            })(mapPin, marker);
+            })(marker, coordinates);
         }
     }
     

@@ -34,12 +34,11 @@ namespace DevBetterWeb.Web.Pages.User
       };
 
       MemberCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
-                                  //.Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude, m.UserFullName()))
-                                  .Select(m => Populate(m, userId))
+                                  .Select(m => GetCoordinates(m, userId))
                                   .ToList();
     }
 
-    private MapCoordinates Populate(Member member, string userId)
+    private MapCoordinates GetCoordinates(Member member, string userId)
     {
       var coordinates = new MapCoordinates((decimal)member.CityLatitude, (decimal)member.CityLongitude, member.UserFullName());
       if (member.UserId == userId) coordinates.IsClickedMember = true;
