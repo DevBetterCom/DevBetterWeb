@@ -10,7 +10,7 @@ namespace DevBetterWeb.Web.Pages.User
 {
   public class MapModel : PageModel
   {
-    public List<MapCoordinates> AddressCoordinates { get; set; } = new List<MapCoordinates>();
+    public List<MapCoordinates> MemberCoordinates { get; set; } = new List<MapCoordinates>();
     public IRepository _repository { get; }
     public IConfiguration _configuration { get; }
 
@@ -33,7 +33,7 @@ namespace DevBetterWeb.Web.Pages.User
         }
       };
 
-      AddressCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
+      MemberCoordinates = members.Where(m => m.CityLatitude is not null && m.CityLongitude is not null)
                                   .Select(m => new MapCoordinates((decimal)m.CityLatitude, (decimal)m.CityLongitude, m.UserFullName()))
                                   .ToList();
     }
