@@ -40,8 +40,13 @@
                 title: marker.memberFullName,
             });
 
+            if (marker.isClickedMember == true) {
+                mapPin.setAnimation(google.maps.Animation.BOUNCE);
+            }
+
             (function (mapPin, marker) {
                 google.maps.event.addListener(mapPin, "click", function (e) {
+                    mapPin.setAnimation(null);
                     memberInfoPopup.setContent(marker.memberFullName);
                     memberInfoPopup.open(map, mapPin);
                 });
