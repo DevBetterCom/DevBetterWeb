@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -96,18 +97,6 @@ namespace DevBetterWeb.Web.Controllers
 
   }
 
-  public class StripeOptions
-  {
-    public string? stripePublishableKey { get; set; }
-    public string? stripeSecretKey { get; set; }
-    //public string? WebhookSecret { get; set; }
-
-    //public string? BasicPrice { get; set; }
-    //public string? ProPrice { get; set; }
-    //public string? Domain { get; set; }
-  }
-
-
   [Route("create-payment-intent")]
   [ApiController]
   public class PaymentIntentApiController : Controller
@@ -123,7 +112,7 @@ namespace DevBetterWeb.Web.Controllers
       });
       return Json(new { clientSecret = paymentIntent.ClientSecret });
     }
-    private int CalculateOrderAmount(SubscriptionType subscriptionType)
+    private static int CalculateOrderAmount(SubscriptionType subscriptionType)
     {
       if (subscriptionType.Equals(SubscriptionType.Monthly))
       {

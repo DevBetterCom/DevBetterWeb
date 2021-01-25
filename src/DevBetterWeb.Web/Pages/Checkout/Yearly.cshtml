@@ -3,6 +3,7 @@
 @{
 
 }
+<!--<partial name="_StripeCheckout" for="SubscriptionType" />-->
 
 <h1>Purchase Yearly Plan</h1>
 <h3>$2000 per year</h3>
@@ -174,8 +175,7 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <script defer>
-        //var stripe = Stripe(Model.StripePublishableKey);
-        var stripe = Stripe("test publishable key");
+        var stripe = Stripe("@Model.StripePublishableKey");
 
         var purchase = {
             items: 'Yearly'
@@ -183,6 +183,7 @@
 
         // Disable the button until we have Stripe set up on the page
         document.querySelector("button").disabled = true;
+
         fetch("/create-payment-intent", {
             method: "POST",
             headers: {
