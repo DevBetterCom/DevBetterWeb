@@ -9,7 +9,6 @@ namespace DevBetterWeb.Web.Pages.Checkout
   public class YearlyModel : PageModel
     {
 
-    public string StripePublishableKey { get; private set; }
     public SubscriptionTypeViewModel SubscriptionType { get; set; }
 
 
@@ -17,7 +16,8 @@ namespace DevBetterWeb.Web.Pages.Checkout
     {
       Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
       Guard.Against.NullOrEmpty(optionsAccessor.Value.stripePublishableKey, nameof(optionsAccessor.Value.stripePublishableKey));
-      StripePublishableKey = optionsAccessor.Value.stripePublishableKey;
+      SubscriptionType = new SubscriptionTypeViewModel("Yearly", "year", 2000, 
+        optionsAccessor.Value.stripePublishableKey, optionsAccessor.Value.yearlyPlanId);
     }
 
     public void OnGet()

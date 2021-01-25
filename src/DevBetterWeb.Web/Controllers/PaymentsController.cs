@@ -107,29 +107,25 @@ namespace DevBetterWeb.Web.Controllers
       var paymentIntents = new PaymentIntentService();
       var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
       {
-        Amount = CalculateOrderAmount(request.SubscriptionType),
+        Amount = CalculateOrderAmount(request.SubscriptionPriceId!),
         Currency = "usd",
       });
       return Json(new { clientSecret = paymentIntent.ClientSecret });
     }
-    private static int CalculateOrderAmount(SubscriptionType subscriptionType)
+    private static int CalculateOrderAmount(string subscriptionTypePriceId)
     {
-      if (subscriptionType.Equals(SubscriptionType.Monthly))
-      {
-        return 20000;
-      }
+      var service = new PriceService();
 
-      return 200000;
-    }
-    public enum SubscriptionType
-    {
-      Monthly,
-      Yearly
+      var priceObject = service.Get(subscriptionTypePriceId);
+
+      int price = (int)priceObject.UnitAmount!;
+      
+      return price;
     }
     public class PaymentIntentCreateRequest
     {
-      [JsonProperty("items")]
-      public SubscriptionType SubscriptionType { get; set; }
+      [JsonProperty("subscriptionpriceid")]
+      public string SubscriptionPriceId { get; set; }
     }
   }
 }
