@@ -27,7 +27,8 @@ namespace DevBetterWeb.Infrastructure.Handlers
 
       if (addressParts is not null)
       {
-        var cityDetailsAPIResponse = JObject.Parse(await _mapCoordinateService.GetMapCoordinates(addressParts[1]));
+        var cityString = addressParts[1];
+        var cityDetailsAPIResponse = JObject.Parse(await _mapCoordinateService.GetMapCoordinates(cityString));
         var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
         var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
 
