@@ -81,6 +81,7 @@ namespace DevBetterWeb.Web
       });
 
       services.AddScoped<IRepository, EfRepository>();
+      services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services
