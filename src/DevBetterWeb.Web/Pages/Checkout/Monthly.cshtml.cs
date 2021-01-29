@@ -1,13 +1,14 @@
 ﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.Pages.Checkout
 {
-  //TODO: refactor yearly and monthly to eliminate duplication
-
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class MonthlyModel : PageModel
   {
 
@@ -25,9 +26,5 @@ namespace DevBetterWeb.Web.Pages.Checkout
     {
     }
 
-    public void OnPost(string email)
-    {
-      var Email = email;
-    }
   }
 }

@@ -109,6 +109,7 @@ namespace DevBetterWeb.Web.Controllers
       {
         Amount = CalculateOrderAmount(request.SubscriptionPriceId!),
         Currency = "usd",
+        SetupFutureUsage = "off_session",
       });
       return Json(new { clientSecret = paymentIntent.ClientSecret });
     }
@@ -125,7 +126,137 @@ namespace DevBetterWeb.Web.Controllers
     public class PaymentIntentCreateRequest
     {
       [JsonProperty("subscriptionpriceid")]
-      public string SubscriptionPriceId { get; set; }
+      public string? SubscriptionPriceId { get; set; }
+    }
+  }
+
+  [Route ("update-payment-intent")]
+  [ApiController]
+  public class PaymentIntentUpdateController : Controller
+  {
+    [HttpPost]
+    public ActionResult Update(PaymentIntentUpdateRequest request)
+    {
+      var service = new PaymentIntentService();
+            
+      service.Update(
+        request.PaymentIntentSecret,
+        new PaymentIntentUpdateOptions
+        {
+          Customer = request.Customer,
+        });
+
+      service.Confirm(
+        request.PaymentIntentSecret,
+        new PaymentIntentConfirmOptions
+        {
+          PaymentMethod = request.Method,
+        }
+      );
+
+
+
+      return Json(new { clientSecret = request.PaymentIntentSecret });
+    }
+
+    public class PaymentIntentUpdateRequest
+    {
+      [JsonProperty("customer")]
+      public string? Customer { get; set; }
+      [JsonProperty("method")]
+      public string? Method { get; set; }
+      [JsonProperty("paymentIntentSecret")]
+      public string? PaymentIntentSecret { get; set; }
+
+    }
+    }
+
+  [Route ("create-customer")]
+  [ApiController]
+  public class CustomerCreationController : Controller
+  {
+    [HttpPost]
+    public ActionResult Create(CustomerCreateRequest request)
+    {
+      var customers = new CustomerService();
+      var customer = customers.Create(new CustomerCreateOptions
+      {
+        Email = request.Email,
+      });
+
+      return Json(new { _customer = customer.Id });
+    }
+
+    public class CustomerCreateRequest
+    {
+      [JsonProperty("email")]
+      public string? Email { get; set; }
+    }
+  }
+
+  [Route ("create-subscription")]
+  [ApiController]
+  public class BillingController: Controller
+  {
+    [HttpPost]
+    public ActionResult<Subscription> CreateSubscription([FromBody] SubscriptionCreateRequest req)
+    {
+      // attach payment method
+      var options = new PaymentMethodAttachOptions
+      {
+        Customer = req.Customer,
+      };
+      var service = new PaymentMethodService();
+      var paymentMethod = service.Attach(req.PaymentMethod, options);
+
+      // update customer's default invoice payment method
+      var customerOptions = new CustomerUpdateOptions
+      {
+        InvoiceSettings = new CustomerInvoiceSettingsOptions
+        {
+          DefaultPaymentMethod = paymentMethod.Id,
+        },
+      };
+      var customerService = new CustomerService();
+      customerService.Update(req.Customer, customerOptions);
+
+      //create subscription
+      var subscriptionOptions = new SubscriptionCreateOptions
+      {
+        Customer = req.Customer,
+        Items = new List<SubscriptionItemOptions>
+        {
+          new SubscriptionItemOptions
+          {
+            Price = req.Price,
+          },
+        },
+      };
+      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+      var subscriptionService = new SubscriptionService();
+      try
+      {
+        Subscription subscription = subscriptionService.Create(subscriptionOptions);
+        return subscription;
+      }
+      catch (StripeException e)
+      {
+        Console.WriteLine($"Failed to create subscription.{e}");
+        return BadRequest();
+      }
+
+    }
+
+    public class SubscriptionCreateRequest
+    {
+      [JsonProperty("paymentMethodId")]
+      public string PaymentMethod { get; set; }
+
+      [JsonProperty("customerId")]
+      public string Customer { get; set; }
+
+      [JsonProperty("priceId")]
+      public string Price { get; set; }
     }
   }
 }

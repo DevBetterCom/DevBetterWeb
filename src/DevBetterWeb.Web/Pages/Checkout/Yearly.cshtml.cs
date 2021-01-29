@@ -1,11 +1,14 @@
 ﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.Pages.Checkout
 {
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class YearlyModel : PageModel
     {
 
