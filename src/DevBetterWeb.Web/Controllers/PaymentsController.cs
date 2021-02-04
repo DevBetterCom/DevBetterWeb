@@ -111,7 +111,7 @@ namespace DevBetterWeb.Web.Controllers
         Currency = "usd",
         SetupFutureUsage = "off_session",
       });
-      return Json(new { clientSecret = paymentIntent.ClientSecret });
+      return Json(new { clientSecret = paymentIntent.ClientSecret, id = paymentIntent.Id });
     }
     private static int CalculateOrderAmount(string subscriptionTypePriceId)
     {
@@ -250,13 +250,36 @@ namespace DevBetterWeb.Web.Controllers
     public class SubscriptionCreateRequest
     {
       [JsonProperty("paymentMethodId")]
-      public string PaymentMethod { get; set; }
+      public string? PaymentMethod { get; set; }
 
       [JsonProperty("customerId")]
-      public string Customer { get; set; }
+      public string? Customer { get; set; }
 
       [JsonProperty("priceId")]
-      public string Price { get; set; }
+      public string? Price { get; set; }
     }
+  }
+
+  [Route("get-email")]
+  [ApiController]
+  public class EmailGetterController : Controller
+  {
+    [HttpPost]
+    public ActionResult GetEmail(EmailGetRequest request)
+    {
+      var service = new CustomerService();
+      var customer = service.Get(request.CustomerId);
+
+      var email = customer.Email;
+
+      return Json(new { _email = email });
+    }
+
+    public class EmailGetRequest
+    {
+      [JsonProperty("customerId")]
+      public string? CustomerId { get; set; }
+    }
+
   }
 }

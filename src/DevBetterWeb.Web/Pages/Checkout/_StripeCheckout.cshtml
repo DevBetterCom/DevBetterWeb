@@ -185,26 +185,25 @@
             // Disable the button until we have Stripe set up on the page
         document.querySelector("button").disabled = true;
 
-        var createCustomer = function () {
-            var emailJSON = {
-                "email": `${document.querySelector('#email-field').value}`
-            };
-            debugger;
+        async function createCustomer () {
+            try {
+                var emailJSON = {
+                    "email": `${document.querySelector('#email-field').value}`
+                };
 
-            return fetch('/create-customer', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(emailJSON)
-            })
-                .then((response) => {
-                    return response.json();
+                const output = await fetch('/create-customer', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(emailJSON)
                 })
-                .then((result) => {
-                    // result.customer.id is used to map back to the customer object
-                    return result;
-                });
+                const customerData = await output.json();
+                return customerData;
+            } catch (error) {
+                console.error(error);
+            }
+
         }
 
         var createPaymentIntent = function () {
@@ -260,9 +259,21 @@
 
         }
 
-        var createSubscription = function({ customerId, paymentMethodId, priceId }) {
-            return (
-                fetch('/create-subscription', {
+        var createSubscription = async function({ customerId, paymentMethodId, priceId }) {
+
+            var handlePaymentThatRequiresCustomerAction = function () {
+
+            };
+
+            var handleRequiresPaymentMethod = function () {
+
+            };
+
+            var onSubscriptionComplete = function () {
+
+            };
+
+            fetch('/create-subscription', {
                     method: 'post',
                     headers: {
                         'Content-type': 'application/json',
@@ -273,9 +284,7 @@
                         "priceId": `${priceId}`
                     }),
                 })
-                    .then((response) => {
-                        return response.json();
-                    })
+                    .then((response) => response.json())
                     // If the card is declined, display an error to the user.
                     .then((result) => {
                         if (result.error) {
@@ -308,15 +317,15 @@
                         // We utilize the HTML element we created.
                         showCardError(error);
                     })
-            );        }
+        }
 
-        var createPayment = function (card, customerId, priceId, customerEmail) {
+        async function createPayment (card, customerId, priceId, customerEmail) {
 
             const CustomerId = customerId;
 
             let PriceId = priceId;
 
-            stripe
+            const output = stripe
                 .createPaymentMethod({
                     type: 'card',
                     card: card,
@@ -324,25 +333,71 @@
                         email: customerEmail,
                     },
                 })
-                .then((result) => {
-                    if (result.error) {
+                .then((paymentResult) => {
+                    if (paymentResult.error) {
                         //showError(result.error.message);
                         ////showError(result.error.message);
                     } else {
-                        createSubscription({
-                            customerId: CustomerId,
-                            paymentMethodId: result.paymentMethod.id,
-                            priceId: PriceId,
-                        });
+                        (async () => {
+                            await createSubscription({
+                                customerId: CustomerId,
+                                paymentMethodId: paymentResult.paymentMethod.id,
+                                priceId: PriceId,
+                            });
+
+                        })();
                         //orderComplete();
-                        return result.paymentMethod.id;
+
                     }
+
+                    return paymentResult.paymentMethod.id;
+
                 });
+
+            return output;
+        }
+
+        async function getCustomerEmail (customer) {
+
+            var customerJSON = {
+                "customerId": `${customer}`
+            };
+
+            var output = await fetch('/get-email', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(customerJSON)
+            })
+            const emailData = await output.json();
+
+            return emailData;
+        }
+
+        async function updatePaymentIntent(customer, paymentMethod, paymentIntent) {
+            var paymentIntentUpdateParams = {
+                "customer": `${customer}`,
+                "method": `${paymentMethod}`,
+                "paymentIntentSecret": `${paymentIntent}`
+            };
+
+            fetch("/update-payment-intent", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(paymentIntentUpdateParams)
+            })
         }
 
         var handleForm = function () {
 
             //createPaymentIntent();
+
+            // errors here are occuring because, despite using async/await, promises are not resolving (unclear if they are not resolving
+            // on time or if they are not resolving at all). Somehow, I need to figure out how to get them to resolve properly, or find 
+            // some other way to get the required information (customer id, customer email, payment method id) into this function.
 
             fetch("/create-payment-intent", {
                 method: "POST",
@@ -389,27 +444,42 @@
                         event.preventDefault();
                         // Complete payment when the submit button is clicked
 
-                        var customerResult = createCustomer();
-                        var customer = customerResult.result.customer.id;
+                        //const customerPromise = await createCustomer();
+
+                        var customerEmail = document.querySelector('#email-field').value;
+
+                        (async () => {
+                            var customer = "customer not set";
+                            var payment = "payment not set";
+
+                            await createCustomer()
+                                .then((customerData) => customer = customerData._customer);
+
+                            await createPayment(card, customer, PriceId, customerEmail)
+                                .then((paymentData) => payment = paymentData);
+
+                            await updatePaymentIntent(customer, payment, data.id)
+                                .then(payWithCard(stripe, data.clientSecret));
+
+                            
+
+                            //await updatePaymentIntent(customer, payment, data.id);
+
+                            // payWithCard(stripe, data.clientSecret);
+
+                        })();
+
+
+
+                        //getCustomerEmail(customer).then((emailData) => email = (emailData));
+
+
                         //var customerId = customerResult.result.customer.id;
-                        var paymentMethod = createPayment(card, customer, PriceId, emailJSON.email);
+
 
                         // update paymentIntent
-                        var paymentIntentUpdateParams = {
-                            "customer": `${customer}`,
-                            "method": `${paymentMethod}`,
-                            "paymentIntentSecret": `${data.id}`
-                        };
+                        //updatePaymentIntent(customer, paymentMethod, data.id);
 
-                        fetch("/update-payment-intent", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(paymentIntentUpdateParams)
-                        })
-
-                        payWithCard(stripe, data.clientSecret);
                     });
 
                 });
@@ -425,10 +495,11 @@
             // Calls stripe.confirmCardPayment
             // If the card requires authentication Stripe shows a pop-up modal to
             // prompt the user to enter authentication details without leaving your page.
-            var payWithCard = function (stripe, clientSecret) {
+            var payWithCard = function (stripe, clientSecret, paymentMethod) {
                 loading(true);
                 stripe
                     .confirmCardPayment(clientSecret, {
+                        payment_method: paymentMethod,
                     })
                     .then(function (result) {
                         if (result.error) {
