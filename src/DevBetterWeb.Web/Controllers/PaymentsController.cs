@@ -146,16 +146,6 @@ namespace DevBetterWeb.Web.Controllers
           Customer = request.Customer,
         });
 
-      service.Confirm(
-        request.PaymentIntentSecret,
-        new PaymentIntentConfirmOptions
-        {
-          PaymentMethod = request.Method,
-        }
-      );
-
-
-
       return Json(new { clientSecret = request.PaymentIntentSecret });
     }
 
@@ -163,8 +153,6 @@ namespace DevBetterWeb.Web.Controllers
     {
       [JsonProperty("customer")]
       public string? Customer { get; set; }
-      [JsonProperty("method")]
-      public string? Method { get; set; }
       [JsonProperty("paymentIntentSecret")]
       public string? PaymentIntentSecret { get; set; }
 
@@ -199,36 +187,40 @@ namespace DevBetterWeb.Web.Controllers
   public class BillingController: Controller
   {
     [HttpPost]
-    public ActionResult<Subscription> CreateSubscription([FromBody] SubscriptionCreateRequest req)
+    public ActionResult<Subscription> CreateSubscription(SubscriptionCreateRequest req)
     {
+      var myCustomer = req.CustomerId;
+      var myPaymentMethod = req.PaymentMethodId;
+      var myPrice = req.PriceId;
+      
       // attach payment method
       var options = new PaymentMethodAttachOptions
       {
-        Customer = req.Customer,
+        Customer = myCustomer,
       };
       var service = new PaymentMethodService();
-      var paymentMethod = service.Attach(req.PaymentMethod, options);
+      service.Attach(myPaymentMethod, options);
 
       // update customer's default invoice payment method
       var customerOptions = new CustomerUpdateOptions
       {
         InvoiceSettings = new CustomerInvoiceSettingsOptions
         {
-          DefaultPaymentMethod = paymentMethod.Id,
+          DefaultPaymentMethod = myPaymentMethod,
         },
       };
       var customerService = new CustomerService();
-      customerService.Update(req.Customer, customerOptions);
+      customerService.Update(myCustomer, customerOptions);
 
       //create subscription
       var subscriptionOptions = new SubscriptionCreateOptions
       {
-        Customer = req.Customer,
+        Customer = myCustomer,
         Items = new List<SubscriptionItemOptions>
         {
           new SubscriptionItemOptions
           {
-            Price = req.Price,
+            Price = myPrice,
           },
         },
       };
@@ -250,13 +242,13 @@ namespace DevBetterWeb.Web.Controllers
     public class SubscriptionCreateRequest
     {
       [JsonProperty("paymentMethodId")]
-      public string? PaymentMethod { get; set; }
+      public string? PaymentMethodId { get; set; }
 
       [JsonProperty("customerId")]
-      public string? Customer { get; set; }
+      public string? CustomerId { get; set; }
 
       [JsonProperty("priceId")]
-      public string? Price { get; set; }
+      public string? PriceId { get; set; }
     }
   }
 

@@ -259,7 +259,7 @@
 
         }
 
-        var createSubscription = async function({ customerId, paymentMethodId, priceId }) {
+        var createSubscription = async function({ customerIdInput, paymentMethodIdInput, priceIdInput }) {
 
             var handlePaymentThatRequiresCustomerAction = function () {
 
@@ -273,16 +273,22 @@
 
             };
 
+            var showCardError = function (error) {
+
+            };
+
+            var subscriptionParams = {
+                "paymentMethodId": `${paymentMethodIdInput}`,
+                "customerId": `${customerIdInput}`,
+                "priceId": `${priceIdInput}`
+            };
+           
             fetch('/create-subscription', {
                     method: 'post',
                     headers: {
                         'Content-type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        "customerId": `${customerId}`,
-                        "paymentMethodId": `${paymentMethodId}`,
-                        "priceId": `${priceId}`
-                    }),
+                body: JSON.stringify(subscriptionParams),
                 })
                     .then((response) => response.json())
                     // If the card is declined, display an error to the user.
@@ -340,11 +346,10 @@
                     } else {
                         (async () => {
                             await createSubscription({
-                                customerId: CustomerId,
-                                paymentMethodId: paymentResult.paymentMethod.id,
-                                priceId: PriceId,
+                                customerIdInput: CustomerId,
+                                paymentMethodIdInput: paymentResult.paymentMethod.id,
+                                priceIdInput: PriceId
                             });
-
                         })();
                         //orderComplete();
 
@@ -375,20 +380,21 @@
             return emailData;
         }
 
-        async function updatePaymentIntent(customer, paymentMethod, paymentIntent) {
+        async function updatePaymentIntent(customer, paymentMethod, paymentIntent, clientSecret) {
             var paymentIntentUpdateParams = {
                 "customer": `${customer}`,
-                "method": `${paymentMethod}`,
                 "paymentIntentSecret": `${paymentIntent}`
             };
 
-            fetch("/update-payment-intent", {
+            await fetch("/update-payment-intent", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(paymentIntentUpdateParams)
             })
+                .then(() => payWithCard(stripe, clientSecret, paymentMethod));
+
         }
 
         var handleForm = function () {
@@ -458,17 +464,16 @@
                             await createPayment(card, customer, PriceId, customerEmail)
                                 .then((paymentData) => payment = paymentData);
 
-                            await updatePaymentIntent(customer, payment, data.id)
-                                .then(payWithCard(stripe, data.clientSecret));
+                            await updatePaymentIntent(customer, payment, data.id, data.clientSecret);
 
+
+
+                        //await updatePaymentIntent(customer, payment, data.id);
+
+                        // payWithCard(stripe, data.clientSecret);
+
+                    })();
                             
-
-                            //await updatePaymentIntent(customer, payment, data.id);
-
-                            // payWithCard(stripe, data.clientSecret);
-
-                        })();
-
 
 
                         //getCustomerEmail(customer).then((emailData) => email = (emailData));
@@ -497,6 +502,7 @@
             // prompt the user to enter authentication details without leaving your page.
             var payWithCard = function (stripe, clientSecret, paymentMethod) {
                 loading(true);
+
                 stripe
                     .confirmCardPayment(clientSecret, {
                         payment_method: paymentMethod,
@@ -517,7 +523,7 @@
             // Shows a success message when the payment is complete
             var orderComplete = function () {
                 loading(false);
-                document.querySelector(".result-message").classList.remove("hidden");
+                document.querySelector("result-message").classList.remove("hidden");
                 document.querySelector("button").disabled = true;
                 document.querySelector("#submit").classList.add("hidden");
                 document.querySelector("#card-element").classList.add("hidden");
