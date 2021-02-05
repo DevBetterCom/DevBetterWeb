@@ -46,6 +46,8 @@ namespace DevBetterWeb.Core.Entities
 
     public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+    public decimal? CityLatitude { get; set; }
+    public decimal? CityLongitude { get; set; }
 
 
     public string UserFullName()
@@ -85,6 +87,13 @@ namespace DevBetterWeb.Core.Entities
 
       Address = address;
       CreateOrUpdateUpdateEvent(nameof(Address));
+      UpdateMemberCityCoordinates();
+    }
+
+    public void UpdateMemberCityCoordinates()
+    {
+      var addressUpdatedEvent = new MemberAddressUpdatedEvent(this);
+      Events.Add(addressUpdatedEvent);
     }
 
     public void UpdateAboutInfo(string? aboutInfo)
