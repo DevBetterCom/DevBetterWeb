@@ -3,9 +3,9 @@ using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Events
 {
-  public class NewMemberCreatedEvent : BaseDomainEvent
+  public class NewMemberCreatedAndProfileUpdatedEvent : BaseDomainEvent
   {
-    public NewMemberCreatedEvent(Member member)
+    public NewMemberCreatedAndProfileUpdatedEvent(Member member)
     {
       Member = member;
     }

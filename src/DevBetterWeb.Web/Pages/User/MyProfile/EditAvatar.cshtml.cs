@@ -22,7 +22,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace DevBetterWeb.Web.Pages.User
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class EditAvatarModel : PageModel
   {
 #nullable disable
@@ -58,7 +58,7 @@ namespace DevBetterWeb.Web.Pages.User
       var currentUserName = User.Identity!.Name;
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{applicationUser.Id}.jpg";
+      AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
       _logger.LogInformation($"Setting AvatarUrl to {AvatarUrl}.");
     }
 
@@ -69,12 +69,11 @@ namespace DevBetterWeb.Web.Pages.User
         return Page();
       }
 
-      bool uploadSuccess = false;
-
       var currentUserName = User.Identity!.Name;
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{applicationUser.Id}.jpg";
+      AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
+
       string fileName = applicationUser.Id + ".jpg";
 
       using (var stream = ImageFile.OpenReadStream())
@@ -82,7 +81,7 @@ namespace DevBetterWeb.Web.Pages.User
         string extension = ImageFile.FileName.Split(".").Last();
         // TODO: validate if extension is correct
 
-        uploadSuccess = await UploadToBlob(fileName, stream);
+        var uploadSuccess = await UploadToBlob(fileName, stream);
 
         if (uploadSuccess)
         {

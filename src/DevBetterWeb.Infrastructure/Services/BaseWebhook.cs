@@ -1,10 +1,10 @@
-﻿using Ardalis.GuardClauses;
-using Discord;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
+using Discord;
+using Newtonsoft.Json;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
@@ -41,13 +41,13 @@ namespace DevBetterWeb.Infrastructure.Services
     [JsonProperty("embeds")]
     public List<Embed> Embeds { get; set; } = new List<Embed>();
 
-    public virtual async Task<HttpResponseMessage> Send()
+    public virtual Task<HttpResponseMessage> Send()
     {
       var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-      return await _httpClient.PostAsync(_webhookUrl, content);
+      return _httpClient.PostAsync(_webhookUrl, content);
     }
 
-    public async Task<HttpResponseMessage> Send(string content, string username = "", string avatarUrl = "", bool isTTS = false, IEnumerable<Embed>? embeds = null)
+    public Task<HttpResponseMessage> Send(string content, string username = "", string avatarUrl = "", bool isTTS = false, IEnumerable<Embed>? embeds = null)
     {
       Content = content;
       Username = username;
@@ -59,8 +59,7 @@ namespace DevBetterWeb.Infrastructure.Services
         Embeds.AddRange(embeds);
       }
 
-      return await Send();
+      return Send();
     }
-
   }
 }
