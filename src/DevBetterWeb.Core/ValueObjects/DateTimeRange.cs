@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 
 namespace DevBetterWeb.Core.ValueObjects
 {
-  public class DateTimeRange //: ValueObject
+
+  public class DateTimeRange : ValueObject
   {
     public DateTime StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
@@ -20,6 +23,12 @@ namespace DevBetterWeb.Core.ValueObjects
       var end = EndDate ?? endDateToUseIfMissing;
 
       return (end - StartDate).Days;
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+      yield return StartDate;
+      yield return EndDate ?? DateTime.MaxValue;
     }
   }
 }
