@@ -46,7 +46,7 @@ namespace DevBetterWeb.Infrastructure.Handlers
           member.CityLongitude =longitude;
 
           _logger.LogInformation($"Set lat/long to {latitude}/{longitude}. Saving...");
-          await _repository.UpdateAsync(member);
+          //await _repository.UpdateAsync(member);
         }
       }
     }
