@@ -38,9 +38,6 @@ namespace DevBetterWeb.Web.Pages.User
           _logger.LogInformation("Updating lat/long for {member.FirstName} {member.LastName}");
           member.UpdateMemberCityCoordinates();
           await _repository.UpdateAsync(member);
-
-          // HACK: save changes AGAIN to handle changes made by event handlers
-          await _repository.UpdateAsync(member);
         }
       };
 
