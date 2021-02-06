@@ -42,7 +42,8 @@ namespace DevBetterWeb.Infrastructure.Services
       else
       {
         _logger.LogError($"Error getting map info: HTTP Status: {response.StatusCode}");
-        throw new Exception("Map API call failed");
+        _logger.LogError(await response.Content.ReadAsStringAsync());
+        return "";
       }
     }
   }

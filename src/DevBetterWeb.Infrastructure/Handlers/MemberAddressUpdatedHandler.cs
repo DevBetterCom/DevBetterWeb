@@ -29,14 +29,16 @@ namespace DevBetterWeb.Infrastructure.Handlers
 
       if (addressParts is not null)
       {
-        
-        //var cityString = addressParts[1];
-        var cityDetailsAPIResponse = JObject.Parse(await _mapCoordinateService.GetMapCoordinates(member.Address));
-        var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
-        var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
+        string responseString = await _mapCoordinateService.GetMapCoordinates(member.Address);
+        if (!string.IsNullOrEmpty(responseString))
+        {
+          var cityDetailsAPIResponse = JObject.Parse(responseString);
+          var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
+          var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
 
-        member.CityLatitude = latResponse?.ToObject<decimal>();
-        member.CityLongitude = lngResponse?.ToObject<decimal>();
+          member.CityLatitude = latResponse?.ToObject<decimal>();
+          member.CityLongitude = lngResponse?.ToObject<decimal>();
+        }
       }
     }
   }
