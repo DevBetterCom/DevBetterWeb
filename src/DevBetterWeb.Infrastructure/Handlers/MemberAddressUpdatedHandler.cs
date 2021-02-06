@@ -35,17 +35,19 @@ namespace DevBetterWeb.Infrastructure.Handlers
         string responseString = await _mapCoordinateService.GetMapCoordinates(member.Address);
         if (!string.IsNullOrEmpty(responseString))
         {
+          _logger.LogInformation($"API Response: {responseString}");
           var cityDetailsAPIResponse = JObject.Parse(responseString);
           var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
           var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
 
           decimal? latitude = latResponse?.ToObject<decimal>();
-          member.CityLatitude = latitude;
-
           decimal? longitude = lngResponse?.ToObject<decimal>();
-          member.CityLongitude =longitude;
-
-          _logger.LogInformation($"Set lat/long to {latitude}/{longitude}. Saving...");
+          if (latitude.HasValue && longitude.HasValue)
+          {
+            member.CityLatitude = latitude;
+            member.CityLongitude = longitude;
+            _logger.LogInformation($"Set lat/long to {latitude}/{longitude}.");
+          }
           //await _repository.UpdateAsync(member);
         }
       }
