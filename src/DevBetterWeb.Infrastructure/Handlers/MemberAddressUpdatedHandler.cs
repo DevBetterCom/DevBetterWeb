@@ -9,14 +9,17 @@ namespace DevBetterWeb.Infrastructure.Handlers
   public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
   {
     private readonly ILogger<MemberAddressUpdatedHandler> _logger;
+    private readonly IRepository _repository;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
-      ILogger<MemberAddressUpdatedHandler> logger)
+      ILogger<MemberAddressUpdatedHandler> logger,
+      IRepository repository)
     {
       _mapCoordinateService = mapCoordinateService;
       _logger = logger;
+      _repository = repository;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
@@ -36,8 +39,14 @@ namespace DevBetterWeb.Infrastructure.Handlers
           var latResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lat");
           var lngResponse = cityDetailsAPIResponse.SelectToken("results[0].geometry.location.lng");
 
-          member.CityLatitude = latResponse?.ToObject<decimal>();
-          member.CityLongitude = lngResponse?.ToObject<decimal>();
+          decimal? latitude = latResponse?.ToObject<decimal>();
+          member.CityLatitude = latitude;
+
+          decimal? longitude = lngResponse?.ToObject<decimal>();
+          member.CityLongitude =longitude;
+
+          _logger.LogInformation($"Set lat/long to {latitude}/{longitude}. Saving...");
+          await _repository.UpdateAsync(member);
         }
       }
     }
