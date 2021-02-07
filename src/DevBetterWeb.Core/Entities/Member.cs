@@ -12,6 +12,10 @@ namespace DevBetterWeb.Core.Entities
 {
   public class Member : BaseEntity
   {
+    public Member()
+    {
+      UserId = "";
+    }
     /// <summary>
     /// Members should only be created via the IMemberRegistrationService.
     /// This will fire off a NewMemberCreatedEvent
