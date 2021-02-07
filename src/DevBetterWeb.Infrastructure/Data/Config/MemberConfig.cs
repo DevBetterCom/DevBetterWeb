@@ -24,6 +24,21 @@ namespace DevBetterWeb.Infrastructure.Data.Config
       builder.Property(x => x.PEFriendCode).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
       builder.Property(x => x.PEUsername).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
       builder.Property(x => x.DiscordUsername).HasMaxLength(200);
+
+      builder.OwnsOne(x => x.ShippingAddress, sa =>
+      {
+        sa.Property(p => p!.Street).HasMaxLength(500).HasDefaultValue("");
+        sa.Property(p => p!.City).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH).HasDefaultValue("");
+        sa.Property(p => p!.State).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH).HasDefaultValue("");
+        sa.Property(p => p!.PostalCode).HasMaxLength(12).HasDefaultValue("");
+        sa.Property(p => p!.Country).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH).HasDefaultValue("");
+      });
+
+      builder.OwnsOne(x => x.CityLocation, cl =>
+      {
+        cl.Property(p => p!.Latitude).HasDefaultValue(null);
+        cl.Property(p => p!.Longitude).HasDefaultValue(null);
+      });
     }
   }
 }

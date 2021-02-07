@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
+using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
@@ -12,7 +16,6 @@ namespace DevBetterWeb.Core.Entities
     {
       UserId = "";
     }
-
     /// <summary>
     /// Members should only be created via the IMemberRegistrationService.
     /// This will fire off a NewMemberCreatedEvent
@@ -29,6 +32,9 @@ namespace DevBetterWeb.Core.Entities
     public string? LastName { get; private set; }
     public string? AboutInfo { get; private set; }
     public string? Address { get; private set; }
+    public Address? ShippingAddress { get; private set; }
+    public Geolocation? CityLocation { get; private set; }
+
     public string? PEFriendCode { get; private set; }
     public string? PEUsername { get; private set; }
 
@@ -87,13 +93,14 @@ namespace DevBetterWeb.Core.Entities
 
       Address = address;
       CreateOrUpdateUpdateEvent(nameof(Address));
-      UpdateMemberCityCoordinates();
     }
 
-    public void UpdateMemberCityCoordinates()
+    public void UpdateShippingAddress(Address newAddress)
     {
-      var addressUpdatedEvent = new MemberAddressUpdatedEvent(this);
+      if (ShippingAddress == newAddress) return;
+      var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
       Events.Add(addressUpdatedEvent);
+      ShippingAddress = newAddress;
     }
 
     public void UpdateAboutInfo(string? aboutInfo)
@@ -228,5 +235,79 @@ namespace DevBetterWeb.Core.Entities
 
       return Subscriptions.Sum(s => s.Dates.ToDays(DateTime.Today));
     }
+
+    public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
+    {
+      private readonly IRepository _repository;
+
+      public IMapCoordinateService _mapCoordinateService { get; }
+
+      public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
+        IRepository repository)
+      {
+        _mapCoordinateService = mapCoordinateService;
+        _repository = repository;
+        // TODO: Add ILogger to domain and inject here
+      }
+
+      public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
+      {
+        var member = addressUpdatedEvent.Member;
+        var oldAddress = addressUpdatedEvent.OldAddress;
+
+        if(member.ShippingAddress == null)
+        {
+          member.CityLocation = null;
+          await _repository.UpdateAsync(member);
+          return;
+        }
+
+        string oldCityStateCountry = oldAddress?.ToCityStateCountryString() ?? "";
+        string newCityStateCountry = member.ShippingAddress.ToCityStateCountryString();
+
+        if (oldCityStateCountry == newCityStateCountry) return;
+
+        string responseString = await _mapCoordinateService
+          .GetMapCoordinates(member.ShippingAddress.ToCityStateCountryString());
+
+        if (string.IsNullOrEmpty(responseString)) return;
+
+        // TODO: Refactor Json Parsing to get Geolocation to separate service
+        var doc = JsonDocument.Parse(responseString);
+
+        try
+        {
+          var rootElement = doc.RootElement;
+
+          var results = rootElement.GetProperty("results");
+          var firstItem = results[0];
+          var geometry = firstItem.GetProperty("geometry");
+          var location = geometry.GetProperty("location");
+          var lat = location.GetProperty("lat");
+          var lng = location.GetProperty("lng");
+          
+          decimal latdec;
+          bool parseResult = decimal.TryParse(lat.ToString(), out latdec);
+          decimal lngdec;
+          parseResult = decimal.TryParse(lat.ToString(), out lngdec) && parseResult;
+
+          if (!parseResult)
+          {
+            member.CityLocation = null;
+          }
+          else
+          {
+            var newLocation = new Geolocation(latdec, lngdec);
+            member.CityLocation = newLocation;
+          }
+          await _repository.UpdateAsync(member);
+        }
+        catch
+        {
+          // TODO: Log something
+        }
+      }
+    }
+
   }
 }

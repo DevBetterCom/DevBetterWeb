@@ -36,8 +36,7 @@ namespace DevBetterWeb.Web.Pages.User
         if (member.Address is not null && (member.CityLatitude is null || member.CityLongitude is null))
         {
           _logger.LogInformation("Updating lat/long for {member.FirstName} {member.LastName}");
-          member.UpdateMemberCityCoordinates();
-          await _repository.UpdateAsync(member);
+          // TODO: figure out if we need to update location data here
         }
       };
 
@@ -49,6 +48,11 @@ namespace DevBetterWeb.Web.Pages.User
     private MapCoordinates GetCoordinates(Member member, string userId)
     {
       var coordinates = new MapCoordinates((decimal)member.CityLatitude, (decimal)member.CityLongitude, member.UserFullName());
+      if(member.CityLocation != null)
+      {
+        coordinates = new MapCoordinates(member.CityLocation.Latitude,
+          member.CityLocation.Longitude, member.UserFullName());
+      }
       if (member.UserId == userId) coordinates.IsClickedMember = true;
       return coordinates;
     }
