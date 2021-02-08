@@ -32,6 +32,7 @@
             <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
             }
             <td>
+                <a href="/user/map/@member.UserId"><i class="fas fa-map-marker-alt fa-2x fa-fw"></i></a>
                 <a href="@member.BlogUrl" target="_blank"><i class="fas fa-blog fa-2x fa-fw"></i></a>
                 <a href="@member.TwitterUrl" target="_blank"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
                 <a href="@member.LinkedInUrl" target="_blank"><i class="fab fa-linkedin fa-2x fa-fw"></i></a>

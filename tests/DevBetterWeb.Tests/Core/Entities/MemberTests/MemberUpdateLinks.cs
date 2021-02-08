@@ -110,7 +110,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
       Assert.Same(member, eventCreated.Member);
       Assert.Equal("Name,AboutInfo,Address,Links", eventCreated.UpdateDetails);
-      Assert.Single(member.Events);
+      Assert.Equal(1, member.Events.Count());
     }
 
   }

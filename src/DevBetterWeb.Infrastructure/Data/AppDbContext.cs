@@ -1,8 +1,10 @@
 ﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,6 +36,31 @@ namespace DevBetterWeb.Infrastructure.Data
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+            if (_dispatcher is not null)
+            {
+              var membersWithAddressUpdatedEvents = ChangeTracker.Entries<Member>()
+               .Select(e => e.Entity)
+               .Where(e => e.Events.Any(x => x.GetType() == typeof(MemberAddressUpdatedEvent)))
+               .ToArray();
+
+              foreach (var member in membersWithAddressUpdatedEvents)
+              {
+                var addressUpdatedEvents = member.Events
+                  .Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
+                  .ToArray();
+                
+                member.Events
+                  .Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
+                  .ToList()
+                  .Clear();
+
+                foreach (var addressUpdatedEvent in addressUpdatedEvents)
+                {
+                  await _dispatcher.Dispatch(addressUpdatedEvent).ConfigureAwait(false);
+                }
+              }
+            }
+
             int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             // ignore events if no dispatcher provided

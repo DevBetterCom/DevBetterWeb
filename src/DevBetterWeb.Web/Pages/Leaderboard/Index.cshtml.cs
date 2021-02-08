@@ -3,62 +3,58 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.Leaderboard
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class IndexModel : PageModel
   {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AppDbContext _appDbContext;
+    private readonly IRepository _repository;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
+    public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
 
     public IndexModel(UserManager<ApplicationUser> userManager,
-        AppDbContext appDbContext)
+        IRepository repository)
     {
       _userManager = userManager;
-      _appDbContext = appDbContext;
-
+      _repository = repository;
     }
 
     public async Task OnGet()
     {
-      var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+      var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+      var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
 
-      // TODO: Write a LINQ join for this
-      // TODO: See if we can use a specification here
-      var userIds = usersInRole.Select(x => x.Id).ToList();
-#nullable disable
-      var members = await _appDbContext.Members.AsNoTracking()
-          .Where(member => userIds.Contains(member.UserId))
-          .OrderByDescending(member => member.BooksRead.Count)
-          .ThenBy(member => member.LastName)
-          .ThenBy(member => member.FirstName)
-          .Include(member => member.BooksRead)
-          .ToListAsync();
+      var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
+      var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 
-      Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
-          .Where(m => m.BooksRead.Count > 0)
+      var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds);
+      var members = await _repository.ListAsync(memberSpec);
+
+      var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
+      var alumni = await _repository.ListAsync(alumniSpec);
+
+      Members = members
+          .Where(m => (m.BooksRead?.Count ?? 0) > 0 && 
+                !alumni.Any(alumni => alumni.Id == m.Id))
+          .Select(member => MemberLinksDTO.FromMemberEntity(member))
           .ToList();
 
-      var books = await _appDbContext.Books.AsQueryable()
-        .OrderByDescending(book => book.MembersWhoHaveRead.Count)
-        .ThenBy(book => book.Title)
-        .Include(book => book.MembersWhoHaveRead)
-        .AsNoTracking()
-        .ToListAsync();
+      Alumni = alumni.Select(alumni => MemberLinksDTO.FromMemberEntity(alumni))
+          .Where(m => (m.BooksRead?.Count ?? 0) > 0)
+          .ToList();
 
-      Books = books;
-#nullable enable
-
+      var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
+      Books = await _repository.ListAsync(bookSpec);
     }
 
     public class MemberLinksDTO
