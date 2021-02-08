@@ -11,9 +11,9 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly PaymentIntentService _paymentIntentService;
 
-    public PaymentIntentUpdateController()
+    public PaymentIntentUpdateController(PaymentIntentService paymentIntentService)
     {
-      _paymentIntentService = new PaymentIntentService();
+      _paymentIntentService = paymentIntentService;
     }
 
     [HttpPost]

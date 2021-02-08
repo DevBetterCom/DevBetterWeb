@@ -11,9 +11,9 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly CustomerService _customerService;
 
-    public CustomerCreationController()
+    public CustomerCreationController(CustomerService customerService)
     {
-      _customerService = new CustomerService();
+      _customerService = customerService;
     }
 
     [HttpPost]

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using Stripe.Checkout;
 
 namespace DevBetterWeb.Web
 {
@@ -94,6 +95,14 @@ namespace DevBetterWeb.Web
       });
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
+
+      // TODO: Refactor out these direct dependencies on stripe
+      services.AddScoped<PaymentMethodService>();
+      services.AddScoped<CustomerService>();
+      services.AddScoped<SubscriptionService>();
+      services.AddScoped<PriceService>();
+      services.AddScoped<PaymentIntentService>();
+      services.AddScoped<SessionService>();
     }
 
     public void ConfigureContainer(ContainerBuilder builder)

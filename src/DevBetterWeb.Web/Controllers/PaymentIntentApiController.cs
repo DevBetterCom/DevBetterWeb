@@ -11,9 +11,9 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly PriceService _priceService;
 
-    public PaymentIntentApiController()
+    public PaymentIntentApiController(PriceService priceService)
     {
-      _priceService = new PriceService();
+      _priceService = priceService;
     }
 
     [HttpPost]
