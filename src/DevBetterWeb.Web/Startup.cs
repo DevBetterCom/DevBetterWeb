@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 namespace DevBetterWeb.Web
 {
@@ -58,6 +59,7 @@ namespace DevBetterWeb.Web
 
       services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
       services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
+      services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
 
       // TODO: Consider changing to check services collection for dbContext
       if (!_isDbContextAdded)
@@ -134,6 +136,8 @@ namespace DevBetterWeb.Web
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
       });
+
+      StripeConfiguration.ApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
 
       // run migrations automatically on startup
       //migrationContext.Database.Migrate();
