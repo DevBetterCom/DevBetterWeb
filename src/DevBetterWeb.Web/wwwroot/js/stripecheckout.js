@@ -51,6 +51,8 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         // orderComplete();
         loading(false);
         document.querySelector("result-message").classList.remove("hidden");
+
+        window.location.replace("./checkout/success");
     };
 
     var showCardError = function (error) {
@@ -94,7 +96,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         // Some payment methods require a customer to be on session
         // to complete the payment process. Check the status of the
         // payment intent to handle these actions.
-        .then(() => handlePaymentThatRequiresCustomerAction())
+        .then(() => {
+            handlePaymentThatRequiresCustomerAction();
+        })
 
         // If attaching this card to a Customer object succeeds,
         // but attempts to charge the customer fail, you
@@ -102,7 +106,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         .then(() => handleRequiresPaymentMethod())
 
         // No more actions required. Provision your service for the user.
-        .then(() => onSubscriptionComplete())
+        .then(() => {
+            onSubscriptionComplete();
+        })
 
         .catch((error) => {
             // An error has happened. Display the failure to the user here.
