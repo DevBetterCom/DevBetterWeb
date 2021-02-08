@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevBetterWeb.Web.Controllers
 {
-    public class HomeController : Controller
+  public class HomeController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IDomainEventDispatcher _dispatcher;
