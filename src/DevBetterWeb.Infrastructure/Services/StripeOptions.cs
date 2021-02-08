@@ -7,9 +7,5 @@
     public string? yearlyPlanId { get; set; }
     public string? monthlyPlanId { get; set; }
 
-    //public string? WebhookSecret { get; set; }
-    //public string? BasicPrice { get; set; }
-    //public string? ProPrice { get; set; }
-    //public string? Domain { get; set; }
   }
 }
