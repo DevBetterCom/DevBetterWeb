@@ -4,20 +4,22 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210118212122_MapCoordinates")]
+    partial class MapCoordinates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("BookMember", b =>
                 {
@@ -227,84 +229,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasForeignKey("MembersWhoHaveReadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
-                {
-                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.Address", "ShippingAddress", b1 =>
-                        {
-                            b1.Property<int>("MemberId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .UseIdentityColumn();
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("PostalCode")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(12)
-                                .HasColumnType("nvarchar(12)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasDefaultValue("");
-
-                            b1.HasKey("MemberId");
-
-                            b1.ToTable("Members");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MemberId");
-                        });
-
-                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.Geolocation", "CityLocation", b1 =>
-                        {
-                            b1.Property<int>("MemberId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .UseIdentityColumn();
-
-                            b1.Property<decimal>("Latitude")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("Longitude")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.HasKey("MemberId");
-
-                            b1.ToTable("Members");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MemberId");
-                        });
-
-                    b.Navigation("CityLocation");
-
-                    b.Navigation("ShippingAddress");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>

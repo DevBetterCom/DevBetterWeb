@@ -4,7 +4,6 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class IndexModel : PageModel
   {
 #nullable disable
@@ -28,36 +27,24 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository _repository;
-    private readonly AppDbContext _appDbContext;
 
     public IndexModel(UserManager<ApplicationUser> userManager,
         IMemberRegistrationService memberRegistrationService,
-        IRepository repository, AppDbContext appDbContext)
+        IRepository repository)
     {
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
       _repository = repository;
-      _appDbContext = appDbContext;
     }
 
     public async Task OnGetAsync()
     {
       var currentUserName = User.Identity!.Name;
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
-      AvatarUrl = $"https://devbetter.blob.core.windows.net/photos/{applicationUser.Id}.jpg";
+      AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
 
       var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
       var member = await _repository.GetAsync(spec);
-
-      //var books = await _appDbContext.Books
-      //    .Include(book => book.MembersWhoHaveRead)
-      //    .ToListAsync();
-
-      //var members = await _appDbContext.Members
-      //    .Include(member => member.BooksRead)
-      //    .ToListAsync();
-
-
 
       if (member == null)
       {

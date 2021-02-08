@@ -59,7 +59,7 @@ You should create an **appsettings.development.json** file to hold your other co
 
 ## EF Migrations Commands
 
-Add a new migration:
+Add a new migration (from the DevBetter.Web folder):
 
 ```powershell
 dotnet ef migrations add MIGRATIONNAME -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations

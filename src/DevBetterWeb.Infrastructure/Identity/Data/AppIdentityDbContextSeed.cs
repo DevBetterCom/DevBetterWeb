@@ -1,32 +1,35 @@
-﻿using DevBetterWeb.Web.Areas.Identity.Data;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Areas.Identity
 {
-    public class AppIdentityDbContextSeed
+  public class AppIdentityDbContextSeed
+  {
+    public static async Task SeedAsync(UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager)
     {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
-        {
-            await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.ADMINISTRATORS));
-            await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.MEMBERS));
+      await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.ADMINISTRATORS));
+      await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.MEMBERS));
+      await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.ALUMNI));
 
-            string defaultUserName = "demouser@microsoft.com";
-            string defaultPassword = AuthConstants.DEFAULT_PASSWORD;
+      var defaultUser = await CreateUser(userManager, "demouser@microsoft.com");
+      await userManager.AddToRoleAsync(defaultUser, AuthConstants.Roles.MEMBERS);
 
-            var defaultUser = new ApplicationUser { UserName = defaultUserName, Email = defaultUserName, EmailConfirmed = true };
-            await userManager.CreateAsync(defaultUser, AuthConstants.DEFAULT_PASSWORD);
-            defaultUser = await userManager.FindByNameAsync(defaultUserName);
-            await userManager.AddToRoleAsync(defaultUser, AuthConstants.Roles.MEMBERS);
+      var adminUser = await CreateUser(userManager, "admin@test.com");
+      await userManager.AddToRoleAsync(adminUser, AuthConstants.Roles.ADMINISTRATORS);
 
-            string adminUserName = "admin@test.com";
-            var adminUser = new ApplicationUser { UserName = adminUserName, Email = adminUserName, EmailConfirmed = true };
-            await userManager.CreateAsync(adminUser, defaultPassword);
-            adminUser = await userManager.FindByNameAsync(adminUserName);
-
-            await userManager.AddToRoleAsync(adminUser, AuthConstants.Roles.ADMINISTRATORS);
-        }
+      var alumniUser = await CreateUser(userManager, "alumni@test.com");
+      await userManager.AddToRoleAsync(alumniUser, AuthConstants.Roles.ALUMNI);
     }
+
+    private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager,
+      string userName)
+    {
+      var user = new ApplicationUser { UserName = userName, Email = userName, EmailConfirmed = true };
+      await userManager.CreateAsync(user, AuthConstants.DEFAULT_PASSWORD);
+      return await userManager.FindByNameAsync(userName);
+    }
+  }
 }
