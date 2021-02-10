@@ -8,20 +8,24 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="row">
-    Anyone can register, but only devBetter subscribers will be granted access to recorded coaching sessions, live group coaching meetings, and the group's private chat community.
     Welcome, new member! Please register below:
 </div>
 <div class="row">
     <div class="col-md-4">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
+            <h4>Create a new account for @Model.Email</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" name="captcha" id="captchaInput" />
             <div class="form-group">
-                <label asp-for="Input!.Email"></label>
-                <input asp-for="Input!.Email" class="form-control" />
-                <span asp-validation-for="Input!.Email" class="text-danger"></span>
+                <label asp-for="Input!.FirstName"></label>
+                <input asp-for="Input!.FirstName" class="form-control" />
+                <span asp-validation-for="Input!.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input!.LastName"></label>
+                <input asp-for="Input!.LastName" class="form-control" />
+                <span asp-validation-for="Input!.LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input!.Password"></label>
@@ -35,6 +39,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
+        <p class="alert-danger">@Model.ErrorMessage</p>
     </div>
 </div>
 

@@ -24,19 +24,22 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     private readonly IEmailService _emailService;
     private readonly IDomainEventDispatcher _dispatcher;
     private readonly ICaptchaValidator _captchaValidator;
+    private readonly INewMemberService _newMemberService;
 
     public NewMemberRegisterModel(
             UserManager<ApplicationUser> userManager,
             ILogger<RegisterModel> logger,
             IEmailService emailService,
             IDomainEventDispatcher dispatcher,
-            ICaptchaValidator captchaValidator)
+            ICaptchaValidator captchaValidator,
+            INewMemberService newMemberService)
     {
       _userManager = userManager;
       _logger = logger;
       _emailService = emailService;
       _dispatcher = dispatcher;
       _captchaValidator = captchaValidator;
+      _newMemberService = newMemberService;
 
       ReturnUrl = "https://devbetter.com/User/MyProfile/Personal";
     }
@@ -45,13 +48,17 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public InputModel? Input { get; set; }
 
     public string ReturnUrl { get; set; }
+    public string ErrorMessage { get; set; }
+    public string Email { get; set; }
 
     public class InputModel
     {
       [Required]
-      [EmailAddress]
-      [Display(Name = "Email")]
-      public string? Email { get; set; }
+      [Display(Name = "First Name")]
+      public string? FirstName { get; set; }
+      [Required]
+      [Display(Name = "Last Name")]
+      public string? LastName { get; set; }
 
       [Required]
       [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -65,9 +72,25 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       public string? ConfirmPassword { get; set; }
     }
 
-    public void OnGet()
+    public async void OnGet(string inviteCode, string email)
     {
+      ErrorMessage = "";
 
+      var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCode(email, inviteCode);
+
+      if (!validEmailAndInviteCode.Equals("success"))
+      {
+        DisplayErrorMessage(validEmailAndInviteCode);
+      }
+
+      // if we get this far, email and invite code are valid
+      Email = email;
+    }
+
+    public PageResult DisplayErrorMessage(string message)
+    {
+      ErrorMessage = message;
+      return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(string captcha, string? returnUrl = null)
@@ -80,24 +103,18 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       if (ModelState.IsValid)
       {
         if (Input is null) throw new Exception("Input is null.");
-        var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+        var user = new ApplicationUser { UserName = Email, Email = Email };
         var result = await _userManager.CreateAsync(user, Input.Password);
         if (result.Succeeded)
         {
           _logger.LogInformation("User created a new account with password.");
 
-          var newUserEvent = new NewUserRegisteredEvent(Input.Email!,
+          var newUserEvent = new NewUserRegisteredEvent(Email!,
             Request.HttpContext.Connection.RemoteIpAddress!.ToString());
 
           await _dispatcher.Dispatch(newUserEvent);
 
           var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-          var callbackUrl = Url.Page(
-              "/Account/ConfirmEmail",
-              pageHandler: null,
-              values: new { userId = user.Id, code = code },
-              protocol: Request.Scheme);
-
           var userId = user.Id;
 
           var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, code);
@@ -105,6 +122,8 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
           {
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
+
+          await _newMemberService.MemberSetup(userId, Input.FirstName, Input.LastName, );
 
         }
         foreach (var error in result.Errors)

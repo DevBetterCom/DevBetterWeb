@@ -14,8 +14,7 @@ namespace DevBetterWeb.Core.Services
     private readonly IUserRoleMembershipService _userRoleMembershipService;
 
     public NewMemberService(IRepository repository,
-      IUserRoleMembershipService userRoleMembershipService
-      )
+      IUserRoleMembershipService userRoleMembershipService)
     {
       _repository = repository;
       _userRoleMembershipService = userRoleMembershipService;
@@ -31,41 +30,62 @@ namespace DevBetterWeb.Core.Services
       return invitation;
     }
 
-    public Task SendRegistrationEmail(Invitation invitation)
+    public Task SendRegistrationEmail(Invitation invitation, string callbackUrl)
     {
+      string code = invitation.InviteCode;
+      string inviteEmail = invitation.Email;
+
+      var callbackUrl = Url.Page(
+        "/Account/NewMemberRegister",
+        pageHandler: null,
+        values: new { inviteCode = code, email = inviteEmail },
+        protocol: Request.Scheme);
+
       throw new System.NotImplementedException();
     }
 
-    public async Task VerifyValidEmailAndInviteCode(string email, string inviteCode)
+    public async Task<string> VerifyValidEmailAndInviteCode(string email, string inviteCode)
     {
       var spec = new InvitationByInviteCodeWithEmailSpec(inviteCode);
 
-      var storedInviteCode = await _repository.GetAsync(spec);
-      if (storedInviteCode == null)
+      string ValidEmailAndInviteCode = "success";
+
+      try
       {
-        throw new InvitationNotFoundException();
+        var storedInviteCode = await _repository.GetAsync(spec);
+        if (storedInviteCode == null)
+        {
+          throw new InvitationNotFoundException();
+        }
+        if (storedInviteCode.Email == null)
+        {
+          throw new InvalidEmailException();
+        }
       }
-      if (storedInviteCode.Email == null)
+      catch(Exception e)
       {
-        throw new InvalidEmailException();
+        ValidEmailAndInviteCode = "Invalid email or invite code: " + e.GetType().ToString();
       }
+
+      return ValidEmailAndInviteCode;
     }
 
-    public async Task MemberSetup(string firstName, string lastName, int subscriptionLengthInDays)
+    public async Task MemberSetup(string userId, string firstName, string lastName, string inviteCode)
     {
-      string userId = await RegisterAspNetUser();
       Member member = CreateNewMember(userId, firstName, lastName);
       int memberId = member.Id;
       await AddUserToMemberRole(userId);
-      CreateSubscriptionForMember(memberId, subscriptionLengthInDays);
+
+      var spec = new InvitationByInviteCodeWithSubscriptionIdSpec(inviteCode);
+
+      var invite = await _repository.GetAsync(spec);
+      var subscriptionId = invite.StripeSubscriptionId;
+
+
+
+      CreateSubscriptionForMember(memberId, subscriptionStart, subscriptionEnd);
     }
 
-    private Task<string> RegisterAspNetUser()
-    {
-      // Get user id from new user created on NewMemberRegsiter page
-
-      throw new System.NotImplementedException();
-    }
 
     private Member CreateNewMember(string userId, string firstName, string lastName)
     {
@@ -83,12 +103,11 @@ namespace DevBetterWeb.Core.Services
 
     }
 
-    private Subscription CreateSubscriptionForMember(int memberId, int subscriptionLengthInDays)
+    private Subscription CreateSubscriptionForMember(int memberId, DateTime subscriptionStart, DateTime subscriptionEnd)
     {
       var subscription = new Subscription();
       subscription.MemberId = memberId;
-      DateTime endDate = DateTime.Today.AddDays(subscriptionLengthInDays);
-      DateTimeRange dates = new DateTimeRange(DateTime.Today, endDate);
+      DateTimeRange dates = new DateTimeRange(subscriptionStart, subscriptionEnd);
       subscription.Dates = dates;
       return subscription;
     }

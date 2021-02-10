@@ -5,6 +5,7 @@ using Autofac;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -85,6 +86,7 @@ namespace DevBetterWeb.Web
 
       services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+      services.AddScoped<IPaymentHandlerSubscription, StripeSubscription>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services
@@ -103,6 +105,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<PriceService>();
       services.AddScoped<PaymentIntentService>();
       services.AddScoped<SessionService>();
+
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
