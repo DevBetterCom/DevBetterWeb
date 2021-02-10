@@ -8,9 +8,10 @@ namespace DevBetterWeb.Core.Interfaces
     Task<Invitation> CreateInvitation(string email, string stripeEventId);
     Task SendRegistrationEmail(Invitation invitation);
     Task VerifyValidEmailAndInviteCode(string email, string inviteCode);
-    Task<string> RegisterAspNetUser();
-    Task<Member> CreateNewMember(string userId);
-    Task AddUserToMemberRole(string userId);
-    Task<Subscription> CreateSubscriptionForMember();
+    Task MemberSetup(string firstName, string lastName, int subscriptionLengthInDays);
+    //Task<string> RegisterAspNetUser();
+    //Member CreateNewMember(string userId, string firstName, string lastName);
+    //Task AddUserToMemberRole(string userId);
+    //Subscription CreateSubscriptionForMember(int memberId, int subscriptionLengthInDays);
   }
 }
