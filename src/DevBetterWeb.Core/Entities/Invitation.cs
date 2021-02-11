@@ -6,14 +6,14 @@ namespace DevBetterWeb.Core.Entities
   {
     public string Email { get; set; }
     public string InviteCode { get; set; }
-    public string StripeSubscriptionId { get; set; }
+    public string PaymentHandlerSubscriptionId { get; set; }
     public bool Active { get; set; } = true;
 
     public Invitation(string email, string inviteCode, string stripeSubscriptionId)
     {
       Email = email;
       InviteCode = inviteCode;
-      StripeSubscriptionId = stripeSubscriptionId;
+      PaymentHandlerSubscriptionId = stripeSubscriptionId;
     }
 
     public void Deactivate()

@@ -1,4 +1,5 @@
 ﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
@@ -12,12 +13,18 @@ namespace DevBetterWeb.Core.Services
 
     private readonly IRepository _repository;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
+    private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
+    private readonly IEmailService _emailService;
 
     public NewMemberService(IRepository repository,
-      IUserRoleMembershipService userRoleMembershipService)
+      IUserRoleMembershipService userRoleMembershipService,
+      IPaymentHandlerSubscription paymentHandlerSubscription,
+      IEmailService emailService)
     {
       _repository = repository;
       _userRoleMembershipService = userRoleMembershipService;
+      _paymentHandlerSubscription = paymentHandlerSubscription;
+      _emailService = emailService;
     }
 
     public async Task<Invitation> CreateInvitation(string email, string stripeSubscriptionId)
@@ -30,18 +37,16 @@ namespace DevBetterWeb.Core.Services
       return invitation;
     }
 
-    public Task SendRegistrationEmail(Invitation invitation, string callbackUrl)
+    public async Task SendRegistrationEmail(Invitation invitation)
     {
       string code = invitation.InviteCode;
       string inviteEmail = invitation.Email;
 
-      var callbackUrl = Url.Page(
-        "/Account/NewMemberRegister",
-        pageHandler: null,
-        values: new { inviteCode = code, email = inviteEmail },
-        protocol: Request.Scheme);
+      string completeRegistrationUrl = GetRegistrationUrl(code, inviteEmail);
 
-      throw new System.NotImplementedException();
+      var message = "Thank you for joining DevBetter! Please click to complete your registration: " + completeRegistrationUrl;
+
+      await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
 
     public async Task<string> VerifyValidEmailAndInviteCode(string email, string inviteCode)
@@ -56,6 +61,10 @@ namespace DevBetterWeb.Core.Services
         if (storedInviteCode == null)
         {
           throw new InvitationNotFoundException();
+        }
+        if (!storedInviteCode.Active)
+        {
+          throw new InvitationNotActiveException();
         }
         if (storedInviteCode.Email == null)
         {
@@ -79,11 +88,15 @@ namespace DevBetterWeb.Core.Services
       var spec = new InvitationByInviteCodeWithSubscriptionIdSpec(inviteCode);
 
       var invite = await _repository.GetAsync(spec);
-      var subscriptionId = invite.StripeSubscriptionId;
+      var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
-
+      var subscriptionStart = _paymentHandlerSubscription.GetStartDate(subscriptionId);
+      var subscriptionEnd = _paymentHandlerSubscription.GetEndDate(subscriptionId);
 
       CreateSubscriptionForMember(memberId, subscriptionStart, subscriptionEnd);
+
+      // Member has now been created and set up from the invite used. Invite should now be deactivated
+      invite.Deactivate();
     }
 
 
@@ -110,6 +123,13 @@ namespace DevBetterWeb.Core.Services
       DateTimeRange dates = new DateTimeRange(subscriptionStart, subscriptionEnd);
       subscription.Dates = dates;
       return subscription;
+    }
+
+    private string GetRegistrationUrl(string inviteCode, string inviteEmail)
+    {
+      var url = "https://devbetter.com/Identity/Account/NewMemberRegister/" + inviteCode + "/" + inviteEmail;
+
+      return url;
     }
 
   }

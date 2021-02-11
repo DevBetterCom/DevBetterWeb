@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace DevBetterWeb.Core.Services
+namespace DevBetterWeb.Core.Exceptions
 {
   [Serializable]
   internal class InvalidEmailException : Exception

@@ -41,7 +41,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       _captchaValidator = captchaValidator;
       _newMemberService = newMemberService;
 
-      ReturnUrl = "https://devbetter.com/User/MyProfile/Personal";
+      ReturnUrl = "../User/MyProfile/Personal";
     }
 
     [BindProperty]
@@ -50,6 +50,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public string ReturnUrl { get; set; }
     public string ErrorMessage { get; set; }
     public string Email { get; set; }
+    public string InviteCode { get; set; }
 
     public class InputModel
     {
@@ -85,6 +86,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
       // if we get this far, email and invite code are valid
       Email = email;
+      InviteCode = inviteCode;
     }
 
     public PageResult DisplayErrorMessage(string message)
@@ -123,8 +125,9 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetup(userId, Input.FirstName, Input.LastName, );
+          await _newMemberService.MemberSetup(userId, Input.FirstName!, Input.LastName!, InviteCode);
 
+          // redirect to edit basic profile page
         }
         foreach (var error in result.Errors)
         {
