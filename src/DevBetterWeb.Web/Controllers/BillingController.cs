@@ -82,4 +82,5 @@ namespace DevBetterWeb.Web.Controllers
       public string? PriceId { get; set; }
     }
   }
+
 }

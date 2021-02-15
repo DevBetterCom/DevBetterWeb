@@ -6,6 +6,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
   public class StripeSubscription : IPaymentHandlerSubscription
   {
+
     public DateTime GetEndDate(string subscriptionId)
     {
       var subscription = GetSubscription(subscriptionId);
@@ -34,4 +35,5 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
     }
 
   }
+
 }

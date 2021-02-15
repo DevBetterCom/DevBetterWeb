@@ -44,7 +44,9 @@ namespace DevBetterWeb.Core.Services
 
       string completeRegistrationUrl = GetRegistrationUrl(code, inviteEmail);
 
-      var message = "Thank you for joining DevBetter! Please click to complete your registration: " + completeRegistrationUrl;
+      // TODO: send Discord invite here as well
+
+      var message = "Thank you for joining DevBetter! Please click to complete your registration: " + completeRegistrationUrl + "\n";
 
       await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
@@ -127,7 +129,7 @@ namespace DevBetterWeb.Core.Services
 
     private string GetRegistrationUrl(string inviteCode, string inviteEmail)
     {
-      var url = "https://devbetter.com/Identity/Account/NewMemberRegister/" + inviteCode + "/" + inviteEmail;
+      var url = $"https://devbetter.com/Identity/Account/NewMemberRegister/{inviteCode}/{inviteEmail}";
 
       return url;
     }

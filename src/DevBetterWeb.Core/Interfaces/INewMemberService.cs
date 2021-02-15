@@ -9,9 +9,6 @@ namespace DevBetterWeb.Core.Interfaces
     Task SendRegistrationEmail(Invitation invitation);
     Task<string> VerifyValidEmailAndInviteCode(string email, string inviteCode);
     Task MemberSetup(string userId, string firstName, string lastName, string inviteCode);
-    //Task<string> RegisterAspNetUser();
-    //Member CreateNewMember(string userId, string firstName, string lastName);
-    //Task AddUserToMemberRole(string userId);
-    //Subscription CreateSubscriptionForMember(int memberId, int subscriptionLengthInDays);
+
   }
 }

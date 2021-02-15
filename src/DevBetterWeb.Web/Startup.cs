@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
@@ -87,6 +88,8 @@ namespace DevBetterWeb.Web
       services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripeSubscription>();
+      services.AddScoped<IPaymentHandlerCustomer, StripeCustomer>();
+      services.AddScoped<INewMemberService, NewMemberService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services
@@ -137,11 +140,14 @@ namespace DevBetterWeb.Web
       app.UseAuthentication();
       app.UseAuthorization();
 
-      app.UseSwagger();
-      app.UseSwaggerUI(c =>
+      if (env.EnvironmentName == "Development")
       {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-      });
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+          c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        });
+      }
 
       app.UseEndpoints(endpoints =>
       {
