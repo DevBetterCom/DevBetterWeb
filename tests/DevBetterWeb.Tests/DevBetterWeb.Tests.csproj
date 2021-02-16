@@ -69,6 +69,7 @@
   <ItemGroup>
     <Folder Include="BuildReports\Coverage\" />
     <Folder Include="BuildReports\UnitTests\" />
+    <Folder Include="Functional\StripeWebhookHandler\" />
   </ItemGroup>
 
 </Project>

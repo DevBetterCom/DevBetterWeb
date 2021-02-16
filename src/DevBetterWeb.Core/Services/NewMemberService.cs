@@ -81,7 +81,7 @@ namespace DevBetterWeb.Core.Services
       return ValidEmailAndInviteCode;
     }
 
-    public async Task MemberSetup(string userId, string firstName, string lastName, string inviteCode)
+    public async Task<Member> MemberSetup(string userId, string firstName, string lastName, string inviteCode)
     {
       Member member = CreateNewMember(userId, firstName, lastName);
       int memberId = member.Id;
@@ -99,6 +99,8 @@ namespace DevBetterWeb.Core.Services
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
+
+      return member;
     }
 
 
