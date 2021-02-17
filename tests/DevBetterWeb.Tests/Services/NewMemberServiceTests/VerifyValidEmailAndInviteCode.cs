@@ -20,7 +20,6 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     private readonly string _email = "TestEmail";
     private readonly string _inviteCode = "TestInviteCode";
     private readonly string _subscriptionId = "TestSubscriptionId";
-    private readonly Invitation _invitation;
 
     private readonly string _validEmailAndInviteCodeString = "success";
     private readonly string _invalidEmailString = "Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvalidEmailException";
@@ -34,12 +33,13 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object);
-      _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 
     [Fact]
     public async Task ReturnsSuccessGivenValidEmailAndInviteCode()
     {
+      Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCode(_email, _inviteCode);
@@ -51,7 +51,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     [Fact]
     public async Task ReturnsExceptionMessageGivenInvalidEmail()
     {
-      _invitation.Email = null;
+      Invitation _invitation = new Invitation(null, _inviteCode, _subscriptionId);
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
@@ -80,7 +80,9 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     [Fact]
     public async Task ReturnsExceptionMessageGivenInactiveInviteCode()
     {
-      _invitation.Active = false;
+      Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+
+      _invitation.Deactivate();
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
