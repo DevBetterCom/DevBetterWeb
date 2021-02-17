@@ -39,7 +39,7 @@ namespace DevBetterWeb.Infrastructure.Services
       await _dispatcher.Dispatch(userAddedToRoleEvent);
     }
 
-    public async Task AddUserToRoleAsyncByRoleName(string userId, string roleName)
+    public async Task AddUserToRoleByRoleNameAsync(string userId, string roleName)
     {
       var role = await _roleManager.FindByNameAsync(roleName);
       var roleId = role.Id;

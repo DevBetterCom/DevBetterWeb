@@ -116,7 +116,7 @@ namespace DevBetterWeb.Core.Services
     {
       var roleName = "Members";
 
-      await _userRoleMembershipService.AddUserToRoleAsyncByRoleName(userId, roleName);
+      await _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
 
     }
 

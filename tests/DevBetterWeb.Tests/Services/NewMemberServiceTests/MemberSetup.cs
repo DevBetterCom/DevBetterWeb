@@ -49,7 +49,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       Assert.Equal(_firstName, member.FirstName);
       Assert.Equal(_lastName, member.LastName);
 
-      _userRoleMembershipService.Verify(u => u.AddUserToRoleAsyncByRoleName(_userId, _roleName), Times.Once);
+      _userRoleMembershipService.Verify(u => u.AddUserToRoleByRoleNameAsync(_userId, _roleName), Times.Once);
       Assert.False(_invitation.Active);
 
     }
