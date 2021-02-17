@@ -57,9 +57,9 @@ namespace DevBetterWeb.Web.Controllers
           var customerId = subscription.CustomerId;
           var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
 
-          Invitation invite = await _newMemberService.CreateInvitation(email, subscriptionId);
+          Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
 
-          await _newMemberService.SendRegistrationEmail(invite);
+          await _newMemberService.SendRegistrationEmailAsync(invite);
         }
         else
         {

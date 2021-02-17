@@ -42,7 +42,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
-      var result = await _newMemberService.VerifyValidEmailAndInviteCode(_email, _inviteCode);
+      var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
       _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
       Assert.Equal(_validEmailAndInviteCodeString, result);
@@ -55,7 +55,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
-      var result = await _newMemberService.VerifyValidEmailAndInviteCode(_email, _inviteCode);
+      var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
       _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
       Assert.Equal(_invalidEmailString, result);
@@ -71,7 +71,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
-      var result = await _newMemberService.VerifyValidEmailAndInviteCode(_email, _inviteCode);
+      var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
       _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
       Assert.Equal(_invalidInviteCodeString, result);
@@ -86,7 +86,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
 
-      var result = await _newMemberService.VerifyValidEmailAndInviteCode(_email, _inviteCode);
+      var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
       _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
       Assert.Equal(_inactiveInviteString, result);

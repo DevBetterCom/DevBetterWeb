@@ -77,7 +77,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     {
       ErrorMessage = "";
 
-      var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCode(email, inviteCode);
+      var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(email, inviteCode);
 
       if (!validEmailAndInviteCode.Equals("success"))
       {
@@ -125,7 +125,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetup(userId, Input.FirstName!, Input.LastName!, InviteCode);
+          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode);
 
           // redirect to edit basic profile page
         }

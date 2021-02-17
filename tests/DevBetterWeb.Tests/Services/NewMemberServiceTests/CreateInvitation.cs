@@ -36,7 +36,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     [Fact]
     public async Task CreatesInvitationWithGivenEmailAndEventId()
     {
-      var invitation = await _newMemberService.CreateInvitation(_email, _subscriptionId);
+      var invitation = await _newMemberService.CreateInvitationAsync(_email, _subscriptionId);
 
       Assert.Equal(_email, invitation.Email);
       Assert.Equal(_subscriptionId, invitation.PaymentHandlerSubscriptionId);

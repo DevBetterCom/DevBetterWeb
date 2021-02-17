@@ -35,7 +35,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     [Fact]
     public async Task SendsRegistrationEmail()
     {
-      await _newMemberService.SendRegistrationEmail(_invitation);
+      await _newMemberService.SendRegistrationEmailAsync(_invitation);
 
       _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }

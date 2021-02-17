@@ -27,7 +27,7 @@ namespace DevBetterWeb.Core.Services
       _emailService = emailService;
     }
 
-    public async Task<Invitation> CreateInvitation(string email, string stripeSubscriptionId)
+    public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
     {
       var inviteCode = Guid.NewGuid().ToString();
       var invitation = new Invitation(email, inviteCode, stripeSubscriptionId);
@@ -37,7 +37,7 @@ namespace DevBetterWeb.Core.Services
       return invitation;
     }
 
-    public async Task SendRegistrationEmail(Invitation invitation)
+    public async Task SendRegistrationEmailAsync(Invitation invitation)
     {
       string code = invitation.InviteCode;
       string inviteEmail = invitation.Email;
@@ -51,7 +51,7 @@ namespace DevBetterWeb.Core.Services
       await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
 
-    public async Task<string> VerifyValidEmailAndInviteCode(string email, string inviteCode)
+    public async Task<string> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode)
     {
       var spec = new InvitationByInviteCodeWithEmailSpec(inviteCode);
 
@@ -81,11 +81,11 @@ namespace DevBetterWeb.Core.Services
       return ValidEmailAndInviteCode;
     }
 
-    public async Task<Member> MemberSetup(string userId, string firstName, string lastName, string inviteCode)
+    public async Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode)
     {
       Member member = CreateNewMember(userId, firstName, lastName);
       int memberId = member.Id;
-      await AddUserToMemberRole(userId);
+      await AddUserToMemberRoleAsync(userId);
 
       var spec = new InvitationByInviteCodeWithSubscriptionIdSpec(inviteCode);
 
@@ -112,7 +112,7 @@ namespace DevBetterWeb.Core.Services
       return member;
     }
 
-    private async Task AddUserToMemberRole(string userId)
+    private async Task AddUserToMemberRoleAsync(string userId)
     {
       var roleName = "Members";
 

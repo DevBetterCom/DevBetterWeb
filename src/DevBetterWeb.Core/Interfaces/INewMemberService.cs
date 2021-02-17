@@ -5,10 +5,10 @@ namespace DevBetterWeb.Core.Interfaces
 {
   public interface INewMemberService
   {
-    Task<Invitation> CreateInvitation(string email, string stripeEventId);
-    Task SendRegistrationEmail(Invitation invitation);
-    Task<string> VerifyValidEmailAndInviteCode(string email, string inviteCode);
-    Task<Member> MemberSetup(string userId, string firstName, string lastName, string inviteCode);
+    Task<Invitation> CreateInvitationAsync(string email, string stripeEventId);
+    Task SendRegistrationEmailAsync(Invitation invitation);
+    Task<string> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
+    Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode);
 
   }
 }

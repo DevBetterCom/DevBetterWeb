@@ -43,7 +43,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     {
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithSubscriptionIdSpec>())).ReturnsAsync(_invitation);
 
-      Member member = await _newMemberService.MemberSetup(_userId, _firstName, _lastName, _inviteCode);
+      Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode);
 
       Assert.Equal(_userId, member.UserId);
       Assert.Equal(_firstName, member.FirstName);
