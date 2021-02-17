@@ -9,11 +9,11 @@ namespace DevBetterWeb.Core.Entities
     public string PaymentHandlerSubscriptionId { get; set; }
     public bool Active { get; set; } = true;
 
-    public Invitation(string email, string inviteCode, string stripeSubscriptionId)
+    public Invitation(string email, string inviteCode, string paymentHandlerSubscriptionId)
     {
       Email = email;
       InviteCode = inviteCode;
-      PaymentHandlerSubscriptionId = stripeSubscriptionId;
+      PaymentHandlerSubscriptionId = paymentHandlerSubscriptionId;
     }
 
     public void Deactivate()
