@@ -21,12 +21,12 @@ namespace DevBetterWeb.Web.Controllers
     private readonly ILogger<PaymentsController> _logger;
     private readonly SessionService _sessionService;
 
-    public PaymentsController(IOptions<StripeOptions> options, ILogger<PaymentsController> logger)
+    public PaymentsController(IOptions<StripeOptions> options, ILogger<PaymentsController> logger, SessionService sessionService)
     {
       this.options = options;
       client = new StripeClient(this.options.Value.stripeSecretKey);
       _logger = logger;
-      _sessionService = new SessionService();
+      _sessionService = sessionService;
     }
 
     [HttpGet("setup")]
