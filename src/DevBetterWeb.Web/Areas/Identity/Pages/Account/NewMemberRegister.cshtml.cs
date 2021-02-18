@@ -79,7 +79,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
       var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(email, inviteCode);
 
-      if (!validEmailAndInviteCode.Equals("success"))
+      if (!validEmailAndInviteCode.Value.Equals("success"))
       {
         DisplayErrorMessage(validEmailAndInviteCode);
       }

@@ -40,12 +40,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     {
       Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
+      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
-      Assert.Equal(_validEmailAndInviteCodeString, result);
+      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      Assert.Equal(_validEmailAndInviteCodeString, result.Value);
     }
 
     [Fact]
@@ -53,12 +53,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     {
       Invitation _invitation = new Invitation(null, _inviteCode, _subscriptionId);
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
+      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
-      Assert.Equal(_invalidEmailString, result);
+      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      Assert.Equal(_invalidEmailString, result.Value);
     }
 
     [Fact]
@@ -67,14 +67,14 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-      _ = _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync((Invitation)null);
+      _ = _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync((Invitation)null);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
-      Assert.Equal(_invalidInviteCodeString, result);
+      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      Assert.Equal(_invalidInviteCodeString, result.Value);
     }
 
     [Fact]
@@ -84,12 +84,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
       _invitation.Deactivate();
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>())).ReturnsAsync(_invitation);
+      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeWithEmailSpec>()), Times.Once);
-      Assert.Equal(_inactiveInviteString, result);
+      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      Assert.Equal(_inactiveInviteString, result.Value);
     }
 
   }

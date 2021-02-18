@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using Ardalis.Result;
+using DevBetterWeb.Core.Entities;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Interfaces
@@ -7,7 +8,7 @@ namespace DevBetterWeb.Core.Interfaces
   {
     Task<Invitation> CreateInvitationAsync(string email, string stripeEventId);
     Task SendRegistrationEmailAsync(Invitation invitation);
-    Task<string> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
+    Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
     Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode);
 
   }

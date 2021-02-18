@@ -1,10 +1,10 @@
 ﻿using System;
+using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Interfaces
 {
   public interface IPaymentHandlerSubscription
   {
-    DateTime GetStartDate(string subscriptionId);
-    DateTime GetEndDate(string subscriptionId);
+    DateTimeRange GetDateTimeRange(string subscriptionId);
   }
 }

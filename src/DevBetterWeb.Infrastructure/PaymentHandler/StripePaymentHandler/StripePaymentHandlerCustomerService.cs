@@ -3,8 +3,15 @@ using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
-  public class StripeCustomer : IPaymentHandlerCustomer
+  public class StripePaymentHandlerCustomerService : IPaymentHandlerCustomer
   {
+    private readonly CustomerService _customerService;
+
+    public StripePaymentHandlerCustomerService(CustomerService customerService)
+    {
+      _customerService = customerService;
+    }
+
     public string GetCustomerEmail(string customerId)
     {
       var customer = GetCustomer(customerId);
@@ -17,9 +24,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     private Stripe.Customer GetCustomer(string customerId)
     {
-      var customerService = new CustomerService();
-
-      var customer = customerService.Get(customerId);
+      var customer = _customerService.Get(customerId);
 
       return customer;
     }

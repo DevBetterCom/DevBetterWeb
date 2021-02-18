@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using Ardalis.Result;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
@@ -51,9 +52,9 @@ namespace DevBetterWeb.Core.Services
       await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
 
-    public async Task<string> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode)
+    public async Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode)
     {
-      var spec = new InvitationByInviteCodeWithEmailSpec(inviteCode);
+      var spec = new InvitationByInviteCodeSpec(inviteCode);
 
       string ValidEmailAndInviteCode = "success";
 
@@ -78,24 +79,22 @@ namespace DevBetterWeb.Core.Services
         ValidEmailAndInviteCode = "Invalid email or invite code: " + e.GetType().ToString();
       }
 
-      return ValidEmailAndInviteCode;
+      return Result<string>.Success(ValidEmailAndInviteCode);
     }
 
     public async Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode)
     {
       Member member = CreateNewMember(userId, firstName, lastName);
-      int memberId = member.Id;
       await AddUserToMemberRoleAsync(userId);
 
-      var spec = new InvitationByInviteCodeWithSubscriptionIdSpec(inviteCode);
+      var spec = new InvitationByInviteCodeSpec(inviteCode);
 
       var invite = await _repository.GetAsync(spec);
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
-      var subscriptionStart = _paymentHandlerSubscription.GetStartDate(subscriptionId);
-      var subscriptionEnd = _paymentHandlerSubscription.GetEndDate(subscriptionId);
+      var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-      CreateSubscriptionForMember(memberId, subscriptionStart, subscriptionEnd);
+      CreateSubscriptionForMember(member.Id, subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
@@ -114,18 +113,17 @@ namespace DevBetterWeb.Core.Services
 
     private async Task AddUserToMemberRoleAsync(string userId)
     {
-      var roleName = "Members";
+      var roleName = Constants.MEMBER_ROLE_NAME;
 
       await _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
 
     }
 
-    private Subscription CreateSubscriptionForMember(int memberId, DateTime subscriptionStart, DateTime subscriptionEnd)
+    private Subscription CreateSubscriptionForMember(int memberId, DateTimeRange subscriptionDateTimeRange)
     {
       var subscription = new Subscription();
       subscription.MemberId = memberId;
-      DateTimeRange dates = new DateTimeRange(subscriptionStart, subscriptionEnd);
-      subscription.Dates = dates;
+      subscription.Dates = subscriptionDateTimeRange;
       return subscription;
     }
 
