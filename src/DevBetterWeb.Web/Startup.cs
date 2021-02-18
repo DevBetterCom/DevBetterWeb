@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using Stripe.Checkout;
 
 namespace DevBetterWeb.Web
 {
@@ -84,6 +87,9 @@ namespace DevBetterWeb.Web
 
       services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+      services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
+      services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
+      services.AddScoped<INewMemberService, NewMemberService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services
@@ -94,6 +100,15 @@ namespace DevBetterWeb.Web
       });
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
+
+      // TODO: Refactor out these direct dependencies on stripe
+      services.AddScoped<PaymentMethodService>();
+      services.AddScoped<CustomerService>();
+      services.AddScoped<SubscriptionService>();
+      services.AddScoped<PriceService>();
+      services.AddScoped<PaymentIntentService>();
+      services.AddScoped<SessionService>();
+
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -125,11 +140,14 @@ namespace DevBetterWeb.Web
       app.UseAuthentication();
       app.UseAuthorization();
 
-      app.UseSwagger();
-      app.UseSwaggerUI(c =>
+      if (env.EnvironmentName == "Development")
       {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-      });
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+          c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        });
+      }
 
       app.UseEndpoints(endpoints =>
       {

@@ -14,11 +14,11 @@ namespace DevBetterWeb.Web.Controllers
     private readonly CustomerService _customerService;
     private readonly SubscriptionService _subscriptionService;
 
-    public BillingController()
+    public BillingController(PaymentMethodService paymentMethodService, CustomerService customerService, SubscriptionService subscriptionService)
     {
-      _paymentMethodService = new PaymentMethodService();
-      _customerService = new CustomerService();
-      _subscriptionService = new SubscriptionService();
+      _paymentMethodService = paymentMethodService;
+      _customerService = customerService;
+      _subscriptionService = subscriptionService;
     }
 
     [HttpPost]
@@ -82,4 +82,5 @@ namespace DevBetterWeb.Web.Controllers
       public string? PriceId { get; set; }
     }
   }
+
 }
