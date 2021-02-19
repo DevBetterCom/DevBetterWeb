@@ -48,15 +48,11 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
     var onSubscriptionComplete = function () {
         // redirect to success page with email and stripe payment intent id
-        // orderComplete();
-        loading(false);
-        document.querySelector("result-message").classList.remove("hidden");
+        orderComplete();
+        //loading(false);
+        //document.querySelector("result-message").classList.remove("hidden");
 
-        window.location.replace("./checkout/success");
-    };
-
-    var showCardError = function (error) {
-
+        //window.location.replace("./checkout/success");
     };
 
     var subscriptionParams = {
@@ -65,22 +61,25 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         "priceId": `${priceIdInput}`
     };
 
-    fetch('/create-subscription', {
+    await fetch('/create-subscription', {
         method: 'post',
         headers: {
             'Content-type': 'application/json',
         },
         body: JSON.stringify(subscriptionParams),
     })
-        .then((response) => response.json())
+        .then((response) => {
+            return response.json()
+        })
 
         // If the card is declined, display an error to the user.
         .then((result) => {
             if (result.error) {
+                showError(result);
                 // The card had an error when trying to attach it to a customer.
                 throw result;
             }
-            //return result;
+            return result;
         })
         // Normalize the result to contain the object returned by Stripe.
         // Add the additional details we need.
@@ -113,7 +112,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         .catch((error) => {
             // An error has happened. Display the failure to the user here.
             // We utilize the HTML element we created.
-            showCardError(error);
+            showError(error);
         });
 }
 

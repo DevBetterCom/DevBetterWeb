@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -34,15 +35,21 @@ namespace DevBetterWeb.Web.Controllers
       _webhook = adminUpdatesWebhook;
     }
 
+    //[HttpGet("/api/discordtest")]
+    //public async Task<IActionResult> IndexMethod()
+    //{
+    //  var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+    //  _logger.LogInformation(json);
+    //  // _webhook.Content = "Hello World!";
+    //  await _webhook.Send();
+
+    //  return Ok();
+    //}
 
     [HttpPost]
     public async Task<IActionResult> Index()
     {
       var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-      _webhook.Content = $"{json}";
-      await _webhook.Send();
-
-      return Ok();
 
       try
       {
@@ -51,13 +58,22 @@ namespace DevBetterWeb.Web.Controllers
 
         if (stripeEventType.Equals("customer.subscription.created"))
         {
+          var myMessage = $"Stripe's Message on Customer.Subscription.Created:";
+          await _webhook.Send("This is a message.");
 
           var subscription = stripeEvent.Data.Object as Stripe.Subscription;
           var subscriptionId = subscription!.Id;
           var customerId = subscription.CustomerId;
           var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
+          if (string.IsNullOrEmpty(email))
+          {
+            throw new InvalidEmailException();
+          }
 
           Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
+
+          var webhookStringWithInvite = $"Subscription Id: {subscriptionId}\nCustomer Id: {customerId}\nEmail: {email}\nInvitation: {invite.Id}";
+          await _webhook.Send($"Webhook:\n{webhookStringWithInvite}");
 
           await _newMemberService.SendRegistrationEmailAsync(invite);
         }
@@ -71,8 +87,9 @@ namespace DevBetterWeb.Web.Controllers
       {
         return BadRequest();
       }
-      catch (Exception)
+      catch (Exception e)
       {
+        _logger.LogError($"{e.GetType()}");
         return BadRequest();
       }
     }

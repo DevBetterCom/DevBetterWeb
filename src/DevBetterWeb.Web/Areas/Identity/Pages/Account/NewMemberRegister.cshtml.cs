@@ -73,20 +73,24 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       public string? ConfirmPassword { get; set; }
     }
 
-    public async void OnGet(string inviteCode, string email)
+    public async Task<PageResult> OnGet(string inviteCode, string email)
     {
       ErrorMessage = "";
 
       var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(email, inviteCode);
+      _logger.LogInformation($"{validEmailAndInviteCode.Value}");
 
       if (!validEmailAndInviteCode.Value.Equals("success"))
       {
-        DisplayErrorMessage(validEmailAndInviteCode);
+        var errorMessage = "Your email or invite code is invalid. Please confirm you've clicked the correct link and try again.";
+        DisplayErrorMessage(errorMessage);
       }
 
       // if we get this far, email and invite code are valid
       Email = email;
       InviteCode = inviteCode;
+
+      return Page();
     }
 
     public PageResult DisplayErrorMessage(string message)
