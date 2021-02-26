@@ -94,45 +94,4 @@ namespace DevBetterWeb.Web.Controllers
       }
     }
   }
-
-  //Test Purposes
-  //  [HttpPost]
-  //  public async Task<IActionResult> Index()
-  //  {
-  //    var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
-  //    try
-  //    {
-  //      var stripeEvent = EventUtility.ParseEvent(json);
-  //      var stripeEventType = stripeEvent.Type;
-
-  //      if (stripeEventType.Equals("customer.subscription.created"))
-  //      {
-
-  //        var subscription = stripeEvent.Data.Object as Stripe.Subscription;
-  //        var subscriptionId = subscription!.Id;
-  //        var customerId = subscription.CustomerId;
-  //        var email = "mycustomer@test.com";
-
-  //        Invitation invite = await _newMemberService.CreateInvitation(email, subscriptionId);
-
-  //        //await _newMemberService.SendRegistrationEmail(invite);
-  //      }
-  //      else
-  //      {
-  //        _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
-  //      }
-  //      return Ok();
-  //    }
-  //    catch (StripeException)
-  //    {
-  //      return BadRequest();
-  //    }
-  //    catch (Exception)
-  //    {
-  //      return BadRequest();
-  //    }
-  //  }
-  //}
-
 }

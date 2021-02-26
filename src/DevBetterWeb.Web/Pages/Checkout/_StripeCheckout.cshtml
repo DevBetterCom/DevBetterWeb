@@ -147,7 +147,7 @@
         <div id="card-element" class="form-control"><!--Stripe.js injects the Card Element--></div>
         <br />
         <div class="form-row">
-            <label for="email" id="emailLabel">Email</label>
+            <label for="email" id="email-label">Email</label>
         </div>
         <div class="form-row">
             <div style="width:100%;">
@@ -159,7 +159,7 @@
             <div class="spinner hidden" id="spinner"></div>
             <span id="button-text">Subscribe</span>
         </button>
-        <p id="card-error" role="alert"></p>
+        <p class="text-danger" id="card-error" role="alert"></p>
         <p class="result-message hidden">
             Payment successful! Thank you for your purchase. Please check your email to complete your registration.
         </p>
@@ -168,7 +168,7 @@
 
     <div id="error-message" class="error-message"></div>
 
-    <p>No risk. Cancel anytime.</p>
+    <p id="no-risk">No risk. Cancel anytime.</p>
 
     <script src="https://js.stripe.com/v3/"></script>
 
