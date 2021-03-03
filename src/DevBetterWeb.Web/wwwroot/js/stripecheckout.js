@@ -93,9 +93,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
     };
 
     var onSubscriptionComplete = function (result) {
-        if (result.subscription.status === 'active') {
-            orderComplete();
-        }
+        //if (result.subscription.status === 'active') {
+        //    orderComplete();
+        //}
 
     };
 
@@ -159,7 +159,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
         // No more actions required. Provision your service for the user.
         .then(() => {
-            onSubscriptionComplete();
+            onSubscriptionComplete(result);
         })
 
         .catch((error) => {
