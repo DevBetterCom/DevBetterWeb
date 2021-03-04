@@ -52,6 +52,8 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
             // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
             // If it's a retry, the payment intent will be on the invoice itself.
+
+            // subscription.latest_invoice is undefined
             let paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
 
             if (
@@ -60,7 +62,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                 return stripe
                     .confirmCardPayment(paymentIntent.client_secret, {
                         payment_method: paymentMethodId,
-                    })
+                        return_url: document.URL
+                    },
+                    {handleActions: false})
                     .then((x) => {
                         if (x.error) {
                             // Start code flow to handle updating the payment details.

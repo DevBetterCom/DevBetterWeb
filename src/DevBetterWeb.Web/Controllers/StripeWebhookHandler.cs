@@ -58,9 +58,6 @@ namespace DevBetterWeb.Web.Controllers
 
         if (stripeEventType.Equals("customer.subscription.created"))
         {
-          var myMessage = $"Stripe's Message on Customer.Subscription.Created:";
-          await _webhook.Send("This is a message.");
-
           var subscription = stripeEvent.Data.Object as Stripe.Subscription;
           var subscriptionId = subscription!.Id;
           var customerId = subscription.CustomerId;
