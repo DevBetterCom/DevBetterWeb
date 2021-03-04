@@ -61,14 +61,14 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                     .confirmCardPayment(paymentIntent.client_secret, {
                         payment_method: paymentMethodId,
                     })
-                    .then((result) => {
-                        if (result.error) {
+                    .then((x) => {
+                        if (x.error) {
                             // Start code flow to handle updating the payment details.
                             // Display error message in your UI.
                             // The card was declined (i.e. insufficient funds, card has expired, etc).
-                            throw result;
+                            throw x;
                         } else {
-                            if (result.paymentIntent.status === 'succeeded') {
+                            if (x.paymentIntent.status === 'succeeded') {
                                 // Show a success message to your customer.
                                 return {
                                     priceId: priceId,
@@ -86,16 +86,17 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                 // No customer action needed.
                 return { subscription, priceId, paymentMethodId };
             }
-        }    };
+        }
+    };
 
     var handleRequiresPaymentMethod = function () {
 
     };
 
     var onSubscriptionComplete = function (result) {
-        //if (result.subscription.status === 'active') {
-        //    orderComplete();
-        //}
+        if (result.subscription.status === 'active') {
+            orderComplete();
+        }
 
     };
 
@@ -117,13 +118,13 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         })
 
         // If the card is declined, display an error to the user.
-        .then((result) => {
-            if (result.error) {
-                showError(result);
+        .then((x) => {
+            if (x.error) {
+                showError(x);
                 // The card had an error when trying to attach it to a customer.
-                throw result;
+                throw x;
             }
-            var output = Promise.resolve(result);
+            var output = Promise.resolve(x);
             return output;
         })
         // Normalize the result to contain the object returned by Stripe.
@@ -133,10 +134,10 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             return new Promise(function (resolve) {
                 resolve({
                     paymentMethodId: paymentMethodIdInput,
-                        priceId: priceIdInput,
-                            subscription: output,
-                        });
+                    priceId: priceIdInput,
+                    subscription: output,
                 });
+            });
 
         })
 
@@ -150,15 +151,19 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                 priceId: value.priceId,
                 paymentMethodId: value.paymentMethodId,
             });
+            return value;
         })
 
         // If attaching this card to a Customer object succeeds,
         // but attempts to charge the customer fail, you
         // get a requires_payment_method error.
-        .then(() => handleRequiresPaymentMethod())
+        .then((value) => {
+            handleRequiresPaymentMethod()
+            return value;
+            })
 
         // No more actions required. Provision your service for the user.
-        .then(() => {
+        .then((result) => {
             onSubscriptionComplete(result);
         })
 
@@ -185,7 +190,7 @@ async function createPayment(card, customerId, priceId, customerEmail) {
         })
         .then((paymentResult) => {
             if (paymentResult.error) {
-                showError(result.error.message);
+                showError(paymentResult.error.message);
                 ////showError(result.error.message);
             } else {
                 (async () => {
@@ -312,14 +317,14 @@ var payWithCard = function (stripe, clientSecret, paymentMethod) {
         .confirmCardPayment(clientSecret, {
             payment_method: paymentMethod,
         })
-        .then(function (result) {
-            if (result.error) {
+        .then((results) => {
+            if (results.error) {
                 // Show error to your customer
-                showError(result.error.message);
+                showError(results.error.message);
             } else {
                 // The payment succeeded!
 
-                orderComplete(result.paymentIntent.id);
+                orderComplete(results.paymentIntent.id);
             }
         });
 };
