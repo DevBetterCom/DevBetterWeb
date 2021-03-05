@@ -80,10 +80,11 @@ namespace DevBetterWeb.Web.Controllers
 
             await _newMemberService.SendRegistrationEmailAsync(invite);
           }
-          else
-          {
-            _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
-          }
+
+        }
+        else
+        {
+          _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
         }
         return Ok();
       }
