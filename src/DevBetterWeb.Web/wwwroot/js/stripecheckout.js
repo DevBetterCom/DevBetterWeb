@@ -72,6 +72,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                             debugger;
                             if (x.paymentIntent.status === 'succeeded') {
                                 // Show a success message to your customer.
+                                subscription.status = "active";
                                 return {
                                     priceId: priceId,
                                     subscription: subscription,
@@ -98,8 +99,8 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
     var onSubscriptionComplete = function (result) {
         debugger;
         if (result.subscription.status === 'active') {
-        orderComplete();
-    }
+            orderComplete();
+        }
 
     };
 
@@ -135,9 +136,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
         .then((output) => {
             return {
-                    paymentMethodId: paymentMethodIdInput,
-                    priceId: priceIdInput,
-                    subscription: output,
+                paymentMethodId: paymentMethodIdInput,
+                priceId: priceIdInput,
+                subscription: output,
             };
 
         })
@@ -146,28 +147,25 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         // to complete the payment process. Check the status of the
         // payment intent to handle these actions.
         .then((value) => {
-             handlePaymentThatRequiresCustomerAction({
-                subscription: value.subscription,
-                invoice: value.subscription.latestInvoice,
-                priceId: value.priceId,
-                paymentMethodId: value.paymentMethodId,
-            });
-            return value;
+            (async () => {
+                await handlePaymentThatRequiresCustomerAction({
+                    subscription: value.subscription,
+                    invoice: value.subscription.latestInvoice,
+                    priceId: value.priceId,
+                    paymentMethodId: value.paymentMethodId,
+                });
+
+                // If attaching this card to a Customer object succeeds,
+                // but attempts to charge the customer fail, you
+                // get a requires_payment_method error.
+                await handleRequiresPaymentMethod();
+
+                // No more actions required. Provision your service for the user.
+                debugger;
+                await onSubscriptionComplete(value);
+                return value;
+            })();
         })
-
-        // If attaching this card to a Customer object succeeds,
-        // but attempts to charge the customer fail, you
-        // get a requires_payment_method error.
-        .then((value) => {
-            handleRequiresPaymentMethod()
-            return value;
-            })
-
-        // No more actions required. Provision your service for the user.
-        .then((result) => {
-            onSubscriptionComplete(result);
-        })
-
         .catch((error) => {
             // An error has happened. Display the failure to the user here.
             // We utilize the HTML element we created.
@@ -227,23 +225,6 @@ async function getCustomerEmail(customer) {
 
     return emailData;
 }
-
-//async function updatePaymentIntent(customer, paymentMethod, paymentIntent, clientSecret) {
-//    var paymentIntentUpdateParams = {
-//        "customer": `${customer}`,
-//        "paymentIntentSecret": `${paymentIntent}`
-//    };
-
-//    await fetch("/update-payment-intent", {
-//        method: "POST",
-//        headers: {
-//            "Content-Type": "application/json"
-//        },
-//        body: JSON.stringify(paymentIntentUpdateParams)
-//    })
-//        .then(() => payWithCard(stripe, clientSecret, paymentMethod));
-
-//}
 
 var handleForm = function () {
 
