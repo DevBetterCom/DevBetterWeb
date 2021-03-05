@@ -38,7 +38,7 @@ async function createCustomer() {
 
 var createSubscription = async function ({ customerIdInput, paymentMethodIdInput, priceIdInput }) {
 
-    var handlePaymentThatRequiresCustomerAction = function ({
+    var handlePaymentThatRequiresCustomerAction = async function ({
         subscription,
         invoice,
         priceId,
@@ -53,18 +53,15 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
             // If it's a retry, the payment intent will be on the invoice itself.
 
-            // subscription.latest_invoice is undefined
-            let paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
+            let paymentIntent = invoice ? invoice.paymentIntent : subscription.latestInvoice.paymentIntent;
 
             if (
                 paymentIntent.status === 'requires_action'
             ) {
-                return stripe
-                    .confirmCardPayment(paymentIntent.client_secret, {
-                        payment_method: paymentMethodId,
-                        return_url: document.URL
-                    },
-                    {handleActions: false})
+                await stripe
+                    .confirmCardPayment(paymentIntent.clientSecret, {
+                        payment_method: paymentMethodId
+                    })
                     .then((x) => {
                         if (x.error) {
                             // Start code flow to handle updating the payment details.
@@ -72,6 +69,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                             // The card was declined (i.e. insufficient funds, card has expired, etc).
                             throw x;
                         } else {
+                            debugger;
                             if (x.paymentIntent.status === 'succeeded') {
                                 // Show a success message to your customer.
                                 return {
@@ -98,9 +96,10 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
     };
 
     var onSubscriptionComplete = function (result) {
+        debugger;
         if (result.subscription.status === 'active') {
-            orderComplete();
-        }
+        orderComplete();
+    }
 
     };
 
@@ -135,13 +134,11 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         // Add the additional details we need.
 
         .then((output) => {
-            return new Promise(function (resolve) {
-                resolve({
+            return {
                     paymentMethodId: paymentMethodIdInput,
                     priceId: priceIdInput,
                     subscription: output,
-                });
-            });
+            };
 
         })
 
@@ -149,9 +146,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         // to complete the payment process. Check the status of the
         // payment intent to handle these actions.
         .then((value) => {
-            handlePaymentThatRequiresCustomerAction({
+             handlePaymentThatRequiresCustomerAction({
                 subscription: value.subscription,
-                invoice: value.subscription.latest_invoice,
+                invoice: value.subscription.latestInvoice,
                 priceId: value.priceId,
                 paymentMethodId: value.paymentMethodId,
             });
@@ -195,7 +192,6 @@ async function createPayment(card, customerId, priceId, customerEmail) {
         .then((paymentResult) => {
             if (paymentResult.error) {
                 showError(paymentResult.error.message);
-                ////showError(result.error.message);
             } else {
                 (async () => {
                     await createSubscription({
@@ -232,22 +228,22 @@ async function getCustomerEmail(customer) {
     return emailData;
 }
 
-async function updatePaymentIntent(customer, paymentMethod, paymentIntent, clientSecret) {
-    var paymentIntentUpdateParams = {
-        "customer": `${customer}`,
-        "paymentIntentSecret": `${paymentIntent}`
-    };
+//async function updatePaymentIntent(customer, paymentMethod, paymentIntent, clientSecret) {
+//    var paymentIntentUpdateParams = {
+//        "customer": `${customer}`,
+//        "paymentIntentSecret": `${paymentIntent}`
+//    };
 
-    await fetch("/update-payment-intent", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(paymentIntentUpdateParams)
-    })
-        .then(() => payWithCard(stripe, clientSecret, paymentMethod));
+//    await fetch("/update-payment-intent", {
+//        method: "POST",
+//        headers: {
+//            "Content-Type": "application/json"
+//        },
+//        body: JSON.stringify(paymentIntentUpdateParams)
+//    })
+//        .then(() => payWithCard(stripe, clientSecret, paymentMethod));
 
-}
+//}
 
 var handleForm = function () {
 

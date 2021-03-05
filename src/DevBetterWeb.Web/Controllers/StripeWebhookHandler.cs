@@ -56,27 +56,34 @@ namespace DevBetterWeb.Web.Controllers
         var stripeEvent = EventUtility.ParseEvent(json);
         var stripeEventType = stripeEvent.Type;
 
-        if (stripeEventType.Equals("customer.subscription.created"))
+        if (stripeEventType.Equals("customer.subscription.created") || stripeEventType.Equals("customer.subscription.updated"))
         {
           var subscription = stripeEvent.Data.Object as Stripe.Subscription;
           var subscriptionId = subscription!.Id;
           var customerId = subscription.CustomerId;
           var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-          if (string.IsNullOrEmpty(email))
+          var status = subscription.Status;
+
+          if (status.Equals("active"))
           {
-            throw new InvalidEmailException();
+
+
+            if (string.IsNullOrEmpty(email))
+            {
+              throw new InvalidEmailException();
+            }
+
+            Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
+
+            var webhookStringWithInvite = $"Subscription Id: {subscriptionId}\nCustomer Id: {customerId}\nEmail: {email}\nInvitation: {invite.Id}";
+            await _webhook.Send($"Webhook:\n{webhookStringWithInvite}");
+
+            await _newMemberService.SendRegistrationEmailAsync(invite);
           }
-
-          Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
-
-          var webhookStringWithInvite = $"Subscription Id: {subscriptionId}\nCustomer Id: {customerId}\nEmail: {email}\nInvitation: {invite.Id}";
-          await _webhook.Send($"Webhook:\n{webhookStringWithInvite}");
-
-          await _newMemberService.SendRegistrationEmailAsync(invite);
-        }
-        else
-        {
-          _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
+          else
+          {
+            _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
+          }
         }
         return Ok();
       }
