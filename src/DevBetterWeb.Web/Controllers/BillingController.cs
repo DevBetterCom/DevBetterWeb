@@ -6,9 +6,9 @@ using Stripe;
 
 namespace DevBetterWeb.Web.Controllers
 {
-  [Route ("create-subscription")]
+  [Route("create-subscription")]
   [ApiController]
-  public class BillingController: Controller
+  public class BillingController : Controller
   {
     private readonly PaymentMethodService _paymentMethodService;
     private readonly CustomerService _customerService;
@@ -27,13 +27,23 @@ namespace DevBetterWeb.Web.Controllers
       var myCustomer = req.CustomerId;
       var myPaymentMethod = req.PaymentMethodId;
       var myPrice = req.PriceId;
-      
+
       // attach payment method
       var options = new PaymentMethodAttachOptions
       {
         Customer = myCustomer,
       };
-      _paymentMethodService.Attach(myPaymentMethod, options);
+
+      try
+      {
+        _paymentMethodService.Attach(myPaymentMethod, options);
+      }
+      catch (StripeException e)
+      {
+        var error = new SubscriptionError(e.Message);
+
+        return error;
+      }
 
       // update customer's default invoice payment method
       var customerOptions = new CustomerUpdateOptions
@@ -65,7 +75,22 @@ namespace DevBetterWeb.Web.Controllers
       }
       catch (StripeException e)
       {
-        return BadRequest(e);
+        var error = new SubscriptionError(e.Message);
+
+        return error;
+      }
+
+
+
+    }
+
+    internal class SubscriptionError : Subscription
+    {
+      public string Message { get; set; }
+
+      public SubscriptionError(string message)
+      {
+        Message = message;
       }
 
     }
