@@ -20,7 +20,6 @@ async function createCustomer() {
         var emailJSON = {
             "email": `${document.querySelector('#email-field').value}`
         };
-        debugger;
         const output = await fetch('/create-customer', {
             method: 'post',
             headers: {
@@ -28,7 +27,6 @@ async function createCustomer() {
             },
             body: JSON.stringify(emailJSON)
         })
-        debugger;
         const customerData = await output.json();
         return customerData;
     } catch (error) {
@@ -106,16 +104,21 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         paymentMethodId,
         priceId,
     }) {
-        if (subscription.status === 'active') {
-            // subscription is active, no customer actions required.
-            return { subscription, priceId, paymentMethodId };
-        }
-        else if (subscription.latestInvoice.paymentIntent.status === 'requires_payment_method') {
+        debugger;
+        try {
+            if (subscription.status === 'active') {
+                // subscription is active, no customer actions required.
+                return { subscription, priceId, paymentMethodId };
+            }
+            else if (subscription.latestInvoice.paymentIntent.status === 'requires_payment_method') {
 
-            throw { error: { message: 'Your card was declined.' } };
-        }
-        else {
-            return { subscription, priceId, paymentMethodId };
+                throw new Error('Your card was declined.');
+            }
+            else {
+                return { subscription, priceId, paymentMethodId };
+            }
+        } catch (error) {
+            showError(error.message);
         }
 
     };
@@ -125,9 +128,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         if (result.subscription.status === 'active') {
             orderComplete();
         }
-        else {
-            onSubscriptionIncomplete();
-        }
+        //else {
+        //    onSubscriptionIncomplete();
+        //}
 
     };
 
@@ -155,6 +158,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
         // If the card is declined, display an error to the user.
         .then((x) => {
+            debugger;
             if (x.message) {
                 showError(x.message);
                 // The card had an error when trying to attach it to a customer.
@@ -198,13 +202,13 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                 // No more actions required. Provision your service for the user.
                 debugger;
                 await onSubscriptionComplete(value);
-                return value;
             })();
         })
         .catch((error) => {
+            debugger;
             // An error has happened. Display the failure to the user here.
             // We utilize the HTML element we created.
-            showError(error);
+            showError(error.message);
         });
 }
 
@@ -362,9 +366,10 @@ var orderComplete = function () {
 };
 // Show the customer the error from Stripe if their card fails to charge
 var showError = function (errorMsgText) {
+    debugger;
     loading(false);
     var errorMsg = document.querySelector("#card-error");
-    errorMsg.textContent = `An error has occured: ${errorMsgText}.`;
+    errorMsg.textContent = `An error has occured: ${errorMsgText}`;
     //setTimeout(function () {
     //    errorMsg.textContent = "";
     //}, 40000);
