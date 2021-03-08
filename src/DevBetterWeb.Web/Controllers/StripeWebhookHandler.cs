@@ -35,16 +35,6 @@ namespace DevBetterWeb.Web.Controllers
       _webhook = adminUpdatesWebhook;
     }
 
-    //[HttpGet("/api/discordtest")]
-    //public async Task<IActionResult> IndexMethod()
-    //{
-    //  var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-    //  _logger.LogInformation(json);
-    //  // _webhook.Content = "Hello World!";
-    //  await _webhook.Send();
-
-    //  return Ok();
-    //}
 
     [HttpPost]
     public async Task<IActionResult> Index()
