@@ -8,10 +8,11 @@ using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stripe;
+using DevBetterWeb.Core;
 
 
 namespace DevBetterWeb.Web.Controllers
-{
+{ 
   [Route("api/stripecallback")]
   public class StripeWebhookHandler : Controller
   {
@@ -46,7 +47,8 @@ namespace DevBetterWeb.Web.Controllers
         var stripeEvent = EventUtility.ParseEvent(json);
         var stripeEventType = stripeEvent.Type;
 
-        if (stripeEventType.Equals("customer.subscription.created") || stripeEventType.Equals("customer.subscription.updated"))
+        if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_CREATED_EVENT_TYPE) || 
+          stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
         {
           var subscription = stripeEvent.Data.Object as Stripe.Subscription;
           var subscriptionId = subscription!.Id;
