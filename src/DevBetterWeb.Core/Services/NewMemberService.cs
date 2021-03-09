@@ -47,7 +47,7 @@ namespace DevBetterWeb.Core.Services
 
       // TODO: send Discord invite here as well
 
-      var message = "Thank you for joining DevBetter! Please click to complete your registration: " + completeRegistrationUrl + "\n\nWe're so glad to have you here!";
+      var message = $"Thank you for joining DevBetter! Please click to complete your registration:\n\n {completeRegistrationUrl}\n\nWe're so glad to have you here!";
 
       await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
