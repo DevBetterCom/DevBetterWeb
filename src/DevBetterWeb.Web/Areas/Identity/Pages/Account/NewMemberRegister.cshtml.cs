@@ -48,9 +48,9 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public InputModel? Input { get; set; }
 
     public string ReturnUrl { get; set; }
-    public string ErrorMessage { get; set; }
-    public string Email { get; set; }
-    public string InviteCode { get; set; }
+    public string? ErrorMessage { get; set; }
+    public string? Email { get; set; }
+    public string? InviteCode { get; set; }
 
     public class InputModel
     {
@@ -129,7 +129,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode);
+          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode!);
 
           // redirect to edit basic profile page
         }

@@ -69,7 +69,7 @@ namespace DevBetterWeb.Core.Services
         {
           throw new InvitationNotActiveException();
         }
-        if (storedInviteCode.Email == null)
+        if (string.IsNullOrEmpty(storedInviteCode.Email))
         {
           throw new InvalidEmailException();
         }
