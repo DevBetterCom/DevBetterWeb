@@ -20,7 +20,7 @@ namespace DevBetterWeb.Web.Pages.Checkout
       Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
       Guard.Against.NullOrEmpty(optionsAccessor.Value.stripePublishableKey, nameof(optionsAccessor.Value.stripePublishableKey));
       SubscriptionType = new SubscriptionTypeViewModel("Yearly", "year", 2000, 
-        optionsAccessor.Value.stripePublishableKey, optionsAccessor.Value.yearlyPlanId);
+        optionsAccessor.Value.stripePublishableKey, optionsAccessor.Value.yearlyPlanId!);
     }
 
     public void OnGet()

@@ -51,7 +51,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     [Fact]
     public async Task ReturnsExceptionMessageGivenInvalidEmail()
     {
-      Invitation _invitation = new Invitation(null, _inviteCode, _subscriptionId);
+      Invitation _invitation = new Invitation("", _inviteCode, _subscriptionId);
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
 

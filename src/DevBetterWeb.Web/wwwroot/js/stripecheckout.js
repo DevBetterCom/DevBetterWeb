@@ -20,7 +20,6 @@ async function createCustomer() {
         var emailJSON = {
             "email": `${document.querySelector('#email-field').value}`
         };
-
         const output = await fetch('/create-customer', {
             method: 'post',
             headers: {
@@ -38,26 +37,103 @@ async function createCustomer() {
 
 var createSubscription = async function ({ customerIdInput, paymentMethodIdInput, priceIdInput }) {
 
-    var handlePaymentThatRequiresCustomerAction = function () {
+    var handlePaymentThatRequiresCustomerAction = async function ({
+        subscription,
+        invoice,
+        priceId,
+        paymentMethodId,
+    }) {
+        {
+            if (subscription && subscription.status === 'active') {
+                // Subscription is active, no customer actions required.
+                return { subscription, priceId, paymentMethodId };
+            }
+
+            // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
+            // If it's a retry, the payment intent will be on the invoice itself.
+
+            let paymentIntent = invoice ? invoice.paymentIntent : subscription.latestInvoice.paymentIntent;
+
+            if (
+                paymentIntent.status === 'requires_action'
+            ) {
+                await stripe
+                    .confirmCardPayment(paymentIntent.clientSecret, {
+                        payment_method: paymentMethodId
+                    })
+                    .then((x) => {
+                        if (x.error) {
+                            // Start code flow to handle updating the payment details.
+                            // Display error message in your UI.
+                            // The card was declined (i.e. insufficient funds, card has expired, etc).
+                            throw x.error.message;
+                        } else {
+                            if (x.paymentIntent.status === 'succeeded') {
+                                // Show a success message to your customer.
+                                subscription.status = "active";
+                                return {
+                                    priceId: priceId,
+                                    subscription: subscription,
+                                    invoice: invoice,
+                                    paymentMethodId: paymentMethodId,
+                                };
+                            }
+                            // authentication (if any was attempted) failed
+                            if (x.paymentIntent.status === 'requires_payment_method') {
+                                return {
+                                    priceId: priceId,
+                                    subscription: subscription,
+                                    invoice: invoice,
+                                    paymentMethodId: paymentMethodId,
+                                };
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        showError(error.message);
+                    });
+            } else {
+                // No customer action needed.
+                return { subscription, priceId, paymentMethodId };
+            }
+        }
+    };
+
+    var handleRequiresPaymentMethod = async function ({
+        subscription,
+        paymentMethodId,
+        priceId,
+    }) {
+        try {
+            if (subscription.status === 'active') {
+                // subscription is active, no customer actions required.
+                return { subscription, priceId, paymentMethodId };
+            }
+            else if (subscription.latestInvoice.paymentIntent.status === 'requires_payment_method') {
+                var message = 'Invalid payment method. Please try again.';
+
+                throw new Error(message);
+            }
+            else {
+                return { subscription, priceId, paymentMethodId };
+            }
+        } catch (error) {
+            showError(error.message);
+        }
 
     };
 
-    var handleRequiresPaymentMethod = function () {
+    var onSubscriptionComplete = function (result) {
+
+        if (result.subscription.status === 'active') {
+            orderComplete();
+        }
+        else if (loading) {
+            showError('Something went wrong. Please try again.');
+        }
 
     };
 
-    var onSubscriptionComplete = function () {
-        // redirect to success page with email and stripe payment intent id
-        // orderComplete();
-        loading(false);
-        document.querySelector("result-message").classList.remove("hidden");
-
-        window.location.replace("./checkout/success");
-    };
-
-    var showCardError = function (error) {
-
-    };
 
     var subscriptionParams = {
         "paymentMethodId": `${paymentMethodIdInput}`,
@@ -65,63 +141,75 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         "priceId": `${priceIdInput}`
     };
 
-    fetch('/create-subscription', {
+    await fetch('/create-subscription', {
         method: 'post',
         headers: {
             'Content-type': 'application/json',
         },
         body: JSON.stringify(subscriptionParams),
     })
-        .then((response) => response.json())
+        .then((response) => {
+            return response.json()
+        })
 
         // If the card is declined, display an error to the user.
-        .then((result) => {
-            if (result.error) {
-                // The card had an error when trying to attach it to a customer.
-                throw result;
+        .then((x) => {
+            if (x.message) {
+                showError(x.message);
+                
+                throw x.message;
             }
-            //return result;
+            return x;
         })
         // Normalize the result to contain the object returned by Stripe.
         // Add the additional details we need.
 
-        .then((result) => {
+        .then((output) => {
             return {
-                paymentMethodId: paymentMethodId,
-                priceId: priceId,
-                subscription: result,
+                paymentMethodId: paymentMethodIdInput,
+                priceId: priceIdInput,
+                subscription: output,
             };
+
         })
 
         // Some payment methods require a customer to be on session
         // to complete the payment process. Check the status of the
         // payment intent to handle these actions.
-        .then(() => {
-            handlePaymentThatRequiresCustomerAction();
+        .then((value) => {
+            (async () => {
+                await handlePaymentThatRequiresCustomerAction({
+                    subscription: value.subscription,
+                    invoice: value.subscription.latestInvoice,
+                    priceId: value.priceId,
+                    paymentMethodId: value.paymentMethodId,
+                });
+
+                // If attaching this card to a Customer object succeeds,
+                // but attempts to charge the customer fail, you
+                // get a requires_payment_method error.
+                await handleRequiresPaymentMethod({
+                    subscription: value.subscription,
+                    paymentMethodId: value.paymentMethodId,
+                    priceId: value.priceId,
+                });
+
+                // No more actions required. Provision your service for the user.
+                await onSubscriptionComplete(value);
+            })();
         })
-
-        // If attaching this card to a Customer object succeeds,
-        // but attempts to charge the customer fail, you
-        // get a requires_payment_method error.
-        .then(() => handleRequiresPaymentMethod())
-
-        // No more actions required. Provision your service for the user.
-        .then(() => {
-            onSubscriptionComplete();
-        })
-
         .catch((error) => {
             // An error has happened. Display the failure to the user here.
             // We utilize the HTML element we created.
-            showCardError(error);
+            //showError(error.message);
         });
 }
 
 async function createPayment(card, customerId, priceId, customerEmail) {
 
-    const CustomerId = customerId;
+    var CustomerId = customerId;
 
-    let PriceId = priceId;
+    var PriceId = priceId;
 
     const output = stripe
         .createPaymentMethod({
@@ -133,8 +221,7 @@ async function createPayment(card, customerId, priceId, customerEmail) {
         })
         .then((paymentResult) => {
             if (paymentResult.error) {
-                //showError(result.error.message);
-                ////showError(result.error.message);
+                showError(paymentResult.error.message);
             } else {
                 (async () => {
                     await createSubscription({
@@ -169,23 +256,6 @@ async function getCustomerEmail(customer) {
     const emailData = await output.json();
 
     return emailData;
-}
-
-async function updatePaymentIntent(customer, paymentMethod, paymentIntent, clientSecret) {
-    var paymentIntentUpdateParams = {
-        "customer": `${customer}`,
-        "paymentIntentSecret": `${paymentIntent}`
-    };
-
-    await fetch("/update-payment-intent", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(paymentIntentUpdateParams)
-    })
-        .then(() => payWithCard(stripe, clientSecret, paymentMethod));
-
 }
 
 var handleForm = function () {
@@ -236,7 +306,9 @@ var handleForm = function () {
                 .then((customerData) => customer = customerData._customer);
 
             await createPayment(card, customer, PriceId, customerEmail)
-                .then((paymentData) => payment = paymentData);
+                .then((paymentData) => {
+                    payment = paymentData;
+                });
 
         })();
 
@@ -260,14 +332,14 @@ var payWithCard = function (stripe, clientSecret, paymentMethod) {
         .confirmCardPayment(clientSecret, {
             payment_method: paymentMethod,
         })
-        .then(function (result) {
-            if (result.error) {
+        .then((results) => {
+            if (results.error) {
                 // Show error to your customer
-                showError(result.error.message);
+                showError(results.error.message);
             } else {
                 // The payment succeeded!
 
-                orderComplete(result.paymentIntent.id);
+                orderComplete(results.paymentIntent.id);
             }
         });
 };
@@ -276,22 +348,23 @@ var payWithCard = function (stripe, clientSecret, paymentMethod) {
 // Shows a success message when the payment is complete
 var orderComplete = function () {
     loading(false);
-    document.querySelector("result-message").classList.remove("hidden");
+    document.querySelector(".result-message").classList.remove("hidden");
     document.querySelector("button").disabled = true;
     document.querySelector("#submit").classList.add("hidden");
     document.querySelector("#card-element").classList.add("hidden");
-    document.querySelector("#email").classList.add("hidden");
-    document.querySelector("#emailLabel").classList.add("hidden");
+    document.querySelector("#email-field").classList.add("hidden");
+    document.querySelector("#email-label").classList.add("hidden");
     document.querySelector("#cardLabel").classList.add("hidden");
+    document.querySelector("#no-risk").classList.add("hidden");
 };
 // Show the customer the error from Stripe if their card fails to charge
 var showError = function (errorMsgText) {
     loading(false);
     var errorMsg = document.querySelector("#card-error");
-    errorMsg.textContent = errorMsgText;
-    setTimeout(function () {
-        errorMsg.textContent = "";
-    }, 4000);
+    errorMsg.textContent = `An error has occured: ${errorMsgText}`;
+    //setTimeout(function () {
+    //    errorMsg.textContent = "";
+    //}, 40000);
 };
 // Show a spinner on payment submission
 var loading = function (isLoading) {

@@ -47,7 +47,7 @@ namespace DevBetterWeb.Core.Services
 
       // TODO: send Discord invite here as well
 
-      var message = "Thank you for joining DevBetter! Please click to complete your registration: " + completeRegistrationUrl + "\n";
+      var message = $"Thank you for joining DevBetter! Please click to complete your registration:\n\n {completeRegistrationUrl}\n\nWe're so glad to have you here!";
 
       await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
@@ -69,7 +69,7 @@ namespace DevBetterWeb.Core.Services
         {
           throw new InvitationNotActiveException();
         }
-        if (storedInviteCode.Email == null)
+        if (string.IsNullOrEmpty(storedInviteCode.Email))
         {
           throw new InvalidEmailException();
         }
