@@ -28,48 +28,42 @@ namespace DevBetterWeb.Web.Controllers
       var myPaymentMethod = req.PaymentMethodId;
       var myPrice = req.PriceId;
 
-      // attach payment method
-      var options = new PaymentMethodAttachOptions
-      {
-        Customer = myCustomer,
-      };
 
       try
       {
-        _paymentMethodService.Attach(myPaymentMethod, options);
-      }
-      catch (StripeException e)
-      {
-        var error = new SubscriptionError(e.Message);
-
-        return error;
-      }
-
-      // update customer's default invoice payment method
-      var customerOptions = new CustomerUpdateOptions
-      {
-        InvoiceSettings = new CustomerInvoiceSettingsOptions
+        // attach payment method
+        var options = new PaymentMethodAttachOptions
         {
-          DefaultPaymentMethod = myPaymentMethod,
-        },
-      };
-      _customerService.Update(myCustomer, customerOptions);
+          Customer = myCustomer,
+        };
 
-      //create subscription
-      var subscriptionOptions = new SubscriptionCreateOptions
-      {
-        Customer = myCustomer,
-        Items = new List<SubscriptionItemOptions>
+
+        _paymentMethodService.Attach(myPaymentMethod, options);
+
+        // update customer's default invoice payment method
+        var customerOptions = new CustomerUpdateOptions
+        {
+          InvoiceSettings = new CustomerInvoiceSettingsOptions
+          {
+            DefaultPaymentMethod = myPaymentMethod,
+          },
+        };
+        _customerService.Update(myCustomer, customerOptions);
+
+        //create subscription
+        var subscriptionOptions = new SubscriptionCreateOptions
+        {
+          Customer = myCustomer,
+          Items = new List<SubscriptionItemOptions>
         {
           new SubscriptionItemOptions
           {
             Price = myPrice,
           },
         },
-      };
-      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
-      try
-      {
+        };
+        subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+
         Subscription subscription = _subscriptionService.Create(subscriptionOptions);
         return subscription;
       }
