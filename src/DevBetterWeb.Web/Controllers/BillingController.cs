@@ -6,9 +6,9 @@ using Stripe;
 
 namespace DevBetterWeb.Web.Controllers
 {
-  [Route ("create-subscription")]
+  [Route("create-subscription")]
   [ApiController]
-  public class BillingController: Controller
+  public class BillingController : Controller
   {
     private readonly PaymentMethodService _paymentMethodService;
     private readonly CustomerService _customerService;
@@ -27,45 +27,64 @@ namespace DevBetterWeb.Web.Controllers
       var myCustomer = req.CustomerId;
       var myPaymentMethod = req.PaymentMethodId;
       var myPrice = req.PriceId;
-      
-      // attach payment method
-      var options = new PaymentMethodAttachOptions
-      {
-        Customer = myCustomer,
-      };
-      _paymentMethodService.Attach(myPaymentMethod, options);
 
-      // update customer's default invoice payment method
-      var customerOptions = new CustomerUpdateOptions
+
+      try
       {
-        InvoiceSettings = new CustomerInvoiceSettingsOptions
+        // attach payment method
+        var options = new PaymentMethodAttachOptions
         {
-          DefaultPaymentMethod = myPaymentMethod,
-        },
-      };
-      _customerService.Update(myCustomer, customerOptions);
+          Customer = myCustomer,
+        };
 
-      //create subscription
-      var subscriptionOptions = new SubscriptionCreateOptions
-      {
-        Customer = myCustomer,
-        Items = new List<SubscriptionItemOptions>
+
+        _paymentMethodService.Attach(myPaymentMethod, options);
+
+        // update customer's default invoice payment method
+        var customerOptions = new CustomerUpdateOptions
+        {
+          InvoiceSettings = new CustomerInvoiceSettingsOptions
+          {
+            DefaultPaymentMethod = myPaymentMethod,
+          },
+        };
+        _customerService.Update(myCustomer, customerOptions);
+
+        //create subscription
+        var subscriptionOptions = new SubscriptionCreateOptions
+        {
+          Customer = myCustomer,
+          Items = new List<SubscriptionItemOptions>
         {
           new SubscriptionItemOptions
           {
             Price = myPrice,
           },
         },
-      };
-      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
-      try
-      {
+        };
+        subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+
         Subscription subscription = _subscriptionService.Create(subscriptionOptions);
         return subscription;
       }
       catch (StripeException e)
       {
-        return BadRequest(e);
+        var error = new SubscriptionError(e.Message);
+
+        return error;
+      }
+
+
+
+    }
+
+    internal class SubscriptionError : Subscription
+    {
+      public string Message { get; set; }
+
+      public SubscriptionError(string message)
+      {
+        Message = message;
       }
 
     }

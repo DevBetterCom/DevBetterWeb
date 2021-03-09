@@ -48,9 +48,9 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public InputModel? Input { get; set; }
 
     public string ReturnUrl { get; set; }
-    public string ErrorMessage { get; set; }
-    public string Email { get; set; }
-    public string InviteCode { get; set; }
+    public string? ErrorMessage { get; set; }
+    public string? Email { get; set; }
+    public string? InviteCode { get; set; }
 
     public class InputModel
     {
@@ -73,20 +73,24 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       public string? ConfirmPassword { get; set; }
     }
 
-    public async void OnGet(string inviteCode, string email)
+    public async Task<PageResult> OnGet(string inviteCode, string email)
     {
       ErrorMessage = "";
 
       var validEmailAndInviteCode = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(email, inviteCode);
+      _logger.LogInformation($"{validEmailAndInviteCode.Value}");
 
       if (!validEmailAndInviteCode.Value.Equals("success"))
       {
-        DisplayErrorMessage(validEmailAndInviteCode);
+        var errorMessage = "Your email or invite code is invalid. Please confirm you've clicked the correct link and try again.";
+        DisplayErrorMessage(errorMessage);
       }
 
       // if we get this far, email and invite code are valid
       Email = email;
       InviteCode = inviteCode;
+
+      return Page();
     }
 
     public PageResult DisplayErrorMessage(string message)
@@ -125,7 +129,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode);
+          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode!);
 
           // redirect to edit basic profile page
         }
