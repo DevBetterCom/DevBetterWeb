@@ -14,6 +14,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       _subscriptionService = subscriptionService;
     }
 
+    public string GetCustomerId(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var customerId = subscription.CustomerId;
+
+      return customerId; 
+    }
+
     public DateTimeRange GetDateTimeRange(string subscriptionId)
     {
       var subscription = GetSubscription(subscriptionId);
@@ -24,6 +33,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       var dateTimeRange = new DateTimeRange(startDate, endDate);
 
       return dateTimeRange;
+    }
+
+    public string GetStatus(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var status = subscription.Status;
+
+      return status;
     }
 
     private DateTime GetEndDate(Subscription subscription)

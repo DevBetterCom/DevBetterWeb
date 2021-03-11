@@ -6,5 +6,7 @@ namespace DevBetterWeb.Core.Interfaces
   public interface IPaymentHandlerSubscription
   {
     DateTimeRange GetDateTimeRange(string subscriptionId);
+    string GetStatus(string subscriptionId);
+    string GetCustomerId(string subscriptionId);
   }
 }
