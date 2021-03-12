@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Stripe;
 
 
 namespace DevBetterWeb.Web.Controllers
@@ -9,31 +9,29 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class PaymentIntentApiController : Controller
   {
-    private readonly PriceService _priceService;
+    private readonly IPaymentHandlerPrice _paymentHandlerPrice;
+    private readonly IPaymentHandlerPaymentIntent _paymentHandlerPaymentIntent;
 
-    public PaymentIntentApiController(PriceService priceService)
+    public PaymentIntentApiController(IPaymentHandlerPrice paymentHandlerPrice,
+      IPaymentHandlerPaymentIntent paymentHandlerPaymentIntent)
     {
-      _priceService = priceService;
+      _paymentHandlerPrice = paymentHandlerPrice;
+      _paymentHandlerPaymentIntent = paymentHandlerPaymentIntent;
     }
 
     [HttpPost]
     public ActionResult Create(PaymentIntentCreateRequest request)
     {
-      var paymentIntents = new PaymentIntentService();
-      var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
-      {
-        Amount = CalculateOrderAmount(request.SubscriptionPriceId!),
-        Currency = "usd",
-        SetupFutureUsage = "off_session",
-      });
-      return Json(new { clientSecret = paymentIntent.ClientSecret, id = paymentIntent.Id });
+      var orderAmount = CalculateOrderAmount(request.SubscriptionPriceId!);
+      var paymentIntentId = _paymentHandlerPaymentIntent.CreatePaymentIntent(orderAmount);
+      var clientSecret = _paymentHandlerPaymentIntent.GetClientSecret(paymentIntentId);
+
+      return Json(new { clientSecret = clientSecret, id = paymentIntentId });
     }
-    private int CalculateOrderAmount(string subscriptionTypePriceId)
+    private int CalculateOrderAmount(string subscriptionPriceId)
     {
 
-      var priceObject = _priceService.Get(subscriptionTypePriceId);
-
-      int price = (int)priceObject.UnitAmount!;
+      int price = _paymentHandlerPrice.GetPriceAmount(subscriptionPriceId);
       
       return price;
     }

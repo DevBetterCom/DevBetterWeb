@@ -7,7 +7,6 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Stripe;
 using DevBetterWeb.Core;
 
 
@@ -80,10 +79,6 @@ namespace DevBetterWeb.Web.Controllers
           _logger.LogError("Unhandled event type: {0}", stripeEventType);
         }
         return Ok();
-      }
-      catch (StripeException)
-      {
-        return BadRequest();
       }
       catch (Exception e)
       {
