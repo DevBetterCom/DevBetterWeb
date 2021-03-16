@@ -2,7 +2,8 @@
 {
   public interface IPaymentHandlerPaymentIntent
   {
-    string CreatePaymentIntent(int orderAmound);
+    string CreatePaymentIntent(int orderAmount);
+    void UpdatePaymentIntent(string paymentIntentSecret, string customerId);
     string GetClientSecret(string paymentIntentId);
   }
 }

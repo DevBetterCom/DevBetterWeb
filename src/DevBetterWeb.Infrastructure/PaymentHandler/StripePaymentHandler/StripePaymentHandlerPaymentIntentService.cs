@@ -24,6 +24,18 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
     {
       throw new System.NotImplementedException();
     }
+
+    public void UpdatePaymentIntent(string paymentIntentSecret, string customerId)
+    {
+      var paymentIntents = new PaymentIntentService();
+
+      paymentIntents.Update(
+        paymentIntentSecret,
+        new PaymentIntentUpdateOptions
+        {
+          Customer = customerId,
+        });
+    }
   }
 
 }
