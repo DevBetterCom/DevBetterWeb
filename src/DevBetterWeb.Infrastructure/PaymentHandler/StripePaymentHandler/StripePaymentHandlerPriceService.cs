@@ -5,11 +5,16 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
   public class StripePaymentHandlerPriceService : IPaymentHandlerPrice
   {
+    private readonly PriceService _priceService;
+
+    public StripePaymentHandlerPriceService(PriceService priceService)
+    {
+      _priceService = priceService;
+    }
+
     public int GetPriceAmount(string subscriptionPriceId)
     {
-      var service = new PriceService();
-
-      var priceObject = service.Get(subscriptionPriceId);
+      var priceObject = _priceService.Get(subscriptionPriceId);
 
       int price = (int)priceObject.UnitAmount!;
 

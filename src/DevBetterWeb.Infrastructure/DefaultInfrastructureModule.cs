@@ -4,6 +4,7 @@ using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Stripe;
 
 namespace DevBetterWeb.Infrastructure
 {
@@ -26,6 +27,7 @@ namespace DevBetterWeb.Infrastructure
         RegisterProductionOnlyDependencies(builder);
       }
       RegisterCommonDependencies(builder);
+      RegisterPaymentHandlerDependencies(builder);
     }
 
     private void RegisterCommonDependencies(ContainerBuilder builder)
@@ -44,6 +46,15 @@ namespace DevBetterWeb.Infrastructure
 
       builder.RegisterAssemblyTypes(this.ThisAssembly)
           .AsClosedTypesOf(typeof(IHandle<>));
+    }
+
+    private void RegisterPaymentHandlerDependencies(ContainerBuilder builder)
+    {
+      builder.RegisterType<CustomerService>();
+      builder.RegisterType<PaymentMethodService>();
+      builder.RegisterType<SubscriptionService>();
+      builder.RegisterType<PriceService>();
+      builder.RegisterType<PaymentIntentService>();
     }
 
     private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)

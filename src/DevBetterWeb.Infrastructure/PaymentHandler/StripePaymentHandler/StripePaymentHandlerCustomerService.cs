@@ -12,6 +12,16 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       _customerService = customerService;
     }
 
+    public string CreateCustomer(string email)
+    {
+      var customer = _customerService.Create(new CustomerCreateOptions
+      {
+        Email = email,
+      });
+
+      return customer.Id;
+    }
+
     public string GetCustomerEmail(string customerId)
     {
       var customer = GetCustomer(customerId);

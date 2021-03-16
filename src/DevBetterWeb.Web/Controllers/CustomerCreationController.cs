@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Stripe;
 
 
 namespace DevBetterWeb.Web.Controllers
@@ -9,22 +9,19 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class CustomerCreationController : Controller
   {
-    private readonly CustomerService _customerService;
+    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
 
-    public CustomerCreationController(CustomerService customerService)
+    public CustomerCreationController(IPaymentHandlerCustomer paymentHandlerCustomer)
     {
-      _customerService = customerService;
+      _paymentHandlerCustomer = paymentHandlerCustomer;
     }
 
     [HttpPost]
     public ActionResult Create(CustomerCreateRequest request)
     {
-      var customer = _customerService.Create(new CustomerCreateOptions
-      {
-        Email = request.Email,
-      });
+      var customerId = _paymentHandlerCustomer.CreateCustomer(request.Email!);
 
-      return Json(new { _customer = customer.Id });
+      return Json(new { _customer = customerId });
     }
 
     public class CustomerCreateRequest

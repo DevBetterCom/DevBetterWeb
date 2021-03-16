@@ -103,14 +103,6 @@ namespace DevBetterWeb.Web
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
-      // TODO: Refactor out these direct dependencies on stripe
-      services.AddScoped<PaymentMethodService>();
-      services.AddScoped<CustomerService>();
-      services.AddScoped<SubscriptionService>();
-      services.AddScoped<PriceService>();
-      services.AddScoped<PaymentIntentService>();
-      services.AddScoped<SessionService>();
-
     }
 
     public void ConfigureContainer(ContainerBuilder builder)

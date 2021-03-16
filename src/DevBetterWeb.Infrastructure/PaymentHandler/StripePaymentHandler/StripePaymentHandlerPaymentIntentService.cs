@@ -5,10 +5,16 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
   public class StripePaymentHandlerPaymentIntentService : IPaymentHandlerPaymentIntent
   {
+    private readonly PaymentIntentService _paymentIntentService;
+
+    public StripePaymentHandlerPaymentIntentService(PaymentIntentService paymentIntentService)
+    {
+      _paymentIntentService = paymentIntentService;
+    }
+
     public string CreatePaymentIntent(int orderAmount)
     {
-      var paymentIntents = new PaymentIntentService();
-      var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
+      var paymentIntent = _paymentIntentService.Create(new PaymentIntentCreateOptions
       {
         Amount = orderAmount,
         Currency = "usd",
@@ -22,14 +28,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     public string GetClientSecret(string paymentIntentId)
     {
-      throw new System.NotImplementedException();
+      var paymentIntent = _paymentIntentService.Get(paymentIntentId);
+      var clientSecret = paymentIntent.ClientSecret;
+
+      return clientSecret;
     }
 
     public void UpdatePaymentIntent(string paymentIntentSecret, string customerId)
     {
-      var paymentIntents = new PaymentIntentService();
-
-      paymentIntents.Update(
+      _paymentIntentService.Update(
         paymentIntentSecret,
         new PaymentIntentUpdateOptions
         {
