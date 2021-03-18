@@ -19,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Stripe;
-using Stripe.Checkout;
 
 namespace DevBetterWeb.Web
 {
@@ -91,6 +90,8 @@ namespace DevBetterWeb.Web
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
       services.AddScoped<IPaymentHandlerEvent, StripePaymentHandlerEventService>();
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
+      services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
+      services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
       services.AddScoped<INewMemberService, NewMemberService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 

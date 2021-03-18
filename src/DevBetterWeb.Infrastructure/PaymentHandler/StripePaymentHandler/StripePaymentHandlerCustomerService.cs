@@ -32,6 +32,18 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     }
 
+    public void UpdatePaymentMethod(string customerId, string paymentMethodId)
+    {
+      var customerOptions = new CustomerUpdateOptions
+      {
+        InvoiceSettings = new CustomerInvoiceSettingsOptions
+        {
+          DefaultPaymentMethod = paymentMethodId,
+        },
+      };
+      _customerService.Update(customerId, customerOptions);
+    }
+
     private Stripe.Customer GetCustomer(string customerId)
     {
       var customer = _customerService.Get(customerId);

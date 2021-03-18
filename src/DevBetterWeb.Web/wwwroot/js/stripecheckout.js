@@ -154,10 +154,10 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
         // If the card is declined, display an error to the user.
         .then((x) => {
-            if (x.message) {
-                showError(x.message);
+            if (x._errorMessage) {
+                showError(x._errorMessage);
                 
-                throw x.message;
+                throw x._errorMessage;
             }
             return x;
         })

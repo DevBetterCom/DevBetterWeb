@@ -55,6 +55,7 @@ namespace DevBetterWeb.Infrastructure
       builder.RegisterType<SubscriptionService>();
       builder.RegisterType<PriceService>();
       builder.RegisterType<PaymentIntentService>();
+      builder.RegisterType<PaymentMethodService>();
     }
 
     private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
