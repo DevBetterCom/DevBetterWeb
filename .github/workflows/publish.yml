@@ -25,7 +25,7 @@ jobs:
     - name: Build and test
       run: dotnet test --configuration Release
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
 
     # Deploy to Azure WebApps using Publish Profile
     - name: 'Azure webapp deploy with Publish Profile'
@@ -33,4 +33,4 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
