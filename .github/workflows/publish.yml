@@ -3,6 +3,7 @@ name: publish
 env:
   AZURE_WEBAPP_NAME: devBetter
   AZURE_GROUP_NAME: DevBetterGroup
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
 
 on:
   push:
@@ -24,16 +25,12 @@ jobs:
     - name: Build and test
       run: dotnet test --configuration Release
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o WebApp
-      
-#    - name: Login
-#      uses: azure/login@v1
-#      with:
-#        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-    # deploy web app using Azure credentials
-    - name: 'Azure webapp deploy'
-      uses: azure/appservice-actions/webapp@master
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+
+    # Deploy to Azure WebApps using Publish Profile
+    - name: 'Azure webapp deploy with Publish Profile'
+      uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}    
+        publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
