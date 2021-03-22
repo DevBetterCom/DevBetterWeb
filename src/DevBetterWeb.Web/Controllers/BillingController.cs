@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Stripe;
 
 
 namespace DevBetterWeb.Web.Controllers
@@ -10,83 +10,51 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class BillingController : Controller
   {
-    private readonly PaymentMethodService _paymentMethodService;
-    private readonly CustomerService _customerService;
-    private readonly SubscriptionService _subscriptionService;
+    private readonly IPaymentHandlerPaymentMethod _paymentHandlerPaymentMethod;
+    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
+    private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
 
-    public BillingController(PaymentMethodService paymentMethodService, CustomerService customerService, SubscriptionService subscriptionService)
+    public BillingController(IPaymentHandlerPaymentMethod paymentHandlerPaymentMethod,
+      IPaymentHandlerCustomer paymentHandlerCustomer, IPaymentHandlerSubscription paymentHandlerSubscription)
     {
-      _paymentMethodService = paymentMethodService;
-      _customerService = customerService;
-      _subscriptionService = subscriptionService;
+      _paymentHandlerPaymentMethod = paymentHandlerPaymentMethod;
+      _paymentHandlerCustomer = paymentHandlerCustomer;
+      _paymentHandlerSubscription = paymentHandlerSubscription;
     }
 
     [HttpPost]
-    public ActionResult<Subscription> CreateSubscription(SubscriptionCreateRequest req)
+    public IPaymentHandlerSubscriptionDTO AttemptToCreateSubscription(SubscriptionCreateRequest req)
     {
-      var myCustomer = req.CustomerId;
-      var myPaymentMethod = req.PaymentMethodId;
-      var myPrice = req.PriceId;
-
 
       try
       {
-        // attach payment method
-        var options = new PaymentMethodAttachOptions
-        {
-          Customer = myCustomer,
-        };
-
-
-        _paymentMethodService.Attach(myPaymentMethod, options);
-
-        // update customer's default invoice payment method
-        var customerOptions = new CustomerUpdateOptions
-        {
-          InvoiceSettings = new CustomerInvoiceSettingsOptions
-          {
-            DefaultPaymentMethod = myPaymentMethod,
-          },
-        };
-        _customerService.Update(myCustomer, customerOptions);
-
-        //create subscription
-        var subscriptionOptions = new SubscriptionCreateOptions
-        {
-          Customer = myCustomer,
-          Items = new List<SubscriptionItemOptions>
-        {
-          new SubscriptionItemOptions
-          {
-            Price = myPrice,
-          },
-        },
-        };
-        subscriptionOptions.AddExpand("latest_invoice.payment_intent");
-
-        Subscription subscription = _subscriptionService.Create(subscriptionOptions);
+        var subscription = CreateSubscription(req);
         return subscription;
       }
-      catch (StripeException e)
+      catch (Exception e)
       {
-        var error = new SubscriptionError(e.Message);
+        var error = _paymentHandlerSubscription.CreateSubscriptionError(e.Message);
 
         return error;
       }
 
-
-
     }
 
-    internal class SubscriptionError : Subscription
+    private IPaymentHandlerSubscriptionDTO CreateSubscription(SubscriptionCreateRequest req)
     {
-      public string Message { get; set; }
+      var customerId = req.CustomerId;
+      var paymentMethodId = req.PaymentMethodId;
+      var priceId = req.PriceId;
 
-      public SubscriptionError(string message)
-      {
-        Message = message;
-      }
+      // attach payment method
+      _paymentHandlerPaymentMethod.AttachPaymentMethodToCustomer(paymentMethodId!, customerId!);
 
+      // update customer's default invoice payment method
+      _paymentHandlerCustomer.UpdatePaymentMethod(customerId!, paymentMethodId!);
+
+      //create subscription
+      var subscriptionDTO = _paymentHandlerSubscription.CreateSubscription(customerId!, priceId!);
+      return subscriptionDTO;
     }
 
     public class SubscriptionCreateRequest

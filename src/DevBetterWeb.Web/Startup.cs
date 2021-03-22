@@ -19,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Stripe;
-using Stripe.Checkout;
 
 namespace DevBetterWeb.Web
 {
@@ -89,6 +88,11 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
+      services.AddScoped<IPaymentHandlerEvent, StripePaymentHandlerEventService>();
+      services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
+      services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
+      services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
+      services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
       services.AddScoped<INewMemberService, NewMemberService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
@@ -100,14 +104,6 @@ namespace DevBetterWeb.Web
       });
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
-
-      // TODO: Refactor out these direct dependencies on stripe
-      services.AddScoped<PaymentMethodService>();
-      services.AddScoped<CustomerService>();
-      services.AddScoped<SubscriptionService>();
-      services.AddScoped<PriceService>();
-      services.AddScoped<PaymentIntentService>();
-      services.AddScoped<SessionService>();
 
     }
 

@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Stripe;
-
 
 namespace DevBetterWeb.Web.Controllers
 {
@@ -9,23 +8,17 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class PaymentIntentUpdateController : Controller
   {
-    private readonly PaymentIntentService _paymentIntentService;
+    private readonly IPaymentHandlerPaymentIntent _paymentHandlerPaymentIntent;
 
-    public PaymentIntentUpdateController(PaymentIntentService paymentIntentService)
+    public PaymentIntentUpdateController(IPaymentHandlerPaymentIntent paymentHandlerPaymentIntent)
     {
-      _paymentIntentService = paymentIntentService;
+      _paymentHandlerPaymentIntent = paymentHandlerPaymentIntent;
     }
 
     [HttpPost]
     public ActionResult Update(PaymentIntentUpdateRequest request)
     {
-          
-      _paymentIntentService.Update(
-        request.PaymentIntentSecret,
-        new PaymentIntentUpdateOptions
-        {
-          Customer = request.Customer,
-        });
+      _paymentHandlerPaymentIntent.UpdatePaymentIntent(request.PaymentIntentSecret!, request.Customer!);
 
       return Json(new { clientSecret = request.PaymentIntentSecret });
     }

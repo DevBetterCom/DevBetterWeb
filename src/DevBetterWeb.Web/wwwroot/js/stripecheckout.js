@@ -39,12 +39,12 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
     var handlePaymentThatRequiresCustomerAction = async function ({
         subscription,
-        invoice,
+        invoiceStatus,
         priceId,
         paymentMethodId,
     }) {
         {
-            if (subscription && subscription.status === 'active') {
+            if (subscription && subscription._status === 'active') {
                 // Subscription is active, no customer actions required.
                 return { subscription, priceId, paymentMethodId };
             }
@@ -52,13 +52,13 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
             // If it's a retry, the payment intent will be on the invoice itself.
 
-            let paymentIntent = invoice ? invoice.paymentIntent : subscription.latestInvoice.paymentIntent;
+            let paymentIntentStatus = invoiceStatus ? invoiceStatus : subscription._latestInvoicePaymentIntentStatus;
 
             if (
-                paymentIntent.status === 'requires_action'
+                paymentIntentStatus === 'requires_action'
             ) {
                 await stripe
-                    .confirmCardPayment(paymentIntent.clientSecret, {
+                    .confirmCardPayment(subscription._latestInvoicePaymentIntentClientSecret, {
                         payment_method: paymentMethodId
                     })
                     .then((x) => {
@@ -68,9 +68,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                             // The card was declined (i.e. insufficient funds, card has expired, etc).
                             throw x.error.message;
                         } else {
-                            if (x.paymentIntent.status === 'succeeded') {
+                            if (x._paymentIntentStatus === 'succeeded') {
                                 // Show a success message to your customer.
-                                subscription.status = "active";
+                                subscription._status = "active";
                                 return {
                                     priceId: priceId,
                                     subscription: subscription,
@@ -79,7 +79,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                                 };
                             }
                             // authentication (if any was attempted) failed
-                            if (x.paymentIntent.status === 'requires_payment_method') {
+                            if (x.paymentIntentStatus === 'requires_payment_method') {
                                 return {
                                     priceId: priceId,
                                     subscription: subscription,
@@ -105,11 +105,11 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         priceId,
     }) {
         try {
-            if (subscription.status === 'active') {
+            if (subscription._status === 'active') {
                 // subscription is active, no customer actions required.
                 return { subscription, priceId, paymentMethodId };
             }
-            else if (subscription.latestInvoice.paymentIntent.status === 'requires_payment_method') {
+            else if (subscription._latestInvoicePaymentIntentStatus === 'requires_payment_method') {
                 var message = 'Invalid payment method. Please try again.';
 
                 throw new Error(message);
@@ -125,7 +125,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
     var onSubscriptionComplete = function (result) {
 
-        if (result.subscription.status === 'active') {
+        if (result.subscription._status === 'active') {
             orderComplete();
         }
         else if (loading) {
@@ -154,10 +154,10 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
         // If the card is declined, display an error to the user.
         .then((x) => {
-            if (x.message) {
-                showError(x.message);
+            if (x._errorMessage) {
+                showError(x._errorMessage);
                 
-                throw x.message;
+                throw x._errorMessage;
             }
             return x;
         })
@@ -180,7 +180,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             (async () => {
                 await handlePaymentThatRequiresCustomerAction({
                     subscription: value.subscription,
-                    invoice: value.subscription.latestInvoice,
+                    invoiceStatus: value.subscription._latestInvoicePaymentIntentStatus,
                     priceId: value.priceId,
                     paymentMethodId: value.paymentMethodId,
                 });
