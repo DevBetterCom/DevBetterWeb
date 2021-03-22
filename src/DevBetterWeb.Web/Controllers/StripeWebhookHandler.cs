@@ -7,7 +7,6 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Stripe;
 using DevBetterWeb.Core;
 
 
@@ -20,6 +19,7 @@ namespace DevBetterWeb.Web.Controllers
     private readonly INewMemberService _newMemberService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
+    private readonly IPaymentHandlerEvent _paymentHandlerEvent;
 
     private readonly AdminUpdatesWebhook _webhook;
 
@@ -27,12 +27,14 @@ namespace DevBetterWeb.Web.Controllers
       INewMemberService newMemberService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IPaymentHandlerCustomer paymentHandlerCustomer,
+      IPaymentHandlerEvent paymentHandlerEvent,
       AdminUpdatesWebhook adminUpdatesWebhook)
     {
       _logger = logger;
       _newMemberService = newMemberService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _paymentHandlerCustomer = paymentHandlerCustomer;
+      _paymentHandlerEvent = paymentHandlerEvent;
       _webhook = adminUpdatesWebhook;
     }
 
@@ -44,17 +46,15 @@ namespace DevBetterWeb.Web.Controllers
 
       try
       {
-        var stripeEvent = EventUtility.ParseEvent(json);
-        var stripeEventType = stripeEvent.Type;
+        var stripeEventType = _paymentHandlerEvent.GetEventType(json);
 
         if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_CREATED_EVENT_TYPE) || 
           stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
         {
-          var subscription = stripeEvent.Data.Object as Stripe.Subscription;
-          var subscriptionId = subscription!.Id;
-          var customerId = subscription.CustomerId;
+          var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
+          var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
           var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-          var status = subscription.Status;
+          var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
 
           if (status.Equals("active"))
           {
@@ -76,13 +76,9 @@ namespace DevBetterWeb.Web.Controllers
         }
         else
         {
-          _logger.LogError("Unhandled event type: {0}", stripeEvent.Type);
+          _logger.LogError("Unhandled event type: {0}", stripeEventType);
         }
         return Ok();
-      }
-      catch (StripeException)
-      {
-        return BadRequest();
       }
       catch (Exception e)
       {
