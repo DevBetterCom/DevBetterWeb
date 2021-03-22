@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Stripe;
 
 
 namespace DevBetterWeb.Web.Controllers
@@ -35,7 +33,7 @@ namespace DevBetterWeb.Web.Controllers
       }
       catch (Exception e)
       {
-        var error = new IPaymentHandlerSubscriptionDTO(e.Message);
+        var error = _paymentHandlerSubscription.CreateSubscriptionError(e.Message);
 
         return error;
       }
@@ -55,20 +53,8 @@ namespace DevBetterWeb.Web.Controllers
       _paymentHandlerCustomer.UpdatePaymentMethod(customerId!, paymentMethodId!);
 
       //create subscription
-      var subscriptionOptions = new SubscriptionCreateOptions
-      {
-        Customer = customerId,
-        Items = new List<SubscriptionItemOptions>
-        {
-          new SubscriptionItemOptions
-          {
-            Price = priceId,
-          },
-        },
-      };
-      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
-      var subscription = _paymentHandlerSubscription.CreateSubscription(customerId!, priceId!);
-      return subscription;
+      var subscriptionDTO = _paymentHandlerSubscription.CreateSubscription(customerId!, priceId!);
+      return subscriptionDTO;
     }
 
     public class SubscriptionCreateRequest

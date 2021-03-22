@@ -8,13 +8,6 @@ namespace DevBetterWeb.Core.Interfaces
     string GetStatus(string subscriptionId);
     string GetCustomerId(string subscriptionId);
     IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId);
-  }
-
-  public interface IPaymentHandlerSubscriptionDTO
-  {
-    public string? _id { get; }
-    public string? _status { get; }
-    public string? _latestInvoicePaymentIntentStatus { get; }
-    public string? _errorMessage { get; }
+    IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage);
   }
 }

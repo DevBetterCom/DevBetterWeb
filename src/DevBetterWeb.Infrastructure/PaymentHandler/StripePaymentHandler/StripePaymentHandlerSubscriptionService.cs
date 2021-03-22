@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
 using Stripe;
@@ -12,6 +13,38 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
     public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService)
     {
       _subscriptionService = subscriptionService;
+    }
+
+    public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId)
+    {
+      var subscriptionOptions = new SubscriptionCreateOptions
+      {
+        Customer = customerId,
+        Items = new List<SubscriptionItemOptions>
+        {
+          new SubscriptionItemOptions
+          {
+            Price = priceId,
+          },
+        },
+      };
+      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+
+      var subscription = _subscriptionService.Create(subscriptionOptions);
+
+      var id = subscription.Id;
+      var status = subscription.Status;
+      var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.PaymentIntent.Status;
+      var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
+
+      var subscriptionDTO = new StripePaymentHandlerSubscriptionDTO(id, status, latestInvoicePaymentIntentStatus, latestInvoicePaymentIntentClientSecret);
+
+      return subscriptionDTO;
+    }
+
+    public IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage)
+    {
+      throw new NotImplementedException();
     }
 
     public string GetCustomerId(string subscriptionId)
@@ -64,28 +97,6 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       var subscription = _subscriptionService.Get(subscriptionId);
 
       return subscription;
-    }
-
-  }
-
-  public class StripePaymentHandlerSubscriptionDTO : IPaymentHandlerSubscriptionDTO
-  {
-    public string? _id { get; private set; }
-    public string? _status { get; private set; }
-    public string? _latestInvoicePaymentIntentStatus { get; private set; }
-    public string? _errorMessage { get; private set; }
-
-
-    public StripePaymentHandlerSubscriptionDTO(string id, string status, string latestInvoicePaymentIntentStatus)
-    {
-      _id = id;
-      _status = status;
-      _latestInvoicePaymentIntentStatus = latestInvoicePaymentIntentStatus;
-    }
-
-    public StripePaymentHandlerSubscriptionDTO(string errorMessage)
-    {
-      _errorMessage = errorMessage;
     }
 
   }

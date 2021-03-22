@@ -92,6 +92,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
       services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
       services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
+      services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
       services.AddScoped<INewMemberService, NewMemberService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
