@@ -44,7 +44,8 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     public IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage)
     {
-      throw new NotImplementedException();
+      var subscriptionError = new StripePaymentHandlerSubscriptionDTO(errorMessage);
+      return subscriptionError;
     }
 
     public string GetCustomerId(string subscriptionId)
