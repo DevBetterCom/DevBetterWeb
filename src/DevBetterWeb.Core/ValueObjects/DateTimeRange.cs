@@ -25,6 +25,15 @@ namespace DevBetterWeb.Core.ValueObjects
       return (end - StartDate).Days;
     }
 
+    public bool Contains(DateTime date)
+    {
+      if(date >= StartDate && date <= EndDate)
+      {
+        return true;
+      }
+      return false;
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
       yield return StartDate;

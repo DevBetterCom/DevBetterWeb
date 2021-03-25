@@ -54,6 +54,7 @@ namespace DevBetterWeb.Core.Entities
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
+    public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
 
 
     public string UserFullName()
@@ -205,6 +206,14 @@ namespace DevBetterWeb.Core.Entities
         BooksRead.Remove(book);
         CreateOrUpdateUpdateEvent("Books");
       }
+    }
+
+    public void AddBillingActivity(string message, decimal amount = 0)
+    {
+      var details = new BillingDetails(message, amount);
+      var activity = new BillingActivity(Id, DateTime.Now, details);
+      BillingActivities.Add(activity);
+      CreateOrUpdateUpdateEvent("BillingActivities");
     }
 
     public void UpdateDiscord(string? discordUsername)

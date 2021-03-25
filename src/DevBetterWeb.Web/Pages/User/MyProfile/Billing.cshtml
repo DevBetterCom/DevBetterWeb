@@ -1,0 +1,39 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfile.BillingModel
+@{
+}
+
+<h3>Billing History</h3>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                Overview
+            </div>
+            <div class="card-body">
+                <p>@Model.GetOverviewBody()</p>
+            </div>
+        </div>
+        <br />
+        <div class="card">
+            <div class="card-header">
+                <b>Recent Activity</b>
+            </div>
+            <div class="card-body">
+                @if (Model.UserBillingViewModel.BillingActivities.Count < 1)
+                {
+                    <p>No recent activity to display.</p>
+                }
+                else
+                {
+                    foreach (var activity in Model.UserBillingViewModel.BillingActivities)
+                    {
+                        <p>@activity.Details.Message on @activity.Date</p>
+                    }
+                }
+                <p><i>Note: Activity shown here is only since DevBetter's transistion to the Stripe payment handler.</i></p>
+            </div>
+        </div>
+    </div>
+</div>

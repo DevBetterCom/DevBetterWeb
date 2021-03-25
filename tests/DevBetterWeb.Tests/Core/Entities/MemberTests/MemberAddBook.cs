@@ -1,4 +1,5 @@
 ﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.ValueObjects;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Core.Entities.MemberTests
