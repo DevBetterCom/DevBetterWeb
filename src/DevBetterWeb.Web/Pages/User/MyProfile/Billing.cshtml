@@ -3,7 +3,7 @@
 @{
 }
 
-<h3>Billing History</h3>
+<h3>My Profile: Billing History</h3>
 
 <div class="row">
     <div class="col-7">
@@ -18,12 +18,27 @@
         <br />
         <div class="card">
             <div class="card-header">
+                Cancel
+            </div>
+            <div class="card-body">
+                To cancel your DevBetter subscription, click below.
+                <br />
+                <br />
+                @*clicking this button should open a popup "Are you sure" dialog. Clicking the button in that dialog leads to cancellation*@
+                <a class="btn btn-danger btn-sm">Cancel Subscription</a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="col-5">
+        <div class="card">
+            <div class="card-header">
                 <b>Recent Activity</b>
             </div>
             <div class="card-body">
                 @if (Model.UserBillingViewModel.BillingActivities.Count < 1)
                 {
-                    <p>No recent activity to display.</p>
+                    <p>No activity to display.</p>
                 }
                 else
                 {

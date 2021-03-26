@@ -8,7 +8,6 @@
 
     public const string MEMBER_ROLE_NAME = "Members";
 
-
     public static class ConfigKeys
     {
       public const string FileStorageConnectionString = "storageconnectionstring";

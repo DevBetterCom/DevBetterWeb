@@ -60,5 +60,13 @@ namespace DevBetterWeb.Infrastructure.Services
       var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
       await _dispatcher.Dispatch(userRemovedFromRoleEvent);
     }
+
+    public async Task RemoveUserFromRoleByRoleNameAsync(string userId, string roleName)
+    {
+      var role = await _roleManager.FindByNameAsync(roleName);
+      var roleId = role.Id;
+
+      await RemoveUserFromRoleAsync(userId, roleId);
+    }
   }
 }
