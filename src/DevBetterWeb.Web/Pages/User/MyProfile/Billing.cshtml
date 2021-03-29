@@ -21,7 +21,7 @@
                 Cancel
             </div>
             <div class="card-body">
-                To cancel your DevBetter subscription, click below.
+                To cancel your DevBetter subscription, click below. Your cancellation will take effect at the end of your current subscription period, on @Model.UserBillingViewModel.CurrentSubscriptionEndDate.ToString() .
                 <br />
                 <br />
                 @*clicking this button should open a popup "Are you sure" dialog. Clicking the button in that dialog leads to cancellation*@
@@ -44,7 +44,7 @@
                 {
                     foreach (var activity in Model.UserBillingViewModel.BillingActivities)
                     {
-                        <p>@activity.Details.Message on @activity.Date</p>
+                        <p>@activity.Details.Message for $@activity.Details.Amount on @activity.Date.ToLongDateString()</p>
                     }
                 }
                 <p><i>Note: Activity shown here is only since DevBetter's transistion to the Stripe payment handler.</i></p>

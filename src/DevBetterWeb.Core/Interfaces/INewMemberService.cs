@@ -16,6 +16,9 @@ namespace DevBetterWeb.Core.Interfaces
   public interface IMemberCancellationService
   {
     Task RemoveMemberFromRoleAsync(string userId);
+    // for immediately after member cancels
+    Task SendFutureCancellationEmailAsync(string userId);
+    // for immediately after member cancellation takes effect
     Task SendCancellationEmailAsync(string userId);
   }
 }

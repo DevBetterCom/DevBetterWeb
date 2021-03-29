@@ -1,0 +1,44 @@
+﻿using System;
+using DevBetterWeb.Core.Entities;
+
+namespace DevBetterWeb.Infrastructure.Services
+{
+  public class MemberSubscriptionPeriodCalculationsService
+  {
+    private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
+
+    // none of these methods should never be called if member does not have current subscription
+    public Subscription GetCurrentSubscription(Member member)
+    {
+
+      foreach (var subscription in member.Subscriptions)
+      {
+        if (subscription.Dates.Contains(DateTime.Today))
+        {
+          return subscription;
+        }
+      }
+
+      throw new Core.Exceptions.NoCurrentSubscriptionFoundException();
+    }
+
+    public DateTime GetCurrentSubscriptionEndDate(Member member)
+    {
+      var currentSubscription = GetCurrentSubscription(member);
+
+      var endDate = currentSubscription.Dates.EndDate??DateTime.MinValue;
+
+      return endDate;
+    }
+
+    public DateTime GetGraduationDate(Member member)
+    {
+      var totalSubscribedDays = member.TotalSubscribedDays();
+
+      var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - totalSubscribedDays;
+      var graduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
+
+      return graduationDate;
+    }
+  }
+}

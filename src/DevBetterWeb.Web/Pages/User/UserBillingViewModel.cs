@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.ValueObjects;
+using DevBetterWeb.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +10,13 @@ namespace DevBetterWeb.Web.Pages.User
   public class UserBillingViewModel
   {
     private const int DAYS_IN_YEAR = 365;
-    private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
+
+    private readonly MemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
+
+    public UserBillingViewModel(MemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
+    {
+      _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
+    }
 
     public List<BillingActivity> BillingActivities { get; private set; } = new List<BillingActivity>();
     public int TotalSubscribedDays { get; private set; }
@@ -23,31 +30,21 @@ namespace DevBetterWeb.Web.Pages.User
       BillingActivities = member.BillingActivities;
       TotalSubscribedDays = member.TotalSubscribedDays();
 
-      foreach (var subscription in member.Subscriptions)
+      CurrentSubscription = _memberSubscriptionPeriodCalculationsService!.GetCurrentSubscription(member);
+
+      if (CurrentSubscription.Dates.ToDays(DateTime.Today) == DAYS_IN_YEAR)
       {
-        if (subscription.Dates.Contains(DateTime.Today))
-        {
-          CurrentSubscription = subscription;
-        }
+        SubscriptionPeriod = SubscriptionPeriodEnum.Yearly;
+      }
+      else
+      {
+        SubscriptionPeriod = SubscriptionPeriodEnum.Monthly;
       }
 
-      if(CurrentSubscription != null)
-      {
-        if(CurrentSubscription.Dates.ToDays(DateTime.Today) == DAYS_IN_YEAR)
-        {
-          SubscriptionPeriod = SubscriptionPeriodEnum.Yearly;
-        }
-        else 
-        {
-          SubscriptionPeriod = SubscriptionPeriodEnum.Monthly;
-        }
+      CurrentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
 
-        CurrentSubscriptionEndDate = CurrentSubscription.Dates.EndDate;
+      GraduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 
-        var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - TotalSubscribedDays;
-        GraduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
-
-      }
     }
 
     public enum SubscriptionPeriodEnum
