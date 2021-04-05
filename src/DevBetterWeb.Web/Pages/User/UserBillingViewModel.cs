@@ -44,7 +44,6 @@ namespace DevBetterWeb.Web.Pages.User
       CurrentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
 
       GraduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
-
     }
 
     public enum SubscriptionPeriodEnum

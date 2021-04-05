@@ -129,7 +129,10 @@ namespace DevBetterWeb.Core.Services
       var subscription = new Subscription();
       subscription.MemberId = memberId;
       subscription.Dates = subscriptionDateTimeRange;
-      await _repository.AddAsync(subscription);
+
+      var member = await _repository.GetByIdAsync<Member>(memberId);
+
+      member.AddSubscription(subscription);
     }
 
     private string GetRegistrationUrl(string inviteCode, string inviteEmail)
@@ -138,6 +141,5 @@ namespace DevBetterWeb.Core.Services
 
       return url;
     }
-
   }
 }

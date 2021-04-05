@@ -16,18 +16,20 @@
             </div>
         </div>
         <br />
+        @if (!Model.GetIsAlumni())
+        {
         <div class="card">
             <div class="card-header">
                 Cancel
             </div>
             <div class="card-body">
-                To cancel your DevBetter subscription, click below. Your cancellation will take effect at the end of your current subscription period, on @Model.UserBillingViewModel.CurrentSubscriptionEndDate.ToString() .
+                @Model.GetCancellationBody()
                 <br />
                 <br />
-                @*clicking this button should open a popup "Are you sure" dialog. Clicking the button in that dialog leads to cancellation*@
-                <a class="btn btn-danger btn-sm">Cancel Subscription</a>
+                <a class="btn btn-danger btn-sm" href="/User/MyProfile/Cancel">Cancel Subscription</a>
             </div>
         </div>
+        }
     </div>
     <br />
     <div class="col-5">

@@ -29,34 +29,33 @@ namespace DevBetterWeb.Infrastructure.Services
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
-    public async Task RemoveMemberFromRoleAsync(string userId)
+    public async Task RemoveUserFromMemberRoleAsync(string email)
     {
-      await _userRoleMembershipService.RemoveUserFromRoleByRoleNameAsync(userId, Constants.MEMBER_ROLE_NAME);
+      var user = await _userManager.FindByEmailAsync(email);
+
+      await _userRoleMembershipService.RemoveUserFromRoleByRoleNameAsync(user.Id, Constants.MEMBER_ROLE_NAME);
     }
 
-    public async Task SendFutureCancellationEmailAsync(string userId)
+    public async Task SendFutureCancellationEmailAsync(string email)
     {
-      var user = await _userManager.FindByIdAsync(userId);
+      var user = await _userManager.FindByEmailAsync(email);
 
-      var spec = new MemberByUserIdSpec(userId);
+      var spec = new MemberByUserIdSpec(user.Id);
       var member = await _repository.GetAsync(spec);
 
       var endDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 
-      var email = user.Email;
       var subject = "DevBetter Cancellation";
       var message = $"You have cancelled your DevBetter subscription. Your cancellation will take effect at the end of your current subscription period, on {endDate.ToLongDateString()}.";
 
       await _emailService.SendEmailAsync(email, subject, message);
     }
 
-    public async Task SendCancellationEmailAsync(string userId)
+    public async Task SendCancellationEmailAsync(string email)
     {
-      var user = await _userManager.FindByIdAsync(userId);
 
-      var email = user.Email;
       var subject = "DevBetter Cancellation";
-      var message = "You have cancelled your DevBetter subscription, and your access to DevBetter has ended. Thank you for being a part of our community. We hope we'll be able to welcome you back sometime in the future! Don't forget that you can rejoin anytime from https://devbetter.com.";
+      var message = "Your DevBetter subscription has ended. Thank you for being a part of our community. We hope we'll be able to welcome you back sometime in the future! Don't forget that you can rejoin anytime from https://devbetter.com.";
 
       await _emailService.SendEmailAsync(email, subject, message);
     }

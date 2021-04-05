@@ -10,15 +10,5 @@ namespace DevBetterWeb.Core.Interfaces
     Task SendRegistrationEmailAsync(Invitation invitation);
     Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
     Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode);
-
-  }
-
-  public interface IMemberCancellationService
-  {
-    Task RemoveMemberFromRoleAsync(string userId);
-    // for immediately after member cancels
-    Task SendFutureCancellationEmailAsync(string userId);
-    // for immediately after member cancellation takes effect
-    Task SendCancellationEmailAsync(string userId);
   }
 }

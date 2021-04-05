@@ -8,6 +8,9 @@
 
     public const string MEMBER_ROLE_NAME = "Members";
 
+
+    public const string STRIPE_API_ENDPOINT = "api/stripecallback";
+
     public static class ConfigKeys
     {
       public const string FileStorageConnectionString = "storageconnectionstring";

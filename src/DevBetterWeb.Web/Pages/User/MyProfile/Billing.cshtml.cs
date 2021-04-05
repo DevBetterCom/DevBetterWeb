@@ -21,8 +21,10 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
 
-    public BillingModel(IRepository repository, UserManager<ApplicationUser> userManager,
-      IMemberRegistrationService memberRegistrationService)
+    public BillingModel(IRepository repository, 
+      UserManager<ApplicationUser> userManager,
+      IMemberRegistrationService memberRegistrationService,
+      IPaymentHandlerSubscription paymentHandlerSubscription)
     {
       _repository = repository;
       _userManager = userManager;
@@ -60,6 +62,23 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       }
 
       return message;
+    }
+
+    public string GetCancellationBody()
+    {
+      string message = "";
+
+      if (!User.IsInRole(AuthConstants.Roles.ALUMNI))
+      {
+        message = $"To cancel your DevBetter subscription, click below. Your cancellation will take effect at the end of your current subscription period, on {UserBillingViewModel.CurrentSubscriptionEndDate.ToString()}.";
+      }
+
+      return message;
+    }
+
+    public bool GetIsAlumni()
+    {
+      return User.IsInRole(AuthConstants.Roles.ALUMNI);
     }
   }
 }
