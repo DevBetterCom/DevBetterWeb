@@ -8,5 +8,5 @@ namespace DevBetterWeb.Core.Interfaces
     Task RemoveUserFromRoleAsync(string userId, string roleId);
     Task AddUserToRoleByRoleNameAsync(string userId, string roleName);
     Task RemoveUserFromRoleByRoleNameAsync(string userId, string roleName);
-    }
+  }
 }

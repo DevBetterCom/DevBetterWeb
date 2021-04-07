@@ -1,7 +1,5 @@
-﻿using DevBetterWeb.Core;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.ValueObjects;
-using DevBetterWeb.Infrastructure.Services;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -11,9 +9,9 @@ namespace DevBetterWeb.Web.Pages.User
   {
     private const int DAYS_IN_YEAR = 365;
 
-    private readonly MemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
+    private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
-    public UserBillingViewModel(MemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
+    public UserBillingViewModel(IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }

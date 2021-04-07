@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using DevBetterWeb.Web.Areas.Identity.Data
+@using DevBetterWeb.Infrastructure.Identity.Data;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -27,7 +27,7 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <partial name="_GoogleAnalyticsPartial")/>
+    <partial name="_GoogleAnalyticsPartial" ) />
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -70,9 +70,9 @@
     <nav class="navbar navbar-light static-top navbar-expand-md">
         <div class="navbar-brand d-flex">
             <div>
-               
+
             </div>
-          
+
 
             <div>
                 <a class="" href="/">
@@ -81,7 +81,7 @@
                 </a>
             </div>
         </div>
-      
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#devBetterNavBar" aria-controls="devBetterNavBar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -126,21 +126,26 @@
             .github-corner:hover .octo-arm {
                 animation: octocat-wave 560ms ease-in-out
             }
+
             @@keyframes octocat-wave {
                 0%, 100% {
                     transform: rotate(0)
                 }
+
                 20%, 60% {
                     transform: rotate(-25deg)
                 }
+
                 40%, 80% {
                     transform: rotate(10deg)
                 }
             }
+
             @@media (max-width:500px) {
                 .github-corner:hover .octo-arm {
                     animation: none
                 }
+
                 .github-corner .octo-arm {
                     animation: octocat-wave 560ms ease-in-out
                 }

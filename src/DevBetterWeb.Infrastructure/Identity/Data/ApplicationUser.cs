@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DevBetterWeb.Web.Areas.Identity.Data
+namespace DevBetterWeb.Infrastructure.Identity.Data
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser

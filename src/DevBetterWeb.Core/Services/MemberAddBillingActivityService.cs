@@ -2,23 +2,20 @@
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Web.Areas.Identity.Data;
-using Microsoft.AspNetCore.Identity;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Core.Services
 {
   public class MemberAddBillingActivityService : IMemberAddBillingActivityService
   {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly MemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
-
+    private readonly IUserLookupService _userLookup;
+    private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
     private readonly IRepository _repository;
 
-    public MemberAddBillingActivityService(UserManager<ApplicationUser> userManager,
-      MemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService,
+    public MemberAddBillingActivityService(IUserLookupService userLookup,
+      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService,
       IRepository repository)
     {
-      _userManager = userManager;
+      _userLookup = userLookup;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
       _repository = repository;
     }
@@ -64,8 +61,8 @@ namespace DevBetterWeb.Infrastructure.Services
 
     private async Task<Member> GetMemberByEmailAsync(string email)
     {
-      var user = await _userManager.FindByEmailAsync(email);
-      var spec = new MemberByUserIdSpec(user.Id);
+      var userId = await _userLookup.FindUserIdByEmailAsync(email);
+      var spec = new MemberByUserIdSpec(userId);
       var member = await _repository.GetAsync(spec);
       return member;
     }

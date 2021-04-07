@@ -98,8 +98,10 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMemberCancellationService, MemberSubscriptionCancellationService>();
       services.AddScoped<IMemberSubscriptionRenewalService, MemberSubscriptionRenewalService>();
       services.AddScoped<IMemberAddBillingActivityService, MemberAddBillingActivityService>();
+      services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
+      services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
+      services.AddScoped<IUserLookupService, UserLookupService>();
 
-      services.AddScoped<MemberSubscriptionPeriodCalculationsService>();
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services

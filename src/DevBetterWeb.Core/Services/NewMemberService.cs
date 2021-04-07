@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Services
 {
- 
   public class NewMemberService : INewMemberService
   {
 

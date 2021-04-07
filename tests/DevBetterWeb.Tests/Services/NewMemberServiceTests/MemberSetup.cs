@@ -44,8 +44,10 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     public async Task SetsUpNewMember()
     {
       var memberResult = new Member();
+      var memberId = memberResult.Id;
 
       _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
+      _repository.Setup(r => r.GetByIdAsync<Member>(memberId)).ReturnsAsync(memberResult);
       _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
 
       Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode);

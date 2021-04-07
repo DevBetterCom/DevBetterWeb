@@ -104,6 +104,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return dateTimeRange;
     }
 
+    public DateTime GetEndDate(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var endDate = GetEndDate(subscription);
+
+      return endDate;
+    }
+
     public string GetStatus(string subscriptionId)
     {
       var subscription = GetSubscription(subscriptionId);

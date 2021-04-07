@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Exceptions;
-using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Core;
@@ -12,43 +9,27 @@ using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Web.Controllers
 {
-
   [Route(Constants.STRIPE_API_ENDPOINT)]
   public class StripeWebhookHandler : Controller
   {
     private readonly ILogger<StripeWebhookHandler> _logger;
-    private readonly INewMemberService _newMemberService;
-    private readonly IMemberCancellationService _memberCancellationService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
     private readonly IPaymentHandlerEvent _paymentHandlerEvent;
     private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
-    private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
-    private readonly IMemberSubscriptionRenewalService _memberSubscriptionRenewalService;
 
-    private readonly AdminUpdatesWebhook _webhook;
+    private readonly IWebhookHandlerService _webhookHandlerService;
 
     public StripeWebhookHandler(ILogger<StripeWebhookHandler> logger,
-      INewMemberService newMemberService,
-      IMemberCancellationService memberCancellationService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
-      IPaymentHandlerCustomer paymentHandlerCustomer,
       IPaymentHandlerEvent paymentHandlerEvent,
       IPaymentHandlerInvoice paymentHandlerInvoice,
-      IMemberAddBillingActivityService memberAddBillingActivityService,
-      IMemberSubscriptionRenewalService memberSubscriptionRenewalService,
-      AdminUpdatesWebhook adminUpdatesWebhook)
+      IWebhookHandlerService webhookHandlerService)
     {
       _logger = logger;
-      _newMemberService = newMemberService;
-      _memberCancellationService = memberCancellationService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
-      _paymentHandlerCustomer = paymentHandlerCustomer;
       _paymentHandlerEvent = paymentHandlerEvent;
       _paymentHandlerInvoice = paymentHandlerInvoice;
-      _memberAddBillingActivityService = memberAddBillingActivityService;
-      _memberSubscriptionRenewalService = memberSubscriptionRenewalService;
-      _webhook = adminUpdatesWebhook;
+      _webhookHandlerService = webhookHandlerService;
     }
 
 
@@ -102,57 +83,17 @@ namespace DevBetterWeb.Web.Controllers
 
     private async Task HandleNewCustomerSubscription(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
-      var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
-
-      if (status == "active")
-      {
-        var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
-        var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-
-        if (string.IsNullOrEmpty(email))
-        {
-          throw new InvalidEmailException();
-        }
-
-        Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
-
-        var webhookMessage = $"A new customer with email {email} has subscribed to DevBetter. They will be receiving a registration email.";
-        await _webhook.Send($"Webhook:\n{webhookMessage}");
-
-        await _newMemberService.SendRegistrationEmailAsync(invite);
-
-        var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
-
-        await _memberAddBillingActivityService.AddSubscriptionCreationBillingActivity(email, paymentAmount);
-      }
+      await _webhookHandlerService.HandleNewCustomerSubscriptionAsync(json);
     }
 
     private async Task HandleCustomerSubscriptionRenewed(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
-      var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
-      var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-
-      var subscriptionDates = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
-      var endDate = (DateTime) subscriptionDates.EndDate;
-
-      await _memberSubscriptionRenewalService.ExtendMemberSubscription(email, endDate);
-
-      var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
-
-      await _memberAddBillingActivityService.AddSubscriptionRenewalBillingActivity(email, paymentAmount);
+      await _webhookHandlerService.HandleCustomerSubscriptionRenewedAsync(json);
     }
 
     private async Task HandleCustomerSubscriptionEnded(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
-      var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
-      var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-
-      await _memberCancellationService.RemoveUserFromMemberRoleAsync(email);
-      await _memberCancellationService.SendCancellationEmailAsync(email);
-      await _memberAddBillingActivityService.AddSubscriptionEndingBillingActivity(email);
+      await _webhookHandlerService.HandleCustomerSubscriptionEndedAsync(json);
     }
 
     private async Task HandleCustomerSubscriptionUpdatedEvent(string json)
@@ -168,14 +109,7 @@ namespace DevBetterWeb.Web.Controllers
 
     private async Task HandleCustomerSubscriptionCancelledAtPeriodEnd(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
-      var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
-      var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-
-      await _memberCancellationService.SendFutureCancellationEmailAsync(email);
-      await _memberAddBillingActivityService.AddSubscriptionCancellationBillingActivity(email);
+      await _webhookHandlerService.HandleCustomerSubscriptionCancelledAtPeriodEndAsync(json);
     }
-
-
   }
 }

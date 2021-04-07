@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using Xunit;
 using Moq;
-using Ardalis.Specification;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {

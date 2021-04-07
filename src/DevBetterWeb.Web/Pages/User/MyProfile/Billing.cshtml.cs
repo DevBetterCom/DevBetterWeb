@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using DevBetterWeb.Core.Interfaces;
+﻿using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using DevBetterWeb.Core;
-using Microsoft.AspNetCore.Mvc;
+using DevBetterWeb.Infrastructure.Identity.Data;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {

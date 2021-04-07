@@ -1,10 +1,9 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Services

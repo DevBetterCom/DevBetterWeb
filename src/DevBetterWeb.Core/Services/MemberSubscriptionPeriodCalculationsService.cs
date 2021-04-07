@@ -1,13 +1,14 @@
 ﻿using System;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Core.Services
 {
-  public class MemberSubscriptionPeriodCalculationsService
+  public class MemberSubscriptionPeriodCalculationsService : IMemberSubscriptionPeriodCalculationsService
   {
     private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
 
-    // none of these methods should never be called if member does not have current subscription
+    // none of these methods should ever be called if member does not have current subscription
     public Subscription GetCurrentSubscription(Member member)
     {
 
@@ -19,14 +20,14 @@ namespace DevBetterWeb.Infrastructure.Services
         }
       }
 
-      throw new Core.Exceptions.NoCurrentSubscriptionFoundException();
+      throw new Exceptions.NoCurrentSubscriptionFoundException();
     }
 
     public DateTime GetCurrentSubscriptionEndDate(Member member)
     {
       var currentSubscription = GetCurrentSubscription(member);
 
-      var endDate = currentSubscription.Dates.EndDate??DateTime.MinValue;
+      var endDate = currentSubscription.Dates.EndDate ?? DateTime.MinValue;
 
       return endDate;
     }
