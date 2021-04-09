@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
@@ -11,18 +10,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
   public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscription
   {
     private readonly SubscriptionService _subscriptionService;
-    private readonly CustomerService _customerService;
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
+    private readonly IPaymentHandlerSubscriptionCreationService _paymentHandlerSubscriptionCreationService;
     private readonly IRepository _repository;
 
     public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService,
-      CustomerService customerService,
-      IPaymentHandlerCustomer paymentHandlerCustomer,
+      IPaymentHandlerSubscriptionCreationService paymentHandlerSubscriptionCreationService,
       IRepository repository)
     {
       _subscriptionService = subscriptionService;
-      _customerService = customerService;
-      _paymentHandlerCustomer = paymentHandlerCustomer;
+      _paymentHandlerSubscriptionCreationService = paymentHandlerSubscriptionCreationService;
       _repository = repository;
     }
 
@@ -41,31 +37,10 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       _subscriptionService.Update(subscriptionId, subscriptionCancelOptions);
     }
 
-    public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId)
+    public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId, string paymentMethodId)
     {
-      var subscriptionOptions = new SubscriptionCreateOptions
-      {
-        Customer = customerId,
-        Items = new List<SubscriptionItemOptions>
-        {
-          new SubscriptionItemOptions
-          {
-            Price = priceId,
-          },
-        },
-      };
-      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
-
-      var subscription = _subscriptionService.Create(subscriptionOptions);
-
-      var id = subscription.Id;
-      var status = subscription.Status;
-      var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.PaymentIntent.Status;
-      var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
-
-      var subscriptionDTO = new StripePaymentHandlerSubscriptionDTO(id, status, latestInvoicePaymentIntentStatus, latestInvoicePaymentIntentClientSecret);
-
-      return subscriptionDTO;
+      var dto = _paymentHandlerSubscriptionCreationService.SetUpSubscription(customerId, priceId, paymentMethodId);
+      return dto;
     }
 
     public IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage)
