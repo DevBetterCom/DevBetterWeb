@@ -264,7 +264,7 @@ namespace DevBetterWeb.Core.Entities
     {
       if (Subscriptions == null || !Subscriptions.Any()) return 0;
 
-      return Subscriptions.Sum(s => s.Dates.ToDays(DateTime.Today));
+      return Subscriptions.Sum(s => s.Dates.ToDaysToDate(DateTime.Today));
     }
 
     public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
