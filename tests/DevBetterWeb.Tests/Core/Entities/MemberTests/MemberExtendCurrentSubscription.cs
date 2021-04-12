@@ -10,7 +10,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void ExtendsSubscription()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription starterSubscription = SubscriptionHelpers.GetDefaultTestSubscription();
+      Subscription starterSubscription = SubscriptionHelpers.GetDefaultTestSubscription();
       DateTime newEndDate = DateTime.Now.AddDays(30);
       DateTime originalStartDate = starterSubscription.Dates.StartDate;
 
@@ -28,7 +28,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void DoesNothingGivenNoCurrentSubscription()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription starterSubscription = SubscriptionHelpers.GetSubscriptionWithPastEndDate();
+      Subscription starterSubscription = SubscriptionHelpers.GetSubscriptionWithPastEndDate();
       DateTime newEndDate = DateTime.Now.AddDays(30);
       var originalEndDate = starterSubscription.Dates.EndDate;
 

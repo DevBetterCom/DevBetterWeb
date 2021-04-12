@@ -84,7 +84,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
       var memberByUserSpec = new MemberByUserIdSpec(userId);
       var member = await _repository.GetAsync(memberByUserSpec);
-      var subscriptions = new List<MemberSubscription>();
+      var subscriptions = new List<Subscription>();
       if (member != null)
       {
         var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
@@ -147,7 +147,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
       try
       {
-        await _repository.AddAsync(new MemberSubscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
+        await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
       }
 
       //DateTimeRange throws an error if EndDate is prior to StartDate
@@ -162,7 +162,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
     public async Task<IActionResult> OnPostDeleteSubscriptionAsync(string userId, int subscriptionId)
     {
-      var subscriptionEntity = await _repository.GetByIdAsync<MemberSubscription>(subscriptionId);
+      var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
       await _repository.DeleteAsync(subscriptionEntity);
 
       return RedirectToPage("./User", new { userId = userId });
@@ -170,7 +170,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
     public async Task<IActionResult> OnPostEditSubscriptionAsync(string userId, int subscriptionId, SubscriptionDTO subscription)
     {
-      var subscriptionEntity = await _repository.GetByIdAsync<MemberSubscription>(subscriptionId);
+      var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
       subscriptionEntity.Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate);
       await _repository.UpdateAsync(subscriptionEntity);
 

@@ -9,7 +9,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void ReturnsDaysSubscribedToDate()
     {
       var member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(50);
+      Subscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(50);
 
       member.AddSubscription(subscription);
       int days = member.TotalSubscribedDays();
@@ -21,7 +21,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void ReturnsDaysSubscribedToDateWithoutDaysAfterToday()
     {
       var member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(58, 12);
+      Subscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(58, 12);
 
       member.AddSubscription(subscription);
       int days = member.TotalSubscribedDays();

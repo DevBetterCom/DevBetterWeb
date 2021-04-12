@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class MemberSubscription : BaseEntity
+  public class Subscription : BaseEntity
   {
     //public DateTime StartDate { get; set; }
     //public DateTime? EndDate { get; set; }

@@ -32,7 +32,7 @@ namespace DevBetterWeb.Infrastructure.Data
     public DbSet<Question>? Questions { get; set; }
     public DbSet<Member>? Members { get; set; }
     public DbSet<Book>? Books { get; set; }
-    public DbSet<MemberSubscription>? Subscriptions { get; set; }
+    public DbSet<Subscription>? Subscriptions { get; set; }
     public DbSet<Invitation>? Invitations { get; set; }
     public DbSet<BillingActivity>? BillingActivities { get; set; }
 
