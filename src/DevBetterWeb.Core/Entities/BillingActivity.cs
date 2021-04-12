@@ -21,7 +21,7 @@ namespace DevBetterWeb.Core.Entities
     {
       MemberId = 0;
       Date = DateTime.MinValue;
-      Details = new BillingDetails("");
+      Details = new BillingDetails();
     }
   }
 }

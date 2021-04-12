@@ -8,6 +8,20 @@ namespace DevBetterWeb.Core.Services
   {
     private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
 
+    public bool GetHasCurrentSubscription(Member member)
+    {
+      bool hasCurrentSubscription = false;
+
+      foreach (var subscription in member.Subscriptions)
+      {
+        if (subscription.Dates.Contains(DateTime.Today))
+        {
+          hasCurrentSubscription = true;
+        }
+      }
+      return hasCurrentSubscription;
+    }
+
     // none of these methods should ever be called if member does not have current subscription
     public Subscription GetCurrentSubscription(Member member)
     {

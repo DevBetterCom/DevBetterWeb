@@ -46,7 +46,7 @@
                 {
                     foreach (var activity in Model.UserBillingViewModel.BillingActivities)
                     {
-                        <p>@activity.Details.Message for $@activity.Details.Amount on @activity.Date.ToLongDateString()</p>
+                        <p>@activity.Details.GetMessageForMemberView() for $@activity.Details.Amount on @activity.Date.ToLongDateString()</p>
                     }
                 }
                 <p><i>Note: Activity shown here is only since DevBetter's transistion to the Stripe payment handler.</i></p>

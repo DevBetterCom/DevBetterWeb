@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace DevBetterWeb.Core.Exceptions
 {
   [Serializable]
-  public  class InvalidEmailException : Exception
+  public class InvalidEmailException : Exception
   {
     public InvalidEmailException()
     {
