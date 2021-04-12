@@ -15,7 +15,7 @@ namespace DevBetterWeb.Web.Pages.User
     public BillingPeriod? BillingPeriod { get; private set; }
     public DateTime? CurrentSubscriptionEndDate { get; private set; }
     public DateTime? GraduationDate { get; private set; }
-    public Subscription? CurrentSubscription { get; private set; }
+    public MemberSubscription? CurrentSubscription { get; private set; }
 
     public UserBillingViewModel(List<BillingActivity> billingActivities,
       int totalSubscribedDays,
@@ -33,7 +33,7 @@ namespace DevBetterWeb.Web.Pages.User
       BillingPeriod billingPeriod,
       DateTime currentSubscriptionEndDate, 
       DateTime graduationDate,
-      Subscription currentSubscription)
+      MemberSubscription currentSubscription)
     {
       BillingActivities = billingActivities;
       TotalSubscribedDays = totalSubscribedDays;

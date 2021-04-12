@@ -53,7 +53,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
         var currentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
         var graduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 
-        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), subscriptionPlan.Details.Name, subscriptionPlan.Details.BillingPeriod, currentSubscriptionEndDate, graduationDate, currentSubscription);
+        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), subscriptionPlan!.Details!.Name, subscriptionPlan!.Details!.BillingPeriod, currentSubscriptionEndDate, graduationDate, currentSubscription);
       }
       else
       {
