@@ -21,8 +21,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
     public BillingModel(IRepository repository, 
       UserManager<ApplicationUser> userManager,
-      IMemberRegistrationService memberRegistrationService,
-      IPaymentHandlerSubscription paymentHandlerSubscription)
+      IMemberRegistrationService memberRegistrationService)
     {
       _repository = repository;
       _userManager = userManager;
