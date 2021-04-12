@@ -9,7 +9,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void AddsSubscription()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
+      Subscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
 
       member.AddSubscription(subscription);
 
@@ -20,7 +20,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void DoesNothingGivenSubscriptionAlreadyInList()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
+      Subscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
 
       member.AddSubscription(subscription);
 

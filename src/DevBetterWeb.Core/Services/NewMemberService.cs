@@ -125,7 +125,7 @@ namespace DevBetterWeb.Core.Services
 
     private async Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange)
     {
-      var subscription = new MemberSubscription();
+      var subscription = new Subscription();
       subscription.MemberId = memberId;
       subscription.Dates = subscriptionDateTimeRange;
 
