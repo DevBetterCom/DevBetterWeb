@@ -16,6 +16,7 @@ namespace DevBetterWeb.Infrastructure.Data.Config
         d.Property(p => p!.MemberName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
         d.Property(p => p!.SubscriptionPlanName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
         d.Property(p => p!.BillingPeriod).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+        d.Property(p => p!.Date);
       });
     }
   }
