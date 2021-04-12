@@ -32,7 +32,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     }
 
-    public void UpdatePaymentMethod(string customerId, string paymentMethodId)
+    public void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId)
     {
       var customerOptions = new CustomerUpdateOptions
       {

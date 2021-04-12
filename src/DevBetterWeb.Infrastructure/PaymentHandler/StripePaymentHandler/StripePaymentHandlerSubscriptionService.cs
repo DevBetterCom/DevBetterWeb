@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
 using Stripe;
 
@@ -9,37 +10,37 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
   public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscription
   {
     private readonly SubscriptionService _subscriptionService;
+    private readonly IPaymentHandlerSubscriptionCreationService _paymentHandlerSubscriptionCreationService;
+    private readonly IRepository _repository;
 
-    public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService)
+    public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService,
+      IPaymentHandlerSubscriptionCreationService paymentHandlerSubscriptionCreationService,
+      IRepository repository)
     {
       _subscriptionService = subscriptionService;
+      _paymentHandlerSubscriptionCreationService = paymentHandlerSubscriptionCreationService;
+      _repository = repository;
     }
 
-    public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId)
+    public async Task CancelSubscriptionAtPeriodEnd(string customerEmail)
     {
-      var subscriptionOptions = new SubscriptionCreateOptions
+      var spec = new InactiveInvitationByEmailSpec(customerEmail);
+      var invite = await _repository.GetAsync(spec);
+
+      var subscriptionId = invite.PaymentHandlerSubscriptionId;
+
+      var subscriptionCancelOptions = new SubscriptionUpdateOptions
       {
-        Customer = customerId,
-        Items = new List<SubscriptionItemOptions>
-        {
-          new SubscriptionItemOptions
-          {
-            Price = priceId,
-          },
-        },
+        CancelAtPeriodEnd = true,
       };
-      subscriptionOptions.AddExpand("latest_invoice.payment_intent");
 
-      var subscription = _subscriptionService.Create(subscriptionOptions);
+      _subscriptionService.Update(subscriptionId, subscriptionCancelOptions);
+    }
 
-      var id = subscription.Id;
-      var status = subscription.Status;
-      var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.PaymentIntent.Status;
-      var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
-
-      var subscriptionDTO = new StripePaymentHandlerSubscriptionDTO(id, status, latestInvoicePaymentIntentStatus, latestInvoicePaymentIntentClientSecret);
-
-      return subscriptionDTO;
+    public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId, string paymentMethodId)
+    {
+      var dto = _paymentHandlerSubscriptionCreationService.SetUpSubscription(customerId, priceId, paymentMethodId);
+      return dto;
     }
 
     public IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage)
@@ -48,13 +49,22 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return subscriptionError;
     }
 
+    public bool GetCancelAtPeriodEnd(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var cancelAtPeriodEnd = subscription.CancelAtPeriodEnd;
+
+      return cancelAtPeriodEnd;
+    }
+
     public string GetCustomerId(string subscriptionId)
     {
       var subscription = GetSubscription(subscriptionId);
 
       var customerId = subscription.CustomerId;
 
-      return customerId; 
+      return customerId;
     }
 
     public DateTimeRange GetDateTimeRange(string subscriptionId)
@@ -67,6 +77,15 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       var dateTimeRange = new DateTimeRange(startDate, endDate);
 
       return dateTimeRange;
+    }
+
+    public DateTime GetEndDate(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var endDate = GetEndDate(subscription);
+
+      return endDate;
     }
 
     public string GetStatus(string subscriptionId)

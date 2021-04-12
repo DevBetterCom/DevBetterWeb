@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Areas.Identity

@@ -28,14 +28,94 @@ async function createCustomer() {
             body: JSON.stringify(emailJSON)
         })
         const customerData = await output.json();
+        if (customerData._error) {
+            throw customerData._error;
+        }
         return customerData;
     } catch (error) {
-        console.error(error);
+        showError(error.message);
     }
 
 }
 
 var createSubscription = async function ({ customerIdInput, paymentMethodIdInput, priceIdInput }) {
+
+    var handleRequiresPaymentMethod = async function ({
+        subscription,
+    }) {
+        try {
+            var subscriptionJSON = {
+                "subscriptionId": subscription._id
+            };
+
+            await fetch('/get-subscription-status', {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify(subscriptionJSON),
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((value) => {
+                    if (value._status === 'active') {
+                        // subscription is active, no customer actions required.
+                        return { subscription };
+                    }
+                    else if (subscription._latestInvoicePaymentIntentStatus === 'requires_payment_method') {
+                        var message = 'Invalid payment method. Please try again.';
+
+                        throw new Error(message);
+                    }
+                    else {
+                        return { subscription };
+                    }
+                })
+        } catch (error) {
+            showError(error.message);
+        }
+
+    };
+
+    var onSubscriptionComplete = async function (result) {
+        try {
+            var subscriptionJSON = {
+                "subscriptionId": result.subscription._id
+            };
+
+            await fetch('/get-subscription-status', {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify(subscriptionJSON),
+            })
+                .then((queryResult) => {
+                    return queryResult.json();
+                })
+                .then((value) => {
+                    if (value._status === 'active') {
+                        orderComplete();
+                    }
+                    else if (loading) {
+                        showError('Something went wrong. Please try again.');
+                    }
+                })
+        }
+        catch (error) {
+            showError(error.message);
+        }
+    };
+
+    var processFinalSubscriptionCreation = async function (value) {
+        await handleRequiresPaymentMethod({
+            subscription: value.subscription
+        })
+            .then(() => {
+                onSubscriptionComplete(value);
+            });
+    }
 
     var handlePaymentThatRequiresCustomerAction = async function ({
         subscription,
@@ -68,13 +148,12 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                             // The card was declined (i.e. insufficient funds, card has expired, etc).
                             throw x.error.message;
                         } else {
-                            if (x._paymentIntentStatus === 'succeeded') {
+                            if (x.paymentIntent.status === 'succeeded') {
                                 // Show a success message to your customer.
                                 subscription._status = "active";
                                 return {
                                     priceId: priceId,
                                     subscription: subscription,
-                                    invoice: invoice,
                                     paymentMethodId: paymentMethodId,
                                 };
                             }
@@ -83,11 +162,13 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                                 return {
                                     priceId: priceId,
                                     subscription: subscription,
-                                    invoice: invoice,
                                     paymentMethodId: paymentMethodId,
                                 };
                             }
                         }
+                    })
+                    .then((value) => {
+                        processFinalSubscriptionCreation(value);
                     })
                     .catch((error) => {
                         showError(error.message);
@@ -99,40 +180,6 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         }
     };
 
-    var handleRequiresPaymentMethod = async function ({
-        subscription,
-        paymentMethodId,
-        priceId,
-    }) {
-        try {
-            if (subscription._status === 'active') {
-                // subscription is active, no customer actions required.
-                return { subscription, priceId, paymentMethodId };
-            }
-            else if (subscription._latestInvoicePaymentIntentStatus === 'requires_payment_method') {
-                var message = 'Invalid payment method. Please try again.';
-
-                throw new Error(message);
-            }
-            else {
-                return { subscription, priceId, paymentMethodId };
-            }
-        } catch (error) {
-            showError(error.message);
-        }
-
-    };
-
-    var onSubscriptionComplete = function (result) {
-
-        if (result.subscription._status === 'active') {
-            orderComplete();
-        }
-        else if (loading) {
-            showError('Something went wrong. Please try again.');
-        }
-
-    };
 
 
     var subscriptionParams = {
@@ -156,7 +203,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
         .then((x) => {
             if (x._errorMessage) {
                 showError(x._errorMessage);
-                
+
                 throw x._errorMessage;
             }
             return x;
@@ -170,39 +217,22 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
                 priceId: priceIdInput,
                 subscription: output,
             };
-
         })
 
         // Some payment methods require a customer to be on session
         // to complete the payment process. Check the status of the
         // payment intent to handle these actions.
         .then((value) => {
-            (async () => {
-                await handlePaymentThatRequiresCustomerAction({
-                    subscription: value.subscription,
-                    invoiceStatus: value.subscription._latestInvoicePaymentIntentStatus,
-                    priceId: value.priceId,
-                    paymentMethodId: value.paymentMethodId,
-                });
-
-                // If attaching this card to a Customer object succeeds,
-                // but attempts to charge the customer fail, you
-                // get a requires_payment_method error.
-                await handleRequiresPaymentMethod({
-                    subscription: value.subscription,
-                    paymentMethodId: value.paymentMethodId,
-                    priceId: value.priceId,
-                });
-
-                // No more actions required. Provision your service for the user.
-                await onSubscriptionComplete(value);
-            })();
+            handlePaymentThatRequiresCustomerAction(value);
         })
+
         .catch((error) => {
+            showError(error.message);
             // An error has happened. Display the failure to the user here.
             // We utilize the HTML element we created.
             //showError(error.message);
         });
+
 }
 
 async function createPayment(card, customerId, priceId, customerEmail) {

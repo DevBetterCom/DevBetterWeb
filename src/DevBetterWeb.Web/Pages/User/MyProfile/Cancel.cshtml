@@ -1,0 +1,24 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfile.CancelModel
+@{
+}
+
+<h3>My Profile: Cancel Subscription</h3>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                Cancel Subscription
+            </div>
+            <div class="card-body">
+                <p>@Model.Message</p>
+                <br />
+                <br />
+                <form method="post">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancel Subscription" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

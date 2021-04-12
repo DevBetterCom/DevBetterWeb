@@ -34,6 +34,7 @@ namespace DevBetterWeb.Infrastructure.Data
     public DbSet<Book>? Books { get; set; }
     public DbSet<Subscription>? Subscriptions { get; set; }
     public DbSet<Invitation>? Invitations { get; set; }
+    public DbSet<BillingActivity>? BillingActivities { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

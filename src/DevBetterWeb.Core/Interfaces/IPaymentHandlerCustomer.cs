@@ -4,6 +4,6 @@
   {
     string GetCustomerEmail(string customerId);
     string CreateCustomer(string email);
-    void UpdatePaymentMethod(string customerId, string paymentMethodId);
+    void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId);
   }
 }

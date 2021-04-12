@@ -1,5 +1,4 @@
-﻿using System;
-using DevBetterWeb.Core.Interfaces;
+﻿using DevBetterWeb.Core.Interfaces;
 using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
@@ -26,6 +25,20 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
         subscriptionId = subscription!.Id;
       }
       return subscriptionId;
+    }
+
+    public string GetInvoiceId(string json)
+    {
+      var stripeEvent = EventUtility.ParseEvent(json);
+      var invoiceId = "";
+
+      if (stripeEvent.Type.StartsWith("invoice"))
+      {
+        var invoice = stripeEvent.Data.Object as Invoice;
+
+        invoiceId = invoice!.Id;
+      }
+      return invoiceId;
     }
   }
 

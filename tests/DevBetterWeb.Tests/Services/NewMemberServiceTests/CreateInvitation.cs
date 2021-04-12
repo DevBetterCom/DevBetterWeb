@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using Xunit;
 using Moq;
-using Ardalis.Specification;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
@@ -18,6 +13,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
+    private readonly Mock<IMemberRegistrationService> _memberRegistrationService;
 
     private readonly INewMemberService _newMemberService;
 
@@ -30,7 +26,8 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
-      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object);
+      _memberRegistrationService = new Mock<IMemberRegistrationService>();
+      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
     }
 
     [Fact]
