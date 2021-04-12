@@ -233,8 +233,8 @@ namespace DevBetterWeb.Core.Entities
 
     public void AddBillingActivity(string subscriptionPlanName, string actionVerbPastTense, BillingPeriod billingPeriod, decimal amount = 0)
     {
-      var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, amount);
-      var activity = new BillingActivity(Id, DateTime.Now, details);
+      var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
+      var activity = new BillingActivity(Id, details);
       BillingActivities.Add(activity);
       CreateOrUpdateUpdateEvent("BillingActivities");
     }
