@@ -60,6 +60,27 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("ArchiveVideos");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BillingActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberId")
+                        .HasMaxLength(500)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("BillingActivities");
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -259,6 +280,45 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BillingActivity", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
+                        .WithMany("BillingActivities")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.BillingDetails", "Details", b1 =>
+                        {
+                            b1.Property<int>("BillingActivityId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .UseIdentityColumn();
+
+                            b1.Property<decimal>("Amount")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("decimal(18,2)")
+                                .HasDefaultValue(0m);
+
+                            b1.Property<string>("Message")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(500)
+                                .HasColumnType("nvarchar(500)")
+                                .HasDefaultValue("");
+
+                            b1.HasKey("BillingActivityId");
+
+                            b1.ToTable("BillingActivities");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BillingActivityId");
+                        });
+
+                    b.Navigation("Details")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
                 {
                     b.OwnsOne("DevBetterWeb.Core.ValueObjects.Address", "ShippingAddress", b1 =>
@@ -384,6 +444,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
                 {
+                    b.Navigation("BillingActivities");
+
                     b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618

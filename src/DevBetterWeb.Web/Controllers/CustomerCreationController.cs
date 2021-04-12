@@ -1,7 +1,7 @@
 ﻿using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-
+using System;
 
 namespace DevBetterWeb.Web.Controllers
 {
@@ -19,9 +19,16 @@ namespace DevBetterWeb.Web.Controllers
     [HttpPost]
     public ActionResult Create(CustomerCreateRequest request)
     {
+      try
+      {
       var customerId = _paymentHandlerCustomer.CreateCustomer(request.Email!);
 
       return Json(new { _customer = customerId });
+      }
+      catch(Exception e)
+      {
+        return Json(new { _error = e.Message });
+      }
     }
 
     public class CustomerCreateRequest

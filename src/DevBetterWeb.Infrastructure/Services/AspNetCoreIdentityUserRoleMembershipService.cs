@@ -1,10 +1,9 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Infrastructure.Services
@@ -59,6 +58,14 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
       await _dispatcher.Dispatch(userRemovedFromRoleEvent);
+    }
+
+    public async Task RemoveUserFromRoleByRoleNameAsync(string userId, string roleName)
+    {
+      var role = await _roleManager.FindByNameAsync(roleName);
+      var roleId = role.Id;
+
+      await RemoveUserFromRoleAsync(userId, roleId);
     }
   }
 }

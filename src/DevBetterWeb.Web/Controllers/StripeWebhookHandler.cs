@@ -1,41 +1,35 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Exceptions;
-using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Core;
 
 
 namespace DevBetterWeb.Web.Controllers
-{ 
-  [Route("api/stripecallback")]
+{
+  [Route(Constants.STRIPE_API_ENDPOINT)]
   public class StripeWebhookHandler : Controller
   {
     private readonly ILogger<StripeWebhookHandler> _logger;
-    private readonly INewMemberService _newMemberService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
     private readonly IPaymentHandlerEvent _paymentHandlerEvent;
+    private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
 
-    private readonly AdminUpdatesWebhook _webhook;
+    private readonly IWebhookHandlerService _webhookHandlerService;
 
     public StripeWebhookHandler(ILogger<StripeWebhookHandler> logger,
-      INewMemberService newMemberService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
-      IPaymentHandlerCustomer paymentHandlerCustomer,
       IPaymentHandlerEvent paymentHandlerEvent,
-      AdminUpdatesWebhook adminUpdatesWebhook)
+      IPaymentHandlerInvoice paymentHandlerInvoice,
+      IWebhookHandlerService webhookHandlerService)
     {
       _logger = logger;
-      _newMemberService = newMemberService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
-      _paymentHandlerCustomer = paymentHandlerCustomer;
       _paymentHandlerEvent = paymentHandlerEvent;
-      _webhook = adminUpdatesWebhook;
+      _paymentHandlerInvoice = paymentHandlerInvoice;
+      _webhookHandlerService = webhookHandlerService;
     }
 
 
@@ -48,31 +42,17 @@ namespace DevBetterWeb.Web.Controllers
       {
         var stripeEventType = _paymentHandlerEvent.GetEventType(json);
 
-        if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_CREATED_EVENT_TYPE) || 
-          stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
+        if (stripeEventType.Equals(StripeConstants.INVOICE_PAYMENT_SUCCEEDED_EVENT_TYPE))
         {
-          var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
-          var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
-          var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
-          var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
-
-          if (status.Equals("active"))
-          {
-
-
-            if (string.IsNullOrEmpty(email))
-            {
-              throw new InvalidEmailException();
-            }
-
-            Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
-
-            var webhookStringWithInvite = $"Subscription Id: {subscriptionId}\nCustomer Id: {customerId}\nEmail: {email}\nInvitation: {invite.Id}";
-            await _webhook.Send($"Webhook:\n{webhookStringWithInvite}");
-
-            await _newMemberService.SendRegistrationEmailAsync(invite);
-          }
-
+          await HandleInvoicePaymentSucceeded(json);
+        }
+        else if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_DELETED_EVENT_TYPE))
+        {
+          await HandleCustomerSubscriptionEnded(json);
+        }
+        else if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
+        {
+          await HandleCustomerSubscriptionUpdatedEvent(json);
         }
         else
         {
@@ -85,6 +65,51 @@ namespace DevBetterWeb.Web.Controllers
         _logger.LogError($"{e.GetType()}");
         return BadRequest();
       }
+    }
+
+    private async Task HandleInvoicePaymentSucceeded(string json)
+    {
+      var billingReason = _paymentHandlerInvoice.GetBillingReason(json);
+
+      if (billingReason == StripeConstants.INVOICE_PAYMENT_SUCCEEDED_FOR_SUBSCRIPTION_CREATION)
+      {
+        await HandleNewCustomerSubscription(json);
+      }
+      else if (billingReason == StripeConstants.INVOICE_PAYMENT_SUCCEEDED_FOR_SUBSCRIPTION_RENEWAL)
+      {
+        await HandleCustomerSubscriptionRenewed(json);
+      }
+    }
+
+    private async Task HandleNewCustomerSubscription(string json)
+    {
+      await _webhookHandlerService.HandleNewCustomerSubscriptionAsync(json);
+    }
+
+    private async Task HandleCustomerSubscriptionRenewed(string json)
+    {
+      await _webhookHandlerService.HandleCustomerSubscriptionRenewedAsync(json);
+    }
+
+    private async Task HandleCustomerSubscriptionEnded(string json)
+    {
+      await _webhookHandlerService.HandleCustomerSubscriptionEndedAsync(json);
+    }
+
+    private async Task HandleCustomerSubscriptionUpdatedEvent(string json)
+    {
+      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
+      var cancelAtPeriodEnd = _paymentHandlerSubscription.GetCancelAtPeriodEnd(subscriptionId);
+
+      if (cancelAtPeriodEnd)
+      {
+        await HandleCustomerSubscriptionCancelledAtPeriodEnd(json);
+      }
+    }
+
+    private async Task HandleCustomerSubscriptionCancelledAtPeriodEnd(string json)
+    {
+      await _webhookHandlerService.HandleCustomerSubscriptionCancelledAtPeriodEndAsync(json);
     }
   }
 }

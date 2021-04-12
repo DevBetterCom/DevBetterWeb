@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,7 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;

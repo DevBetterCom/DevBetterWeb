@@ -1,0 +1,56 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfile.BillingModel
+@{
+}
+
+<h3>My Profile: Billing History</h3>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                Overview
+            </div>
+            <div class="card-body">
+                <p>@Model.GetOverviewBody()</p>
+            </div>
+        </div>
+        <br />
+        @if (!Model.GetIsAlumni())
+        {
+        <div class="card">
+            <div class="card-header">
+                Cancel
+            </div>
+            <div class="card-body">
+                @Model.GetCancellationBody()
+                <br />
+                <br />
+                <a class="btn btn-danger btn-sm" href="/User/MyProfile/Cancel">Cancel Subscription</a>
+            </div>
+        </div>
+        }
+    </div>
+    <br />
+    <div class="col-5">
+        <div class="card">
+            <div class="card-header">
+                <b>Recent Activity</b>
+            </div>
+            <div class="card-body">
+                @if (Model.UserBillingViewModel.BillingActivities.Count < 1)
+                {
+                    <p>No activity to display.</p>
+                }
+                else
+                {
+                    foreach (var activity in Model.UserBillingViewModel.BillingActivities)
+                    {
+                        <p>@activity.Details.Message for $@activity.Details.Amount on @activity.Date.ToLongDateString()</p>
+                    }
+                }
+                <p><i>Note: Activity shown here is only since DevBetter's transistion to the Stripe payment handler.</i></p>
+            </div>
+        </div>
+    </div>
+</div>

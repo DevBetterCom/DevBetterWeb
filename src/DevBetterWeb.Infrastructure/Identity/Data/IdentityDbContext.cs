@@ -1,10 +1,10 @@
-﻿using DevBetterWeb.Web.Areas.Identity.Data;
+﻿using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Models
 {
-    public class IdentityDbContext : IdentityDbContext<ApplicationUser>
+  public class IdentityDbContext : IdentityDbContext<ApplicationUser>
     {
         public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
             : base(options)

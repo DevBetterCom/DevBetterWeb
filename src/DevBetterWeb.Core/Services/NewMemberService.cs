@@ -16,16 +16,19 @@ namespace DevBetterWeb.Core.Services
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
+    private readonly IMemberRegistrationService _memberRegistrationService;
 
     public NewMemberService(IRepository repository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
-      IEmailService emailService)
+      IEmailService emailService,
+      IMemberRegistrationService memberRegistrationService)
     {
       _repository = repository;
       _userRoleMembershipService = userRoleMembershipService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _emailService = emailService;
+      _memberRegistrationService = memberRegistrationService;
     }
 
     public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
@@ -74,7 +77,7 @@ namespace DevBetterWeb.Core.Services
           throw new InvalidEmailException();
         }
       }
-      catch(Exception e)
+      catch (Exception e)
       {
         ValidEmailAndInviteCode = "Invalid email or invite code: " + e.GetType().ToString();
       }
@@ -84,7 +87,7 @@ namespace DevBetterWeb.Core.Services
 
     public async Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode)
     {
-      Member member = CreateNewMember(userId, firstName, lastName);
+      Member member = await CreateNewMemberAsync(userId, firstName, lastName);
       await AddUserToMemberRoleAsync(userId);
 
       var spec = new InvitationByInviteCodeSpec(inviteCode);
@@ -94,18 +97,19 @@ namespace DevBetterWeb.Core.Services
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-      CreateSubscriptionForMember(member.Id, subscriptionDateTimeRange);
+      await CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
+      await _repository.UpdateAsync(invite);
 
       return member;
     }
 
 
-    private Member CreateNewMember(string userId, string firstName, string lastName)
+    private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName)
     {
-      Member member = new Member(userId);
+      Member member = await _memberRegistrationService.RegisterMemberAsync(userId);
       member.UpdateName(firstName, lastName);
 
       return member;
@@ -119,12 +123,15 @@ namespace DevBetterWeb.Core.Services
 
     }
 
-    private Subscription CreateSubscriptionForMember(int memberId, DateTimeRange subscriptionDateTimeRange)
+    private async Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange)
     {
       var subscription = new Subscription();
       subscription.MemberId = memberId;
       subscription.Dates = subscriptionDateTimeRange;
-      return subscription;
+
+      var member = await _repository.GetByIdAsync<Member>(memberId);
+
+      member.AddSubscription(subscription);
     }
 
     private string GetRegistrationUrl(string inviteCode, string inviteEmail)
@@ -133,6 +140,5 @@ namespace DevBetterWeb.Core.Services
 
       return url;
     }
-
   }
 }

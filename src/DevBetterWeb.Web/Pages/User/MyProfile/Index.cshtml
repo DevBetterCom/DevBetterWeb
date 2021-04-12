@@ -125,97 +125,107 @@
                 </div>
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/EditAvatar">Edit</a>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <b>Links</b>
-                </div>
-                <div class="card-body">
-
-                    <label class="font-weight-bold">Blog</label>
-                    @if (Model.UserProfileViewModel.BlogUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.BlogUrl</p>
-                    }
-
-                    <label class="font-weight-bold">CodinGame</label>
-                    @if (Model.UserProfileViewModel.CodinGameUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.CodinGameUrl</p>
-                    }
-
-                    <label class="font-weight-bold">GitHub</label>
-                    @if (Model.UserProfileViewModel.GithubUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.GithubUrl</p>
-                    }
-
-                    <label class="font-weight-bold">LinkedIn</label>
-                    @if (Model.UserProfileViewModel.LinkedInUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.LinkedInUrl</p>
-                    }
-
-                    <label class="font-weight-bold">Twitter</label>
-                    @if (Model.UserProfileViewModel.TwitterUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.TwitterUrl</p>
-                    }
-
-                    <label class="font-weight-bold">Twitch</label>
-                    @if (Model.UserProfileViewModel.TwitchUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.TwitchUrl</p>
-                    }
-
-                    <label class="font-weight-bold">YouTube</label>
-                    @if (Model.UserProfileViewModel.YouTubeUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.YouTubeUrl</p>
-                    }
-
-                    <label class="font-weight-bold">Other</label>
-                    @if (Model.UserProfileViewModel.OtherUrl == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.OtherUrl</p>
-                    }
-
-                    <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
-
-                </div>
-            </div>
-
         </div>
+        <br />
+        <div class="card">
+            <div class="card-header">
+                <b>Links</b>
+            </div>
+            <div class="card-body">
+
+                <label class="font-weight-bold">Blog</label>
+                @if (Model.UserProfileViewModel.BlogUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.BlogUrl</p>
+                }
+
+                <label class="font-weight-bold">CodinGame</label>
+                @if (Model.UserProfileViewModel.CodinGameUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.CodinGameUrl</p>
+                }
+
+                <label class="font-weight-bold">GitHub</label>
+                @if (Model.UserProfileViewModel.GithubUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.GithubUrl</p>
+                }
+
+                <label class="font-weight-bold">LinkedIn</label>
+                @if (Model.UserProfileViewModel.LinkedInUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.LinkedInUrl</p>
+                }
+
+                <label class="font-weight-bold">Twitter</label>
+                @if (Model.UserProfileViewModel.TwitterUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.TwitterUrl</p>
+                }
+
+                <label class="font-weight-bold">Twitch</label>
+                @if (Model.UserProfileViewModel.TwitchUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.TwitchUrl</p>
+                }
+
+                <label class="font-weight-bold">YouTube</label>
+                @if (Model.UserProfileViewModel.YouTubeUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.YouTubeUrl</p>
+                }
+
+                <label class="font-weight-bold">Other</label>
+                @if (Model.UserProfileViewModel.OtherUrl == null)
+                {
+                    <p>none</p>
+                }
+                else
+                {
+                    <p>@Model.UserProfileViewModel.OtherUrl</p>
+                }
+
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
+
+            </div>
+        </div>
+        <br />
+        @*UNCOMMENT WHEN STRIPE GOES LIVE
+        <div class="card">
+            <div class="card-header">
+                <b>Billing Information</b>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
+            </div>
+        </div>*@
     </div>
 </div>

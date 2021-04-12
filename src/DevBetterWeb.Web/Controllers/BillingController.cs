@@ -6,26 +6,21 @@ using Newtonsoft.Json;
 
 namespace DevBetterWeb.Web.Controllers
 {
+
   [Route("create-subscription")]
   [ApiController]
   public class BillingController : Controller
   {
-    private readonly IPaymentHandlerPaymentMethod _paymentHandlerPaymentMethod;
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
 
-    public BillingController(IPaymentHandlerPaymentMethod paymentHandlerPaymentMethod,
-      IPaymentHandlerCustomer paymentHandlerCustomer, IPaymentHandlerSubscription paymentHandlerSubscription)
+    public BillingController(IPaymentHandlerSubscription paymentHandlerSubscription)
     {
-      _paymentHandlerPaymentMethod = paymentHandlerPaymentMethod;
-      _paymentHandlerCustomer = paymentHandlerCustomer;
       _paymentHandlerSubscription = paymentHandlerSubscription;
     }
 
     [HttpPost]
     public IPaymentHandlerSubscriptionDTO AttemptToCreateSubscription(SubscriptionCreateRequest req)
     {
-
       try
       {
         var subscription = CreateSubscription(req);
@@ -46,14 +41,8 @@ namespace DevBetterWeb.Web.Controllers
       var paymentMethodId = req.PaymentMethodId;
       var priceId = req.PriceId;
 
-      // attach payment method
-      _paymentHandlerPaymentMethod.AttachPaymentMethodToCustomer(paymentMethodId!, customerId!);
-
-      // update customer's default invoice payment method
-      _paymentHandlerCustomer.UpdatePaymentMethod(customerId!, paymentMethodId!);
-
       //create subscription
-      var subscriptionDTO = _paymentHandlerSubscription.CreateSubscription(customerId!, priceId!);
+      var subscriptionDTO = _paymentHandlerSubscription.CreateSubscription(customerId!, priceId!, paymentMethodId!);
       return subscriptionDTO;
     }
 

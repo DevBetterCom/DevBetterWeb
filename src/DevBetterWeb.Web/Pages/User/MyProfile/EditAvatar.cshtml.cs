@@ -6,7 +6,7 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Web.Areas.Identity.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

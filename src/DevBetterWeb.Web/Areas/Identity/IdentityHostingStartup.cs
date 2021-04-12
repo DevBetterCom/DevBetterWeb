@@ -1,4 +1,4 @@
-﻿using DevBetterWeb.Web.Areas.Identity.Data;
+﻿using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

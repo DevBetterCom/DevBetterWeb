@@ -54,6 +54,7 @@ namespace DevBetterWeb.Core.Entities
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
+    public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
 
 
     public string UserFullName()
@@ -207,6 +208,36 @@ namespace DevBetterWeb.Core.Entities
       }
     }
 
+    public void AddSubscription(Subscription subscription)
+    {
+      if (!Subscriptions.Any(s => s.Id == subscription.Id))
+      {
+        Subscriptions.Add(subscription);
+
+        CreateOrUpdateUpdateEvent("Subscription Added");
+      }
+    }
+    public void ExtendCurrentSubscription(DateTime newEndDate)
+    { 
+      for (int i = 0; i < Subscriptions.Count; i++)
+      {
+        Subscription s = Subscriptions[i];
+        if(s.Dates.Contains(DateTime.Today))
+        {
+          s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
+          CreateOrUpdateUpdateEvent("Subscription Updated");
+        }
+      }
+    }
+
+    public void AddBillingActivity(string message, decimal amount = 0)
+    {
+      var details = new BillingDetails(message, amount);
+      var activity = new BillingActivity(Id, DateTime.Now, details);
+      BillingActivities.Add(activity);
+      CreateOrUpdateUpdateEvent("BillingActivities");
+    }
+
     public void UpdateDiscord(string? discordUsername)
     {
       if (DiscordUsername == discordUsername) return;
@@ -233,7 +264,7 @@ namespace DevBetterWeb.Core.Entities
     {
       if (Subscriptions == null || !Subscriptions.Any()) return 0;
 
-      return Subscriptions.Sum(s => s.Dates.ToDays(DateTime.Today));
+      return Subscriptions.Sum(s => s.Dates.ToDaysToDate(DateTime.Today));
     }
 
     public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
@@ -255,7 +286,7 @@ namespace DevBetterWeb.Core.Entities
         var member = addressUpdatedEvent.Member;
         var oldAddress = addressUpdatedEvent.OldAddress;
 
-        if(member.ShippingAddress == null)
+        if (member.ShippingAddress == null)
         {
           member.CityLocation = null;
           await _repository.UpdateAsync(member);
@@ -285,7 +316,7 @@ namespace DevBetterWeb.Core.Entities
           var location = geometry.GetProperty("location");
           var lat = location.GetProperty("lat");
           var lng = location.GetProperty("lng");
-          
+
           decimal latdec;
           bool parseResult = decimal.TryParse(lat.ToString(), out latdec);
           decimal lngdec;
