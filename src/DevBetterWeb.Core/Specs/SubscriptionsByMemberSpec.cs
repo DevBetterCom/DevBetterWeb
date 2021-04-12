@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs
 {
-    public class SubscriptionsByMemberSpec : Specification<Subscription>
+    public class SubscriptionsByMemberSpec : Specification<MemberSubscription>
     {
         public SubscriptionsByMemberSpec(int memberId)
         {
