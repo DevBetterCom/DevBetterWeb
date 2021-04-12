@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DevBetterWeb.Core.Enums;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
@@ -97,6 +99,31 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return status;
     }
 
+    public BillingPeriod GetBillingPeriod(string subscriptionId)
+    {
+      var subscription = GetSubscription(subscriptionId);
+
+      var billingPeriod = GetSubscriptionBillingInterval(subscription);
+
+      return billingPeriod;
+    }
+
+    private BillingPeriod GetSubscriptionBillingInterval(Subscription subscription)
+    {
+      var item = subscription.Items.Data[0];
+      var period = item.Price.Recurring.Interval;
+
+      if (period == "month")
+      {
+        return BillingPeriod.Month;
+      }
+      if (period == "year")
+      {
+        return BillingPeriod.Year;
+      }
+      throw new InvalidBillingPeriodException();
+    }
+
     private DateTime GetEndDate(Subscription subscription)
     {
       DateTime endDate = subscription.CurrentPeriodEnd;
@@ -113,12 +140,20 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     private Stripe.Subscription GetSubscription(string subscriptionId)
     {
-
       var subscription = _subscriptionService.Get(subscriptionId);
 
       return subscription;
     }
 
+    public string GetAssociatedProductName(string subscriptionId)
+    {
+      var subscription = _subscriptionService.Get(subscriptionId);
+
+      var item = subscription.Items.Data[0];
+      var productNickname = item.Price.Nickname;
+
+      return productNickname;
+    }
   }
 
 }

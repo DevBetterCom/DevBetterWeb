@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 
@@ -8,55 +9,41 @@ namespace DevBetterWeb.Core.Services
   public class MemberAddBillingActivityService : IMemberAddBillingActivityService
   {
     private readonly IUserLookupService _userLookup;
-    private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
     private readonly IRepository _repository;
 
     public MemberAddBillingActivityService(IUserLookupService userLookup,
-      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService,
       IRepository repository)
     {
       _userLookup = userLookup;
-      _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
       _repository = repository;
     }
 
-    public async Task AddSubscriptionCreationBillingActivity(string email, decimal amount)
+    public async Task AddSubscriptionCreationBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      var message = $"{member.UserFullName()} subscribed to DevBetter";
-
-      member.AddBillingActivity(message, amount);
+      member.AddBillingActivity(subscriptionPlanName, "Subscribed", billingPeriod, amount);
     }
 
-    public async Task AddSubscriptionRenewalBillingActivity(string email, decimal amount)
+    public async Task AddSubscriptionRenewalBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      var message = $"{member.UserFullName()} renewed their subscription";
-
-      member.AddBillingActivity(message, amount);
+      member.AddBillingActivity(subscriptionPlanName, "Renewed", billingPeriod, amount);
     }
 
-    public async Task AddSubscriptionCancellationBillingActivity(string email)
+    public async Task AddSubscriptionCancellationBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      var endDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
-      var endDateString = endDate.ToLongDateString();
-
-      var message = $"{member.UserFullName()} cancelled their subscription. They will lose access to DevBetter at the end of their billing cycle, on {endDateString}.";
-
-      member.AddBillingActivity(message);
+      member.AddBillingActivity(subscriptionPlanName, "Cancelled", billingPeriod);
     }
 
-    public async Task AddSubscriptionEndingBillingActivity(string email)
+    public async Task AddSubscriptionEndingBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      var message = $"{member.UserFullName()}'s subscription ended";
-
-      member.AddBillingActivity(message);
+      member.AddBillingActivity(subscriptionPlanName, "Ended", billingPeriod);
     }
 
     private async Task<Member> GetMemberByEmailAsync(string email)

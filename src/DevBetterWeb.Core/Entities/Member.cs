@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
@@ -230,9 +231,9 @@ namespace DevBetterWeb.Core.Entities
       }
     }
 
-    public void AddBillingActivity(string message, decimal amount = 0)
+    public void AddBillingActivity(string subscriptionPlanName, string actionVerbPastTense, BillingPeriod billingPeriod, decimal amount = 0)
     {
-      var details = new BillingDetails(message, amount);
+      var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, amount);
       var activity = new BillingActivity(Id, DateTime.Now, details);
       BillingActivities.Add(activity);
       CreateOrUpdateUpdateEvent("BillingActivities");
