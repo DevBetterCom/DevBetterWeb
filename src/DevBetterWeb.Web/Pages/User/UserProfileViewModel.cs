@@ -35,7 +35,6 @@ namespace DevBetterWeb.Web.Pages.User
     public List<Book> BooksRead { get; set; } = new List<Book>();
     public int? AddedBook { get; set; }
     public int? RemovedBook { get; set; }
-    public UserBooksUpdateModel userBooksUpdateModel { get; set; } = new UserBooksUpdateModel();
 
     public UserProfileViewModel()
     {
@@ -44,23 +43,25 @@ namespace DevBetterWeb.Web.Pages.User
 
     public UserProfileViewModel(Member member)
     {
-
-      BlogUrl = member.BlogUrl;
-      CodinGameUrl = member.CodinGameUrl;
-      TwitchUrl = member.TwitchUrl;
-      YouTubeUrl = member.YouTubeUrl;
-      TwitterUrl = member.TwitterUrl;
-      GithubUrl = member.GitHubUrl;
-      LinkedInUrl = member.LinkedInUrl;
-      OtherUrl = member.OtherUrl;
-      AboutInfo = member.AboutInfo;
       FirstName = member.FirstName;
       LastName = member.LastName;
-      Address = member.Address;
-      PEFriendCode = member.PEFriendCode;
-      PEUsername = member.PEUsername;
       BooksRead = member.BooksRead!;
-      DiscordUsername = member.DiscordUsername;
+
+      string valueToUseIfNull = "none";
+
+      BlogUrl = member.BlogUrl ?? valueToUseIfNull;
+      CodinGameUrl = member.CodinGameUrl ?? valueToUseIfNull;
+      TwitchUrl = member.TwitchUrl ?? valueToUseIfNull;
+      YouTubeUrl = member.YouTubeUrl ?? valueToUseIfNull;
+      TwitterUrl = member.TwitterUrl ?? valueToUseIfNull;
+      GithubUrl = member.GitHubUrl ?? valueToUseIfNull;
+      LinkedInUrl = member.LinkedInUrl ?? valueToUseIfNull;
+      OtherUrl = member.OtherUrl ?? valueToUseIfNull;
+      AboutInfo = member.AboutInfo ?? valueToUseIfNull;
+      Address = member.Address ?? valueToUseIfNull;
+      PEFriendCode = member.PEFriendCode ?? valueToUseIfNull;
+      PEUsername = member.PEUsername ?? valueToUseIfNull;
+      DiscordUsername = member.DiscordUsername ?? valueToUseIfNull;
 
     }
 
