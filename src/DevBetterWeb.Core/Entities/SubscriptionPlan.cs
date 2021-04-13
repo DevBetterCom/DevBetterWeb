@@ -12,5 +12,10 @@ namespace DevBetterWeb.Core.Entities
       Details = details;
     }
 
+    public SubscriptionPlan()
+    {
+      Details = new SubscriptionPlanDetails();
+    }
+
   }
 }
