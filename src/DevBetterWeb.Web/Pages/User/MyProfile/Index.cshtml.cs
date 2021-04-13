@@ -22,19 +22,24 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
     public List<Book> Books { get; set; } = new List<Book>();
 
+    public string AlumniProgressPercentage { get; set; }
+
 #nullable enable
 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository _repository;
+    private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public IndexModel(UserManager<ApplicationUser> userManager,
         IMemberRegistrationService memberRegistrationService,
-        IRepository repository)
+        IRepository repository,
+        IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
       _repository = repository;
+      _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
     public async Task OnGetAsync()
@@ -53,7 +58,15 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
       Books = await _repository.ListAsync<Book>();
 
+      int value = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
+      AlumniProgressPercentage = $"{value}%";
+
       UserProfileViewModel = new UserProfileViewModel(member);
+    }
+
+    public bool GetIsAlumni()
+    {
+      return User.IsInRole(AuthConstants.Roles.ALUMNI);
     }
 
     //public async Task OnPost()
