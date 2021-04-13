@@ -5,7 +5,12 @@ namespace DevBetterWeb.Core.Entities
 {
   public class SubscriptionPlan : BaseEntity
   {
-    public SubscriptionPlanDetails? Details { get; set; }
+    public SubscriptionPlanDetails Details { get; set; }
+
+    public SubscriptionPlan(SubscriptionPlanDetails details)
+    {
+      Details = details;
+    }
 
   }
 }
