@@ -17,6 +17,13 @@ namespace DevBetterWeb.Core.ValueObjects
       BillingPeriod = billingPeriod;
     }
 
+    public SubscriptionPlanDetails()
+    {
+      Name = "";
+      PricePerBillingPeriod = 0;
+      BillingPeriod = BillingPeriod.None;
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
       yield return PricePerBillingPeriod;
