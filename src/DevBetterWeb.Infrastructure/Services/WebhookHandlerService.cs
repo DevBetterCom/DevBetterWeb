@@ -47,7 +47,9 @@ namespace DevBetterWeb.Infrastructure.Services
       var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
 
       await _memberCancellationService.SendFutureCancellationEmailAsync(email);
-      await _memberAddBillingActivityService.AddSubscriptionCancellationBillingActivity(email);
+      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+      await _memberAddBillingActivityService.AddSubscriptionCancellationBillingActivity(email, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleCustomerSubscriptionEndedAsync(string json)
@@ -58,7 +60,9 @@ namespace DevBetterWeb.Infrastructure.Services
 
       await _memberCancellationService.RemoveUserFromMemberRoleAsync(email);
       await _memberCancellationService.SendCancellationEmailAsync(email);
-      await _memberAddBillingActivityService.AddSubscriptionEndingBillingActivity(email);
+      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+      await _memberAddBillingActivityService.AddSubscriptionEndingBillingActivity(email, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleCustomerSubscriptionRenewedAsync(string json)
@@ -73,7 +77,9 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
 
-      await _memberAddBillingActivityService.AddSubscriptionRenewalBillingActivity(email, paymentAmount);
+      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+      await _memberAddBillingActivityService.AddSubscriptionRenewalBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleNewCustomerSubscriptionAsync(string json)
@@ -100,9 +106,10 @@ namespace DevBetterWeb.Infrastructure.Services
 
         await _newMemberService.SendRegistrationEmailAsync(invite);
 
-        await _memberAddBillingActivityService.AddSubscriptionCreationBillingActivity(email, paymentAmount);
+        var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+        var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+        await _memberAddBillingActivityService.AddSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
       }
-
     }
   }
 }

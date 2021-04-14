@@ -5,6 +5,7 @@ namespace DevBetterWeb.Core.Interfaces
 {
   public interface IMemberSubscriptionPeriodCalculationsService
   {
+    bool GetHasCurrentSubscription(Member member);
     Subscription GetCurrentSubscription(Member member);
     DateTime GetCurrentSubscriptionEndDate(Member member);
     DateTime GetGraduationDate(Member member);

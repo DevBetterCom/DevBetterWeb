@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
@@ -48,7 +49,7 @@ namespace DevBetterWeb.Core.Entities
     public string? CodinGameUrl { get; private set; }
     public string? DiscordUsername { get; private set; }
 
-    public List<Book>? BooksRead { get; set; } = new List<Book>();
+    public List<Book> BooksRead { get; set; } = new List<Book>();
 
     public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
@@ -218,11 +219,11 @@ namespace DevBetterWeb.Core.Entities
       }
     }
     public void ExtendCurrentSubscription(DateTime newEndDate)
-    { 
+    {
       for (int i = 0; i < Subscriptions.Count; i++)
       {
         Subscription s = Subscriptions[i];
-        if(s.Dates.Contains(DateTime.Today))
+        if (s.Dates.Contains(DateTime.Today))
         {
           s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
           CreateOrUpdateUpdateEvent("Subscription Updated");
@@ -230,10 +231,10 @@ namespace DevBetterWeb.Core.Entities
       }
     }
 
-    public void AddBillingActivity(string message, decimal amount = 0)
+    public void AddBillingActivity(string subscriptionPlanName, string actionVerbPastTense, BillingPeriod billingPeriod, decimal amount = 0)
     {
-      var details = new BillingDetails(message, amount);
-      var activity = new BillingActivity(Id, DateTime.Now, details);
+      var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
+      var activity = new BillingActivity(Id, details);
       BillingActivities.Add(activity);
       CreateOrUpdateUpdateEvent("BillingActivities");
     }

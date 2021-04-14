@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.ValueObjects;
 using System;
+using DevBetterWeb.Core.Enums;
 
 namespace DevBetterWeb.Core.Interfaces
 {
@@ -14,5 +15,7 @@ namespace DevBetterWeb.Core.Interfaces
     IPaymentHandlerSubscriptionDTO CreateSubscriptionError(string errorMessage);
     bool GetCancelAtPeriodEnd(string subscriptionId);
     Task CancelSubscriptionAtPeriodEnd(string customerEmail);
+    BillingPeriod GetBillingPeriod(string subscriptionId);
+    string GetAssociatedProductName(string subscriptionId);
   }
 }

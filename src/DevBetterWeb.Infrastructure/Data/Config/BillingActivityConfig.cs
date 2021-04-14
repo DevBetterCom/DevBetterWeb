@@ -11,8 +11,12 @@ namespace DevBetterWeb.Infrastructure.Data.Config
       builder.Property(x => x.MemberId).HasMaxLength(500);
       builder.OwnsOne(x => x.Details, d =>
       {
-        d.Property(p => p!.Message).HasMaxLength(500).HasDefaultValue("");
         d.Property(p => p!.Amount).HasDefaultValue(0);
+        d.Property(p => p!.ActionVerbPastTense).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+        d.Property(p => p!.MemberName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+        d.Property(p => p!.SubscriptionPlanName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+        d.Property(p => p!.BillingPeriod).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
+        d.Property(p => p!.Date);
       });
     }
   }

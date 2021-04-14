@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
@@ -18,14 +20,17 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
     private readonly IRepository _repository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
+    private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public BillingModel(IRepository repository, 
       UserManager<ApplicationUser> userManager,
-      IMemberRegistrationService memberRegistrationService)
+      IMemberRegistrationService memberRegistrationService,
+      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _repository = repository;
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
+      _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
     public async Task OnGetAsync()
@@ -41,7 +46,20 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
         member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
       }
 
-      UserBillingViewModel = new UserBillingViewModel(member);
+      if(_memberSubscriptionPeriodCalculationsService.GetHasCurrentSubscription(member))
+      {
+        var currentSubscription = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscription(member);
+        var subscriptionPlan = await _repository.GetByIdAsync<SubscriptionPlan>(currentSubscription.SubscriptionPlanId);
+        var currentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
+        var graduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
+
+        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), subscriptionPlan!.Details!.Name, subscriptionPlan!.Details!.BillingPeriod, currentSubscriptionEndDate, graduationDate, currentSubscription);
+      }
+      else
+      {
+        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member));
+      }
+
     }
 
     public string GetOverviewBody()
@@ -55,7 +73,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
           message += $"If there is no interruption to your subscription, you will graduate to Alumnus status on {UserBillingViewModel.GraduationDate}.\n";
         }
 
-        message += $"You are currently subscribed to a {UserBillingViewModel.SubscriptionPeriod} plan. Your current subscription expires on {UserBillingViewModel.CurrentSubscriptionEndDate} and will be automatically renewed at that time. ";
+        message += $"You are currently subscribed to a {UserBillingViewModel.BillingPeriod} plan. Your current subscription expires on {UserBillingViewModel.CurrentSubscriptionEndDate} and will be automatically renewed at that time. ";
       }
 
       return message;
