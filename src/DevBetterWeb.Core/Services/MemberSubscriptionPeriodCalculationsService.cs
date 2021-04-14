@@ -6,7 +6,7 @@ namespace DevBetterWeb.Core.Services
 {
   public class MemberSubscriptionPeriodCalculationsService : IMemberSubscriptionPeriodCalculationsService
   {
-    private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
+    private const double DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
 
     public bool GetHasCurrentSubscription(Member member)
     {
