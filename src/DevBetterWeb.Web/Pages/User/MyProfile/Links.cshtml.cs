@@ -43,16 +43,6 @@ namespace DevBetterWeb.Web.Pages.User
             var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
             var member = await _repository.GetAsync(spec);
 
-            //var books = await _appDbContext.Books
-            //    .Include(book => book.MembersWhoHaveRead)
-            //    .ToListAsync();
-
-            //var members = await _appDbContext.Members
-            //    .Include(member => member.BooksRead)
-            //    .ToListAsync();
-
-
-
             if (member == null)
             {
                 member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
