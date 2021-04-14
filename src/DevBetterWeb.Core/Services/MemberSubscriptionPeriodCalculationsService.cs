@@ -54,5 +54,15 @@ namespace DevBetterWeb.Core.Services
 
       return endDate;
     }
+
+    public int GetPercentageProgressToAlumniStatus(Member member)
+    {
+      var totalSubscribedDays = member.TotalSubscribedDays();
+
+      var percentage = totalSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS;
+      var percentageInt = (int)percentage;
+
+      return percentageInt;
+    }
   }
 }
