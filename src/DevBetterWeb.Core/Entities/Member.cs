@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
@@ -263,7 +264,9 @@ namespace DevBetterWeb.Core.Entities
 
     public int TotalSubscribedDays()
     {
-      if (Subscriptions == null || !Subscriptions.Any()) return 0;
+      Guard.Against.Null(Subscriptions, nameof(Subscriptions));
+
+      if (!Subscriptions.Any()) return 0;
 
       return Subscriptions.Sum(s => s.Dates.ToDaysToDate(DateTime.Today));
     }
