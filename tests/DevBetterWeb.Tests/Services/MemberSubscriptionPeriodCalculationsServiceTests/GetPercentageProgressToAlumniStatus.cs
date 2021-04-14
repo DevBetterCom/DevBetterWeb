@@ -21,14 +21,18 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionPeriodCalculationsServic
       _memberSubscriptionPeriodCalculationsService = new MemberSubscriptionPeriodCalculationsService();
     }
 
-    [Fact]
-    public void CalculatesCorrectPercentageGivenPercentageBelow100()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(73)]
+    [InlineData(730)]
+    [InlineData(63)]
+    public void CalculatesCorrectPercentageGivenPercentageBelow100(int days)
     {
       var member = MemberHelpers.CreateWithDefaultConstructor();
-      var subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(73);
+      var subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(days);
       member.AddSubscription(subscription);
 
-      var expectedPercentage = 100 * 73 / 730;
+      var expectedPercentage = (int) (100 * ((double)days / (double) 730));
 
       var percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
 
