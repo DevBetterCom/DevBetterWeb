@@ -48,7 +48,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
       AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
 
-      var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+      var spec = new MemberByUserIdWithBooksReadAndSubscriptionsSpec(applicationUser.Id);
       var member = await _repository.GetAsync(spec);
 
       if (member == null)
@@ -58,8 +58,8 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
       Books = await _repository.ListAsync<Book>();
 
-      int value = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
-      AlumniProgressPercentage = $"{value}%";
+      int percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
+      AlumniProgressPercentage = $"{percentage}%";
 
       UserProfileViewModel = new UserProfileViewModel(member);
     }
