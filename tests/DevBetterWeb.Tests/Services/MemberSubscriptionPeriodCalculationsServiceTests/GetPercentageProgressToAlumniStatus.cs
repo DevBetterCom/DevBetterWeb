@@ -20,7 +20,7 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionPeriodCalculationsServic
     {
       _memberSubscriptionPeriodCalculationsService = new MemberSubscriptionPeriodCalculationsService();
     }
-
+    
     [Theory]
     [InlineData(0)]
     [InlineData(73)]
