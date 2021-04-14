@@ -64,46 +64,12 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       UserProfileViewModel = new UserProfileViewModel(member);
     }
 
+
     public bool GetIsAlumni()
     {
       return User.IsInRole(AuthConstants.Roles.ALUMNI);
     }
 
-    //public async Task OnPost()
-    //{
-    //    if (!ModelState.IsValid) return;
-    //    // TODO: consider only getting the user alias not the whole URL for social media links
-    //    // TODO: assess risk of XSS attacks and how to mitigate
 
-    //    var currentUserName = User.Identity!.Name;
-    //    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
-
-    //    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    //    var member = await _repository.GetAsync(spec);
-
-    //    if (UserProfileUpdateModel.AddedBook.HasValue)
-    //    {
-    //        AddedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.AddedBook.Value);
-
-    //        member.AddBookRead(AddedBook);
-    //    }
-
-    //    if (UserProfileUpdateModel.RemovedBook.HasValue)
-    //    {
-    //        RemovedBook = await _repository.GetByIdAsync<Book>(UserProfileUpdateModel.RemovedBook.Value);
-
-    //        member.RemoveBookRead(RemovedBook);
-    //    }
-
-    //    member.UpdateName(UserProfileUpdateModel.FirstName, UserProfileUpdateModel.LastName); 
-    //    member.UpdatePEInfo(UserProfileUpdateModel.PEFriendCode, UserProfileUpdateModel.PEUsername);
-    //    member.UpdateAboutInfo(UserProfileUpdateModel.AboutInfo);
-    //    member.UpdateAddress(UserProfileUpdateModel.Address);
-    //    member.UpdateLinks(UserProfileUpdateModel.BlogUrl, UserProfileUpdateModel.GithubUrl, UserProfileUpdateModel.LinkedInUrl,
-    //        UserProfileUpdateModel.OtherUrl, UserProfileUpdateModel.TwitchUrl, UserProfileUpdateModel.YouTubeUrl, UserProfileUpdateModel.TwitterUrl);
-
-    //    // this is trying to add to bookmember database - why?
-    //    await _repository.UpdateAsync(member);
-    //}
   }
 }

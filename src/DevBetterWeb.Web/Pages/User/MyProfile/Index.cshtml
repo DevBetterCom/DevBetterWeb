@@ -27,56 +27,17 @@
                 <div class="form-group">
                     <label class="font-weight-bold">Shipping Address</label>
                     <span class="text-secondary small">Only administrators can view this information</span>
-                    @if (Model.UserProfileViewModel.Address == null)
-                    {
-                        <p>none</p>
-                    }
-                    else
-                    {
-                        <p>@Model.UserProfileViewModel.Address</p>
-                    }
+                    <p>@Model.UserProfileViewModel.Address</p>
                 </div>
 
                 <label class="font-weight-bold">About</label>
-                @if (Model.UserProfileViewModel.AboutInfo == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.AboutInfo</p>
-                }
-
+                <p>@Model.UserProfileViewModel.AboutInfo</p>
                 <label class="font-weight-bold">Discord Username</label>
-                @if (Model.UserProfileViewModel.DiscordUsername == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.DiscordUsername</p>
-                }
-
+                <p>@Model.UserProfileViewModel.DiscordUsername</p>
                 <label class="font-weight-bold">Project Euler Username</label>
-                @if (Model.UserProfileViewModel.PEUsername == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.PEUsername</p>
-                }
-
+                <p>@Model.UserProfileViewModel.PEUsername</p>
                 <label class="font-weight-bold">Project Euler Friend Code</label>
-                @if (Model.UserProfileViewModel.PEFriendCode == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.PEFriendCode</p>
-                }
-
+                <p>@Model.UserProfileViewModel.PEFriendCode</p>
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Personal">Edit</a>
 
             </div>
@@ -163,84 +124,21 @@
             <div class="card-body">
 
                 <label class="font-weight-bold">Blog</label>
-                @if (Model.UserProfileViewModel.BlogUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.BlogUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.BlogUrl</p>
                 <label class="font-weight-bold">CodinGame</label>
-                @if (Model.UserProfileViewModel.CodinGameUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.CodinGameUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.CodinGameUrl</p>
                 <label class="font-weight-bold">GitHub</label>
-                @if (Model.UserProfileViewModel.GithubUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.GithubUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.GithubUrl</p>
                 <label class="font-weight-bold">LinkedIn</label>
-                @if (Model.UserProfileViewModel.LinkedInUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.LinkedInUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.LinkedInUrl</p>
                 <label class="font-weight-bold">Twitter</label>
-                @if (Model.UserProfileViewModel.TwitterUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.TwitterUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.TwitterUrl</p>
                 <label class="font-weight-bold">Twitch</label>
-                @if (Model.UserProfileViewModel.TwitchUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.TwitchUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.TwitchUrl</p>
                 <label class="font-weight-bold">YouTube</label>
-                @if (Model.UserProfileViewModel.YouTubeUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.YouTubeUrl</p>
-                }
-
+                <p>@Model.UserProfileViewModel.YouTubeUrl</p>
                 <label class="font-weight-bold">Other</label>
-                @if (Model.UserProfileViewModel.OtherUrl == null)
-                {
-                    <p>none</p>
-                }
-                else
-                {
-                    <p>@Model.UserProfileViewModel.OtherUrl</p>
-                }
+                <p>@Model.UserProfileViewModel.OtherUrl</p>
 
                 <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
 
@@ -248,13 +146,13 @@
         </div>
         <br />
         @*UNCOMMENT WHEN STRIPE GOES LIVE
-        <div class="card">
-            <div class="card-header">
-                <b>Billing Information</b>
-            </div>
-            <div class="card-body">
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
-            </div>
-        </div>*@
+            <div class="card">
+                <div class="card-header">
+                    <b>Billing Information</b>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
+                </div>
+            </div>*@
     </div>
 </div>
