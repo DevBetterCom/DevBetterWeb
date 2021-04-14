@@ -59,10 +59,14 @@ namespace DevBetterWeb.Core.Services
     {
       var totalSubscribedDays = member.TotalSubscribedDays();
 
-      var percentage = totalSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS;
-      var percentageInt = (int)percentage;
+      int percentage = (int) (100 * ((double)totalSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS));
 
-      return percentageInt;
+      if(percentage > 100)
+      {
+        return 100;
+      }
+
+      return percentage;
     }
   }
 }
