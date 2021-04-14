@@ -8,6 +8,30 @@ namespace DevBetterWeb.Core.Services
   {
     private const int DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
 
+    public bool GetHasCurrentSubscription(Member member)
+    {
+      bool hasCurrentSubscription = false;
+
+      foreach (var subscription in member.Subscriptions)
+      {
+        if (subscription.Dates.Contains(DateTime.Today))
+        {
+          hasCurrentSubscription = true;
+        }
+      }
+      return hasCurrentSubscription;
+    }
+
+    public DateTime GetGraduationDate(Member member)
+    {
+      var totalSubscribedDays = member.TotalSubscribedDays();
+
+      var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - totalSubscribedDays;
+      var graduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
+
+      return graduationDate;
+    }
+
     // none of these methods should ever be called if member does not have current subscription
     public Subscription GetCurrentSubscription(Member member)
     {
@@ -19,7 +43,6 @@ namespace DevBetterWeb.Core.Services
           return subscription;
         }
       }
-
       throw new Exceptions.NoCurrentSubscriptionFoundException();
     }
 
@@ -30,16 +53,6 @@ namespace DevBetterWeb.Core.Services
       var endDate = currentSubscription.Dates.EndDate ?? DateTime.MinValue;
 
       return endDate;
-    }
-
-    public DateTime GetGraduationDate(Member member)
-    {
-      var totalSubscribedDays = member.TotalSubscribedDays();
-
-      var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - totalSubscribedDays;
-      var graduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
-
-      return graduationDate;
     }
 
     public int GetPercentageProgressToAlumniStatus(Member member)
