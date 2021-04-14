@@ -4,14 +4,16 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210412195027_DateToBillingDetailsFromBillingActivity")]
+    partial class DateToBillingDetailsFromBillingActivity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,6 +223,26 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("Members");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubscriptionPlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -243,26 +265,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.HasIndex("ArchiveVideoId");
 
                     b.ToTable("Question");
-                });
-
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubscriptionPlanId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.SubscriptionPlan", b =>
@@ -424,16 +426,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("ShippingAddress");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
-                {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ArchiveVideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.Subscription", b =>
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberSubscription", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Member", null)
                         .WithMany("Subscriptions")
@@ -443,7 +436,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.OwnsOne("DevBetterWeb.Core.ValueObjects.DateTimeRange", "Dates", b1 =>
                         {
-                            b1.Property<int>("SubscriptionId")
+                            b1.Property<int>("MemberSubscriptionId")
                                 .HasColumnType("int");
 
                             b1.Property<DateTime?>("EndDate")
@@ -452,15 +445,24 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                             b1.Property<DateTime>("StartDate")
                                 .HasColumnType("datetime2");
 
-                            b1.HasKey("SubscriptionId");
+                            b1.HasKey("MemberSubscriptionId");
 
                             b1.ToTable("SubscriptionDates");
 
                             b1.WithOwner()
-                                .HasForeignKey("SubscriptionId");
+                                .HasForeignKey("MemberSubscriptionId");
                         });
 
                     b.Navigation("Dates")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("ArchiveVideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
