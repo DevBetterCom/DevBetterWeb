@@ -49,7 +49,7 @@ namespace DevBetterWeb.Core.Entities
     public string? CodinGameUrl { get; private set; }
     public string? DiscordUsername { get; private set; }
 
-    public List<Book>? BooksRead { get; set; } = new List<Book>();
+    public List<Book> BooksRead { get; set; } = new List<Book>();
 
     public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
@@ -219,11 +219,11 @@ namespace DevBetterWeb.Core.Entities
       }
     }
     public void ExtendCurrentSubscription(DateTime newEndDate)
-    { 
+    {
       for (int i = 0; i < Subscriptions.Count; i++)
       {
         Subscription s = Subscriptions[i];
-        if(s.Dates.Contains(DateTime.Today))
+        if (s.Dates.Contains(DateTime.Today))
         {
           s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
           CreateOrUpdateUpdateEvent("Subscription Updated");
