@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
@@ -13,60 +15,62 @@ namespace DevBetterWeb.Web.Pages.User
 {
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class MyProfileLinksModel : PageModel
-    {
+  {
 #nullable disable
-        [BindProperty]
-        public UserLinksUpdateModel UserLinksUpdateModel { get; set; }
+    [BindProperty]
+    public UserLinksUpdateModel UserLinksUpdateModel { get; set; }
 
 #nullable enable
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMemberRegistrationService _memberRegistrationService;
-        private readonly IRepository _repository;
-        private readonly AppDbContext _appDbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMemberRegistrationService _memberRegistrationService;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly AppDbContext _appDbContext;
 
-        public MyProfileLinksModel(UserManager<ApplicationUser> userManager, 
-            IMemberRegistrationService memberRegistrationService,
-            IRepository repository, AppDbContext appDbContext)
-        {
-            _userManager = userManager;
-            _memberRegistrationService = memberRegistrationService;
-            _repository = repository;
-            _appDbContext = appDbContext;
-        }
+    public MyProfileLinksModel(UserManager<ApplicationUser> userManager,
+        IMemberRegistrationService memberRegistrationService,
+        IRepository<Member> memberRepository,
+        AppDbContext appDbContext)
+    {
+      _userManager = userManager;
+      _memberRegistrationService = memberRegistrationService;
+      _memberRepository = memberRepository;
+      _appDbContext = appDbContext;
+    }
 
-        public async Task OnGetAsync()
-        {
-            var currentUserName = User.Identity!.Name;
-            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    public async Task OnGetAsync()
+    {
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-            var member = await _repository.GetAsync(spec);
+      var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+      var member = await _memberRepository.GetBySpecAsync(spec);
 
-            if (member == null)
-            {
-                member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
-            }
+      if (member == null)
+      {
+        member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
+      }
 
-            UserLinksUpdateModel = new UserLinksUpdateModel(member);
-        }
+      UserLinksUpdateModel = new UserLinksUpdateModel(member);
+    }
 
-        public async Task OnPost()
-        {
-            if (!ModelState.IsValid) return;
-            // TODO: consider only getting the user alias not the whole URL for social media links
-            // TODO: assess risk of XSS attacks and how to mitigate
+    public async Task OnPost()
+    {
+      if (!ModelState.IsValid) return;
+      // TODO: consider only getting the user alias not the whole URL for social media links
+      // TODO: assess risk of XSS attacks and how to mitigate
 
-            var currentUserName = User.Identity!.Name;
-            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-            var member = await _repository.GetAsync(spec);
+      var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
-            member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
+      member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
                 UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl);
 
-            await _repository.UpdateAsync(member);
-        }
+      await _memberRepository.UpdateAsync(member);
     }
+  }
 }

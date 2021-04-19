@@ -23,11 +23,11 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
   public class CreateModel : PageModel
   {
     private IConfiguration _configuration;
-    private readonly IRepository _repository;
+    private readonly IRepository<ArchiveVideo> _videoRepository;
 
-    public CreateModel(IRepository repository, IConfiguration configuration)
+    public CreateModel(IRepository<ArchiveVideo> videoRepository, IConfiguration configuration)
     {
-      _repository = repository;
+      _videoRepository = videoRepository;
       _configuration = configuration;
     }
 
@@ -69,7 +69,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
         VideoUrl = ""
       };
 
-      await _repository.AddAsync(videoEntity);
+      await _videoRepository.AddAsync(videoEntity);
 
       var uploadSuccess = false;
 
@@ -99,16 +99,14 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
           fileName = $"{dateString}-{videoEntity.Id}.{extension}";
           uploadSuccess = await UploadToBlob(fileName, null, stream);
         }
-
       }
 
       if (uploadSuccess)
       {
         videoEntity.VideoUrl = fileName;
-        await _repository.UpdateAsync(videoEntity);
+        await _videoRepository.UpdateAsync(videoEntity);
         return RedirectToPage("/ArchivedVideos/Index");
       }
-
 
       return RedirectToPage("./Index");
     }
@@ -158,8 +156,6 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
       {
         return false;
       }
-
     }
-
   }
 }

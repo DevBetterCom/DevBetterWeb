@@ -8,6 +8,7 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.ValueObjects;
+using System;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
@@ -16,18 +17,22 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
   {
 #nullable disable
     public UserBillingViewModel UserBillingViewModel { get; private set; }
+
 #nullable enable
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<SubscriptionPlan> _subscriptionPlanRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
-    public BillingModel(IRepository repository, 
+    public BillingModel(IRepository<Member> memberRepository, 
+      IRepository<SubscriptionPlan> subscriptionPlanRepository,
       UserManager<ApplicationUser> userManager,
       IMemberRegistrationService memberRegistrationService,
       IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _subscriptionPlanRepository = subscriptionPlanRepository;
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
@@ -39,7 +44,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
       var spec = new MemberByUserIdWithBillingActivitiesSpec(applicationUser.Id);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
 
       if (member == null)
       {
@@ -49,7 +54,9 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       if(_memberSubscriptionPeriodCalculationsService.GetHasCurrentSubscription(member))
       {
         var currentSubscription = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscription(member);
-        var subscriptionPlan = await _repository.GetByIdAsync<SubscriptionPlan>(currentSubscription.SubscriptionPlanId);
+        if (currentSubscription is null) throw new Exception($"Member {member} has no current subscription.");
+
+        var subscriptionPlan = await _subscriptionPlanRepository.GetByIdAsync(currentSubscription.SubscriptionPlanId);
         var currentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
         var graduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 

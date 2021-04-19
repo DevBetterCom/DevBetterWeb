@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
@@ -13,73 +15,75 @@ namespace DevBetterWeb.Web.Pages.User
 {
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class MyProfilePersonalModel : PageModel
-    {
+  {
 #nullable disable
-        [BindProperty]
-        public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; }
+    [BindProperty]
+    public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; }
 
 #nullable enable
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMemberRegistrationService _memberRegistrationService;
-        private readonly IRepository _repository;
-        private readonly AppDbContext _appDbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMemberRegistrationService _memberRegistrationService;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly AppDbContext _appDbContext;
 
-        public MyProfilePersonalModel(UserManager<ApplicationUser> userManager, 
-            IMemberRegistrationService memberRegistrationService,
-            IRepository repository, AppDbContext appDbContext)
-        {
-            _userManager = userManager;
-            _memberRegistrationService = memberRegistrationService;
-            _repository = repository;
-            _appDbContext = appDbContext;
-        }
+    public MyProfilePersonalModel(UserManager<ApplicationUser> userManager,
+        IMemberRegistrationService memberRegistrationService,
+        IRepository<Member> memberRepository,
+        AppDbContext appDbContext)
+    {
+      _userManager = userManager;
+      _memberRegistrationService = memberRegistrationService;
+      _memberRepository = memberRepository;
+      _appDbContext = appDbContext;
+    }
 
-        public async Task OnGetAsync()
-        {
-            var currentUserName = User.Identity!.Name;
-            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    public async Task OnGetAsync()
+    {
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdSpec(applicationUser.Id);
-            var member = await _repository.GetAsync(spec);
+      var spec = new MemberByUserIdSpec(applicationUser.Id);
+      var member = await _memberRepository.GetBySpecAsync(spec);
 
-            //var books = await _appDbContext.Books
-            //    .Include(book => book.MembersWhoHaveRead)
-            //    .ToListAsync();
+      //var books = await _appDbContext.Books
+      //    .Include(book => book.MembersWhoHaveRead)
+      //    .ToListAsync();
 
-            //var members = await _appDbContext.Members
-            //    .Include(member => member.BooksRead)
-            //    .ToListAsync();
+      //var members = await _appDbContext.Members
+      //    .Include(member => member.BooksRead)
+      //    .ToListAsync();
 
 
 
-            if (member == null)
-            {
-                member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
-            }
+      if (member == null)
+      {
+        member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
+      }
 
-            UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
-        }
+      UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
+    }
 
-        public async Task OnPost()
-        {
-            if (!ModelState.IsValid) return;
-            // TODO: consider only getting the user alias not the whole URL for social media links
-            // TODO: assess risk of XSS attacks and how to mitigate
+    public async Task OnPost()
+    {
+      if (!ModelState.IsValid) return;
+      // TODO: consider only getting the user alias not the whole URL for social media links
+      // TODO: assess risk of XSS attacks and how to mitigate
 
-            var currentUserName = User.Identity!.Name;
-            var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+      var currentUserName = User.Identity!.Name;
+      var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-            var spec = new MemberByUserIdSpec(applicationUser.Id);
-            var member = await _repository.GetAsync(spec);
+      var spec = new MemberByUserIdSpec(applicationUser.Id);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
-            member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName); 
-            member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername);
-            member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
-            member.UpdateAddress(UserPersonalUpdateModel.Address);
+      member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName);
+      member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername);
+      member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
+      member.UpdateAddress(UserPersonalUpdateModel.Address);
       member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername);
 
-            await _repository.UpdateAsync(member);
-        }
+      await _memberRepository.UpdateAsync(member);
     }
+  }
 }

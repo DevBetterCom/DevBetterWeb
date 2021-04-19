@@ -9,17 +9,18 @@ namespace DevBetterWeb.Infrastructure.Handlers
   public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
   {
     private readonly ILogger<MemberAddressUpdatedHandler> _logger;
-    private readonly IRepository _repository;
+    //private readonly IRepository _repository;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
-      ILogger<MemberAddressUpdatedHandler> logger,
-      IRepository repository)
+      ILogger<MemberAddressUpdatedHandler> logger
+      //IRepository repository
+      )
     {
       _mapCoordinateService = mapCoordinateService;
       _logger = logger;
-      _repository = repository;
+      //_repository = repository;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)

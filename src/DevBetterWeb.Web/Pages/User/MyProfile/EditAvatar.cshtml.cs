@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -38,19 +40,19 @@ namespace DevBetterWeb.Web.Pages.User
     private readonly IConfiguration _configuration;
     private readonly ILogger<EditAvatarModel> _logger;
     private readonly IDomainEventDispatcher _dispatcher;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
 
     public EditAvatarModel(UserManager<ApplicationUser> userManager,
         IConfiguration configuration,
         ILogger<EditAvatarModel> logger,
         IDomainEventDispatcher dispatcher,
-        IRepository repository)
+        IRepository<Member> memberRepository)
     {
       _userManager = userManager;
       _configuration = configuration;
       _logger = logger;
       _dispatcher = dispatcher;
-      _repository = repository;
+      _memberRepository = memberRepository;
     }
 
     public async Task OnGetAsync()
@@ -86,7 +88,8 @@ namespace DevBetterWeb.Web.Pages.User
         if (uploadSuccess)
         {
           var spec = new MemberByUserIdSpec(applicationUser.Id);
-          var member = await _repository.GetAsync(spec);
+          var member = await _memberRepository.GetBySpecAsync(spec);
+          if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
           var memberAvatarUpdatedEvent = new MemberAvatarUpdatedEvent(member);
           await _dispatcher.Dispatch(memberAvatarUpdatedEvent);

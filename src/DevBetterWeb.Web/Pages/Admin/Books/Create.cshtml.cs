@@ -10,11 +10,11 @@ namespace DevBetterWeb.Web.Pages.Admin.Books
 {
   public class CreateModel : PageModel
   {
-    private readonly IRepository _repository;
+    private readonly IRepository<Book> _bookRepository;
 
-    public CreateModel(IRepository repository)
+    public CreateModel(IRepository<Book> bookRepository)
     {
-      _repository = repository;
+      _bookRepository = bookRepository;
     }
 
     public IActionResult OnGet()
@@ -43,7 +43,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Books
       var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
       bookEntity.Events.Add(bookAddedEvent);
 
-      await _repository.AddAsync(bookEntity);
+      await _bookRepository.AddAsync(bookEntity);
 
       return RedirectToPage("./Index");
     }

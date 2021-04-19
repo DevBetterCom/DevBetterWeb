@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Enums;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 
@@ -9,13 +10,13 @@ namespace DevBetterWeb.Core.Services
   public class MemberAddBillingActivityService : IMemberAddBillingActivityService
   {
     private readonly IUserLookupService _userLookup;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
 
     public MemberAddBillingActivityService(IUserLookupService userLookup,
-      IRepository repository)
+      IRepository<Member> memberRepository)
     {
       _userLookup = userLookup;
-      _repository = repository;
+      _memberRepository = memberRepository;
     }
 
     public async Task AddSubscriptionCreationBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
@@ -50,7 +51,8 @@ namespace DevBetterWeb.Core.Services
     {
       var userId = await _userLookup.FindUserIdByEmailAsync(email);
       var spec = new MemberByUserIdSpec(userId);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberWithEmailNotFoundException(email);
       return member;
     }
   }

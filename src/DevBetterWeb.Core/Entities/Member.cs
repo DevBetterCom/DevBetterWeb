@@ -12,7 +12,7 @@ using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class Member : BaseEntity
+  public class Member : BaseEntity, IAggregateRoot
   {
     public Member()
     {
@@ -273,15 +273,15 @@ namespace DevBetterWeb.Core.Entities
 
     public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
     {
-      private readonly IRepository _repository;
+      private readonly IRepository<Member> _memberRepository;
 
       public IMapCoordinateService _mapCoordinateService { get; }
 
       public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
-        IRepository repository)
+        IRepository<Member> memberRepository)
       {
         _mapCoordinateService = mapCoordinateService;
-        _repository = repository;
+        _memberRepository = memberRepository;
         // TODO: Add ILogger to domain and inject here
       }
 
@@ -293,7 +293,7 @@ namespace DevBetterWeb.Core.Entities
         if (member.ShippingAddress == null)
         {
           member.CityLocation = null;
-          await _repository.UpdateAsync(member);
+          await _memberRepository.UpdateAsync(member);
           return;
         }
 
@@ -335,7 +335,7 @@ namespace DevBetterWeb.Core.Entities
             var newLocation = new Geolocation(latdec, lngdec);
             member.CityLocation = newLocation;
           }
-          await _repository.UpdateAsync(member);
+          await _memberRepository.UpdateAsync(member);
         }
         catch
         {

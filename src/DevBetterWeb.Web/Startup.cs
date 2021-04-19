@@ -84,7 +84,8 @@ namespace DevBetterWeb.Web
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
       });
 
-      services.AddScoped<IRepository, EfRepository>();
+      services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+      //services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();

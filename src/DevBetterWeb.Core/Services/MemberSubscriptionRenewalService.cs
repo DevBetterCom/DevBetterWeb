@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
@@ -8,13 +10,13 @@ namespace DevBetterWeb.Core.Services
   public class MemberSubscriptionRenewalService : IMemberSubscriptionRenewalService
   {
     private readonly IUserLookupService _userLookup;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
 
     public MemberSubscriptionRenewalService(IUserLookupService userLookup,
-      IRepository repository)
+      IRepository<Member> memberRepository)
     {
       _userLookup = userLookup;
-      _repository = repository;
+      _memberRepository = memberRepository;
     }
 
     public async Task ExtendMemberSubscription(string email, System.DateTime subscriptionEndDate)
@@ -22,8 +24,8 @@ namespace DevBetterWeb.Core.Services
       var userId = await _userLookup.FindUserIdByEmailAsync(email);
 
       var spec = new MemberByUserIdSpec(userId);
-      var member = await _repository.GetAsync(spec);
-
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberWithEmailNotFoundException(email);
       member.ExtendCurrentSubscription(subscriptionEndDate);
     }
   }

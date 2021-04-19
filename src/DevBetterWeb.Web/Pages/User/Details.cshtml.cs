@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,11 @@ namespace DevBetterWeb.Web.Pages.User
 #pragma warning disable CS0436 // Type conflicts with imported type
         public UserDetailsViewModel? UserDetailsViewModel { get; set; }
 #pragma warning restore CS0436 // Type conflicts with imported type
-        private readonly IRepository _repository;
+        private readonly IRepository<Member> _memberRepository;
 
-        public DetailsModel(IRepository repository)
+        public DetailsModel(IRepository<Member> memberRepository)
         {
-            _repository = repository;
+            _memberRepository = memberRepository;
         }
 
         public async Task OnGet(string userId)
@@ -29,7 +30,7 @@ namespace DevBetterWeb.Web.Pages.User
             //}
 
             var spec = new MemberByUserIdWithBooksReadSpec(userId);
-            var member = await _repository.GetAsync(spec);
+            var member = await _memberRepository.GetBySpecAsync(spec);
 
             if (member == null)
             {

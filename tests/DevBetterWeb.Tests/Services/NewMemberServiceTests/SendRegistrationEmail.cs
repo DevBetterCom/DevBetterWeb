@@ -9,7 +9,8 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
   public class SendRegistrationEmail
   {
-    private readonly Mock<IRepository> _repository;
+    private readonly Mock<IRepository<Member>> _memberRepository;
+    private readonly Mock<IRepository<Invitation>> _invitationRepository;
     private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
@@ -25,12 +26,18 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public SendRegistrationEmail()
     {
-      _repository = new Mock<IRepository>();
+      _memberRepository = new Mock<IRepository<Member>>();
+      _invitationRepository = new Mock<IRepository<Invitation>>();
       _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
-      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
+      _newMemberService = new NewMemberService(_memberRepository.Object,
+        _invitationRepository.Object,
+        _userRoleMembershipService.Object,
+        _paymentHandlerSubscription.Object,
+        _emailService.Object,
+        _memberRegistrationService.Object);
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 

@@ -16,17 +16,20 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
   public class IndexModel : PageModel
   {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<Book> _bookRepository;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
     public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
 
     public IndexModel(UserManager<ApplicationUser> userManager,
-        IRepository repository)
+        IRepository<Member> memberRepository,
+        IRepository<Book> bookRepository)
     {
       _userManager = userManager;
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _bookRepository = bookRepository;
     }
 
     public async Task OnGet()
@@ -38,10 +41,10 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 
       var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds);
-      var members = await _repository.ListAsync(memberSpec);
+      var members = await _memberRepository.ListAsync(memberSpec);
 
       var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
-      var alumni = await _repository.ListAsync(alumniSpec);
+      var alumni = await _memberRepository.ListAsync(alumniSpec);
 
       Members = members
           .Where(m => (m.BooksRead?.Count ?? 0) > 0 && 
@@ -54,7 +57,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .ToList();
 
       var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
-      Books = await _repository.ListAsync(bookSpec);
+      Books = await _bookRepository.ListAsync(bookSpec);
     }
 
     public class MemberLinksDTO

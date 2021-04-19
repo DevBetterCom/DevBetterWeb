@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs
 {
-  public class MemberByUserIdWithBillingActivitiesSpec : Specification<Member>
+  public class MemberByUserIdWithBillingActivitiesSpec : Specification<Member>, ISingleResultSpecification
   {
     public MemberByUserIdWithBillingActivitiesSpec(string userId)
     {

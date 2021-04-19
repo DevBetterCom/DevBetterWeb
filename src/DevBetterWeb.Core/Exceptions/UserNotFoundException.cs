@@ -2,10 +2,10 @@
 
 namespace DevBetterWeb.Core.Exceptions
 {
-    public class UserNotFoundException : Exception
+  public class UserNotFoundException : Exception
+  {
+    public UserNotFoundException(string userId) : base($"{userId} not found")
     {
-        public UserNotFoundException(string userId) : base($"{userId} not found")
-        {
-        }
     }
+  }
 }

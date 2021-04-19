@@ -18,12 +18,12 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class EditModel : PageModel
     {
-        private readonly IRepository _repository;
+        private readonly IRepository<ArchiveVideo> _videoRepository;
         private readonly AppDbContext _context;
 
-        public EditModel(IRepository repository, AppDbContext context)
+        public EditModel(IRepository<ArchiveVideo> videoRepository, AppDbContext context)
         {
-            _repository = repository;
+            _videoRepository = videoRepository;
             _context = context;
         }
 
@@ -57,7 +57,9 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideoEntity = await _context.ArchiveVideos.AsNoTracking()
+            // TODO: use repo + spec here
+            var archiveVideoEntity = await _context.ArchiveVideos
+                .AsNoTracking()
                 .Include(v => v.Questions)
                 .FirstOrDefaultAsync(v => v.Id == id);
                 
@@ -87,7 +89,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
                 return Page();
             }
 
-            var currentVideoEntity = await _repository.GetByIdAsync<ArchiveVideo>(ArchiveVideoModel.Id);
+            var currentVideoEntity = await _videoRepository.GetByIdAsync(ArchiveVideoModel.Id);
             if(currentVideoEntity == null)
             {
                 return NotFound();
@@ -97,7 +99,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
             currentVideoEntity.Title = ArchiveVideoModel.Title;
             currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
-            await _repository.UpdateAsync(currentVideoEntity);
+            await _videoRepository.UpdateAsync(currentVideoEntity);
 
             return RedirectToPage("./Index");
         }

@@ -3,13 +3,15 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using Xunit;
 using Moq;
+using DevBetterWeb.Core.Entities;
+using System.Threading;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
-
   public class CreateInvitation
   {
-    private readonly Mock<IRepository> _repository;
+    private readonly Mock<IRepository<Member>> _memberRepository;
+    private readonly Mock<IRepository<Invitation>> _invitationRepository;
     private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
@@ -22,12 +24,13 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public CreateInvitation()
     {
-      _repository = new Mock<IRepository>();
+      _invitationRepository = new Mock<IRepository<Invitation>>();
+      _memberRepository = new Mock<IRepository<Member>>();
       _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
-      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
+      _newMemberService = new NewMemberService(_memberRepository.Object, _invitationRepository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
     }
 
     [Fact]
@@ -38,9 +41,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       Assert.Equal(_email, invitation.Email);
       Assert.Equal(_subscriptionId, invitation.PaymentHandlerSubscriptionId);
 
-      _repository.Verify(r => r.AddAsync(invitation), Times.Once);
-
+      _invitationRepository.Verify(r => r.AddAsync(invitation, CancellationToken.None), Times.Once);
     }
   }
-
 }

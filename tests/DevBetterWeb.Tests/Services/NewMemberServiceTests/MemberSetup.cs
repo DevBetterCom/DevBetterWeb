@@ -5,12 +5,14 @@ using Xunit;
 using Moq;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Specs;
+using System.Threading;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
   public class MemberSetup
   {
-    private readonly Mock<IRepository> _repository;
+    private readonly Mock<IRepository<Member>> _memberRepository;
+    private readonly Mock<IRepository<Invitation>> _invitationRepository;
     private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
@@ -31,12 +33,18 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public MemberSetup()
     {
-      _repository = new Mock<IRepository>();
+      _invitationRepository = new Mock<IRepository<Invitation>>();
+      _memberRepository = new Mock<IRepository<Member>>();
       _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
-      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
+      _newMemberService = new NewMemberService(_memberRepository.Object,
+        _invitationRepository.Object,
+        _userRoleMembershipService.Object,
+        _paymentHandlerSubscription.Object,
+        _emailService.Object,
+        _memberRegistrationService.Object);
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 
@@ -46,8 +54,8 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       var memberResult = new Member();
       var memberId = memberResult.Id;
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
-      _repository.Setup(r => r.GetByIdAsync<Member>(memberId)).ReturnsAsync(memberResult);
+      _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
+      _memberRepository.Setup(r => r.GetByIdAsync(memberId, CancellationToken.None)).ReturnsAsync(memberResult);
       _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
 
       Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode);
