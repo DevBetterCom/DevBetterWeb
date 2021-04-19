@@ -3,6 +3,8 @@ using Xunit;
 using Moq;
 using System;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Specs;
+using System.Threading;
 
 namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests
 {
@@ -14,6 +16,7 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests
     [Fact]
     public async Task SendsEmail()
     {
+      _memberRepository.Setup(s => s.GetBySpecAsync(It.IsAny<MemberByUserIdSpec>(), CancellationToken.None)).ReturnsAsync(new Member());
       _subscriptionPeriodCalculationsService.Setup(s => s.GetCurrentSubscriptionEndDate(It.IsAny<Member>())).Returns(_date);
 
       await _memberCancellationService.SendFutureCancellationEmailAsync(_email);
@@ -21,7 +24,4 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests
       _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()));
     }
   }
-
 }
-
-
