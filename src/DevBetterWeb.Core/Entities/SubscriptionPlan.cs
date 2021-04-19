@@ -1,9 +1,10 @@
-﻿using DevBetterWeb.Core.SharedKernel;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class SubscriptionPlan : BaseEntity
+  public class SubscriptionPlan : BaseEntity, IAggregateRoot
   {
     public SubscriptionPlanDetails Details { get; set; }
 
@@ -16,6 +17,5 @@ namespace DevBetterWeb.Core.Entities
     {
       Details = new SubscriptionPlanDetails();
     }
-
   }
 }

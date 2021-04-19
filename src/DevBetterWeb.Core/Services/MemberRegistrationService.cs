@@ -6,18 +6,18 @@ namespace DevBetterWeb.Core.Services
 {
   public class MemberRegistrationService : IMemberRegistrationService
   {
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
 
-    public MemberRegistrationService(IRepository repository)
+    public MemberRegistrationService(IRepository<Member> memberRepository)
     {
-      _repository = repository;
+      _memberRepository = memberRepository;
     }
 
     public async Task<Member> RegisterMemberAsync(string userId)
     {
       var member = new Member(userId);
 
-      await _repository.AddAsync(member);
+      await _memberRepository.AddAsync(member);
 
       return member;
     }

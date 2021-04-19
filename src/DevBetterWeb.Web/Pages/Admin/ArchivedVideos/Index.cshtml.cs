@@ -15,11 +15,11 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
     public class IndexModel : PageModel
     {
-        private readonly IRepository _repository;
+        private readonly IRepository<ArchiveVideo> _videoRepository;
 
-        public IndexModel(IRepository repository)
+        public IndexModel(IRepository<ArchiveVideo> videoRepository)
         {
-            _repository = repository;
+            _videoRepository = videoRepository;
         }
 
         public IList<ArchiveVideoIndexDTO> ArchiveVideoList { get; set; } = new List<ArchiveVideoIndexDTO>();
@@ -39,7 +39,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
 
         public async Task OnGetAsync()
         {
-            ArchiveVideoList = (await _repository.ListAsync<ArchiveVideo>()) 
+            ArchiveVideoList = (await _videoRepository.ListAsync()) 
                 .Select(video => new ArchiveVideoIndexDTO
                 {
                     Id = video.Id,

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
@@ -27,16 +28,20 @@ namespace DevBetterWeb.Web.Pages.User
 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<Book> _bookRepository;
     private readonly AppDbContext _appDbContext;
 
     public MyProfileBooksModel(UserManager<ApplicationUser> userManager,
         IMemberRegistrationService memberRegistrationService,
-        IRepository repository, AppDbContext appDbContext)
+        IRepository<Member> memberRepository,
+        IRepository<Book> bookRepository,
+        AppDbContext appDbContext)
     {
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _bookRepository = bookRepository;
       _appDbContext = appDbContext;
     }
 
@@ -46,14 +51,14 @@ namespace DevBetterWeb.Web.Pages.User
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
       var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
 
       if (member == null)
       {
         member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
       }
 
-      Books = await _repository.ListAsync<Book>();
+      Books = await _bookRepository.ListAsync();
 
       UserBooksUpdateModel = new UserBooksUpdateModel(member);
     }
@@ -68,16 +73,17 @@ namespace DevBetterWeb.Web.Pages.User
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
       var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if(member is null) throw new MemberNotFoundException(applicationUser.Id);
 
       if (UserBooksUpdateModel.AddedBook.HasValue)
       {
-        AddedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.AddedBook.Value);
-
+        AddedBook = await _bookRepository.GetByIdAsync(UserBooksUpdateModel.AddedBook.Value);
+        if (AddedBook is null) throw new BookNotFoundException(UserBooksUpdateModel.AddedBook.Value);
         member.AddBookRead(AddedBook);
       }
 
-      await _repository.UpdateAsync(member);
+      await _memberRepository.UpdateAsync(member);
 
       return RedirectToPage();
     }
@@ -91,16 +97,17 @@ namespace DevBetterWeb.Web.Pages.User
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
       var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
       if (UserBooksUpdateModel.RemovedBook.HasValue)
       {
-        RemovedBook = await _repository.GetByIdAsync<Book>(UserBooksUpdateModel.RemovedBook.Value);
-
+        RemovedBook = await _bookRepository.GetByIdAsync(UserBooksUpdateModel.RemovedBook.Value);
+        if (RemovedBook is null) throw new BookNotFoundException(UserBooksUpdateModel.RemovedBook.Value);
         member.RemoveBookRead(RemovedBook);
       }
 
-      await _repository.UpdateAsync(member);
+      await _memberRepository.UpdateAsync(member);
 
       return RedirectToPage();
     }

@@ -28,17 +28,20 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<Book> _bookRepository;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public IndexModel(UserManager<ApplicationUser> userManager,
         IMemberRegistrationService memberRegistrationService,
-        IRepository repository,
+        IRepository<Member> memberRepository,
+        IRepository<Book> bookRepository,
         IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _bookRepository = bookRepository;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
@@ -49,14 +52,14 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
 
       var spec = new MemberByUserIdWithBooksReadAndSubscriptionsSpec(applicationUser.Id);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
 
       if (member == null)
       {
         member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
       }
 
-      Books = await _repository.ListAsync<Book>();
+      Books = await _bookRepository.ListAsync();
 
       int percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
       AlumniProgressPercentage = $"{percentage}%";
@@ -64,12 +67,9 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       UserProfileViewModel = new UserProfileViewModel(member);
     }
 
-
     public bool GetIsAlumni()
     {
       return User.IsInRole(AuthConstants.Roles.ALUMNI);
     }
-
-
   }
 }

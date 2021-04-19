@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,21 +15,21 @@ namespace DevBetterWeb.Web.Pages.User
     private readonly ILogger<MapModel> _logger;
 
     public List<MapCoordinates> MemberCoordinates { get; set; } = new List<MapCoordinates>();
-    public IRepository _repository { get; }
+    public IRepository<Member> _memberRepository { get; }
     public IConfiguration _configuration { get; }
 
-    public MapModel(IRepository repository,
+    public MapModel(IRepository<Member> memberRepository,
       IConfiguration configuration,
       ILogger<MapModel> logger)
     {
-      _repository = repository;
+      _memberRepository = memberRepository;
       _configuration = configuration;
       _logger = logger;
     }
 
     public async Task OnGet(string userId)
     {
-      var members = await _repository.ListAsync<Member>();
+      var members = await _memberRepository.ListAsync();
 
       // Handle members that are in the database before map functionality is introduced, so they will not trigger the AddressUpdated event
       foreach (var member in members)
@@ -47,7 +48,8 @@ namespace DevBetterWeb.Web.Pages.User
 
     private MapCoordinates GetCoordinates(Member member, string userId)
     {
-      var coordinates = new MapCoordinates((decimal)member.CityLatitude, (decimal)member.CityLongitude, member.UserFullName());
+      Guard.Against.Null(member, nameof(member));
+      var coordinates = new MapCoordinates((decimal)member.CityLatitude!, (decimal)member.CityLongitude!, member.UserFullName());
       if(member.CityLocation != null)
       {
         coordinates = new MapCoordinates(member.CityLocation.Latitude,

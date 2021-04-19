@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class Book : BaseEntity
+  public class Book : BaseEntity, IAggregateRoot
   {
     public string? Title { get; set; }
     public string? Author { get; set; }

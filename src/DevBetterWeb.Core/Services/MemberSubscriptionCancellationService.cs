@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 
@@ -9,20 +11,20 @@ namespace DevBetterWeb.Core.Services
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IEmailService _emailService;
     private readonly IUserLookupService _userLookup;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public MemberSubscriptionCancellationService(
       IUserRoleMembershipService userRoleMembershipService,
       IEmailService emailService,
       IUserLookupService userLookup,
-      IRepository repository,
+      IRepository<Member> memberRepository,
       IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _userRoleMembershipService = userRoleMembershipService;
       _emailService = emailService;
       _userLookup = userLookup;
-      _repository = repository;
+      _memberRepository = memberRepository;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
@@ -38,7 +40,8 @@ namespace DevBetterWeb.Core.Services
       var userId = await _userLookup.FindUserIdByEmailAsync(email);
 
       var spec = new MemberByUserIdSpec(userId);
-      var member = await _repository.GetAsync(spec);
+      var member = await _memberRepository.GetBySpecAsync(spec);
+      if (member is null) throw new MemberWithEmailNotFoundException(email);
 
       var endDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
 
@@ -48,13 +51,12 @@ namespace DevBetterWeb.Core.Services
       await _emailService.SendEmailAsync(email, subject, message);
     }
 
-    public async Task SendCancellationEmailAsync(string email)
+    public Task SendCancellationEmailAsync(string email)
     {
-
       var subject = "DevBetter Cancellation";
       var message = "Your DevBetter subscription has ended. Thank you for being a part of our community. We hope we'll be able to welcome you back sometime in the future! Don't forget that you can rejoin anytime from https://devbetter.com.";
 
-      await _emailService.SendEmailAsync(email, subject, message);
+      return _emailService.SendEmailAsync(email, subject, message);
     }
 
   }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
@@ -13,22 +14,22 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
   {
     private readonly SubscriptionService _subscriptionService;
     private readonly IPaymentHandlerSubscriptionCreationService _paymentHandlerSubscriptionCreationService;
-    private readonly IRepository _repository;
+    private readonly IRepository<Invitation> _invitationRepository;
 
     public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService,
       IPaymentHandlerSubscriptionCreationService paymentHandlerSubscriptionCreationService,
-      IRepository repository)
+      IRepository<Invitation> invitationRepository)
     {
       _subscriptionService = subscriptionService;
       _paymentHandlerSubscriptionCreationService = paymentHandlerSubscriptionCreationService;
-      _repository = repository;
+      _invitationRepository = invitationRepository;
     }
 
     public async Task CancelSubscriptionAtPeriodEnd(string customerEmail)
     {
       var spec = new InactiveInvitationByEmailSpec(customerEmail);
-      var invite = await _repository.GetAsync(spec);
-
+      var invite = await _invitationRepository.GetBySpecAsync(spec);
+      if (invite is null) throw new InvitationNotFoundException(customerEmail);
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
       var subscriptionCancelOptions = new SubscriptionUpdateOptions
@@ -108,7 +109,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return billingPeriod;
     }
 
-    private BillingPeriod GetSubscriptionBillingInterval(Subscription subscription)
+    private BillingPeriod GetSubscriptionBillingInterval(Stripe.Subscription subscription)
     {
       var item = subscription.Items.Data[0];
       var period = item.Price.Recurring.Interval;
@@ -124,14 +125,14 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       throw new InvalidBillingPeriodException();
     }
 
-    private DateTime GetEndDate(Subscription subscription)
+    private DateTime GetEndDate(Stripe.Subscription subscription)
     {
       DateTime endDate = subscription.CurrentPeriodEnd;
 
       return endDate;
     }
 
-    private DateTime GetStartDate(Subscription subscription)
+    private DateTime GetStartDate(Stripe.Subscription subscription)
     {
       DateTime startDate = subscription.CurrentPeriodStart;
 

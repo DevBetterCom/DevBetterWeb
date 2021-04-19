@@ -1,5 +1,6 @@
 ﻿using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
@@ -24,19 +25,22 @@ namespace DevBetterWeb.Web.Pages.Admin
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IMemberRegistrationService _memberRegistrationService;
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<Subscription> _subscriptionRepository;
 
     public UserModel(UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IUserRoleMembershipService userRoleMembershipService,
         IMemberRegistrationService memberRegistrationService,
-        IRepository repository)
+        IRepository<Member> memberRepository,
+        IRepository<Subscription> subscriptionRepository)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _userRoleMembershipService = userRoleMembershipService;
       _memberRegistrationService = memberRegistrationService;
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _subscriptionRepository = subscriptionRepository;
     }
 
 
@@ -83,12 +87,12 @@ namespace DevBetterWeb.Web.Pages.Admin
       Roles = assignedRoles.ToList();
 
       var memberByUserSpec = new MemberByUserIdSpec(userId);
-      var member = await _repository.GetAsync(memberByUserSpec);
+      var member = await _memberRepository.GetBySpecAsync(memberByUserSpec);
       var subscriptions = new List<Subscription>();
       if (member != null)
       {
         var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
-        subscriptions = await _repository.ListAsync(subscriptionByMemberSpec);
+        subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
 
         foreach (var subscription in subscriptions)
         {
@@ -124,7 +128,7 @@ namespace DevBetterWeb.Web.Pages.Admin
     public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
     {
       var memberByUserSpec = new MemberByUserIdSpec(userId);
-      var member = await _repository.GetAsync(memberByUserSpec);
+      var member = await _memberRepository.GetBySpecAsync(memberByUserSpec);
 
       if (member == null)
       {
@@ -132,7 +136,7 @@ namespace DevBetterWeb.Web.Pages.Admin
       }
 
       var subscriptionByMemberSpec = new SubscriptionsByMemberSpec(member.Id);
-      var subscriptionsFromDb = await _repository.ListAsync(subscriptionByMemberSpec);
+      var subscriptionsFromDb = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
 
       // return error message if new subscription overlaps an existing subscription
       foreach (var subscriptionFromDb in subscriptionsFromDb)
@@ -147,7 +151,12 @@ namespace DevBetterWeb.Web.Pages.Admin
 
       try
       {
-        await _repository.AddAsync(new Subscription() { Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate), MemberId = member.Id });
+        var newSub = new Subscription()
+        {
+          Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate),
+          MemberId = member.Id
+        };
+        await _subscriptionRepository.AddAsync(newSub);
       }
 
       //DateTimeRange throws an error if EndDate is prior to StartDate
@@ -162,17 +171,19 @@ namespace DevBetterWeb.Web.Pages.Admin
 
     public async Task<IActionResult> OnPostDeleteSubscriptionAsync(string userId, int subscriptionId)
     {
-      var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
-      await _repository.DeleteAsync(subscriptionEntity);
+      var subscriptionEntity = await _subscriptionRepository.GetByIdAsync(subscriptionId);
+      if (subscriptionEntity is null) throw new SubscriptionNotFoundException(subscriptionId);
+      await _subscriptionRepository.DeleteAsync(subscriptionEntity);
 
       return RedirectToPage("./User", new { userId = userId });
     }
 
     public async Task<IActionResult> OnPostEditSubscriptionAsync(string userId, int subscriptionId, SubscriptionDTO subscription)
     {
-      var subscriptionEntity = await _repository.GetByIdAsync<Subscription>(subscriptionId);
+      var subscriptionEntity = await _subscriptionRepository.GetByIdAsync(subscriptionId);
+      if (subscriptionEntity is null) throw new SubscriptionNotFoundException(subscriptionId);
       subscriptionEntity.Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate);
-      await _repository.UpdateAsync(subscriptionEntity);
+      await _subscriptionRepository.UpdateAsync(subscriptionEntity);
 
       return RedirectToPage("./User", new { userId = userId });
     }

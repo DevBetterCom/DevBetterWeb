@@ -13,11 +13,11 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
     [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     public class DeleteModel : PageModel
     {
-        private readonly IRepository _repository;
+        private readonly IRepository<ArchiveVideo> _videoRepository;
 
-        public DeleteModel(IRepository repository)
+        public DeleteModel(IRepository<ArchiveVideo> videoRepository)
         {
-            _repository = repository;
+      _videoRepository = videoRepository;
         }
 
         protected class DeleteVideoModel
@@ -46,7 +46,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
+            var archiveVideo = await _videoRepository.GetByIdAsync(id.Value);
 
             if (archiveVideo == null)
             {
@@ -69,11 +69,11 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
                 return NotFound();
             }
 
-            var archiveVideo = await _repository.GetByIdAsync<ArchiveVideo>(id.Value);
+            var archiveVideo = await _videoRepository.GetByIdAsync(id.Value);
 
             if (archiveVideo != null)
             {
-                await _repository.DeleteAsync(archiveVideo);
+                await _videoRepository.DeleteAsync(archiveVideo);
             }
 
             return RedirectToPage("./Index");

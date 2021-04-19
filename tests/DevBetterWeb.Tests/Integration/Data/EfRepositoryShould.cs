@@ -93,13 +93,13 @@ namespace DevBetterWeb.Tests.Integration.Data
         //        i => i.Title == initialTitle);
         //}
 
-        private EfRepository GetRepository()
+        private EfRepository<Member> GetMemberRepository()
         {
             var options = CreateNewContextOptions();
             var mockDispatcher = new Mock<IDomainEventDispatcher>();
 
             _dbContext = new AppDbContext(options, mockDispatcher.Object);
-            return new EfRepository(_dbContext);
+            return new EfRepository<Member>(_dbContext);
         }
     }
 }

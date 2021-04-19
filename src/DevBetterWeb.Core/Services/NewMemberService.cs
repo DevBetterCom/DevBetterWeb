@@ -12,19 +12,22 @@ namespace DevBetterWeb.Core.Services
   public class NewMemberService : INewMemberService
   {
 
-    private readonly IRepository _repository;
+    private readonly IRepository<Member> _memberRepository;
+    private readonly IRepository<Invitation> _invitationRepository;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
 
-    public NewMemberService(IRepository repository,
+    public NewMemberService(IRepository<Member> memberRepository,
+      IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
       IMemberRegistrationService memberRegistrationService)
     {
-      _repository = repository;
+      _memberRepository = memberRepository;
+      _invitationRepository = invitationRepository;
       _userRoleMembershipService = userRoleMembershipService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _emailService = emailService;
@@ -36,12 +39,12 @@ namespace DevBetterWeb.Core.Services
       var inviteCode = Guid.NewGuid().ToString();
       var invitation = new Invitation(email, inviteCode, stripeSubscriptionId);
 
-      await _repository.AddAsync(invitation);
+      await _invitationRepository.AddAsync(invitation);
 
       return invitation;
     }
 
-    public async Task SendRegistrationEmailAsync(Invitation invitation)
+    public Task SendRegistrationEmailAsync(Invitation invitation)
     {
       string code = invitation.InviteCode;
       string inviteEmail = invitation.Email;
@@ -52,7 +55,7 @@ namespace DevBetterWeb.Core.Services
 
       var message = $"Thank you for joining DevBetter! Please click to complete your registration:\n\n {completeRegistrationUrl}\n\nWe're so glad to have you here!";
 
-      await _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
+      return _emailService.SendEmailAsync(inviteEmail, "Welcome to DevBetter!", message);
     }
 
     public async Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode)
@@ -63,7 +66,7 @@ namespace DevBetterWeb.Core.Services
 
       try
       {
-        var storedInviteCode = await _repository.GetAsync(spec);
+        var storedInviteCode = await _invitationRepository.GetBySpecAsync(spec);
         if (storedInviteCode == null)
         {
           throw new InvitationNotFoundException();
@@ -92,7 +95,8 @@ namespace DevBetterWeb.Core.Services
 
       var spec = new InvitationByInviteCodeSpec(inviteCode);
 
-      var invite = await _repository.GetAsync(spec);
+      var invite = await _invitationRepository.GetBySpecAsync(spec);
+      if (invite is null) throw new InvitationNotFoundException(inviteCode);
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
@@ -101,11 +105,10 @@ namespace DevBetterWeb.Core.Services
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
-      await _repository.UpdateAsync(invite);
+      await _invitationRepository.UpdateAsync(invite);
 
       return member;
     }
-
 
     private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName)
     {
@@ -115,12 +118,11 @@ namespace DevBetterWeb.Core.Services
       return member;
     }
 
-    private async Task AddUserToMemberRoleAsync(string userId)
+    private Task AddUserToMemberRoleAsync(string userId)
     {
       var roleName = Constants.MEMBER_ROLE_NAME;
 
-      await _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
-
+      return _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
     }
 
     private async Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange)
@@ -129,8 +131,8 @@ namespace DevBetterWeb.Core.Services
       subscription.MemberId = memberId;
       subscription.Dates = subscriptionDateTimeRange;
 
-      var member = await _repository.GetByIdAsync<Member>(memberId);
-
+      var member = await _memberRepository.GetByIdAsync(memberId);
+      if (member is null) throw new MemberNotFoundException(memberId);
       member.AddSubscription(subscription);
     }
 

@@ -1,11 +1,10 @@
-﻿using DevBetterWeb.Core.SharedKernel;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
-using System;
-using System.Linq;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class Subscription : BaseEntity
+  public class Subscription : BaseEntity, IAggregateRoot
   {
     //public DateTime StartDate { get; set; }
     //public DateTime? EndDate { get; set; }

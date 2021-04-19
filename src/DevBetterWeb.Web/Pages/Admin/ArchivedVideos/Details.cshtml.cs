@@ -22,13 +22,13 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
     public class DetailsModel : PageModel
     {
         private readonly IConfiguration _configuration;
-        private readonly IRepository _repository;
+        private readonly IRepository<ArchiveVideo> _videoRepository;
 
         public DetailsModel(IConfiguration configuration,
-            IRepository repository)
+            IRepository<ArchiveVideo> videoRepository)
         {
             _configuration = configuration;
-            _repository = repository;
+            _videoRepository = videoRepository;
         }
 
         public ArchiveVideoDetailsDTO? ArchiveVideoDetails { get; set; }
@@ -61,7 +61,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos
             StartTime = startTime;
 
             var spec = new ArchiveVideoWithQuestionsSpec(id.Value);
-            var archiveVideoEntity = await _repository.GetAsync(spec);
+            var archiveVideoEntity = await _videoRepository.GetBySpecAsync(spec);
 
             if (archiveVideoEntity == null)
             {

@@ -1,16 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
-using Xunit;
-using Moq;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Specs;
+using Moq;
+using Xunit;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
   public class VerifyValidEmailAndInviteCode
   {
-    private readonly Mock<IRepository> _repository;
+    private readonly Mock<IRepository<Member>> _memberRepository;
+    private readonly Mock<IRepository<Invitation>> _invitationRepository;
     private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
@@ -29,37 +31,43 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public VerifyValidEmailAndInviteCode()
     {
-      _repository = new Mock<IRepository>();
+      _memberRepository = new Mock<IRepository<Member>>();
+      _invitationRepository = new Mock<IRepository<Invitation>>();
       _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
-      _newMemberService = new NewMemberService(_repository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
+      _newMemberService = new NewMemberService(_memberRepository.Object,
+        _invitationRepository.Object,
+        _userRoleMembershipService.Object,
+        _paymentHandlerSubscription.Object,
+        _emailService.Object,
+        _memberRegistrationService.Object);
     }
 
     [Fact]
     public async Task ReturnsSuccessGivenValidEmailAndInviteCode()
     {
-      Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+      var invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
+      _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
       Assert.Equal(_validEmailAndInviteCodeString, result.Value);
     }
 
     [Fact]
     public async Task ReturnsExceptionMessageGivenInvalidEmail()
     {
-      Invitation _invitation = new Invitation("", _inviteCode, _subscriptionId);
+      var invitation = new Invitation("", _inviteCode, _subscriptionId);
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
+      _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
       Assert.Equal(_invalidEmailString, result.Value);
     }
 
@@ -69,13 +77,13 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-      _ = _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync((Invitation)null);
+      _ = _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync((Invitation)null);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
       Assert.Equal(_invalidInviteCodeString, result.Value);
     }
 
@@ -86,14 +94,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
       _invitation.Deactivate();
 
-      _repository.Setup(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>())).ReturnsAsync(_invitation);
+      _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
 
       var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-      _repository.Verify(r => r.GetAsync(It.IsAny<InvitationByInviteCodeSpec>()), Times.Once);
+      _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
       Assert.Equal(_inactiveInviteString, result.Value);
     }
-
   }
-
 }

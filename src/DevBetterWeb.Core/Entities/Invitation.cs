@@ -1,8 +1,9 @@
-﻿using DevBetterWeb.Core.SharedKernel;
+﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class Invitation : BaseEntity
+  public class Invitation : BaseEntity, IAggregateRoot
   {
     public string Email { get; private set; }
     public string InviteCode { get; private set; }
