@@ -1,0 +1,74 @@
+﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentViewModel;
+@{
+}
+
+<style>
+    .container-pie {
+        height: 4.5rem;
+        width: 4.5rem;
+        position: relative;
+    }
+
+    .circle {
+        height: 4rem;
+        width: 4rem;
+        background-color: #dee2e6;
+        border-radius: 100%;
+        position: absolute;
+    }
+
+    .pie {
+        transition: all 1s;
+        height: 4rem;
+        width: 4rem;
+        background-color: #007bff;
+        border-radius: 100%;
+        clip: rect(0rem, 2rem, 4rem, 0rem);
+        position: absolute;
+    }
+
+    .hold {
+        position: absolute;
+        height: 8rem;
+        width: 8rem;
+        border-radius: 100%;
+        clip: rect(0rem, 4rem, 4rem, 2rem);
+    }
+
+    .pie {
+        transform: rotate(@Model.Percentage);
+    }
+
+    .innerCircle {
+        position: absolute;
+        width: 3rem;
+        height: 3rem;
+        background-color: #000;
+        border-radius: 100%;
+        top: 0.55rem;
+        left: 0.55rem;
+        box-shadow: 0rem 0rem 0.04rem rgba(0,0,0,0.5) inset;
+        color: white;
+    }
+
+        .innerCircle .content {
+            position: relative;
+            display: block;
+            width: 3rem;
+            top: 0.75rem;
+            text-align: center;
+            font-size: 100%;
+        }
+</style>
+
+<div class="container-pie">
+
+    <div class="circle"></div>
+    <div class="hold">
+        <div class="pie"></div>
+    </div>
+    <div class="innerCircle">
+        <div class="content"><b>@Model.Percentage.Substring(0, 2)%</b></div>
+    </div>
+
+</div>
