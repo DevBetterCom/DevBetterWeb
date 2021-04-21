@@ -1,0 +1,31 @@
+﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentViewModel;
+@{
+}
+
+<style>
+                .rectangle-background {
+                    height: 35px;
+                    width: auto;
+                    background-color: #c7c7c7;
+                }
+
+                .rectangle-progress {
+                    height: 35px;
+                    width: @Model.Percentage;
+                    background-color: #42ed24;
+                }
+</style>
+<div class="card">
+    <div class="card-header">
+        <b>Progress Towards Alumni Status (beta)</b>
+    </div>
+    <div class="card-body">
+        <p>Graduate to Alumni Status after two years as a member of DevBetter</p>
+        <br />
+        <div class="rectangle-background">
+            <div class="rectangle-progress"></div>
+        </div>
+        <br />
+        <strong>@Model.Percentage Complete</strong>
+    </div>
+</div>

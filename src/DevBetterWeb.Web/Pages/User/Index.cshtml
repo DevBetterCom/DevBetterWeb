@@ -14,54 +14,66 @@
             <th>Name</th>
             <th>Subscribed<br />Days</th>
             <th></th>
-            @if(Model.IsAdministrator)
+            @if (Model.IsAdministrator)
             {
-            <th></th>
+                <th></th>
             }
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var member in Model.Members)
         {
-        <tr>
-            <td><img src="@string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId)" class="db-avatar-small" height="200" width="200" onerror='epic(this)' alt="Avatar (@member.FullName)" /></td>
-            <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
-            <td>@member.SubscribedDays</td>
-            @if(Model.IsAdministrator)
-            {
-            <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
-            }
-            <td>
-                <a href="/user/map/@member.UserId"><i class="fas fa-map-marker-alt fa-2x fa-fw"></i></a>
-                <a href="@member.BlogUrl" target="_blank"><i class="fas fa-blog fa-2x fa-fw"></i></a>
-                <a href="@member.TwitterUrl" target="_blank"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
-                <a href="@member.LinkedInUrl" target="_blank"><i class="fab fa-linkedin fa-2x fa-fw"></i></a>
-                <a href="@member.GitHubUrl" target="_blank"><i class="fab fa-github-square fa-2x fa-fw"></i></a>
-                <a href="@member.TwitchUrl" target="_blank"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
-                <a href="@member.YouTubeUrl" target="_blank"><i class="fab fa-youtube-square fa-2x fa-fw"></i></a>
-                <a href="@member.CodinGameUrl" target="_blank"><i class="fas fa-code fa-2x fa-fw"></i></a>
-                <a href="@member.OtherUrl" target="_blank"><i class="fas fa-link fa-2x fa-fw"></i></a>
-
-                @if(Model.IsAdministrator)
+            <tr>
+                <td><img src="@string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId)" class="db-avatar-small" height="200" width="200" onerror='epic(this)' alt="Avatar (@member.FullName)" /></td>
+                <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
+                <td>@member.SubscribedDays</td>
+                @if (Model.IsAdministrator)
                 {
-                    @if (!String.IsNullOrEmpty(member.Address))
+                    <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
+                }
+                <td>
+                    @if (member.SubscribedDays >= 730)
                     {
-                    <i title="Shipping Address" class="fas fa-map-marker fa-2x fa-fw"></i>
+                        <a>  Alumni</a>
                     }
                     else
                     {
-                    <i title="Shipping Address" class="fas fa-map-marker-alt fa-2x fa-fw"></i>
+                        <partial name="_MemberSubscriptionPercentCircle" for="PercentModels[Model.Members.IndexOf(member)]" />
+}
+                </td>
+                <td>
+                    <a href="/user/map/@member.UserId"><i class="fas fa-map-marker-alt fa-2x fa-fw"></i></a>
+                    <a href="@member.BlogUrl" target="_blank"><i class="fas fa-blog fa-2x fa-fw"></i></a>
+                    <a href="@member.TwitterUrl" target="_blank"><i class="fab fa-twitter-square fa-2x fa-fw"></i></a>
+                    <a href="@member.LinkedInUrl" target="_blank"><i class="fab fa-linkedin fa-2x fa-fw"></i></a>
+                    <a href="@member.GitHubUrl" target="_blank"><i class="fab fa-github-square fa-2x fa-fw"></i></a>
+                    <a href="@member.TwitchUrl" target="_blank"><i class="fab fa-twitch fa-2x fa-fw"></i></a>
+                    <a href="@member.YouTubeUrl" target="_blank"><i class="fab fa-youtube-square fa-2x fa-fw"></i></a>
+                    <a href="@member.CodinGameUrl" target="_blank"><i class="fas fa-code fa-2x fa-fw"></i></a>
+                    <a href="@member.OtherUrl" target="_blank"><i class="fas fa-link fa-2x fa-fw"></i></a>
+
+                    @if (Model.IsAdministrator)
+                    {
+                        @if (!String.IsNullOrEmpty(member.Address))
+                        {
+                            <i title="Shipping Address" class="fas fa-map-marker fa-2x fa-fw"></i>
+                        }
+                        else
+                        {
+                            <i title="Shipping Address" class="fas fa-map-marker-alt fa-2x fa-fw"></i>
+                        }
                     }
-                }
-                @if (!string.IsNullOrEmpty(member.PEUsername))
-                {
-                <img class="projectEulerBadge" src="@member.PEBadgeURL" alt="Project Euler Badge" align="right" />
-                }
 
-            </td>
+                    @if (!string.IsNullOrEmpty(member.PEUsername))
+                    {
+                        <img class="projectEulerBadge" src="@member.PEBadgeURL" alt="Project Euler Badge" align="right" />
+                    }
+
+                </td>
 
 
-        </tr>
+            </tr>
         }
     </tbody>
 </table>
