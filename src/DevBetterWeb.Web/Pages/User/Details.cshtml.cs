@@ -27,12 +27,6 @@ namespace DevBetterWeb.Web.Pages.User
 
     public async Task OnGet(string userId)
     {
-      // I don't think we need this - SAS
-      //var user = await _userManager.FindByIdAsync(id);
-      //if (user == null)
-      //{
-      //    BadRequest();
-      //}
 
       var spec = new MemberByUserIdWithBooksReadAndSubscriptionsSpec(userId);
       var member = await _memberRepository.GetBySpecAsync(spec);
