@@ -16,7 +16,7 @@ namespace DevBetterWeb.Web.Pages.User
     private readonly IRepository<Member> _memberRepository;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
-    public MemberSubscriptionPercentViewModel PercentModel { get; set; }
+    public MemberSubscriptionPercentViewModel PercentModel { get; set; } = new MemberSubscriptionPercentViewModel("0");
 
     public DetailsModel(IRepository<Member> memberRepository,
       IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
@@ -50,7 +50,7 @@ namespace DevBetterWeb.Web.Pages.User
       int percentageNum = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member!);
       string percentage = $"{percentageNum}%";
 
-      PercentModel = new MemberSubscriptionPercentViewModel(percentage);
+      PercentModel.SetPercentage(percentage);
     }
   }
 }
