@@ -4,7 +4,7 @@ using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class Subscription : BaseEntity, IAggregateRoot
+  public class MemberSubscription : BaseEntity, IAggregateRoot
   {
     //public DateTime StartDate { get; set; }
     //public DateTime? EndDate { get; set; }

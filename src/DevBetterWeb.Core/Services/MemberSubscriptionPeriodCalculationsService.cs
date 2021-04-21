@@ -33,7 +33,7 @@ namespace DevBetterWeb.Core.Services
     }
 
     // none of these methods should ever be called if member does not have current subscription
-    public Subscription GetCurrentSubscription(Member member)
+    public MemberSubscription GetCurrentSubscription(Member member)
     {
 
       foreach (var subscription in member.Subscriptions)
