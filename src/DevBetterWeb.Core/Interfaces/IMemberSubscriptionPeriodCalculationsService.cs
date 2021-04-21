@@ -10,5 +10,6 @@ namespace DevBetterWeb.Core.Interfaces
     DateTime GetCurrentSubscriptionEndDate(Member member);
     DateTime GetGraduationDate(Member member);
     int GetPercentageProgressToAlumniStatus(Member member);
+    int GetPercentageProgressToAlumniStatus(int memberSubscribedDays);
   }
 }
