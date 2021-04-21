@@ -59,9 +59,15 @@ namespace DevBetterWeb.Core.Services
     {
       var totalSubscribedDays = member.TotalSubscribedDays();
 
-      int percentage = (int) (100 * ((double)totalSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS));
+      int percentage = GetPercentageProgressToAlumniStatus(totalSubscribedDays);
+      return percentage;
+    }
 
-      if(percentage > 100)
+    public int GetPercentageProgressToAlumniStatus(int memberSubscribedDays)
+    {
+      int percentage = (int)(100 * ((double)memberSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS));
+
+      if (percentage > 100)
       {
         return 100;
       }
