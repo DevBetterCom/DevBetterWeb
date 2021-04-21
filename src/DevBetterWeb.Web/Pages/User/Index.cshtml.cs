@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -17,15 +18,19 @@ namespace DevBetterWeb.Web.Pages.User
   {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly AppDbContext _appDbContext;
+    public readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
+    public List<MemberSubscriptionPercentViewModel> PercentModels { get; set; } = new List<MemberSubscriptionPercentViewModel>();
     public bool IsAdministrator { get; set; }
 
     public IndexModel(UserManager<ApplicationUser> userManager,
-        AppDbContext appDbContext)
+        AppDbContext appDbContext,
+        IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _userManager = userManager;
       _appDbContext = appDbContext;
+      _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
 
     public async Task OnGet()
@@ -48,6 +53,12 @@ namespace DevBetterWeb.Web.Pages.User
       Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
           .ToList();
 #nullable enable
+
+      foreach(var member in Members)
+      {
+        var model = new MemberSubscriptionPercentViewModel($"{_memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member.SubscribedDays)}deg");
+        PercentModels.Add(model);
+      }
 
     }
 
