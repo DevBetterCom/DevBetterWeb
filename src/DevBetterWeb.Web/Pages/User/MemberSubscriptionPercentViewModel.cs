@@ -8,5 +8,10 @@
     {
       Percentage = percentage;
     }
+
+    public void SetPercentage(string percentage)
+    {
+      Percentage = percentage;
+    }
   }
 }
