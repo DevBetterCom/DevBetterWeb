@@ -1,4 +1,4 @@
-﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentViewModel;
+﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentCircleViewModel;
 @{
 }
 
@@ -36,7 +36,7 @@
     }
 
     .pie {
-        transform: rotate(@Model.Percentage);
+        transform: rotate(@Model.GetDegrees());
     }
 
     .innerCircle {
@@ -68,7 +68,7 @@
         <div class="pie"></div>
     </div>
     <div class="innerCircle">
-        <div class="content"><b>@Model.Percentage.Substring(0, 2)%</b></div>
+        <div class="content"><b>@Model.GetPercentageWithPercent()</b></div>
     </div>
 
 </div>

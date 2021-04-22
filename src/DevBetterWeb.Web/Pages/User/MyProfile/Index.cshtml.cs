@@ -23,7 +23,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
     public List<Book> Books { get; set; } = new List<Book>();
 
     public string AlumniProgressPercentage { get; set; }
-    public MemberSubscriptionPercentViewModel Model {get; set;}
+    public MemberSubscriptionPercentBarViewModel Model {get; set;}
 
 #nullable enable
 
@@ -63,9 +63,8 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       Books = await _bookRepository.ListAsync();
 
       int percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member);
-      AlumniProgressPercentage = $"{percentage}%";
 
-      Model = new MemberSubscriptionPercentViewModel(AlumniProgressPercentage);
+      Model = new MemberSubscriptionPercentBarViewModel(percentage);
 
       UserProfileViewModel = new UserProfileViewModel(member);
     }
