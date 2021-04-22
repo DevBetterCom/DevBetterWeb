@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.1.0" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.3.1" />
-    <PackageReference Include="Sendgrid" Version="9.22.0" />
+    <PackageReference Include="Sendgrid" Version="9.23.0" />
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.5" />
@@ -27,7 +27,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.5" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.5" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-    <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Stripe.net" Version="39.45.0" />
     <PackageReference Include="VimeoDotNet" Version="2.1.0" />
