@@ -1,10 +1,11 @@
 ﻿using System;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class BillingActivity : BaseEntity
+  public class BillingActivity : BaseEntity, IAggregateRoot
   {
     public int MemberId { get; private set; }
     public BillingDetails Details { get; private set; }

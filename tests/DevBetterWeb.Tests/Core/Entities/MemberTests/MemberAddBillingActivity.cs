@@ -12,7 +12,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
       var subscriptionPlanName = Guid.NewGuid().ToString();
-      var actionVerb = Guid.NewGuid().ToString();
+      var actionVerb = BillingActivityVerb.None;
       var billingPeriod = BillingPeriod.Month;
 
       member.AddBillingActivity(subscriptionPlanName, actionVerb, billingPeriod);
@@ -30,7 +30,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
       var subscriptionPlanName = Guid.NewGuid().ToString();
-      var actionVerb = Guid.NewGuid().ToString();
+      var actionVerb = BillingActivityVerb.None;
       var random = new Random();
       decimal amount = random.Next() / 100;
       var billingPeriod = BillingPeriod.Year;
