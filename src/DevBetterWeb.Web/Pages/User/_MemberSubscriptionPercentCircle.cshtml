@@ -27,16 +27,22 @@
         position: absolute;
     }
 
+    .pie2 {
+        transition: all 1s;
+        height: 4rem;
+        width: 4rem;
+        background-color: #007bff;
+        border-radius: 100%;
+        clip: rect(0rem, 2rem, 4rem, 0rem);
+        position: absolute;
+    }
+
     .hold {
         position: absolute;
         height: 8rem;
         width: 8rem;
         border-radius: 100%;
         clip: rect(0rem, 4rem, 4rem, 2rem);
-    }
-
-    .pie {
-        transform: rotate(@Model.GetDegrees());
     }
 
     .innerCircle {
@@ -65,8 +71,10 @@
 
     <div class="circle"></div>
     <div class="hold">
-        <div class="pie"></div>
+        <div class="pie" style="transform: rotate(@Model.GetDegreesForFirstPartialPie())"></div>
     </div>
+    <div class="pie2" style="transform: rotate(@Model.GetDegreesForSecondPartialPie());opacity: @Model.GetOpacityForSecondPartialPie()"></div>
+
     <div class="innerCircle">
         <div class="content"><b>@Model.GetPercentageWithPercent()</b></div>
     </div>
