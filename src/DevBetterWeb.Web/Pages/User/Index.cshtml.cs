@@ -21,7 +21,7 @@ namespace DevBetterWeb.Web.Pages.User
     public readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
-    public List<MemberSubscriptionPercentViewModel> PercentModels { get; set; } = new List<MemberSubscriptionPercentViewModel>();
+    public List<MemberSubscriptionPercentCircleViewModel> PercentModels { get; set; } = new List<MemberSubscriptionPercentCircleViewModel>();
     public bool IsAdministrator { get; set; }
 
     public IndexModel(UserManager<ApplicationUser> userManager,
@@ -56,10 +56,10 @@ namespace DevBetterWeb.Web.Pages.User
 
       foreach(var member in Members)
       {
-        var model = new MemberSubscriptionPercentViewModel($"{_memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member.SubscribedDays)}deg");
+        var model = new MemberSubscriptionPercentCircleViewModel(0);
+        model.Percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member.SubscribedDays);
         PercentModels.Add(model);
       }
-
     }
 
     public class MemberLinksDTO
