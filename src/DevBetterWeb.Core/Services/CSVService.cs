@@ -7,9 +7,9 @@ using DevBetterWeb.Core.Interfaces;
 
 namespace DevBetterWeb.Core.Services
 {
-  public class CSVService : ICSVService
+  public class CsvService : ICsvService
   {
-    public byte[] GetCSVByteArrayFromList(List<BillingActivity> billingActivities)
+    public byte[] GetCsvByteArrayFromList(List<BillingActivity> billingActivities)
     {
       var dataTable = GenerateDataTable(billingActivities);
 
