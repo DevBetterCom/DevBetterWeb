@@ -20,13 +20,13 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
     public List<BillingActivity> SubscribedBillingActivities { get; set; } = new List<BillingActivity>();
 
     private readonly IRepository<BillingActivity> _repository;
-    private readonly ICSVService _csvService;
+    private readonly ICsvService _csvService;
 
     [BindProperty]
     public SignupReportsDatesModel _signupReportsDatesModel { get; set; }
 
     public SignupsModel(IRepository<BillingActivity> repository,
-      ICSVService csvService)
+      ICsvService csvService)
     {
       _repository = repository;
       _signupReportsDatesModel = new SignupReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
@@ -57,7 +57,7 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
 
       if(SubscribedBillingActivities.Count != 0)
       {
-        array = _csvService.GetCSVByteArrayFromList(SubscribedBillingActivities);
+        array = _csvService.GetCsvByteArrayFromList(SubscribedBillingActivities);
       }
 
       return new FileContentResult(array, "text/csv")
