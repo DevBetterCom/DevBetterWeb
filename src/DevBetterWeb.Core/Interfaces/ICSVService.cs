@@ -3,8 +3,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Interfaces
 {
-  public interface ICSVService
+  public interface ICsvService
   {
-    byte[] GetCSVByteArrayFromList(List<BillingActivity> billingActivities);
+    byte[] GetCsvByteArrayFromList(List<BillingActivity> billingActivities);
   }
 }
