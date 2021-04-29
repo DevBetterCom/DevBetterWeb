@@ -103,7 +103,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
       services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
       services.AddScoped<IUserLookupService, UserLookupService>();
-      services.AddScoped<ICSVService, CSVService>();
+      services.AddScoped<ICsvService, CsvService>();
 
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
