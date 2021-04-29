@@ -7,11 +7,11 @@
 <h3>Sign Ups</h3>
 
 <br />
-<form method="post">
+<form method="post" asp-page-handler="refresh">
     <div class="form-group">
         <label for="start">Start date:</label>
 
-        <input asp-for="_signupReportsDatesModel.StartDate" 
+        <input asp-for="_signupReportsDatesModel.StartDate"
                type="date" id="start" name="StartDate"
                asp-format="{0:yyyy-MM-dd}"
                max="@DateTime.Now"
@@ -27,13 +27,16 @@
                class="form-control form-control-sm">
     </div>
     <input type="submit" value="Refresh Dates" class="btn btn-success" />
-    <br />
-    <br />
-    <p>
-        No data available until transition to Stripe is complete.
-    </p>
-    <br />
 </form>
+<br />
+<form method="post" asp-page-handler="download">
+    <input type="submit" value="Download Report" class="btn btn-success" />
+</form>
+<br />
+<p>
+    No data available until transition to Stripe is complete.
+</p>
+<br />
 <table class="table table-sm table-striped" id="signupsTable">
     <thead>
         <tr>
