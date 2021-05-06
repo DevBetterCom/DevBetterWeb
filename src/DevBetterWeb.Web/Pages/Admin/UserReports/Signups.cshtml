@@ -1,0 +1,58 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.UserReports.SignupsModel
+@{
+    ViewData["Title"] = "SignUps";
+}
+
+<h3>Sign Ups</h3>
+
+<br />
+<form method="post" asp-page-handler="refresh">
+    <div class="form-group">
+        <label for="start">Start date:</label>
+
+        <input asp-for="_signupReportsDatesModel.StartDate"
+               type="date" id="start" name="StartDate"
+               asp-format="{0:yyyy-MM-dd}"
+               max="@DateTime.Now"
+               class="form-control form-control-sm">
+        <br />
+        <br />
+        <label for="end">End date:</label>
+
+        <input asp-for="_signupReportsDatesModel.EndDate"
+               type="date" id="end" name="EndDate"
+               asp-format="{0:yyyy-MM-dd}"
+               max="@DateTime.Now"
+               class="form-control form-control-sm">
+    </div>
+    <input type="submit" value="Refresh Dates" class="btn btn-success" />
+</form>
+<br />
+<form method="post" asp-page-handler="download">
+    <input type="submit" value="Download Report" class="btn btn-success" />
+</form>
+<br />
+<p>
+    No data available until transition to Stripe is complete.
+</p>
+<br />
+<table class="table table-sm table-striped" id="signupsTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Subscription Plan</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var activity in Model.SubscribedBillingActivities)
+        {
+            <tr>
+                <td>@activity.Details.Date.ToShortDateString()</td>
+                <td>@activity.Details.MemberName</td>
+                <td>@activity.Details.SubscriptionPlanName</td>
+            </tr>
+        }
+    </tbody>
+</table>
