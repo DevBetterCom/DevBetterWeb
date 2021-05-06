@@ -10,11 +10,11 @@ namespace DevBetterWeb.Core.ValueObjects
     public decimal Amount { get; }
     public string MemberName { get; }
     public string SubscriptionPlanName { get; }
-    public string ActionVerbPastTense { get; }
+    public BillingActivityVerb ActionVerbPastTense { get; }
     public BillingPeriod BillingPeriod { get; }
     public DateTime Date { get; }
 
-    public BillingDetails(string memberName, string subscriptionPlanName, string actionVerbPastTense, BillingPeriod billingPeriod, DateTime date, decimal amount = 0)
+    public BillingDetails(string memberName, string subscriptionPlanName, BillingActivityVerb actionVerbPastTense, BillingPeriod billingPeriod, DateTime date, decimal amount = 0)
     {
       Amount = amount;
       MemberName = memberName;
@@ -55,18 +55,18 @@ namespace DevBetterWeb.Core.ValueObjects
 
       switch (ActionVerbPastTense)
       {
-        case "Subscribed":
-          message += $" {ActionVerbPastTense} to {SubscriptionPlanName} for ${Amount}";
+        case BillingActivityVerb.Subscribed:
+          message += $" {ActionVerbPastTense.ToString()} to {SubscriptionPlanName} for ${Amount}";
           break;
-        case "Ended":
-          message += $"{GetPossessiveEnding(viewer)} {SubscriptionPlanName} {ActionVerbPastTense}";
+        case BillingActivityVerb.Ended:
+          message += $"{GetPossessiveEnding(viewer)} {SubscriptionPlanName} {ActionVerbPastTense.ToString()}";
           break;
-        case "Renewed":
-          message += $" {ActionVerbPastTense} {SubscriptionPlanName} for ${Amount}";
+        case BillingActivityVerb.Renewed:
+          message += $" {ActionVerbPastTense.ToString()} {SubscriptionPlanName} for ${Amount}";
           break;
-        case "Cancelled":
+        case BillingActivityVerb.Cancelled:
         default:
-          message += $" {ActionVerbPastTense} {SubscriptionPlanName}";
+          message += $" {ActionVerbPastTense.ToString()} {SubscriptionPlanName}";
           break;
       }
 
@@ -102,7 +102,7 @@ namespace DevBetterWeb.Core.ValueObjects
       Amount = 0;
       MemberName = "";
       SubscriptionPlanName = "";
-      ActionVerbPastTense = "";
+      ActionVerbPastTense = BillingActivityVerb.None;
       BillingPeriod = BillingPeriod.None;
     }
 
