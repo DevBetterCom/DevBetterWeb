@@ -1,4 +1,4 @@
-﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentViewModel;
+﻿@model DevBetterWeb.Web.Pages.User.MemberSubscriptionPercentBarViewModel;
 @{
 }
 
@@ -11,7 +11,7 @@
 
                 .rectangle-progress {
                     height: 35px;
-                    width: @Model.Percentage;
+                    width: @Model.GetPercentageWithPercent();
                     background-color: #42ed24;
                 }
 </style>
@@ -26,6 +26,6 @@
             <div class="rectangle-progress"></div>
         </div>
         <br />
-        <strong>@Model.Percentage Complete</strong>
+        <strong>@Model.GetPercentageWithPercent() Complete</strong>
     </div>
 </div>

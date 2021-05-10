@@ -25,17 +25,14 @@ namespace DevBetterWeb.Web.Pages.User
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository<Member> _memberRepository;
-    private readonly AppDbContext _appDbContext;
 
     public MyProfileLinksModel(UserManager<ApplicationUser> userManager,
         IMemberRegistrationService memberRegistrationService,
-        IRepository<Member> memberRepository,
-        AppDbContext appDbContext)
+        IRepository<Member> memberRepository)
     {
       _userManager = userManager;
       _memberRegistrationService = memberRegistrationService;
       _memberRepository = memberRepository;
-      _appDbContext = appDbContext;
     }
 
     public async Task OnGetAsync()
