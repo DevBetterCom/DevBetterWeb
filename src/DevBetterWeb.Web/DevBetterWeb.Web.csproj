@@ -69,6 +69,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Pages\Admin\UserReports\Signups - Copy %282%29.cshtml.cs">
+	    <DependentUpon>Signups.cshtml.cs</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\Admin\UserReports\Signups - Copy - Copy.cshtml.cs">
+	    <DependentUpon>Signups - Copy.cshtml.cs</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\Admin\UserReports\Signups - Copy.cshtml.cs">
+	    <DependentUpon>Signups.cshtml.cs</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Update="Pages\_ViewImports.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>

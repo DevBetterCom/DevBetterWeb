@@ -23,13 +23,13 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
     private readonly ICsvService _csvService;
 
     [BindProperty]
-    public SignupReportsDatesModel _signupReportsDatesModel { get; set; }
+    public ReportsDatesModel _signupReportsDatesModel { get; set; }
 
     public SignupsModel(IRepository<BillingActivity> repository,
       ICsvService csvService)
     {
       _repository = repository;
-      _signupReportsDatesModel = new SignupReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
+      _signupReportsDatesModel = new ReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
       _csvService = csvService;
     }
 
@@ -64,23 +64,6 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
       {
         FileDownloadName = "SignupsList-" + DateTime.Today.ToString("yyyy-MM-dd") + ".csv"
       };
-    }
-  }
-
-  public class SignupReportsDatesModel
-  {
-    public DateTime? StartDate { get; set; } 
-    public DateTime? EndDate { get; set; } 
-
-    public SignupReportsDatesModel()
-    {
-      // for model binding
-    }
-
-    public SignupReportsDatesModel(DateTime startDate, DateTime endDate)
-    {
-      StartDate = startDate;
-      EndDate = endDate;
     }
   }
 }
