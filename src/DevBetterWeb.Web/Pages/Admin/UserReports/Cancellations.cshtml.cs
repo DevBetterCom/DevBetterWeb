@@ -17,7 +17,7 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
   public class CancellationsModel : PageModel
   {
 
-    private static readonly DateTimeRange defaultRange = new DateTimeRange(DateTime.Today.AddDays(-29), DateTime.Today.AddDays(-1));
+    private static readonly DateTimeRange defaultRange = new DateTimeRange(DateTime.Today.AddDays(-29), DateTime.Today);
 
     public List<BillingActivity> CancelledBillingActivities { get; set; } = new List<BillingActivity>();
 
