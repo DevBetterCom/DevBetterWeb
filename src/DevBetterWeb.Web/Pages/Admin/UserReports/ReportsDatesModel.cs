@@ -12,10 +12,10 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
       // for model binding
     }
 
-    public ReportsDatesModel(DateTime startDate, DateTime endDate)
+    public ReportsDatesModel(DateTime startDate, DateTime inclusiveEndDate)
     {
       StartDate = startDate;
-      EndDate = endDate;
+      EndDate = new DateTime(inclusiveEndDate.Year, inclusiveEndDate.Month, inclusiveEndDate.Day, 23, 59, 59);
     }
   }
 }
