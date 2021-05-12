@@ -1,10 +1,10 @@
 ﻿@page
-@model DevBetterWeb.Web.Pages.Admin.UserReports.SignupsModel
+@model DevBetterWeb.Web.Pages.Admin.UserReports.CancellationsModel
 @{
-    ViewData["Title"] = "SignUps";
+    ViewData["Title"] = "Cancellations";
 }
 
-<h3>Sign Ups</h3>
+<h3>Cancellations</h3>
 
 <br />
 
@@ -12,7 +12,7 @@
     <div class="form-group">
         <label for="start">Start date:</label>
 
-        <input asp-for="_signupReportsDatesModel.StartDate"
+        <input asp-for="_cancellationReportsDatesModel.StartDate"
                type="date" id="start" name="StartDate"
                asp-format="{0:yyyy-MM-dd}"
                max="@DateTime.Now"
@@ -21,7 +21,7 @@
         <br />
         <label for="end">End date:</label>
 
-        <input asp-for="_signupReportsDatesModel.EndDate"
+        <input asp-for="_cancellationReportsDatesModel.EndDate"
                type="date" id="end" name="EndDate"
                asp-format="{0:yyyy-MM-dd}"
                max="@DateTime.Now"
@@ -47,7 +47,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var activity in Model.SubscribedBillingActivities)
+        @foreach (var activity in Model.CancelledBillingActivities)
         {
             <tr>
                 <td>@activity.Details.Date.ToShortDateString()</td>
