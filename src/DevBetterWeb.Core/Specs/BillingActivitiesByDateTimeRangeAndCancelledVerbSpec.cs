@@ -5,11 +5,11 @@ using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Specs
 {
-  public class BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec : Specification<BillingActivity>
+  public class BillingActivitiesByDateTimeRangeAndCancelledVerbSpec : Specification<BillingActivity>
   {
-    public BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(DateTimeRange range)
+    public BillingActivitiesByDateTimeRangeAndCancelledVerbSpec(DateTimeRange range)
     {
-      Query.Where(activity => activity.Details.ActionVerbPastTense == Enums.BillingActivityVerb.Subscribed)
+      Query.Where(activity => activity.Details.ActionVerbPastTense == Enums.BillingActivityVerb.Cancelled)
         .Where(activity => activity.Details.Date >= range.StartDate)
         .Where(activity => activity.Details.Date <= range.EndDate)
         .OrderBy(activity => activity.Details.Date);
