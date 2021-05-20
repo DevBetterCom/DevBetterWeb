@@ -23,28 +23,28 @@ namespace DevBetterWeb.Core.Services
     {
       var member = await GetMemberByEmailAsync(email);
 
-      member.AddBillingActivity(subscriptionPlanName, "Subscribed", billingPeriod, amount);
+      member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Subscribed, billingPeriod, amount);
     }
 
     public async Task AddSubscriptionRenewalBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      member.AddBillingActivity(subscriptionPlanName, "Renewed", billingPeriod, amount);
+      member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Renewed, billingPeriod, amount);
     }
 
     public async Task AddSubscriptionCancellationBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      member.AddBillingActivity(subscriptionPlanName, "Cancelled", billingPeriod);
+      member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Cancelled, billingPeriod);
     }
 
     public async Task AddSubscriptionEndingBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await GetMemberByEmailAsync(email);
 
-      member.AddBillingActivity(subscriptionPlanName, "Ended", billingPeriod);
+      member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Ended, billingPeriod);
     }
 
     private async Task<Member> GetMemberByEmailAsync(string email)

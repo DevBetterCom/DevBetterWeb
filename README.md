@@ -31,6 +31,7 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 - Add/Remove Roles to User
 - Add/Remove Books
 - Update Member Subscription Dates
+- Update User email confirmation
 
 ## Development Links
 
