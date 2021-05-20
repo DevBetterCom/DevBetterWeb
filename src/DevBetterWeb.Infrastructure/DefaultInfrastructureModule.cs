@@ -38,6 +38,8 @@ namespace DevBetterWeb.Infrastructure
       builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
       builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
           .As<IUserRoleMembershipService>();
+      builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
+          .As<IUserEmailConfirmationService>();
       builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
       builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
       builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
