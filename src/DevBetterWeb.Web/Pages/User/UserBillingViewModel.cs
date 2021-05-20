@@ -1,6 +1,5 @@
 ﻿using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Enums;
-using DevBetterWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 

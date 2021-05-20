@@ -28,7 +28,7 @@
 		<PackageReference Include="Autofac" Version="6.2.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
 		<PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-		<PackageReference Include="CSharpFunctionalExtensions" Version="2.15.1" />
+		<PackageReference Include="CSharpFunctionalExtensions" Version="2.15.2" />
 		<PackageReference Include="Dapper" Version="2.0.90" />
 		<PackageReference Include="GoogleReCaptcha.V3" Version="1.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
@@ -55,8 +55,8 @@
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
 		<PackageReference Include="Stripe.net" Version="39.47.0" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.3" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.4" />
 		<PackageReference Include="TagHelperSamples.Authorization" Version="3.0.56" />
 		<PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.6.0" />
 		<PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />

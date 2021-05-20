@@ -27,13 +27,15 @@ namespace DevBetterWeb.Web.Pages.Admin
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository<Member> _memberRepository;
     private readonly IRepository<Subscription> _subscriptionRepository;
+    private readonly IUserEmailConfirmationService _userEmailConfirmationService;
 
     public UserModel(UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IUserRoleMembershipService userRoleMembershipService,
         IMemberRegistrationService memberRegistrationService,
         IRepository<Member> memberRepository,
-        IRepository<Subscription> subscriptionRepository)
+        IRepository<Subscription> subscriptionRepository,
+        IUserEmailConfirmationService userEmailConfirmationService)
     {
       _userManager = userManager;
       _roleManager = roleManager;
@@ -41,6 +43,7 @@ namespace DevBetterWeb.Web.Pages.Admin
       _memberRegistrationService = memberRegistrationService;
       _memberRepository = memberRepository;
       _subscriptionRepository = subscriptionRepository;
+      _userEmailConfirmationService = userEmailConfirmationService;
     }
 
 
@@ -50,6 +53,7 @@ namespace DevBetterWeb.Web.Pages.Admin
     public SubscriptionDTO Subscription { get; set; } = new SubscriptionDTO();
     public List<SubscriptionDTO> Subscriptions { get; set; } = new List<SubscriptionDTO>();
     public double TotalDaysInAllSubscriptions { get; set; }
+    public EmailConfirmationModel EmailConfirmation { get; set; } = new EmailConfirmationModel();
 
 
     public async Task<IActionResult> OnGetAsync(string userId)
@@ -107,6 +111,12 @@ namespace DevBetterWeb.Web.Pages.Admin
           TotalDaysInAllSubscriptions += totalDaysInSubscription;
         }
       }
+
+      EmailConfirmation.IsConfirmedString = IdentityUser.EmailConfirmed ? "Yes" : "No";
+      string emailAddressMessage = "the email address";
+      EmailConfirmation.EditEmailConfirmationMessage = @$"Are you sure you want to {(IdentityUser.EmailConfirmed
+        ? $"revoke {emailAddressMessage} confirmation"
+        : $"confirm {emailAddressMessage}")}?";
 
       return Page();
     }
@@ -188,11 +198,24 @@ namespace DevBetterWeb.Web.Pages.Admin
       return RedirectToPage("./User", new { userId = userId });
     }
 
+    public async Task<IActionResult> OnPostUpdateEmailConfirmationAsync(string userId, bool isEmailConfirmed)
+    {
+      await _userEmailConfirmationService.UpdateUserEmailConfirmationAsync(userId, !isEmailConfirmed);
+
+      return RedirectToPage("./User", new { userId });
+    }
+
     public class SubscriptionDTO
     {
       public int Id { get; set; }
       public DateTime StartDate { get; set; }
       public DateTime? EndDate { get; set; }
+    }
+
+    public class EmailConfirmationModel
+    {
+      public string IsConfirmedString { get; set; }
+      public string EditEmailConfirmationMessage { get; set; }
     }
   }
 }
