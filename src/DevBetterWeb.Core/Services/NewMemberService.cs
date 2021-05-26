@@ -3,7 +3,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Core.ValueObjects;
 using System;
 using System.Threading.Tasks;
 
@@ -18,13 +17,15 @@ namespace DevBetterWeb.Core.Services
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
+    private readonly IMemberSubscriptionCreationService _memberSubscriptionCreationService;
 
     public NewMemberService(IRepository<Member> memberRepository,
       IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
-      IMemberRegistrationService memberRegistrationService)
+      IMemberRegistrationService memberRegistrationService,
+      IMemberSubscriptionCreationService memberSubscriptionCreationService)
     {
       _memberRepository = memberRepository;
       _invitationRepository = invitationRepository;
@@ -32,6 +33,7 @@ namespace DevBetterWeb.Core.Services
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _emailService = emailService;
       _memberRegistrationService = memberRegistrationService;
+      _memberSubscriptionCreationService = memberSubscriptionCreationService;
     }
 
     public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
@@ -101,7 +103,7 @@ namespace DevBetterWeb.Core.Services
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-      await CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
+      await _memberSubscriptionCreationService.CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
@@ -123,17 +125,6 @@ namespace DevBetterWeb.Core.Services
       var roleName = Constants.MEMBER_ROLE_NAME;
 
       return _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
-    }
-
-    private async Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange)
-    {
-      var subscription = new Subscription();
-      subscription.MemberId = memberId;
-      subscription.Dates = subscriptionDateTimeRange;
-
-      var member = await _memberRepository.GetByIdAsync(memberId);
-      if (member is null) throw new MemberNotFoundException(memberId);
-      member.AddSubscription(subscription);
     }
 
     private string GetRegistrationUrl(string inviteCode, string inviteEmail)

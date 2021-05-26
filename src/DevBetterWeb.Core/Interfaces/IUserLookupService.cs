@@ -5,5 +5,6 @@ namespace DevBetterWeb.Core.Interfaces
   public interface IUserLookupService
   {
     Task<string> FindUserIdByEmailAsync(string email);
+    Task<bool> FindUserIsMemberByEmailAsync(string email);
   }
 }

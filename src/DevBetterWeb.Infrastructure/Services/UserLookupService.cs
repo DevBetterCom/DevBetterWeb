@@ -22,5 +22,31 @@ namespace DevBetterWeb.Infrastructure.Services
 
       return id;
     }
+
+    public async Task<bool> FindUserIsMemberByEmailAsync(string email)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if(user == null)
+      {
+        return false;
+      }
+
+      var roles = await _userManager.GetRolesAsync(user);
+
+      var memberRoleName = Core.Constants.MEMBER_ROLE_NAME;
+
+      bool userIsMember = false;
+
+      foreach (var role in roles)
+      {
+        if (role.Equals(memberRoleName))
+        {
+          userIsMember = true;
+        }
+      }
+
+      return userIsMember;
+    }
   }
 }

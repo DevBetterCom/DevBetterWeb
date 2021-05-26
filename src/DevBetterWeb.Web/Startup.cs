@@ -99,6 +99,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<INewMemberService, NewMemberService>();
       services.AddScoped<IMemberCancellationService, MemberSubscriptionCancellationService>();
       services.AddScoped<IMemberSubscriptionRenewalService, MemberSubscriptionRenewalService>();
+      services.AddScoped<IMemberSubscriptionCreationService, MemberSubscriptionCreationService>();
       services.AddScoped<IMemberAddBillingActivityService, MemberAddBillingActivityService>();
       services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
       services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();

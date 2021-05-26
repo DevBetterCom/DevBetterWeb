@@ -17,6 +17,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
     private readonly Mock<IEmailService> _emailService;
     private readonly Mock<IMemberRegistrationService> _memberRegistrationService;
+    private readonly Mock<IMemberSubscriptionCreationService> _memberSubscriptionCreationService;
 
     private readonly INewMemberService _newMemberService;
 
@@ -39,12 +40,14 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
+      _memberSubscriptionCreationService = new Mock<IMemberSubscriptionCreationService>();
       _newMemberService = new NewMemberService(_memberRepository.Object,
         _invitationRepository.Object,
         _userRoleMembershipService.Object,
         _paymentHandlerSubscription.Object,
         _emailService.Object,
-        _memberRegistrationService.Object);
+        _memberRegistrationService.Object,
+        _memberSubscriptionCreationService.Object);
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 

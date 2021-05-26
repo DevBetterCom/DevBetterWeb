@@ -3,7 +3,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Services
 {
