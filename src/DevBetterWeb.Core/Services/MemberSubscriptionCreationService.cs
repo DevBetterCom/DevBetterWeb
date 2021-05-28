@@ -8,7 +8,7 @@ namespace DevBetterWeb.Core.Services
 {
   public class MemberSubscriptionCreationService : IMemberSubscriptionCreationService
   {
-    IRepository<Member> _memberRepository;
+    private readonly IRepository<Member> _memberRepository;
 
     public MemberSubscriptionCreationService(IRepository<Member> repository)
     {
