@@ -30,7 +30,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
       _emailService = new Mock<IEmailService>();
       _memberRegistrationService = new Mock<IMemberRegistrationService>();
-      _newMemberService = new NewMemberService(_memberRepository.Object, _invitationRepository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
+      _newMemberService = new NewMemberService(_invitationRepository.Object, _userRoleMembershipService.Object, _paymentHandlerSubscription.Object, _emailService.Object, _memberRegistrationService.Object);
     }
 
     [Fact]

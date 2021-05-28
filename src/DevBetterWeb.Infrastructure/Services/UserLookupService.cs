@@ -2,6 +2,8 @@
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
@@ -21,6 +23,20 @@ namespace DevBetterWeb.Infrastructure.Services
       var id = user.Id;
 
       return id;
+    }
+
+    public async Task<bool> FindUserIsMemberByEmailAsync(string email)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if(user == null)
+      {
+        return false;
+      }
+
+      var roles = await _userManager.GetRolesAsync(user);
+
+      return roles.Any(role => role.Equals(Constants.MEMBER_ROLE_NAME));
     }
   }
 }

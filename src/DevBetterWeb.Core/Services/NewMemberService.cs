@@ -3,7 +3,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Core.ValueObjects;
 using System;
 using System.Threading.Tasks;
 
@@ -12,21 +11,18 @@ namespace DevBetterWeb.Core.Services
   public class NewMemberService : INewMemberService
   {
 
-    private readonly IRepository<Member> _memberRepository;
     private readonly IRepository<Invitation> _invitationRepository;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
 
-    public NewMemberService(IRepository<Member> memberRepository,
-      IRepository<Invitation> invitationRepository,
+    public NewMemberService(IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
       IMemberRegistrationService memberRegistrationService)
     {
-      _memberRepository = memberRepository;
       _invitationRepository = invitationRepository;
       _userRoleMembershipService = userRoleMembershipService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
@@ -101,7 +97,7 @@ namespace DevBetterWeb.Core.Services
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-      await CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
+      member.AddSubscription(subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
@@ -123,17 +119,6 @@ namespace DevBetterWeb.Core.Services
       var roleName = Constants.MEMBER_ROLE_NAME;
 
       return _userRoleMembershipService.AddUserToRoleByRoleNameAsync(userId, roleName);
-    }
-
-    private async Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange)
-    {
-      var subscription = new Subscription();
-      subscription.MemberId = memberId;
-      subscription.Dates = subscriptionDateTimeRange;
-
-      var member = await _memberRepository.GetByIdAsync(memberId);
-      if (member is null) throw new MemberNotFoundException(memberId);
-      member.AddSubscription(subscription);
     }
 
     private string GetRegistrationUrl(string inviteCode, string inviteEmail)
