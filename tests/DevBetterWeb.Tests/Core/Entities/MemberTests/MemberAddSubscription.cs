@@ -1,34 +1,22 @@
 ﻿using DevBetterWeb.Core.Entities;
 using Xunit;
+using System.Linq;
 
 namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
   public class MemberAddSubscription
   {
     [Fact]
-    public void AddsSubscription()
+    public void AddsSubscriptionWithGivenDateTimeRange()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
       Subscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
 
-      member.AddSubscription(subscription);
+      member.AddSubscription(subscription.Dates);
 
-      Assert.Contains(subscription, member.Subscriptions);
-    }
+      var subscriptionAdded = member.Subscriptions.Any(s => s.Dates.Equals(subscription.Dates));
 
-    [Fact]
-    public void DoesNothingGivenSubscriptionAlreadyInList()
-    {
-      Member member = MemberHelpers.CreateWithDefaultConstructor();
-      Subscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
-
-      member.AddSubscription(subscription);
-
-      Assert.Contains(subscription, member.Subscriptions);
-
-      member.AddSubscription(subscription);
-
-      Assert.Single(member.Subscriptions);
+      Assert.True(subscriptionAdded);
     }
   }
 }

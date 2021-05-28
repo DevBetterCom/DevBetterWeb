@@ -16,7 +16,6 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly INewMemberService _newMemberService;
     private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
     private readonly IMemberSubscriptionRenewalService _memberSubscriptionRenewalService;
-    private readonly IMemberSubscriptionFactory _memberSubscriptionCreationService;
     private readonly IMemberCancellationService _memberCancellationService;
 
     private readonly IUserLookupService _userLookupService;
@@ -31,7 +30,6 @@ namespace DevBetterWeb.Infrastructure.Services
       INewMemberService newMemberService,
       IMemberAddBillingActivityService memberAddBillingActivityService,
       IMemberSubscriptionRenewalService memberSubscriptionRenewalService,
-      IMemberSubscriptionFactory memberSubscriptionCreationService,
       IMemberCancellationService memberCancellationService,
       IUserLookupService userLookupService,
       IRepository<Member> repository,
@@ -44,7 +42,6 @@ namespace DevBetterWeb.Infrastructure.Services
       _newMemberService = newMemberService;
       _memberAddBillingActivityService = memberAddBillingActivityService;
       _memberSubscriptionRenewalService = memberSubscriptionRenewalService;
-      _memberSubscriptionCreationService = memberSubscriptionCreationService;
       _memberCancellationService = memberCancellationService;
       _userLookupService = userLookupService;
       _repository = repository;
@@ -146,12 +143,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var userIsMember = await _userLookupService.FindUserIsMemberByEmailAsync(email);
 
-      if (userIsMember)
-      {
-        return true;
-      }
-
-      return false;
+      return userIsMember;
 
     }
 
@@ -166,9 +158,12 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var userId = await _userLookupService.FindUserIdByEmailAsync(email);
       var spec = new MemberByUserIdSpec(userId);
-      var member = _repository.GetBySpecAsync(spec);
+      var member = await _repository.GetBySpecAsync(spec);
 
-      await _memberSubscriptionCreationService.CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
+      if(member != null)
+      {
+        member.AddSubscription(subscriptionDateTimeRange);
+      }
     }
   }
 }

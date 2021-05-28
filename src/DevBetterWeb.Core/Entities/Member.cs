@@ -210,15 +210,17 @@ namespace DevBetterWeb.Core.Entities
       }
     }
 
-    public void AddSubscription(Subscription subscription)
+    public void AddSubscription(DateTimeRange subscriptionDateTimeRange)
     {
-      if (!Subscriptions.Any(s => s.Id == subscription.Id))
-      {
-        Subscriptions.Add(subscription);
+      var subscription = new Subscription();
+      subscription.MemberId = this.Id;
+      subscription.Dates = subscriptionDateTimeRange;
 
-        CreateOrUpdateUpdateEvent("Subscription Added");
-      }
+      Subscriptions.Add(subscription);
+
+      CreateOrUpdateUpdateEvent("Subscription Added");
     }
+
     public void ExtendCurrentSubscription(DateTime newEndDate)
     {
       for (int i = 0; i < Subscriptions.Count; i++)

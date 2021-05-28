@@ -30,7 +30,7 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionPeriodCalculationsServic
     {
       var member = MemberHelpers.CreateWithDefaultConstructor();
       var subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(days);
-      member.AddSubscription(subscription);
+      member.AddSubscription(subscription.Dates);
 
       var expectedPercentage = (int) (100 * ((double)days / (double) 730));
 
@@ -44,7 +44,7 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionPeriodCalculationsServic
     {
       var member = MemberHelpers.CreateWithDefaultConstructor();
       var subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(731);
-      member.AddSubscription(subscription);
+      member.AddSubscription(subscription.Dates);
 
       var expectedPercentage = 100;
 

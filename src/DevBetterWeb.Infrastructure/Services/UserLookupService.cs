@@ -2,6 +2,8 @@
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
@@ -34,19 +36,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var roles = await _userManager.GetRolesAsync(user);
 
-      var memberRoleName = Core.Constants.MEMBER_ROLE_NAME;
-
-      bool userIsMember = false;
-
-      foreach (var role in roles)
-      {
-        if (role.Equals(memberRoleName))
-        {
-          userIsMember = true;
-        }
-      }
-
-      return userIsMember;
+      return roles.Any(role => role.Equals(Constants.MEMBER_ROLE_NAME));
     }
   }
 }

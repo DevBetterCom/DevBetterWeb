@@ -11,29 +11,23 @@ namespace DevBetterWeb.Core.Services
   public class NewMemberService : INewMemberService
   {
 
-    private readonly IRepository<Member> _memberRepository;
     private readonly IRepository<Invitation> _invitationRepository;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
-    private readonly IMemberSubscriptionFactory _memberSubscriptionCreationService;
 
-    public NewMemberService(IRepository<Member> memberRepository,
-      IRepository<Invitation> invitationRepository,
+    public NewMemberService(IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
-      IMemberRegistrationService memberRegistrationService,
-      IMemberSubscriptionFactory memberSubscriptionCreationService)
+      IMemberRegistrationService memberRegistrationService)
     {
-      _memberRepository = memberRepository;
       _invitationRepository = invitationRepository;
       _userRoleMembershipService = userRoleMembershipService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _emailService = emailService;
       _memberRegistrationService = memberRegistrationService;
-      _memberSubscriptionCreationService = memberSubscriptionCreationService;
     }
 
     public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
@@ -103,7 +97,7 @@ namespace DevBetterWeb.Core.Services
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-      await _memberSubscriptionCreationService.CreateSubscriptionForMemberAsync(member.Id, subscriptionDateTimeRange);
+      member.AddSubscription(subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
