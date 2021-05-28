@@ -3,7 +3,7 @@ using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Interfaces
 {
-  public interface IMemberSubscriptionCreationService
+  public interface IMemberSubscriptionFactory
   {
     Task CreateSubscriptionForMemberAsync(int memberId, DateTimeRange subscriptionDateTimeRange);
   }

@@ -16,7 +16,7 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly INewMemberService _newMemberService;
     private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
     private readonly IMemberSubscriptionRenewalService _memberSubscriptionRenewalService;
-    private readonly IMemberSubscriptionCreationService _memberSubscriptionCreationService;
+    private readonly IMemberSubscriptionFactory _memberSubscriptionCreationService;
     private readonly IMemberCancellationService _memberCancellationService;
 
     private readonly IUserLookupService _userLookupService;
@@ -31,7 +31,7 @@ namespace DevBetterWeb.Infrastructure.Services
       INewMemberService newMemberService,
       IMemberAddBillingActivityService memberAddBillingActivityService,
       IMemberSubscriptionRenewalService memberSubscriptionRenewalService,
-      IMemberSubscriptionCreationService memberSubscriptionCreationService,
+      IMemberSubscriptionFactory memberSubscriptionCreationService,
       IMemberCancellationService memberCancellationService,
       IUserLookupService userLookupService,
       IRepository<Member> repository,

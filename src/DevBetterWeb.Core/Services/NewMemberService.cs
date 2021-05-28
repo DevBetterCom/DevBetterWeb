@@ -17,7 +17,7 @@ namespace DevBetterWeb.Core.Services
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
-    private readonly IMemberSubscriptionCreationService _memberSubscriptionCreationService;
+    private readonly IMemberSubscriptionFactory _memberSubscriptionCreationService;
 
     public NewMemberService(IRepository<Member> memberRepository,
       IRepository<Invitation> invitationRepository,
@@ -25,7 +25,7 @@ namespace DevBetterWeb.Core.Services
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
       IMemberRegistrationService memberRegistrationService,
-      IMemberSubscriptionCreationService memberSubscriptionCreationService)
+      IMemberSubscriptionFactory memberSubscriptionCreationService)
     {
       _memberRepository = memberRepository;
       _invitationRepository = invitationRepository;
