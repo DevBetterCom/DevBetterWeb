@@ -17,8 +17,6 @@ namespace DevBetterWeb.Web.Pages.Admin.Members
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IRepository<Member> _memberRepository;
 
-    public string EmailToUnsubscribe { get; private set; }
-
     public string NameToUnsubscribe { get; private set; }
 
     public string Message { get; private set; }
@@ -37,13 +35,11 @@ namespace DevBetterWeb.Web.Pages.Admin.Members
       var spec = new MemberByUserIdSpec(userId);
       var member = await _memberRepository.GetBySpecAsync(spec);
 
-      var user = await _userManager.FindByIdAsync(userId);
-      EmailToUnsubscribe = await _userManager.GetEmailAsync(user);
+      var EmailToUnsubscribe = await GetEmail(userId);
 
       if(member != null)
       {
         NameToUnsubscribe = member.UserFullName();
-        EmailToUnsubscribe = "";
         Message = $"If you are sure you want to unsubscribe {NameToUnsubscribe} with email {EmailToUnsubscribe} from DevBetter, click below.";
       }
       else
@@ -52,8 +48,9 @@ namespace DevBetterWeb.Web.Pages.Admin.Members
       }
     }
 
-    public async Task<PageResult> OnPost()
+    public async Task<PageResult> OnPost(string userId)
     {
+      var EmailToUnsubscribe = await GetEmail(userId);
       try
       {
         await _paymentHandlerSubscription.CancelSubscriptionAtPeriodEnd(EmailToUnsubscribe);
@@ -65,6 +62,14 @@ namespace DevBetterWeb.Web.Pages.Admin.Members
         Message = "Attempt to cancel subscription failed.";
         return Page();
       }
+    }
+
+    private async Task<string> GetEmail(string userId)
+    {
+      var user = await _userManager.FindByIdAsync(userId);
+      var EmailToUnsubscribe = await _userManager.GetEmailAsync(user);
+
+      return EmailToUnsubscribe;
     }
   }
 }
