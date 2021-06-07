@@ -2,9 +2,10 @@
 @model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
 @{
     ViewData["Title"] = "Index";
-    var memberrank = 1;
-    var alumnirank = 1;
-    var bookrank = 1;
+
+    var memberRankings = Model.CalculateMemberBookRanks(Model.Members);
+    var alumniRankings = Model.CalculateMemberBookRanks(Model.Alumni);
+    var bookRankings = Model.CalculateBookRanks(Model.Books);
 }
 
 <h3>Leaderboard</h3>
@@ -26,7 +27,7 @@
                 @foreach (var member in Model.Members)
                 {
                     <tr>
-                        <td>@(memberrank++)</td>
+                        <td>@(memberRankings[member.BooksRead!.Count])</td>
                         <td>
                             <a href="/User/Details/@member.UserId">@member.FullName</a>
                         </td>
@@ -52,7 +53,7 @@
                 @foreach (var member in Model.Alumni)
                 {
                     <tr>
-                        <td>@(alumnirank++)</td>
+                        <td>@(alumniRankings[member.BooksRead!.Count])</td>
                         <td>
                             <a href="/User/Details/@member.UserId">@member.FullName</a>
                         </td>
@@ -82,7 +83,7 @@
                 @foreach (var book in Model.Books)
                 {
                     <tr>
-                        <td>@(bookrank++)</td>
+                        <td>@(bookRankings[book.MembersWhoHaveRead!.Count])</td>
                         <td>
                             <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
                         </td>

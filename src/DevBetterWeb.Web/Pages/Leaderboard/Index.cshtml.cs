@@ -32,6 +32,44 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       _bookRepository = bookRepository;
     }
 
+    public Dictionary<int,int> CalculateMemberBookRanks(List<MemberLinksDTO> members)
+    {
+      // could probably do this with a groupby bookcount
+        var memberBookCounts = members
+                .Select(m=>m.BooksRead!.Count)
+                .Distinct()
+                .OrderByDescending(c=>c);
+
+        var memberBookRankings = new Dictionary<int,int>();
+        var rank = 1;
+        foreach (var count in memberBookCounts)
+        {
+            memberBookRankings[count]=rank;
+            rank += 1;
+        }
+        
+        return memberBookRankings;
+    }
+
+    public Dictionary<int, int> CalculateBookRanks(List<Book> books)
+    {
+      var bookCounts = books
+        .Select(m => m.MembersWhoHaveRead!.Count)
+        .Distinct()
+        .OrderByDescending(c => c);
+
+      var bookRankings = new Dictionary<int, int>();
+      var rank = 1;
+      foreach (var count in bookCounts)
+      {
+        bookRankings[count] = rank;
+        rank += 1;
+      }
+
+      return bookRankings;
+    }
+
+
     public async Task OnGet()
     {
       var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
