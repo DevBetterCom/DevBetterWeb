@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +19,14 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IRepository<Member> _memberRepository;
     private readonly IRepository<Book> _bookRepository;
+    private readonly RankingService<int> _rankingService = new RankingService<int>();
 
     public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
     public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
+
+    public Dictionary<int, int> BookRanks { get; set; }
+
 
     public IndexModel(UserManager<ApplicationUser> userManager,
         IRepository<Member> memberRepository,
@@ -90,12 +95,20 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
           .Select(member => MemberLinksDTO.FromMemberEntity(member))
           .ToList();
 
+      var memberRanks = _rankingService.Rank(Members.Select(m=>m.BooksRead!.Count));
+      Members.ForEach(m=>m.Rank=memberRanks[m.BooksRead!.Count]);
+
       Alumni = alumni.Select(alumni => MemberLinksDTO.FromMemberEntity(alumni))
           .Where(m => (m.BooksRead?.Count ?? 0) > 0)
           .ToList();
 
+      var alumniRanks = _rankingService.Rank(Alumni.Select(m => m.BooksRead!.Count));
+      Alumni.ForEach(m => m.Rank = alumniRanks[m.BooksRead!.Count]);
+
       var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
       Books = await _bookRepository.ListAsync(bookSpec);
+
+      BookRanks = _rankingService.Rank(Books.Select(b => b.MembersWhoHaveRead!.Count));
     }
 
     public class MemberLinksDTO
@@ -103,6 +116,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
       public string? UserId { get; set; }
       public string? FullName { get; set; }
       public List<Book>? BooksRead { get; private set; }
+      public int Rank { get; set; }
 
       public static MemberLinksDTO FromMemberEntity(Member member)
       {

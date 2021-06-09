@@ -27,7 +27,7 @@
                 @foreach (var member in Model.Members)
                 {
                     <tr>
-                        <td>@(memberRankings[member.BooksRead!.Count])</td>
+                        <td>@member.Rank</td>
                         <td>
                             <a href="/User/Details/@member.UserId">@member.FullName</a>
                         </td>
@@ -53,7 +53,7 @@
                 @foreach (var member in Model.Alumni)
                 {
                     <tr>
-                        <td>@(alumniRankings[member.BooksRead!.Count])</td>
+                        <td>@member.Rank</td>
                         <td>
                             <a href="/User/Details/@member.UserId">@member.FullName</a>
                         </td>
@@ -83,7 +83,7 @@
                 @foreach (var book in Model.Books)
                 {
                     <tr>
-                        <td>@(bookRankings[book.MembersWhoHaveRead!.Count])</td>
+                        <td>@(Model.BookRanks[book.MembersWhoHaveRead!.Count])</td>
                         <td>
                             <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
                         </td>
