@@ -1,0 +1,49 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.Members.IndexModel
+@{
+}
+
+<div class="d-flex mb-3">
+    <div class="mr-3">
+        <h3>Members</h3>
+    </div>
+</div>
+<table class="table table-striped table-bordered" id="usersTable">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userWithMemberRole in Model.UsersWithMemberRole)
+        {
+            <tr>
+                <td>@userWithMemberRole.User.Email</td>
+                <td>
+                    <a href ="./Members/Cancel/@userWithMemberRole.User.Id">Manage Subscription</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a href="./Admin/Users">
+        Manage Users
+    </a>
+</div>
+<div>
+    <a href="./Admin/Books">
+        Manage Books
+    </a>
+</div>
+<div>
+    <a href="./Admin/ArchivedVideos">
+        Manage Videos
+    </a>
+</div>
+
+
+@section scripts{
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}
