@@ -10,7 +10,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
     public void AddsSubscriptionWithGivenDateTimeRange()
     {
       Member member = MemberHelpers.CreateWithDefaultConstructor();
-      Subscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
+      MemberSubscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
 
       member.AddSubscription(subscription.Dates);
 
