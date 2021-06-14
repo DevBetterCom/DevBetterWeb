@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DevBetterWeb.Core.Services;
 using Xunit;
@@ -24,7 +23,7 @@ namespace DevBetterWeb.Tests.Services.RankingServiceTests
     [InlineData(3)]
     public void SingleIntegerHasRankOfOne(int value)
     {
-      var rankings = _sut.Rank(new List<int>{value});
+      var rankings = _sut.Rank(new List<int> { value });
       Assert.Equal(1, rankings[value]);
     }
 
@@ -52,6 +51,14 @@ namespace DevBetterWeb.Tests.Services.RankingServiceTests
     public void DuplicateIntegersHaveSameRank()
     {
       var numbersToRank = new List<int> { 1, 1, 2, 2, 3 };
+      // Expected Ranking Result from this series:
+      // Rank  Entry
+      // 1      3
+      // 2      2
+      // 2      2
+      // 4      1
+      // 4      1
+      // 4      1
       var rankings = _sut.Rank(numbersToRank);
       Assert.Equal(1, rankings[3]);
       Assert.Equal(2, rankings[2]);

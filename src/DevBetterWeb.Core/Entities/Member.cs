@@ -53,7 +53,7 @@ namespace DevBetterWeb.Core.Entities
     public List<Book> BooksRead { get; set; } = new List<Book>();
 
     public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
-    public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+    public List<MemberSubscription> Subscriptions { get; set; } = new List<MemberSubscription>();
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
     public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
@@ -212,7 +212,7 @@ namespace DevBetterWeb.Core.Entities
 
     public void AddSubscription(DateTimeRange subscriptionDateTimeRange)
     {
-      var subscription = new Subscription();
+      var subscription = new MemberSubscription();
       subscription.MemberId = this.Id;
       subscription.Dates = subscriptionDateTimeRange;
 
@@ -225,7 +225,7 @@ namespace DevBetterWeb.Core.Entities
     {
       for (int i = 0; i < Subscriptions.Count; i++)
       {
-        Subscription s = Subscriptions[i];
+        MemberSubscription s = Subscriptions[i];
         if (s.Dates.Contains(DateTime.Today))
         {
           s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
