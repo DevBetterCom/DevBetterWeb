@@ -6,27 +6,27 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
   public static class SubscriptionHelpers
   {
-    public static Subscription GetDefaultTestSubscription()
+    public static MemberSubscription GetDefaultTestSubscription()
     {
-      return new Subscription
+      return new MemberSubscription
       {
         Dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(20))
       };
     }
 
-    public static Subscription GetSubscriptionWithPastEndDate()
+    public static MemberSubscription GetSubscriptionWithPastEndDate()
     {
-      return new Subscription
+      return new MemberSubscription
       {
         Dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(-20))
       };
     }
 
-    public static Subscription GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(int daysToDate, int totalDays = 0)
+    public static MemberSubscription GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(int daysToDate, int totalDays = 0)
     {
       int difference = totalDays - daysToDate;
 
-      return new Subscription
+      return new MemberSubscription
       {
         Dates = new DateTimeRange(DateTime.Today.AddDays(daysToDate * -1), DateTime.Today.AddDays(totalDays))
       };
