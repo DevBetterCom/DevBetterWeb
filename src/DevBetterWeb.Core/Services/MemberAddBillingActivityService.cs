@@ -11,49 +11,43 @@ namespace DevBetterWeb.Core.Services
   {
     private readonly IUserLookupService _userLookup;
     private readonly IRepository<Member> _memberRepository;
+    private readonly IMemberLookupService _memberLookupService;
 
     public MemberAddBillingActivityService(IUserLookupService userLookup,
-      IRepository<Member> memberRepository)
+      IRepository<Member> memberRepository,
+      IMemberLookupService memberLookup)
     {
       _userLookup = userLookup;
       _memberRepository = memberRepository;
+      _memberLookupService = memberLookup;
     }
 
     public async Task AddMemberSubscriptionCreationBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
-      var member = await GetMemberByEmailAsync(email);
+      var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
       member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Subscribed, billingPeriod, amount);
     }
 
     public async Task AddMemberSubscriptionRenewalBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
-      var member = await GetMemberByEmailAsync(email);
+      var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
       member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Renewed, billingPeriod, amount);
     }
 
     public async Task AddMemberSubscriptionCancellationBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
-      var member = await GetMemberByEmailAsync(email);
+      var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
       member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Cancelled, billingPeriod);
     }
 
     public async Task AddMemberSubscriptionEndingBillingActivity(string email, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
-      var member = await GetMemberByEmailAsync(email);
+      var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
       member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Ended, billingPeriod);
-    }
-
-    private async Task<Member> GetMemberByEmailAsync(string email)
-    {
-      var userId = await _userLookup.FindUserIdByEmailAsync(email);
-      var spec = new MemberByUserIdSpec(userId);
-      var member = await _memberRepository.GetBySpecAsync(spec);
-      if (member is null) throw new MemberWithEmailNotFoundException(email);
-      return member;
     }
   }
 }

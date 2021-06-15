@@ -8,7 +8,6 @@ namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests
   public class SendCancellationEmailAsync : MemberSubscriptionCancellationServiceTest
   {
     private readonly string _email = "TestEmail";
-    private readonly DateTime _date = new DateTime(1, 1, 1);
 
     [Fact]
     public async Task SendsEmail()

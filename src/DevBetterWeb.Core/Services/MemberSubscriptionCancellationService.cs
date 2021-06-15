@@ -11,6 +11,7 @@ namespace DevBetterWeb.Core.Services
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly IEmailService _emailService;
     private readonly IUserLookupService _userLookup;
+    private readonly IMemberLookupService _memberLookupService;
     private readonly IRepository<Member> _memberRepository;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
@@ -18,12 +19,14 @@ namespace DevBetterWeb.Core.Services
       IUserRoleMembershipService userRoleMembershipService,
       IEmailService emailService,
       IUserLookupService userLookup,
+      IMemberLookupService memberLookup,
       IRepository<Member> memberRepository,
       IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
     {
       _userRoleMembershipService = userRoleMembershipService;
       _emailService = emailService;
       _userLookup = userLookup;
+      _memberLookupService = memberLookup;
       _memberRepository = memberRepository;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
     }
@@ -37,11 +40,7 @@ namespace DevBetterWeb.Core.Services
 
     public async Task SendFutureCancellationEmailAsync(string email)
     {
-      var userId = await _userLookup.FindUserIdByEmailAsync(email);
-
-      var spec = new MemberByUserIdSpec(userId);
-      var member = await _memberRepository.GetBySpecAsync(spec);
-      if (member is null) throw new MemberWithEmailNotFoundException(email);
+      var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
       var endDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
 
@@ -58,6 +57,5 @@ namespace DevBetterWeb.Core.Services
 
       return _emailService.SendEmailAsync(email, subject, message);
     }
-
   }
 }
