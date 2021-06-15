@@ -18,6 +18,8 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly IMemberSubscriptionRenewalService _memberSubscriptionRenewalService;
     private readonly IMemberCancellationService _memberCancellationService;
 
+    private readonly IMemberSubscriptionEndedAdminEmailService _memberSubscriptionEndedAdminEmailService;
+
     private readonly IUserLookupService _userLookupService;
     private readonly IRepository<Member> _repository;
 
@@ -31,6 +33,7 @@ namespace DevBetterWeb.Infrastructure.Services
       IMemberAddBillingActivityService memberAddBillingActivityService,
       IMemberSubscriptionRenewalService memberSubscriptionRenewalService,
       IMemberCancellationService memberCancellationService,
+      IMemberSubscriptionEndedAdminEmailService memberSubscriptionEndedAdminEmailService,
       IUserLookupService userLookupService,
       IRepository<Member> repository,
       AdminUpdatesWebhook webhook)
@@ -43,6 +46,7 @@ namespace DevBetterWeb.Infrastructure.Services
       _memberAddBillingActivityService = memberAddBillingActivityService;
       _memberSubscriptionRenewalService = memberSubscriptionRenewalService;
       _memberCancellationService = memberCancellationService;
+      _memberSubscriptionEndedAdminEmailService = memberSubscriptionEndedAdminEmailService;
       _userLookupService = userLookupService;
       _repository = repository;
       _webhook = webhook;
@@ -68,6 +72,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       await _memberCancellationService.RemoveUserFromMemberRoleAsync(email);
       await _memberCancellationService.SendCancellationEmailAsync(email);
+      await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(email);
       var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
       var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
       await _memberAddBillingActivityService.AddSubscriptionEndingBillingActivity(email, subscriptionPlanName, billingPeriod);
