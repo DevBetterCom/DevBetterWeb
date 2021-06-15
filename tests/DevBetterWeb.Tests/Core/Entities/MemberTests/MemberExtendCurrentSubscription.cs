@@ -18,10 +18,10 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
       member.ExtendCurrentSubscription(newEndDate);
 
-      Assert.Equal(newEndDate, member.Subscriptions[0].Dates.EndDate);
-      Assert.Equal(originalStartDate, member.Subscriptions[0].Dates.StartDate);
+      Assert.Equal(newEndDate, member.MemberSubscriptions[0].Dates.EndDate);
+      Assert.Equal(originalStartDate, member.MemberSubscriptions[0].Dates.StartDate);
 
-      Assert.Single(member.Subscriptions);
+      Assert.Single(member.MemberSubscriptions);
     }
 
     [Fact]
@@ -36,9 +36,9 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
       member.ExtendCurrentSubscription(newEndDate);
 
-      Assert.Equal(originalEndDate, member.Subscriptions[0].Dates.EndDate);
+      Assert.Equal(originalEndDate, member.MemberSubscriptions[0].Dates.EndDate);
 
-      Assert.Single(member.Subscriptions);
+      Assert.Single(member.MemberSubscriptions);
     }
   }
 }
