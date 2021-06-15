@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DevBetterWeb.Infrastructure.Data.Config
 {
-  public class SubscriptionPlanConfig : IEntityTypeConfiguration<SubscriptionPlan>
+  public class MemberSubscriptionPlanConfig : IEntityTypeConfiguration<MemberSubscriptionPlan>
   {
-    public void Configure(EntityTypeBuilder<SubscriptionPlan> builder)
+    public void Configure(EntityTypeBuilder<MemberSubscriptionPlan> builder)
     {
       builder.OwnsOne(x => x.Details, d =>
       {

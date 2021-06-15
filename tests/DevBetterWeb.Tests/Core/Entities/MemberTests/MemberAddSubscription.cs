@@ -14,7 +14,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 
       member.AddSubscription(subscription.Dates);
 
-      var subscriptionAdded = member.Subscriptions.Any(s => s.Dates.Equals(subscription.Dates));
+      var subscriptionAdded = member.MemberSubscriptions.Any(s => s.Dates.Equals(subscription.Dates));
 
       Assert.True(subscriptionAdded);
     }

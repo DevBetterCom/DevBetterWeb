@@ -52,7 +52,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
       var applicationUser = await _userManager.FindByNameAsync(currentUserName);
       AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
 
-      var spec = new MemberByUserIdWithBooksReadAndSubscriptionsSpec(applicationUser.Id);
+      var spec = new MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec(applicationUser.Id);
       var member = await _memberRepository.GetBySpecAsync(spec);
 
       if (member == null)
