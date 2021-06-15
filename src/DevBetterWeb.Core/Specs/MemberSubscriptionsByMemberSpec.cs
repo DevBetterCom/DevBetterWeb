@@ -3,9 +3,9 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs
 {
-    public class SubscriptionsByMemberSpec : Specification<MemberSubscription>
+    public class MemberSubscriptionsByMemberSpec : Specification<MemberSubscription>
     {
-        public SubscriptionsByMemberSpec(int memberId)
+        public MemberSubscriptionsByMemberSpec(int memberId)
         {
             Query.Where(subscription => subscription.MemberId == memberId)
             .OrderBy(subscription => subscription.Dates.StartDate);

@@ -44,7 +44,7 @@ namespace DevBetterWeb.Web.Pages.User
       var userIds = usersInRole.Select(x => x.Id).ToList();
 #nullable disable
       var members = await _appDbContext.Members
-          .Include(m => m.Subscriptions)
+          .Include(m => m.MemberSubscriptions)
           .AsNoTracking()
           .Where(member => userIds.Contains(member.UserId))
           .OrderBy(member => member.LastName)
