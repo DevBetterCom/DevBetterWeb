@@ -28,7 +28,7 @@ namespace DevBetterWeb.Web.Pages.User
     public async Task OnGet(string userId)
     {
 
-      var spec = new MemberByUserIdWithBooksReadAndSubscriptionsSpec(userId);
+      var spec = new MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec(userId);
       var member = await _memberRepository.GetBySpecAsync(spec);
 
       if (member == null)

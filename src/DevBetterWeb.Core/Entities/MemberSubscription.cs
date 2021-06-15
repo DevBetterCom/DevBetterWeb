@@ -12,6 +12,6 @@ namespace DevBetterWeb.Core.Entities
     public DateTimeRange Dates { get; set; }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
     public int MemberId { get; set; }
-    public int SubscriptionPlanId { get; set; }
+    public int MemberSubscriptionPlanId { get; set; }
   }
 }

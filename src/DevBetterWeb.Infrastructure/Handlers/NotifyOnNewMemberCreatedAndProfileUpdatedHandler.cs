@@ -33,7 +33,7 @@ namespace DevBetterWeb.Infrastructure.Handlers
         string message = $"A new Member with id {domainEvent.Member.UserId} has signed up and updated their membership profile.\n" +
           $"Member email: {newMemberEmail} \n" +
           $"Member subscription(s): ";
-        foreach(var subscription in domainEvent.Member.Subscriptions)
+        foreach(var subscription in domainEvent.Member.MemberSubscriptions)
         {
           message = message + $"\n    {subscription.Dates.StartDate} to {subscription.Dates.EndDate}";
         }

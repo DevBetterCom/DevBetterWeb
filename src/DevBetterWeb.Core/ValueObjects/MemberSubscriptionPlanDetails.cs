@@ -4,20 +4,20 @@ using DevBetterWeb.Core.Enums;
 
 namespace DevBetterWeb.Core.ValueObjects
 {
-  public class SubscriptionPlanDetails : ValueObject
+  public class MemberSubscriptionPlanDetails : ValueObject
   {
     public string Name { get; set; }
     public decimal PricePerBillingPeriod { get; set; }
     public BillingPeriod BillingPeriod { get; set; }
 
-    public SubscriptionPlanDetails(string name, decimal pricePerBillingPeriod, BillingPeriod billingPeriod)
+    public MemberSubscriptionPlanDetails(string name, decimal pricePerBillingPeriod, BillingPeriod billingPeriod)
     {
       Name = name;
       PricePerBillingPeriod = pricePerBillingPeriod;
       BillingPeriod = billingPeriod;
     }
 
-    public SubscriptionPlanDetails()
+    public MemberSubscriptionPlanDetails()
     {
       Name = "";
       PricePerBillingPeriod = 0;
