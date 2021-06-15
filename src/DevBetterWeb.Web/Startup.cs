@@ -19,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using Hangfire;
+using Hangfire.SqlServer;
 
 namespace DevBetterWeb.Web
 {
@@ -118,6 +120,23 @@ namespace DevBetterWeb.Web
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
+      // Add Hangfire services.
+      services.AddHangfire(configuration => configuration
+          .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+          .UseSimpleAssemblyNameTypeSerializer()
+          .UseRecommendedSerializerSettings()
+          .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+          {
+            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+            QueuePollInterval = TimeSpan.Zero,
+            UseRecommendedIsolationLevel = true,
+            DisableGlobalLocks = true
+          }));
+
+      // Add the processing server as IHostedService
+      services.AddHangfireServer();
+
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -144,6 +163,8 @@ namespace DevBetterWeb.Web
       app.UseStaticFiles();
       //app.UseCookiePolicy();
 
+      app.UseHangfireDashboard();
+
       app.UseRouting();
 
       app.UseAuthentication();
@@ -162,6 +183,7 @@ namespace DevBetterWeb.Web
       {
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
+        endpoints.MapHangfireDashboard();
       });
 
       StripeConfiguration.ApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
