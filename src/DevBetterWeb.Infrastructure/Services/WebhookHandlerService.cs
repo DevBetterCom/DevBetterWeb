@@ -61,7 +61,7 @@ namespace DevBetterWeb.Infrastructure.Services
       await _memberCancellationService.SendFutureCancellationEmailAsync(email);
       var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
       var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-      await _memberAddBillingActivityService.AddSubscriptionCancellationBillingActivity(email, subscriptionPlanName, billingPeriod);
+      await _memberAddBillingActivityService.AddMemberSubscriptionCancellationBillingActivity(email, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleCustomerSubscriptionEndedAsync(string json)
@@ -75,7 +75,7 @@ namespace DevBetterWeb.Infrastructure.Services
       await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(email);
       var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
       var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-      await _memberAddBillingActivityService.AddSubscriptionEndingBillingActivity(email, subscriptionPlanName, billingPeriod);
+      await _memberAddBillingActivityService.AddMemberSubscriptionEndingBillingActivity(email, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleCustomerSubscriptionRenewedAsync(string json)
@@ -92,7 +92,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
       var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-      await _memberAddBillingActivityService.AddSubscriptionRenewalBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
+      await _memberAddBillingActivityService.AddMemberSubscriptionRenewalBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
     }
 
     public async Task HandleNewCustomerSubscriptionAsync(string json)
@@ -137,7 +137,7 @@ namespace DevBetterWeb.Infrastructure.Services
     {
       var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
       var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-      await _memberAddBillingActivityService.AddSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
+      await _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
     }
 
     // Below two methods are for handling migration from Launchpass to Stripe

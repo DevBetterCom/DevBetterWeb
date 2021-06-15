@@ -53,7 +53,7 @@ namespace DevBetterWeb.Core.Entities
     public List<Book> BooksRead { get; set; } = new List<Book>();
 
     public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
-    public List<MemberSubscription> Subscriptions { get; set; } = new List<MemberSubscription>();
+    public List<MemberSubscription> MemberSubscriptions { get; set; } = new List<MemberSubscription>();
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
     public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
@@ -216,16 +216,16 @@ namespace DevBetterWeb.Core.Entities
       subscription.MemberId = this.Id;
       subscription.Dates = subscriptionDateTimeRange;
 
-      Subscriptions.Add(subscription);
+      MemberSubscriptions.Add(subscription);
 
       CreateOrUpdateUpdateEvent("Subscription Added");
     }
 
     public void ExtendCurrentSubscription(DateTime newEndDate)
     {
-      for (int i = 0; i < Subscriptions.Count; i++)
+      for (int i = 0; i < MemberSubscriptions.Count; i++)
       {
-        MemberSubscription s = Subscriptions[i];
+        MemberSubscription s = MemberSubscriptions[i];
         if (s.Dates.Contains(DateTime.Today))
         {
           s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
@@ -266,11 +266,11 @@ namespace DevBetterWeb.Core.Entities
 
     public int TotalSubscribedDays()
     {
-      Guard.Against.Null(Subscriptions, nameof(Subscriptions));
+      Guard.Against.Null(MemberSubscriptions, nameof(MemberSubscriptions));
 
-      if (!Subscriptions.Any()) return 0;
+      if (!MemberSubscriptions.Any()) return 0;
 
-      return Subscriptions.Sum(s => s.Dates.ToDaysToDate(DateTime.Today));
+      return MemberSubscriptions.Sum(s => s.Dates.ToDaysToDate(DateTime.Today));
     }
 
     public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>

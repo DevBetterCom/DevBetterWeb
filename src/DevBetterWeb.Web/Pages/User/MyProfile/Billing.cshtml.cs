@@ -20,13 +20,13 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
 
 #nullable enable
     private readonly IRepository<Member> _memberRepository;
-    private readonly IRepository<SubscriptionPlan> _subscriptionPlanRepository;
+    private readonly IRepository<MemberSubscriptionPlan> _subscriptionPlanRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
 
     public BillingModel(IRepository<Member> memberRepository, 
-      IRepository<SubscriptionPlan> subscriptionPlanRepository,
+      IRepository<MemberSubscriptionPlan> subscriptionPlanRepository,
       UserManager<ApplicationUser> userManager,
       IMemberRegistrationService memberRegistrationService,
       IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
@@ -56,7 +56,7 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
         var currentSubscription = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscription(member);
         if (currentSubscription is null) throw new Exception($"Member {member} has no current subscription.");
 
-        var subscriptionPlan = await _subscriptionPlanRepository.GetByIdAsync(currentSubscription.SubscriptionPlanId);
+        var subscriptionPlan = await _subscriptionPlanRepository.GetByIdAsync(currentSubscription.MemberSubscriptionPlanId);
         var currentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
         var graduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 
