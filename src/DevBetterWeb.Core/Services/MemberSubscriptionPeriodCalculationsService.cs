@@ -12,7 +12,7 @@ namespace DevBetterWeb.Core.Services
     {
       bool hasCurrentSubscription = false;
 
-      foreach (var subscription in member.Subscriptions)
+      foreach (var subscription in member.MemberSubscriptions)
       {
         if (subscription.Dates.Contains(DateTime.Today))
         {
@@ -36,14 +36,14 @@ namespace DevBetterWeb.Core.Services
     public MemberSubscription GetCurrentSubscription(Member member)
     {
 
-      foreach (var subscription in member.Subscriptions)
+      foreach (var subscription in member.MemberSubscriptions)
       {
         if (subscription.Dates.Contains(DateTime.Today))
         {
           return subscription;
         }
       }
-      throw new Exceptions.NoCurrentSubscriptionFoundException();
+      throw new Exceptions.NoCurrentMemberSubscriptionFoundException();
     }
 
     public DateTime GetCurrentSubscriptionEndDate(Member member)
