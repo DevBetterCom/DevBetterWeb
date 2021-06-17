@@ -20,20 +20,4 @@ namespace DevBetterWeb.Core.Handlers
       await _webhook.Send();
     }
   }
-
-  public class DailyCheckEventHandler : IHandle<DailyCheckEvent>
-  {
-    private readonly AdminUpdatesWebhook _webhook;
-
-    public DailyCheckEventHandler(AdminUpdatesWebhook webhook)
-    {
-      _webhook = webhook;
-    }
-
-    public async Task Handle(DailyCheckEvent domainEvent)
-    {
-      _webhook.Content = "Daily Check Event Running";
-      await _webhook.Send();
-    }
-  }
 }

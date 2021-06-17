@@ -119,7 +119,7 @@ namespace DevBetterWeb.Web
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
-      services.AddHostedService<DailyCheck>();
+      services.AddHostedService<DailyCheckService>();
 
     }
 
