@@ -107,6 +107,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
       services.AddScoped<IUserLookupService, UserLookupService>();
       services.AddScoped<ICsvService, CsvService>();
+      services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
 
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
