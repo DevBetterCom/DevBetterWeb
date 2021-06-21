@@ -20,4 +20,12 @@ namespace DevBetterWeb.Infrastructure.Data.Config
       });
     }
   }
+  class DailyCheckConfig : IEntityTypeConfiguration<DailyCheck>
+  {
+    public void Configure(EntityTypeBuilder<DailyCheck> builder)
+    {
+      builder.Property(d => d.Date);
+      builder.Property(d => d.TasksCompleted).HasMaxLength(500);
+    }
+  }
 }
