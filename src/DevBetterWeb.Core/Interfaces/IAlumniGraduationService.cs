@@ -6,7 +6,7 @@ namespace DevBetterWeb.Core.Interfaces
 {
   public interface IAlumniGraduationService
   {
-    Task<List<Member>> CheckIfAnyMemberGraduating();
-    Task GraduateMembers(List<Member> membersToGraduate);
+    Task<List<Member>> CheckIfAnyMemberGraduating(List<Member> members);
+    Task GraduateMembersIfNeeded(AppendOnlyStringList messages);
   }
 }
