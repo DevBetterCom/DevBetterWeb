@@ -38,7 +38,7 @@ namespace DevBetterWeb.Web.Services
         {
           _logger.LogInformation("Daily Check running at: {time}", DateTimeOffset.Now);
 
-          RaiseDailyCheckEvent();         
+          RaiseDailyCheckInitiatedEvent();         
         }
 
         await Task.Delay(DELAY_IN_MILLISECONDS, stoppingToken);
@@ -59,9 +59,9 @@ namespace DevBetterWeb.Web.Services
       return true;
     }
 
-    private async void RaiseDailyCheckEvent()
+    private async void RaiseDailyCheckInitiatedEvent()
     {
-      await _dispatcher.Dispatch(new DailyCheckEvent());
+      await _dispatcher.Dispatch(new DailyCheckInitiatedEvent());
       _logger.LogInformation("Daily Check Event Raised");
 
       DailyCheck dailyCheck = new DailyCheck();

@@ -2,7 +2,7 @@
 
 namespace DevBetterWeb.Core.Events
 {
-  public class DailyCheckEvent : BaseDomainEvent
+  public class DailyCheckInitiatedEvent : BaseDomainEvent
   {
 
   }

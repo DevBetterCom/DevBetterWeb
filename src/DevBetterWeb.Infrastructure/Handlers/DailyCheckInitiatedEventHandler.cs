@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Handlers
 {
-  public class DailyCheckEventHandler : IHandle<DailyCheckEvent>
+  public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
     private readonly AdminUpdatesWebhook _webhook;
 
-    public DailyCheckEventHandler(AdminUpdatesWebhook webhook)
+    public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook)
     {
       _webhook = webhook;
     }
 
-    public async Task Handle(DailyCheckEvent domainEvent)
+    public async Task Handle(DailyCheckInitiatedEvent domainEvent)
     {
       
       // Add real stuff
