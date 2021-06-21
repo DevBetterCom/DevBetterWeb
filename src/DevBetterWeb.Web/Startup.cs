@@ -108,6 +108,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IUserLookupService, UserLookupService>();
       services.AddScoped<ICsvService, CsvService>();
       services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
+      services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
 
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 

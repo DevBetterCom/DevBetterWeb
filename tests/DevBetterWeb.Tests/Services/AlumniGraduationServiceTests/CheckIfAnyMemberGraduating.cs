@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 
@@ -15,13 +17,22 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
   public class CheckIfAnyMemberGraduating
   {
     private readonly Mock<IUserLookupService> userLookupService;
+    private readonly Mock<IRepository<Member>> repository;
+    private readonly Mock<IGraduationCommunicationsService> graduationCommunications;
+    private readonly Mock<UserManager<ApplicationUser>> userManager;
+
+    private const int DAYS_IN_TWO_YEARS = 365 * 2;
 
     private AlumniGraduationService service;
 
     public CheckIfAnyMemberGraduating()
     {
       userLookupService = new Mock<IUserLookupService>();
-      service = new AlumniGraduationService(userLookupService.Object);
+      repository = new Mock<IRepository<Member>>();
+      graduationCommunications = new Mock<IGraduationCommunicationsService>();
+      var store = new Mock<IUserStore<ApplicationUser>>();
+      userManager = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
+      service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
     }
 
     [Fact]
@@ -45,7 +56,7 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
 
       var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-      Assert.Contains(graduatingMember,list);
+      Assert.Contains(graduatingMember, list);
     }
 
     [Fact]
@@ -87,6 +98,23 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
       testlist.Add(alum);
 
       userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(alum.UserId)).ReturnsAsync(true);
+
+      var list = await service.CheckIfAnyMemberGraduating(testlist);
+
+      Assert.Empty(list);
+    }
+
+    [Fact]
+    public async Task ReturnsEmptyListGivenListWithMemberOneDayFromGraduation()
+    {
+      var testlist = new List<Member>();
+      var member = new Member();
+      var nearGraduationSubscription = new MemberSubscription();
+      nearGraduationSubscription.Dates = new DateTimeRange(DateTime.Today.AddDays(DAYS_IN_TWO_YEARS * -1).AddDays(1), DateTime.Today.AddDays(1));
+      member.MemberSubscriptions.Add(nearGraduationSubscription);
+      testlist.Add(member);
+
+      userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(member.UserId)).ReturnsAsync(false);
 
       var list = await service.CheckIfAnyMemberGraduating(testlist);
 

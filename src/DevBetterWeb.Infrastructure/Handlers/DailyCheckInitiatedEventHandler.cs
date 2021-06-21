@@ -21,15 +21,23 @@ namespace DevBetterWeb.Core.Handlers
     public async Task Handle(DailyCheckInitiatedEvent domainEvent)
     {
       AppendOnlyStringList messages = new();
-      
-      // Add real stuff
+
+      // real stuff
+
+      // check if admins need to be reminded to avoid renewing near-alumnus's subscription
 
       // check if people need upgraded to alumni
+      await _alumniGraduationService.GraduateMembersIfNeeded(messages);
 
       // check if people need to be pinged about new member link
 
-      _webhook.Content = "Daily Check Event Completed";
-      await _webhook.Send();
+      messages.Append("Daily Check Event Completed");
+
+      foreach (var message in messages)
+      {
+        _webhook.Content = message;
+        await _webhook.Send();
+      }
     }
   }
 }
