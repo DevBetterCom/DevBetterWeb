@@ -34,14 +34,14 @@ namespace DevBetterWeb.Web.Services
       while (!stoppingToken.IsCancellationRequested)
       {
         bool dailyCheckRanToday = await DailyCheckRanToday();
-        if (!dailyCheckRanToday && DateTime.UtcNow.Hour >= 14)
+        if (!dailyCheckRanToday && DateTime.UtcNow.Hour >= 13)
         {
           _logger.LogInformation("Daily Check running at: {time}", DateTimeOffset.Now);
 
-          RaiseDailyCheckEvent();
-
-          await Task.Delay(DELAY_IN_MILLISECONDS, stoppingToken);
+          RaiseDailyCheckEvent();         
         }
+
+        await Task.Delay(DELAY_IN_MILLISECONDS, stoppingToken);
       }
     }
 

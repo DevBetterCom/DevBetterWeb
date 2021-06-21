@@ -19,6 +19,10 @@ namespace DevBetterWeb.Core.Handlers
       
       // Add real stuff
 
+      // check if people need upgraded to alumni
+
+      // check if people need to be pinged about new member link
+
       _webhook.Content = "Daily Check Event Completed";
       await _webhook.Send();
     }
