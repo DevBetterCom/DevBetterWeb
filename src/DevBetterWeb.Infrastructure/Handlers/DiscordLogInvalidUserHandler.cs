@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Handlers
 {
-    public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
+  public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
+  {
+    private readonly AdminUpdatesWebhook _webhook;
+
+    public DiscordLogInvalidUserHandler(AdminUpdatesWebhook webhook)
     {
-        private readonly AdminUpdatesWebhook _webhook;
-
-        public DiscordLogInvalidUserHandler(AdminUpdatesWebhook webhook)
-        {
-            _webhook = webhook;
-        }
-
-        public async Task Handle(InvalidUserEvent domainEvent)
-        {
-            _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
-            await _webhook.Send();
-        }
+      _webhook = webhook;
     }
+
+    public async Task Handle(InvalidUserEvent domainEvent)
+    {
+      _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
+      await _webhook.Send();
+    }
+  }
 }
