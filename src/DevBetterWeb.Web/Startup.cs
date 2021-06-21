@@ -8,6 +8,7 @@ using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
 using MediatR;
@@ -117,6 +118,8 @@ namespace DevBetterWeb.Web
       });
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
+
+      services.AddHostedService<DailyCheckService>();
 
     }
 
