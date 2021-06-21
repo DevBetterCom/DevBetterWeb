@@ -5,12 +5,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace DevBetterWeb.Infrastructure.Data.Config
 {
-    class MemberSubscriptionConfig : IEntityTypeConfiguration<MemberSubscription>
+  class MemberSubscriptionConfig : IEntityTypeConfiguration<MemberSubscription>
+  {
+    public void Configure(EntityTypeBuilder<MemberSubscription> builder)
     {
-        public void Configure(EntityTypeBuilder<MemberSubscription> builder)
-        {
-            builder.OwnsOne(x => x.Dates)
-                   .ToTable("MemberSubscriptionDates");
-        }
+      builder.OwnsOne(x => x.Dates)
+             .ToTable("MemberSubscriptionDates");
     }
+  }
 }
