@@ -30,7 +30,6 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
       userLookupService = new Mock<IUserLookupService>();
       repository = new Mock<IRepository<Member>>();
       graduationCommunications = new Mock<IGraduationCommunicationsService>();
-      var store = new Mock<IUserStore<ApplicationUser>>();
       userManager = new Mock<IUserRoleManager>();
       service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
     }
