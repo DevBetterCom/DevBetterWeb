@@ -24,7 +24,7 @@ namespace DevBetterWeb.Infrastructure.Services
     {
       var memberEmail = "";
       var memberSubject = "Congratulations from DevBetter!";
-      var memberText = "You're now an alumnus of DevBetter! Congratulations on your graduation!\nNow that you're an alumnus, you'll retain full access as long as you want it, but your subscription is free.";
+      var memberText = "You're now an alumnus of DevBetter! Congratulations on your graduation!\nNow that you're an alumnus, you'll retain full access as long as you want it (and you follow our code of conduct and other terms), but your subscription is free.";
       await _emailService.SendEmailAsync(memberEmail, memberSubject, memberText);
 
       var adminSubject = "DevBetter Graduation";

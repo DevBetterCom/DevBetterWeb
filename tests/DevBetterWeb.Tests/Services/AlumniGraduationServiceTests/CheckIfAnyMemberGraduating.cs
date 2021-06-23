@@ -19,7 +19,7 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
     private readonly Mock<IUserLookupService> userLookupService;
     private readonly Mock<IRepository<Member>> repository;
     private readonly Mock<IGraduationCommunicationsService> graduationCommunications;
-    private readonly Mock<UserManager<ApplicationUser>> userManager;
+    private readonly Mock<IUserRoleManager> userManager;
 
     private const int DAYS_IN_TWO_YEARS = 365 * 2;
 
@@ -31,7 +31,7 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
       repository = new Mock<IRepository<Member>>();
       graduationCommunications = new Mock<IGraduationCommunicationsService>();
       var store = new Mock<IUserStore<ApplicationUser>>();
-      userManager = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
+      userManager = new Mock<IUserRoleManager>();
       service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
     }
 

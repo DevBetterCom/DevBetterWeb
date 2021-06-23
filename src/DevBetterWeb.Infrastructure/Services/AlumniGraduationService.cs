@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Identity.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
@@ -16,17 +14,17 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly IUserLookupService _userLookupService;
     private readonly IRepository<Member> _repository;
     private readonly IGraduationCommunicationsService _graduationCommunicationsService;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserRoleManager _userRoleManager;
 
     public AlumniGraduationService(IUserLookupService userLookupService,
       IRepository<Member> repository,
       IGraduationCommunicationsService graduationCommunicationsService,
-      UserManager<ApplicationUser> userManager)
+      IUserRoleManager userRoleManager)
     {
       _userLookupService = userLookupService;
       _repository = repository;
       _graduationCommunicationsService = graduationCommunicationsService;
-      _userManager = userManager;
+      _userRoleManager = userRoleManager;
     }
 
     public async Task GraduateMembersIfNeeded(AppendOnlyStringList messages)
@@ -89,8 +87,7 @@ namespace DevBetterWeb.Infrastructure.Services
       var messages = new List<string>();
       foreach(var member in membersToGraduate)
       {
-        var user = await _userManager.FindByIdAsync(member.UserId);
-        await _userManager.AddToRoleAsync(user, Constants.ALUMNI_ROLE_NAME);
+        await _userRoleManager.AddUserToRoleAsync(member.UserId, Constants.ALUMNI_ROLE_NAME);
 
         await _graduationCommunicationsService.SendGraduationCommunications(member);
 
