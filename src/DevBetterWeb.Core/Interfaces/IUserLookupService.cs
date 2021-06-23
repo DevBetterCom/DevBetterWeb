@@ -6,5 +6,6 @@ namespace DevBetterWeb.Core.Interfaces
   {
     Task<string> FindUserIdByEmailAsync(string email);
     Task<bool> FindUserIsMemberByEmailAsync(string email);
+    Task<bool> FindUserIsAlumniByUserIdAsync(string userId);
   }
 }

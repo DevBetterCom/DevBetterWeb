@@ -29,7 +29,7 @@ namespace DevBetterWeb.Infrastructure.Services
     {
       var user = await _userManager.FindByEmailAsync(email);
 
-      if(user == null)
+      if (user == null)
       {
         return false;
       }
@@ -37,6 +37,20 @@ namespace DevBetterWeb.Infrastructure.Services
       var roles = await _userManager.GetRolesAsync(user);
 
       return roles.Any(role => role.Equals(Constants.MEMBER_ROLE_NAME));
+    }
+
+    public async Task<bool> FindUserIsAlumniByUserIdAsync(string userId)
+    {
+      var user = await _userManager.FindByIdAsync(userId);
+
+      if (user == null)
+      {
+        return false;
+      }
+
+      var roles = await _userManager.GetRolesAsync(user);
+
+      return roles.Any(role => role.Equals(Constants.ALUMNI_ROLE_NAME));
     }
   }
 }
