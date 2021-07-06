@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;

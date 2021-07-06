@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
-using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 
