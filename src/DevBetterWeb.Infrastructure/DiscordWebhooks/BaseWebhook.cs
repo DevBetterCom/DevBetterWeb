@@ -6,7 +6,7 @@ using Ardalis.GuardClauses;
 using Discord;
 using Newtonsoft.Json;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Infrastructure.DiscordWebooks
 {
   /// <summary>
   /// https://github.com/Hellsing/DiscordWebhook/blob/master/Webhook.cs

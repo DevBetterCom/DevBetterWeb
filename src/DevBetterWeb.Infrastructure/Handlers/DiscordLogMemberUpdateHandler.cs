@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 
 namespace DevBetterWeb.Core.Handlers
 {
@@ -26,6 +26,4 @@ namespace DevBetterWeb.Core.Handlers
           $"Check it out here: https://devbetter.com/User/Details/{memberUpdatedEvent.Member.UserId}.";
     }
   }
-
-
 }

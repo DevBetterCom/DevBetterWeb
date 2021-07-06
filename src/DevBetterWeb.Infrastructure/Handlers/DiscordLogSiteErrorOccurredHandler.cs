@@ -1,23 +1,23 @@
-﻿using DevBetterWeb.Core.Events;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Services;
-using System.Threading.Tasks;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 
 namespace DevBetterWeb.Core.Handlers
 {
-    public class DiscordLogSiteErrorOccurredHandler : IHandle<SiteErrorOccurredEvent>
+  public class DiscordLogSiteErrorOccurredHandler : IHandle<SiteErrorOccurredEvent>
+  {
+    private readonly AdminUpdatesWebhook _webhook;
+
+    public DiscordLogSiteErrorOccurredHandler(AdminUpdatesWebhook webhook)
     {
-        private readonly AdminUpdatesWebhook _webhook;
-
-        public DiscordLogSiteErrorOccurredHandler(AdminUpdatesWebhook webhook)
-        {
-            _webhook = webhook;
-        }
-
-        public async Task Handle(SiteErrorOccurredEvent domainEvent)
-        {
-            _webhook.Content = $"Site error: {domainEvent.SiteException.ToString()}.";
-            await _webhook.Send();
-        }
+      _webhook = webhook;
     }
+
+    public Task Handle(SiteErrorOccurredEvent domainEvent)
+    {
+      _webhook.Content = $"Site error: {domainEvent.SiteException.ToString()}.";
+      return _webhook.Send();
+    }
+  }
 }

@@ -1,6 +1,6 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Handlers
@@ -14,10 +14,10 @@ namespace DevBetterWeb.Core.Handlers
       _webhook = webhook;
     }
 
-    public async Task Handle(InvalidUserEvent domainEvent)
+    public Task Handle(InvalidUserEvent domainEvent)
     {
       _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
-      await _webhook.Send();
+      return _webhook.Send();
     }
   }
 }

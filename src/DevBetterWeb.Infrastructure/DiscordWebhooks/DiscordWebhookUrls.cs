@@ -1,6 +1,6 @@
-﻿namespace DevBetterWeb.Infrastructure.Services
+﻿namespace DevBetterWeb.Infrastructure.DiscordWebooks
 {
-    public class DiscordWebhookUrls
+  public class DiscordWebhookUrls
     {
     public string? AdminUpdates { get; set; }
     public string? BookDiscussion { get; set; }

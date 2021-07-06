@@ -1,7 +1,6 @@
 ﻿using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Services;
-using System.Collections.Generic;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Handlers
