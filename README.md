@@ -58,6 +58,8 @@ Some actions, such as registering a member, send email notifications. You should
 
 You should create an **appsettings.development.json** file to hold your other connection strings such as for Azure Storage. You can use [Azurite](https://github.com/Azure/Azurite) as a local emulator for this.
 
+You will need to set up a Discord server - see [here](https://ardalis.com/add-discord-notifications-to-asp-net-core-apps/) for a walkthrough -  and add the url to  appsettings.development.json in the Discord Webhooks section that you can copy from appsettings.json. Alternatively you can create a mock server which will provide you with a url to use - an example is mocky.io
+
 ## EF Migrations Commands
 
 Add a new migration (from the DevBetter.Web folder):
