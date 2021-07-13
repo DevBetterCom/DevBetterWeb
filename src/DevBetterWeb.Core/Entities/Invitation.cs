@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using System;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities
@@ -9,12 +10,16 @@ namespace DevBetterWeb.Core.Entities
     public string InviteCode { get; private set; }
     public string PaymentHandlerSubscriptionId { get; private set; }
     public bool Active { get; private set; } = true;
+    public DateTime DateCreated { get; private set; }
+    public DateTime? DateOfUserPing { get; private set; }
+    public DateTime? DateOfLastAdminPing { get; private set; }
 
     public Invitation(string email, string inviteCode, string paymentHandlerSubscriptionId)
     {
       Email = email;
       InviteCode = inviteCode;
       PaymentHandlerSubscriptionId = paymentHandlerSubscriptionId;
+      DateCreated = DateTime.Today;
     }
 
     private Invitation()
