@@ -1,0 +1,119 @@
+name: CI/CD Pipeline
+
+on: [ push, pull_request, workflow_dispatch ]
+
+env:
+  AZURE_WEBAPP_NAME: devBetter
+  AZURE_GROUP_NAME: DevBetterGroup
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+jobs:
+  ci:
+    name: Continuous Integration
+    strategy:
+      matrix:
+        os: [ ubuntu-18.04, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    outputs:
+      is_push_to_default_branch: ${{ steps.conditionals_handler.outputs.is_push_to_default_branch }}
+    steps:
+      - name: Data gatherer
+        id: data_gatherer
+        shell: pwsh
+        run: |
+          # Get default branch
+          $repo = "${{ github.repository }}"
+          $defaultBranch = Invoke-RestMethod -Method GET -Uri https://api.github.com/repos/$repo | Select-Object -ExpandProperty default_branch
+          Write-Output "::set-output name=default_branch::$(echo $defaultBranch)"
+
+      - name: Conditionals handler
+        id: conditionals_handler
+        shell: pwsh
+        run: |
+          $defaultBranch = "${{ steps.data_gatherer.outputs.default_branch }}"
+          $githubRef = "${{ github.ref }}"
+          $githubEventName = "${{ github.event_name }}"
+          $currentBranch = $githubRef -replace 'refs/heads/', ''
+          $isDefaultBranch = 'false'
+          $isPush = 'false'
+          $isPushToDefaultBranch = 'false'
+
+          if ( $currentBranch -eq $defaultBranch ) {
+            $isDefaultBranch = 'true'
+          }
+          if ( $githubEventName -eq 'push' ) {
+            $isPush = 'true'
+          }
+          if ( $currentBranch -eq $defaultBranch -and $githubEventName -eq 'push' ) {
+            $isPushToDefaultBranch = 'true'
+          }
+          
+          Write-Output "::set-output name=is_default_branch::$(echo $isDefaultBranch)"
+          Write-Output "::set-output name=is_push::$(echo $isPush)"
+          Write-Output "::set-output name=is_push_to_default_branch::$(echo $isPushToDefaultBranch)"
+
+      - name: Setup .NET Core
+        id: setup_dotnet_core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Build solution
+        id: build_solution
+        shell: pwsh
+        run: |
+          dotnet build ./DevBetterWeb.sln --configuration Release --output Artifacts
+
+      - name: Run unit tests
+        id: run_unit_tests
+        shell: pwsh
+        run: |
+          dotnet test ./DevBetterWeb.sln --configuration Release --no-build --output Artifacts
+
+      - name: Publish WebApp
+        id: publish_webapp
+        shell: pwsh
+        run: |
+          dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
+
+      - name: Upload build artifacts
+        id: upload_build_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build artifacts
+          path: Artifacts/
+
+      - name: Upload publish artifacts
+        id: upload_publish_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Publish artifacts
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp/
+
+  cd:
+    if: needs.ci.outputs.is_push_to_default_branch == 'true'
+    name: Continuous Deployment
+    needs: ci
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download publish artifacts
+        id: dl_publish_artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Publish artifacts
+          path: WebApp/
+
+      - name: Azure webapp deploy with Publish Profile
+        id: azure_webapp_deploy_with_publish_profile
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
