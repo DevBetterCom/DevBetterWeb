@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using DevBetterWeb.Core.Interfaces;
 using Discord;
 using Newtonsoft.Json;
 
@@ -18,14 +20,16 @@ namespace DevBetterWeb.Infrastructure.DiscordWebooks
   {
     private readonly HttpClient _httpClient = new HttpClient();
     protected string _webhookUrl;
+    private readonly IAppLogger<BaseWebhook> _logger;
 
-    public BaseWebhook(string webhookUrl)
+    public BaseWebhook(string webhookUrl, IAppLogger<BaseWebhook> logger)
     {
       Guard.Against.NullOrEmpty(webhookUrl, nameof(webhookUrl));
       _webhookUrl = webhookUrl;
+      _logger = logger;
     }
 
-    public BaseWebhook(ulong id, string token) : this($"https://discordapp.com/api/webhooks/{id}/{token}")
+    public BaseWebhook(ulong id, string token, IAppLogger<BaseWebhook> logger) : this($"https://discordapp.com/api/webhooks/{id}/{token}", logger)
     {
     }
 
@@ -41,10 +45,18 @@ namespace DevBetterWeb.Infrastructure.DiscordWebooks
     [JsonProperty("embeds")]
     public List<Embed> Embeds { get; set; } = new List<Embed>();
 
-    public virtual Task<HttpResponseMessage> Send()
+    public virtual async Task<HttpResponseMessage> Send()
     {
       var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-      return _httpClient.PostAsync(_webhookUrl, content);
+      try
+      {
+        return await _httpClient.PostAsync(_webhookUrl, content);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error sending webhook", _webhookUrl, content);
+        return new HttpResponseMessage();
+      }
     }
 
     public Task<HttpResponseMessage> Send(string content, string username = "", string avatarUrl = "", bool isTTS = false, IEnumerable<Embed>? embeds = null)
