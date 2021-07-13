@@ -32,7 +32,7 @@
                 {
                     <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
                 }
-                <td>
+                <td data-order="@member.SubscribedDays">
                     @if (member.SubscribedDays >= 730)
                     {
                         <a>  Alumni</a>
