@@ -17,9 +17,9 @@ namespace DevBetterWeb.Web.Pages.Admin.Members
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IRepository<Member> _memberRepository;
 
-    public string NameToUnsubscribe { get; private set; }
+    public string NameToUnsubscribe { get; private set; } = "";
 
-    public string Message { get; private set; }
+    public string Message { get; private set; } = "";
 
     public CancelModel(UserManager<ApplicationUser> userManager,
       IPaymentHandlerSubscription paymentHandlerSubscription,

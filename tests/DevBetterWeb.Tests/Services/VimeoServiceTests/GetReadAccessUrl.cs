@@ -7,7 +7,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
   public class GetReadAccessUrl
   {
     [Fact]
-    public async Task GetReadAccessUrlIsExpected()
+    public void GetReadAccessUrlIsExpected()
     {
       var vimeoCredential = new VimeoCredential("client id", "client secret", "https://your_website_here.com/wherever-you-send-users-after-grant");
       var vimeoService = new VimeoService(vimeoCredential);
