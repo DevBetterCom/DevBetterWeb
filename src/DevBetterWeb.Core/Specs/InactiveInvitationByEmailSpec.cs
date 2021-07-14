@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs
 {
-  public partial class InactiveInvitationByEmailSpec : Specification<Invitation>, ISingleResultSpecification
+  public class InactiveInvitationByEmailSpec : Specification<Invitation>, ISingleResultSpecification
   {
     public InactiveInvitationByEmailSpec(string email)
     {
