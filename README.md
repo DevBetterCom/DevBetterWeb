@@ -1,5 +1,4 @@
-[![Actions Status](https://github.com/ardalis/DevBetterWeb/workflows/.NET%20Core/badge.svg)](https://github.com/ardalis/DevBetterWeb/actions)
-[![Last Publish Attempt](https://github.com/ardalis/DevBetterWeb/workflows/publish/badge.svg)](https://github.com/ardalis/DevBetterWeb/actions)
+[![CI/CD Pipeline](https://github.com/DevBetterCom/DevBetterWeb/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/ardalis/DevBetterWeb/actions)
 
 # DevBetterWeb
 
