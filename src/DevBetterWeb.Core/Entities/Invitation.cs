@@ -49,6 +49,7 @@ namespace DevBetterWeb.Core.Entities
     {
       DateOfUserPing = DateTime.Today;
     }
+
     public void UpdateAdminPingDate()
     {
       DateOfLastAdminPing = DateTime.Today;

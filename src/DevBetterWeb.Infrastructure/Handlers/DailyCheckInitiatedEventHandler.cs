@@ -10,6 +10,8 @@ namespace DevBetterWeb.Core.Handlers
 {
   public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
+    private const string DAILY_CHECK_COMPLETED_MESSAGE = "Daily Check Event Completed";
+
     private readonly AdminUpdatesWebhook _webhook;
     private readonly IAlumniGraduationService _alumniGraduationService;
     private readonly IDailyCheckPingService _dailyCheckPingService;
@@ -40,7 +42,7 @@ namespace DevBetterWeb.Core.Handlers
       // check if people need to be pinged about new member link
       await _dailyCheckPingService.SendPingIfNeeded(messages);
 
-      messages.Append("Daily Check Event Completed");
+      messages.Append(DAILY_CHECK_COMPLETED_MESSAGE);
 
       await SendMessagesToDiscord(messages);
       await StoreMessagesInTasksCompleted(messages);
@@ -64,7 +66,7 @@ namespace DevBetterWeb.Core.Handlers
       {
         foreach (var message in messages)
         {
-          if (!message.Equals("Daily Check Event Completed"))
+          if (!message.Equals(DAILY_CHECK_COMPLETED_MESSAGE))
           {
             if (todaysDailyCheck.TasksCompleted == null) todaysDailyCheck.TasksCompleted = "";
             todaysDailyCheck.TasksCompleted += message;
