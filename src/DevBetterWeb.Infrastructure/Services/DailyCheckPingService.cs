@@ -52,12 +52,12 @@ namespace DevBetterWeb.Infrastructure.Services
       var invitationsForAdminPing = CheckIfAnyActiveInvitationsRequireAdminPing(activeInvitations);
       if(invitationsForAdminPing.Any())
       {
-        var listOfEmails = "";
+        var listOfEmailsToRemindAdminsAbout = "";
         foreach(var invitation in invitationsForAdminPing)
         {
-          listOfEmails += $"{invitation.Email}\n";
+          listOfEmailsToRemindAdminsAbout += $"{invitation.Email}\n";
         }
-        messages.Append($"Admins should be reminded to remind these users to finish setting up their DevBetter accounts: {listOfEmails}");
+        messages.Append($"Admins should be reminded to remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}");
 
         var adminPingMessage = await SendAdminPing(invitationsForAdminPing);
         messages.Append(adminPingMessage);
@@ -125,26 +125,26 @@ namespace DevBetterWeb.Infrastructure.Services
     private async Task<string> SendAdminPing(List<Invitation> invitations)
     {
       var emailSubject = "Remind user(s) to finish setting up their DevBetter account(s)";
-      var listOfEmails = "";
+      var listOfEmailsToRemindAdminsAbout = "";
 
       foreach (var invitation in invitations)
       {
-        listOfEmails += $"{invitation.Email}\n";
+        listOfEmailsToRemindAdminsAbout += $"{invitation.Email}\n";
       }
 
-      var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmails}";
+      var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}";
 
       var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
-      var emailList = "";
+      var listOfEmailsAdminsWereRemindedAbout = "";
 
       foreach(var user in usersInAdminRole)
       {
         await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
-        emailList += $"{user.Email}\n";
+        listOfEmailsAdminsWereRemindedAbout += $"{user.Email}\n";
       }
 
-      var message = $"Admins were reminded to remind these users to finish setting up their DevBetter accounts: {emailList}";
+      var message = $"Admins were reminded to remind these users to finish setting up their DevBetter accounts: {listOfEmailsAdminsWereRemindedAbout}";
 
       foreach(var invitation in invitations)
       {
