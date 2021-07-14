@@ -214,8 +214,8 @@ namespace DevBetterWeb.Web.Pages.Admin
 
     public class EmailConfirmationModel
     {
-      public string IsConfirmedString { get; set; }
-      public string EditEmailConfirmationMessage { get; set; }
+      public string IsConfirmedString { get; set; } = "";
+      public string EditEmailConfirmationMessage { get; set; } = "";
     }
   }
 }
