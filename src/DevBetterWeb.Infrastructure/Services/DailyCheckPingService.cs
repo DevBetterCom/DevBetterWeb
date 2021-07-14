@@ -67,18 +67,23 @@ namespace DevBetterWeb.Infrastructure.Services
 
       foreach(var invite in invitations)
       {
-        bool inviteRequiresAdminPing = true;
-
-        if (invite.DateOfUserPing.Equals(DateTime.MinValue)) inviteRequiresAdminPing = false;
-        if (invite.DateOfLastAdminPing.Equals(DateTime.Today)) inviteRequiresAdminPing = false;
-        if (DateTime.Today - invite.DateCreated < new TimeSpan(4, 0, 0, 0)) inviteRequiresAdminPing = false;
-        if (DateTime.Today - invite.DateOfUserPing < new TimeSpan(2, 0, 0, 0)) inviteRequiresAdminPing = false;
-        if (!invite.Active) inviteRequiresAdminPing = false;
-
-        if (inviteRequiresAdminPing) invitationsRequiringAdminPing.Add(invite);
+        if (InviteRequiresAdminPing(invite)) invitationsRequiringAdminPing.Add(invite);
       }
 
       return invitationsRequiringAdminPing;
+    }
+
+    private bool InviteRequiresAdminPing(Invitation invite)
+    {
+      bool inviteRequiresAdminPing = true;
+
+      if (invite.DateOfUserPing.Equals(DateTime.MinValue)) inviteRequiresAdminPing = false;
+      if (invite.DateOfLastAdminPing.Equals(DateTime.Today)) inviteRequiresAdminPing = false;
+      if (DateTime.Today - invite.DateCreated < new TimeSpan(4, 0, 0, 0)) inviteRequiresAdminPing = false;
+      if (DateTime.Today - invite.DateOfUserPing < new TimeSpan(2, 0, 0, 0)) inviteRequiresAdminPing = false;
+      if (!invite.Active) inviteRequiresAdminPing = false;
+
+      return inviteRequiresAdminPing;
     }
 
     public List<Invitation> CheckIfAnyActiveInvitationsRequireUserPing(List<Invitation> invitations)
