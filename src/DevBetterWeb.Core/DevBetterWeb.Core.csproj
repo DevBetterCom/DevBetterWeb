@@ -18,7 +18,7 @@
     <PackageReference Include="Ardalis.Result" Version="3.1.1" />
     <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     <PackageReference Include="Ardalis.Specification" Version="5.1.0" />
-    <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.3" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.17.0" />
   </ItemGroup>
 
   <ItemGroup>

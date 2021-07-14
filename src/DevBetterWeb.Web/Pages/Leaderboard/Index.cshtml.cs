@@ -25,7 +25,7 @@ namespace DevBetterWeb.Web.Pages.Leaderboard
     public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
     public List<Book> Books { get; set; } = new List<Book>();
 
-    public Dictionary<int, int> BookRanks { get; set; }
+    public Dictionary<int, int> BookRanks { get; set; } = new Dictionary<int, int>();
 
 
     public IndexModel(UserManager<ApplicationUser> userManager,
