@@ -1,7 +1,4 @@
-﻿using DevBetterWeb.Core.Entities;
-using System;
-using System.Threading.Tasks;
-using DevBetterWeb.Infrastructure.Services;
+﻿using DevBetterWeb.Infrastructure.Services;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.VimeoServiceTests
@@ -9,7 +6,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
   public class GetFullAccessUrl
   {
     [Fact]
-    public async Task GetFullAccessUrlIsExpected()
+    public void GetFullAccessUrlIsExpected()
     {
       var vimeoCredential = new VimeoCredential("client id", "client secret", "https://your_website_here.com/wherever-you-send-users-after-grant");
       var vimeoService = new VimeoService(vimeoCredential);
