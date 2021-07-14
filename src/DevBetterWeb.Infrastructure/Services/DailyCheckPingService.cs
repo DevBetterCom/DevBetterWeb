@@ -13,6 +13,9 @@ namespace DevBetterWeb.Infrastructure.Services
 {
   public class DailyCheckPingService : IDailyCheckPingService
   {
+    private TimeSpan TWO_DAYS = new TimeSpan(2, 0, 0, 0);
+    private TimeSpan FOUR_DAYS = new TimeSpan(4, 0, 0, 0);
+
     public IRepository<Invitation> _repository;
     public IEmailService _emailService;
     public UserManager<ApplicationUser> _userManager;
@@ -79,8 +82,8 @@ namespace DevBetterWeb.Infrastructure.Services
 
       if (invite.DateOfUserPing.Equals(DateTime.MinValue)) inviteRequiresAdminPing = false;
       if (invite.DateOfLastAdminPing.Equals(DateTime.Today)) inviteRequiresAdminPing = false;
-      if (DateTime.Today - invite.DateCreated < new TimeSpan(4, 0, 0, 0)) inviteRequiresAdminPing = false;
-      if (DateTime.Today - invite.DateOfUserPing < new TimeSpan(2, 0, 0, 0)) inviteRequiresAdminPing = false;
+      if (DateTime.Today - invite.DateCreated < FOUR_DAYS) inviteRequiresAdminPing = false;
+      if (DateTime.Today - invite.DateOfUserPing < TWO_DAYS) inviteRequiresAdminPing = false;
       if (!invite.Active) inviteRequiresAdminPing = false;
 
       return inviteRequiresAdminPing;
@@ -92,7 +95,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       foreach(var invite in invitations)
       {
-        if((DateTime.Today - invite.DateCreated) >= new TimeSpan(2,0,0,0) && invite.DateOfUserPing.Equals(DateTime.MinValue))
+        if((DateTime.Today - invite.DateCreated) >= TWO_DAYS && invite.DateOfUserPing.Equals(DateTime.MinValue))
         {
           invitationsRequiringUserPing.Add(invite);
         }
