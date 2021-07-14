@@ -9,12 +9,15 @@ namespace DevBetterWeb.Core.Handlers
   {
     private readonly AdminUpdatesWebhook _webhook;
     private readonly IAlumniGraduationService _alumniGraduationService;
+    private readonly IDailyCheckPingService _dailyCheckPingService;
 
     public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook,
-      IAlumniGraduationService alumniGraduationService)
+      IAlumniGraduationService alumniGraduationService,
+      IDailyCheckPingService dailyCheckPingService)
     {
       _webhook = webhook;
       _alumniGraduationService = alumniGraduationService;
+      _dailyCheckPingService = dailyCheckPingService;
     }
 
     public async Task Handle(DailyCheckInitiatedEvent domainEvent)
@@ -29,6 +32,7 @@ namespace DevBetterWeb.Core.Handlers
       await _alumniGraduationService.GraduateMembersIfNeeded(messages);
 
       // check if people need to be pinged about new member link
+      await _dailyCheckPingService.SendPingIfNeeded(messages);
 
       messages.Append("Daily Check Event Completed");
 
