@@ -12,6 +12,9 @@ namespace DevBetterWeb.Infrastructure.Data.Config
       builder.Property(i => i.InviteCode).HasMaxLength(500);
       builder.Property(i => i.PaymentHandlerSubscriptionId).HasMaxLength(500);
       builder.Property(i => i.PaymentHandlerSubscriptionId).HasMaxLength(500);
+      builder.Property(i => i.DateCreated);
+      builder.Property(i => i.DateOfUserPing);
+      builder.Property(i => i.DateOfLastAdminPing);
     }
   }
 }
