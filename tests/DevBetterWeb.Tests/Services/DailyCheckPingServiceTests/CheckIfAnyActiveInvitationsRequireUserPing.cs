@@ -21,6 +21,8 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
 
     private DailyCheckPingService service;
 
+    private List<Invitation> testlist;
+
     public CheckIfAnyActiveInvitationsRequireUserPing()
     {
       var store = new Mock<IUserStore<ApplicationUser>>();
@@ -28,13 +30,13 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
       _emailService = new Mock<IEmailService>();
       _repository = new Mock<IRepository<Invitation>>();
       service = new DailyCheckPingService(_repository.Object, _emailService.Object, _userManager.Object);
+
+      testlist = new List<Invitation>();
     }
 
     [Fact]
     public void ReturnsEmptyListGivenEmptyList()
     {
-      var testlist = new List<Invitation>();
-
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
 
       Assert.Empty(list);
@@ -43,7 +45,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListIfListContainsActiveInvitationCreated2DaysAgoWithNoUserPingDate()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(2, DateTime.MinValue));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
@@ -54,7 +55,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListIfListContainsActiveInvitationCreated2DaysAgoWithUserPingDateOfToday()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(2, DateTime.Today));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
@@ -65,7 +65,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListIfListContainsActiveInvitationCreated5DaysAgoWithUserPingDateOf3DaysAgo()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(5, DateTime.Today.AddDays(3)));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
@@ -77,7 +76,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [MemberData(nameof(GetInvitations))]
     public void ReturnsListWithOneInviteGivenListWithOneValidAndOneInvalid(Invitation valid, Invitation invalid)
     {
-      var testlist = new List<Invitation>();
       testlist.Add(valid);
       testlist.Add(invalid);
 

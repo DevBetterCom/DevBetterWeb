@@ -18,6 +18,8 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
 
     private DailyCheckPingService service;
 
+    private List<Invitation> testlist;
+
     public CheckIfAnyActiveInvitationsRequireAdminPing()
     {
       var store = new Mock<IUserStore<ApplicationUser>>();
@@ -25,13 +27,13 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
       _emailService = new Mock<IEmailService>();
       _repository = new Mock<IRepository<Invitation>>();
       service = new DailyCheckPingService(_repository.Object, _emailService.Object, _userManager.Object);
+
+      testlist = new List<Invitation>();
     }
 
     [Fact]
     public void ReturnsEmptyListGivenEmptyList()
     {
-      var testlist = new List<Invitation>();
-
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
       Assert.Empty(list);
@@ -40,7 +42,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListGiven4DayOldInvitationWithUserPingDateAndNoAdminPingDate()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, 2, null));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -51,7 +52,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListGiven4DayOldInvitationWithUserPingDateAndAdminPingDateOneDayAgo()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, 2, 1));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -62,7 +62,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithNoUserPingDate()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, null, null));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -73,7 +72,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithAdminPingToday()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, 2, 0));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -85,7 +83,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationCreated3DaysAgoToday()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(3, 1, null));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -97,7 +94,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithUserPingYesterday()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, 1, null));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -109,7 +105,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInactiveInvitation()
     {
-      var testlist = new List<Invitation>();
       testlist.Add(InvitationWithGivenProperties(4, 3, 1, false));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
@@ -122,7 +117,6 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [MemberData(nameof(GetInvitations))]
     public void ReturnsOnlyValidAdminPingInviteGivenValidAndInvalid(Invitation valid, Invitation invalid)
     {
-      var testlist = new List<Invitation>();
       testlist.Add(valid);
       testlist.Add(invalid);
 
