@@ -1,6 +1,9 @@
-﻿using DevBetterWeb.Core.Events;
+﻿using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
+using System;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Handlers
@@ -10,14 +13,17 @@ namespace DevBetterWeb.Core.Handlers
     private readonly AdminUpdatesWebhook _webhook;
     private readonly IAlumniGraduationService _alumniGraduationService;
     private readonly IDailyCheckPingService _dailyCheckPingService;
+    private readonly IRepository<DailyCheck> _repository;
 
     public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook,
       IAlumniGraduationService alumniGraduationService,
-      IDailyCheckPingService dailyCheckPingService)
+      IDailyCheckPingService dailyCheckPingService,
+      IRepository<DailyCheck> repository)
     {
       _webhook = webhook;
       _alumniGraduationService = alumniGraduationService;
       _dailyCheckPingService = dailyCheckPingService;
+      _repository = repository;
     }
 
     public async Task Handle(DailyCheckInitiatedEvent domainEvent)
@@ -36,10 +42,20 @@ namespace DevBetterWeb.Core.Handlers
 
       messages.Append("Daily Check Event Completed");
 
+      var spec = new DailyCheckByDateSpec(DateTime.Today);
+
+      var todaysDailyCheck = await _repository.GetBySpecAsync(spec);
+
       foreach (var message in messages)
       {
         _webhook.Content = message;
         await _webhook.Send();
+
+        if(todaysDailyCheck != null && !message.Equals("Daily Check Event Completed"))
+        {
+          if (todaysDailyCheck.TasksCompleted == null) todaysDailyCheck.TasksCompleted = "";
+          todaysDailyCheck.TasksCompleted += message;
+        }
       }
     }
   }

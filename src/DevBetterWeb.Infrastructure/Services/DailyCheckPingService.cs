@@ -128,12 +128,15 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
+      var emailList = "";
+
       foreach(var user in usersInAdminRole)
       {
         await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+        emailList += $"{user.Email}\n";
       }
 
-      var message = $"Admins were reminded to remind these users to finish setting up their DevBetter accounts: {listOfEmails}";
+      var message = $"Admins were reminded to remind these users to finish setting up their DevBetter accounts: {emailList}";
 
       foreach(var invitation in invitations)
       {
