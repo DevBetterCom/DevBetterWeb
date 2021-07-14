@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -42,7 +41,9 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListGiven4DayOldInvitationWithUserPingDateAndNoAdminPingDate()
     {
-      testlist.Add(InvitationWithGivenProperties(4, 2, null));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -52,7 +53,10 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListGiven4DayOldInvitationWithUserPingDateAndAdminPingDateOneDayAgo()
     {
-      testlist.Add(InvitationWithGivenProperties(4, 2, 1));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(1));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -62,7 +66,8 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithNoUserPingDate()
     {
-      testlist.Add(InvitationWithGivenProperties(4, null, null));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -72,7 +77,10 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithAdminPingToday()
     {
-      testlist.Add(InvitationWithGivenProperties(4, 2, 0));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(0));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -83,7 +91,9 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationCreated3DaysAgoToday()
     {
-      testlist.Add(InvitationWithGivenProperties(3, 1, null));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(3)
+        .WithDateOfUserPingGivenDaysAgo(1));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -94,7 +104,9 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInvitationWithUserPingYesterday()
     {
-      testlist.Add(InvitationWithGivenProperties(4, 1, null));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(1));
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -105,7 +117,11 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListGivenInactiveInvitation()
     {
-      testlist.Add(InvitationWithGivenProperties(4, 3, 1, false));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(3)
+        .WithDateOfLastAdminPingGivenDaysAgo(1)
+        .AndDeactivated());
 
       var list = service.CheckIfAnyActiveInvitationsRequireAdminPing(testlist);
 
@@ -128,26 +144,49 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
 
     public static IEnumerable<object[]> GetInvitations()
     {
-      yield return new object[] { InvitationWithGivenProperties(4, 2, 1), InvitationWithGivenProperties(4, 2, 1, false) };
-      yield return new object[] { InvitationWithGivenProperties(5, 2, 1), InvitationWithGivenProperties(5, 1, null) };
-      yield return new object[] { InvitationWithGivenProperties(5, 2, 1), InvitationWithGivenProperties(3, 2, null) };
-      yield return new object[] { InvitationWithGivenProperties(7, 4, 2), InvitationWithGivenProperties(4, 2, 0) };
-    }
-
-
-    private static Invitation InvitationWithGivenProperties(int daysOld, int? daysSinceUserPing, int? daysSinceAdminPing, bool active = true)
-    {
-      DateTime dateCreated = DateTime.Today.AddDays(daysOld * -1);
-      DateTime userPingDate = DateTime.MinValue;
-      if(daysSinceUserPing != null) userPingDate = DateTime.Today.AddDays((double)(daysSinceUserPing * -1));
-      DateTime adminPingDate = DateTime.MinValue;
-      if(daysSinceAdminPing != null) adminPingDate = DateTime.Today.AddDays((double)(daysSinceAdminPing * -1));
-
-      var invite = new Invitation("", "", "", dateCreated, userPingDate, adminPingDate);
-
-      if (!active) invite.Deactivate();
-
-      return invite;
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(1),
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(1)
+        .AndDeactivated()
+      };
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(5)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(1),
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(5)
+        .WithDateOfUserPingGivenDaysAgo(1)
+      };
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(5)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(1),
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(3)
+        .WithDateOfUserPingGivenDaysAgo(2)
+      };
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(7)
+        .WithDateOfUserPingGivenDaysAgo(4)
+        .WithDateOfLastAdminPingGivenDaysAgo(2),
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(4)
+        .WithDateOfUserPingGivenDaysAgo(2)
+        .WithDateOfLastAdminPingGivenDaysAgo(0)
+      };
     }
   }
 }

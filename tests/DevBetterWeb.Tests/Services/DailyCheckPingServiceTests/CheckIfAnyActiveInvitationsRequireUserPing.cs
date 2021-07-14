@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -12,7 +9,6 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
 {
-
   public class CheckIfAnyActiveInvitationsRequireUserPing
   {
     private readonly Mock<IRepository<Invitation>> _repository;
@@ -45,7 +41,8 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsListIfListContainsActiveInvitationCreated2DaysAgoWithNoUserPingDate()
     {
-      testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(2, DateTime.MinValue));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(2));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
 
@@ -55,7 +52,9 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListIfListContainsActiveInvitationCreated2DaysAgoWithUserPingDateOfToday()
     {
-      testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(2, DateTime.Today));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(2)
+        .WithDateOfUserPingGivenDaysAgo(0));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
 
@@ -65,7 +64,9 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     [Fact]
     public void ReturnsEmptyListIfListContainsActiveInvitationCreated5DaysAgoWithUserPingDateOf3DaysAgo()
     {
-      testlist.Add(ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(5, DateTime.Today.AddDays(3)));
+      testlist.Add(InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(5)
+       .WithDateOfUserPingGivenDaysAgo(3));
 
       var list = service.CheckIfAnyActiveInvitationsRequireUserPing(testlist);
 
@@ -85,26 +86,23 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
       Assert.DoesNotContain(invalid, list);
     }
 
-    private static Invitation ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(int daysAgo, DateTime userPingDate)
-    {
-      var invite = new Invitation("", "", "", DateTime.Today.AddDays(daysAgo * -1), userPingDate, DateTime.MinValue);
-      return invite;
-    }
-
-    private static Invitation InactiveInvitation()
-    {
-      var invite = new Invitation("", "", "");
-      invite.Deactivate();
-      return invite;
-    }
-
     public static IEnumerable<object[]> GetInvitations()
     {
-      yield return new object[] { ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(3, DateTime.MinValue), 
-      ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(5, DateTime.Today.AddDays(-3)) };
-
-      yield return new object[] { ActiveInvitationCreatedGivenDaysAgoWithGivenUserPingDate(3, DateTime.MinValue), InactiveInvitation() };
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(3),
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(5)
+        .WithDateOfUserPingGivenDaysAgo(3)
+      };
+      yield return new object[]
+      {
+        InvitationBuilder.BuildDefaultInvitation()
+        .WithDateCreatedGivenDaysAgo(3),
+        InvitationBuilder.BuildDefaultInvitation()
+        .AndDeactivated()
+      };
     }
-
   }
 }
