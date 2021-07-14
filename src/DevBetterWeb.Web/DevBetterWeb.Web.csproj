@@ -33,7 +33,7 @@
 		<PackageReference Include="GoogleReCaptcha.V3" Version="1.3.1" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.7" />
 		<!-- added to fix error when upgrading to .net 5.0 -->
