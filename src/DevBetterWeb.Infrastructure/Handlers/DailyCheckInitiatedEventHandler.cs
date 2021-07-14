@@ -42,20 +42,35 @@ namespace DevBetterWeb.Core.Handlers
 
       messages.Append("Daily Check Event Completed");
 
-      var spec = new DailyCheckByDateSpec(DateTime.Today);
+      await SendMessagesToDiscord(messages);
+      await StoreMessagesInTasksCompleted(messages);
+    }
 
-      var todaysDailyCheck = await _repository.GetBySpecAsync(spec);
-
+    private async Task SendMessagesToDiscord(AppendOnlyStringList messages)
+    {
       foreach (var message in messages)
       {
         _webhook.Content = message;
         await _webhook.Send();
+      }
+    }
 
-        if(todaysDailyCheck != null && !message.Equals("Daily Check Event Completed"))
+    private async Task StoreMessagesInTasksCompleted(AppendOnlyStringList messages)
+    {
+      var spec = new DailyCheckByDateSpec(DateTime.Today);
+      var todaysDailyCheck = await _repository.GetBySpecAsync(spec);
+
+      if (todaysDailyCheck != null)
+      {
+        foreach (var message in messages)
         {
-          if (todaysDailyCheck.TasksCompleted == null) todaysDailyCheck.TasksCompleted = "";
-          todaysDailyCheck.TasksCompleted += message;
+          if (!message.Equals("Daily Check Event Completed"))
+          {
+            if (todaysDailyCheck.TasksCompleted == null) todaysDailyCheck.TasksCompleted = "";
+            todaysDailyCheck.TasksCompleted += message;
+          }
         }
+        await _repository.UpdateAsync(todaysDailyCheck);
       }
     }
   }
