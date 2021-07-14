@@ -3,6 +3,7 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.DomainEvents;
+using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
@@ -44,6 +45,9 @@ namespace DevBetterWeb.Infrastructure
       builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
       builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
       builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
+      builder.RegisterGeneric(typeof(LoggerAdapter<>))
+        .As(typeof(IAppLogger<>))
+        .InstancePerDependency();
 
       builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
 
