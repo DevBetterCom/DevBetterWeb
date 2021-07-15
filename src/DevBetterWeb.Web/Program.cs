@@ -30,6 +30,10 @@ namespace DevBetterWeb.Web
       {
         var services = scope.ServiceProvider;
         var logger = services.GetRequiredService<ILogger<Program>>();
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        logger.LogInformation($"Current environment: {environment}");
+        if (environment == "Production") return;
+
         logger.LogInformation("Seeding database...");
         try
         {
