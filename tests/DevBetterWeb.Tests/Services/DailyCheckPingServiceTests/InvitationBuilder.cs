@@ -3,37 +3,39 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
 {
-  public static class InvitationBuilder
+  public class InvitationBuilder
   {
     public const string DEFAULT_EMAIL = "test@email.com";
     public const string DEFAULT_INVITE_CODE = "defaultInviteCode";
     public const string DEFAULT_SUBSCRIPTION_ID = "testSubscriptionId";
 
-    public static Invitation BuildDefaultInvitation()
+    private Invitation _invitation = new Invitation(DEFAULT_EMAIL, DEFAULT_INVITE_CODE, DEFAULT_SUBSCRIPTION_ID);
+
+    public InvitationBuilder WithDateCreatedGivenDaysAgo(int daysAgo)
     {
-      return new Invitation(DEFAULT_EMAIL, DEFAULT_INVITE_CODE, DEFAULT_SUBSCRIPTION_ID);
+      _invitation.SetPrivateDateTimePropertyValue("DateCreated", DateTime.Today.AddDays(daysAgo * -1));
+      return this;
+    }
+    public InvitationBuilder WithDateOfUserPingGivenDaysAgo(int daysAgo)
+    {
+      _invitation.SetPrivateDateTimePropertyValue("DateOfUserPing", DateTime.Today.AddDays(daysAgo * -1));
+      return this;
+    }
+    public InvitationBuilder WithDateOfLastAdminPingGivenDaysAgo(int daysAgo)
+    {
+      _invitation.SetPrivateDateTimePropertyValue("DateOfLastAdminPing", DateTime.Today.AddDays(daysAgo * -1));
+      return this;
     }
 
-    public static Invitation WithDateCreatedGivenDaysAgo(this Invitation invite, int daysAgo)
+    public InvitationBuilder AndDeactivated()
     {
-      invite.SetPrivateDateTimePropertyValue("DateCreated", DateTime.Today.AddDays(daysAgo * -1));
-      return invite;
-    }
-    public static Invitation WithDateOfUserPingGivenDaysAgo(this Invitation invite, int daysAgo)
-    {
-      invite.SetPrivateDateTimePropertyValue("DateOfUserPing", DateTime.Today.AddDays(daysAgo * -1));
-      return invite;
-    }
-    public static Invitation WithDateOfLastAdminPingGivenDaysAgo(this Invitation invite, int daysAgo)
-    {
-      invite.SetPrivateDateTimePropertyValue("DateOfLastAdminPing", DateTime.Today.AddDays(daysAgo * -1));
-      return invite;
+      _invitation.Deactivate();
+      return this;
     }
 
-    public static Invitation AndDeactivated(this Invitation invite)
+    public Invitation Build()
     {
-      invite.Deactivate();
-      return invite;
+      return _invitation;
     }
   }
 }
