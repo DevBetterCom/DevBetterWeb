@@ -30,6 +30,10 @@ namespace DevBetterWeb.Web
       {
         var services = scope.ServiceProvider;
         var logger = services.GetRequiredService<ILogger<Program>>();
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        logger.LogInformation($"Current environment: {environment}");
+        if (environment == "Production") return;
+
         logger.LogInformation("Seeding database...");
         try
         {
@@ -59,6 +63,10 @@ namespace DevBetterWeb.Web
         catch (Exception ex)
         {
           logger.LogError(ex, "An error occurred while seeding the database.");
+        }
+        finally
+        {
+          logger.LogInformation("Finished seeding database...");
         }
       }
     }
