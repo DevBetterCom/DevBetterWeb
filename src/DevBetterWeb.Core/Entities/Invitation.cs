@@ -22,17 +22,6 @@ namespace DevBetterWeb.Core.Entities
       DateCreated = DateTime.Today;
     }
 
-    // for testing
-    public Invitation(string email, string inviteCode, string paymentHandlerSubscriptionId, DateTime dateCreated, DateTime dateOfUserPing, DateTime dateOfLastAdminPing)
-    {
-      Email = email;
-      InviteCode = inviteCode;
-      PaymentHandlerSubscriptionId = paymentHandlerSubscriptionId;
-      DateCreated = dateCreated;
-      DateOfUserPing = dateOfUserPing;
-      DateOfLastAdminPing = dateOfLastAdminPing;
-    }
-
     private Invitation()
     {
       Email = "";
