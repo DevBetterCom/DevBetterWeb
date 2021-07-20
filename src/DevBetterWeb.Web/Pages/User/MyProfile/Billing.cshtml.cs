@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.ValueObjects;
 using System;
+using System.Linq;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
@@ -51,7 +51,10 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
         member = await _memberRegistrationService.RegisterMemberAsync(applicationUser.Id);
       }
 
-      if(_memberSubscriptionPeriodCalculationsService.GetHasCurrentSubscription(member))
+      var billingActivities = member.BillingActivities.OrderBy(a => a.Details.Date).ToList();
+
+
+      if (_memberSubscriptionPeriodCalculationsService.GetHasCurrentSubscription(member))
       {
         var currentSubscription = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscription(member);
         if (currentSubscription is null) throw new Exception($"Member {member} has no current subscription.");
@@ -60,11 +63,12 @@ namespace DevBetterWeb.Web.Pages.User.MyProfile
         var currentSubscriptionEndDate = _memberSubscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(member);
         var graduationDate = _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member);
 
-        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), subscriptionPlan!.Details!.Name, subscriptionPlan!.Details!.BillingPeriod, currentSubscriptionEndDate, graduationDate, currentSubscription);
+
+        UserBillingViewModel = new UserBillingViewModel(billingActivities, member.TotalSubscribedDays(), subscriptionPlan!.Details!.Name, subscriptionPlan!.Details!.BillingPeriod, currentSubscriptionEndDate, graduationDate, currentSubscription);
       }
       else
       {
-        UserBillingViewModel = new UserBillingViewModel(member.BillingActivities, member.TotalSubscribedDays(), _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member));
+        UserBillingViewModel = new UserBillingViewModel(billingActivities, member.TotalSubscribedDays(), _memberSubscriptionPeriodCalculationsService.GetGraduationDate(member));
       }
 
     }
