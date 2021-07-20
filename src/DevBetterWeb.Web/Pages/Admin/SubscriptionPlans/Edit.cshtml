@@ -14,25 +14,24 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MemberSubscriptionPlan.Details.Name" class="control-label"></label>
-                <input asp-for="MemberSubscriptionPlan.Details.Name" class="form-control" />
-                <span asp-validation-for="MemberSubscriptionPlan.Details.Name" class="text-danger"></span>
+                <label asp-for="Details.Name" class="control-label"></label>
+                <input asp-for="Details.Name" class="form-control" />
+                <span asp-validation-for="Details.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MemberSubscriptionPlan.Details.PricePerBillingPeriod" class="control-label"></label>
-                <input asp-for="MemberSubscriptionPlan.Details.PricePerBillingPeriod" class="form-control" />
-                <span asp-validation-for="MemberSubscriptionPlan.Details.PricePerBillingPeriod" class="text-danger"></span>
+                <label asp-for="Details.PricePerBillingPeriod" class="control-label"></label>
+                <input asp-for="Details.PricePerBillingPeriod" class="form-control" />
+                <span asp-validation-for="Details.PricePerBillingPeriod" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MemberSubscriptionPlan.Details.BillingPeriod" class="control-label"></label>
-                <select asp-for="MemberSubscriptionPlan.Details.BillingPeriod">
+                <label asp-for="Details.BillingPeriod" class="control-label"></label>
+                <select asp-for="Details.BillingPeriod">
                     @foreach (var period in Enum.GetValues(typeof(DevBetterWeb.Core.Enums.BillingPeriod)))
                     {
                         <option value="@period">@period</option>
                     }
                 </select>
             </div>
-            <input type="hidden" asp-for="MemberSubscriptionPlan.Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
