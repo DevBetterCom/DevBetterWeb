@@ -1,0 +1,37 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.SubscriptionPlans.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>MemberSubscriptionPlan</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MemberSubscriptionPlan!.Details.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MemberSubscriptionPlan!.Details.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MemberSubscriptionPlan!.Details.PricePerBillingPeriod)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MemberSubscriptionPlan!.Details.PricePerBillingPeriod)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MemberSubscriptionPlan!.Details.BillingPeriod)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MemberSubscriptionPlan!.Details.BillingPeriod)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.MemberSubscriptionPlan!.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
