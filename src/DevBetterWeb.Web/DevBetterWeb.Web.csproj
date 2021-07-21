@@ -34,7 +34,7 @@
 		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.8" />
 		<!-- added to fix error when upgrading to .net 5.0 -->
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
@@ -42,7 +42,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
