@@ -1,13 +1,16 @@
 ﻿using System.Threading.Tasks;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.Admin.Books
 {
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class CreateModel : PageModel
   {
     private readonly IRepository<Book> _bookRepository;
