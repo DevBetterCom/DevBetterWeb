@@ -12,6 +12,7 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
   public class CheckIfAnyActiveInvitationsRequireAdminPing
   {
     private readonly Mock<IRepository<Invitation>> _repository = new();
+    private readonly Mock<IRepository<Member>> _memberRepository = new();
     private readonly Mock<IEmailService> _emailService = new();
     private readonly Mock<UserManager<ApplicationUser>> _userManager;
 
@@ -24,7 +25,7 @@ namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests
     {
       var store = new Mock<IUserStore<ApplicationUser>>();
       _userManager = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
-      _service = new DailyCheckPingService(_repository.Object, _emailService.Object, _userManager.Object);
+      _service = new DailyCheckPingService(_repository.Object, _memberRepository.Object, _emailService.Object, _userManager.Object);
     }
 
     [Fact]

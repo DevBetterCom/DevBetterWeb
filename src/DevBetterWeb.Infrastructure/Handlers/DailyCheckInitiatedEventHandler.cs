@@ -35,6 +35,7 @@ namespace DevBetterWeb.Core.Handlers
       // real stuff
 
       // check if admins need to be reminded to avoid renewing near-alumnus's subscription
+      await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
       // check if people need upgraded to alumni
       await _alumniGraduationService.GraduateMembersIfNeeded(messages);
