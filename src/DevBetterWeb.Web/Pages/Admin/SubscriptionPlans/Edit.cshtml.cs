@@ -56,7 +56,7 @@ namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans
 
       MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
 
-      MemberSubscriptionPlan.Details = Details;
+      MemberSubscriptionPlan.Details = Details!;
 
       _context.Attach(MemberSubscriptionPlan).State = EntityState.Modified;
 

@@ -15,9 +15,9 @@ namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class CreateModel : PageModel
     {
-        private readonly DevBetterWeb.Infrastructure.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public CreateModel(DevBetterWeb.Infrastructure.Data.AppDbContext context)
+        public CreateModel(AppDbContext context)
         {
             _context = context;
         }
@@ -27,8 +27,8 @@ namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans
             return Page();
         }
 
-        [BindProperty]
-        public MemberSubscriptionPlan MemberSubscriptionPlan { get; set; }
+    [BindProperty]
+    public MemberSubscriptionPlan MemberSubscriptionPlan { get; set; } = new();
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
