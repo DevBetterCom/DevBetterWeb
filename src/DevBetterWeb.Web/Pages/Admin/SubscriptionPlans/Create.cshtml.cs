@@ -38,7 +38,7 @@ namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans
                 return Page();
             }
 
-            _context.MemberSubscriptionPlan.Add(MemberSubscriptionPlan);
+            _context.MemberSubscriptionPlan!.Add(MemberSubscriptionPlan);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
