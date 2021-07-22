@@ -12,7 +12,7 @@ namespace DevBetterWeb.Web.Pages.Resources
     {
     }
 
-    public async Task OnGet()
+    public void OnGet()
     {
     }
   }
