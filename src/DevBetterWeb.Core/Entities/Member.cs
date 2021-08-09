@@ -215,6 +215,8 @@ namespace DevBetterWeb.Core.Entities
       var subscription = new MemberSubscription();
       subscription.MemberId = this.Id;
       subscription.Dates = subscriptionDateTimeRange;
+      // TODO take as parameter
+      subscription.MemberSubscriptionPlanId = 1;
 
       MemberSubscriptions.Add(subscription);
 

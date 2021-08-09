@@ -27,6 +27,7 @@ namespace DevBetterWeb.Web.Pages.Admin
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IRepository<Member> _memberRepository;
     private readonly IRepository<MemberSubscription> _subscriptionRepository;
+    private readonly IRepository<MemberSubscriptionPlan> _subscriptionPlanRepository;
     private readonly IUserEmailConfirmationService _userEmailConfirmationService;
 
     public UserModel(UserManager<ApplicationUser> userManager,
@@ -35,6 +36,7 @@ namespace DevBetterWeb.Web.Pages.Admin
         IMemberRegistrationService memberRegistrationService,
         IRepository<Member> memberRepository,
         IRepository<MemberSubscription> subscriptionRepository,
+        IRepository<MemberSubscriptionPlan> subscriptionPlanRepository,
         IUserEmailConfirmationService userEmailConfirmationService)
     {
       _userManager = userManager;
@@ -43,6 +45,7 @@ namespace DevBetterWeb.Web.Pages.Admin
       _memberRegistrationService = memberRegistrationService;
       _memberRepository = memberRepository;
       _subscriptionRepository = subscriptionRepository;
+      _subscriptionPlanRepository = subscriptionPlanRepository;
       _userEmailConfirmationService = userEmailConfirmationService;
     }
 
@@ -54,6 +57,7 @@ namespace DevBetterWeb.Web.Pages.Admin
     public List<SubscriptionDTO> Subscriptions { get; set; } = new List<SubscriptionDTO>();
     public double TotalDaysInAllSubscriptions { get; set; }
     public EmailConfirmationModel EmailConfirmation { get; set; } = new EmailConfirmationModel();
+    public List<MemberSubscriptionPlan> MemberSubscriptionPlans { get; set; } = new();
 
 
     public async Task<IActionResult> OnGetAsync(string userId)
@@ -112,6 +116,8 @@ namespace DevBetterWeb.Web.Pages.Admin
         }
       }
 
+      MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
+
       EmailConfirmation.IsConfirmedString = IdentityUser.EmailConfirmed ? "Yes" : "No";
       string emailAddressMessage = "the email address";
       EmailConfirmation.EditEmailConfirmationMessage = @$"Are you sure you want to {(IdentityUser.EmailConfirmed
@@ -166,6 +172,10 @@ namespace DevBetterWeb.Web.Pages.Admin
           Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate),
           MemberId = member.Id
         };
+        if(subscription.MemberSubscriptionPlan != null)
+        {
+          newSub.MemberSubscriptionPlanId = subscription.MemberSubscriptionPlan.Id;
+        }
         await _subscriptionRepository.AddAsync(newSub);
       }
 
@@ -210,6 +220,7 @@ namespace DevBetterWeb.Web.Pages.Admin
       public int Id { get; set; }
       public DateTime StartDate { get; set; }
       public DateTime? EndDate { get; set; }
+      public MemberSubscriptionPlan? MemberSubscriptionPlan { get; set; }
     }
 
     public class EmailConfirmationModel
