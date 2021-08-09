@@ -5,6 +5,7 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Tests.Core.Entities.MemberTests;
 using Moq;
 using Xunit;
 
@@ -104,8 +105,8 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
     {
       var testlist = new List<Member>();
       var member = new Member();
-      var nearGraduationSubscription = new MemberSubscription();
-      nearGraduationSubscription.Dates = new DateTimeRange(DateTime.Today.AddDays(DAYS_IN_TWO_YEARS * -1).AddDays(1), DateTime.Today.AddDays(1));
+      var dates = new DateTimeRange(DateTime.Today.AddDays(DAYS_IN_TWO_YEARS * -1).AddDays(1), DateTime.Today.AddDays(1));
+      var nearGraduationSubscription = new MemberSubscription(member.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
       member.MemberSubscriptions.Add(nearGraduationSubscription);
       testlist.Add(member);
 
@@ -119,8 +120,8 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
     private Member GetGraduatingMember()
     {
       var graduatingMember = new Member();
-      var graduationSubscription = new MemberSubscription();
-      graduationSubscription.Dates = new DateTimeRange(DateTime.Now.AddYears(-2).AddDays(-1), DateTime.Now);
+      var dates = new DateTimeRange(DateTime.Now.AddYears(-2).AddDays(-1), DateTime.Now);
+      var graduationSubscription = new MemberSubscription(graduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
       graduatingMember.MemberSubscriptions.Add(graduationSubscription);
 
       return graduatingMember;
@@ -129,8 +130,8 @@ namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
     private Member GetNonGraduatingMember()
     {
       var nonGraduatingMember = new Member();
-      var nonGraduationSubscription = new MemberSubscription();
-      nonGraduationSubscription.Dates = new DateTimeRange(DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1));
+      var dates = new DateTimeRange(DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1));
+      var nonGraduationSubscription = new MemberSubscription(nonGraduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
       nonGraduatingMember.MemberSubscriptions.Add(nonGraduationSubscription);
 
       return nonGraduatingMember;

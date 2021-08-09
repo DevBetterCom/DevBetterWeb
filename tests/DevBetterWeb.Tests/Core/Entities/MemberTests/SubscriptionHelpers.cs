@@ -6,30 +6,25 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
 {
   public static class SubscriptionHelpers
   {
+    public const int TEST_MEMBER_ID = 1;
+    public const int TEST_MEMBER_PLAN_ID = 2;
     public static MemberSubscription GetDefaultTestSubscription()
     {
-      return new MemberSubscription
-      {
-        Dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(20))
-      };
+      var dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(20));
+      return new MemberSubscription(TEST_MEMBER_ID, TEST_MEMBER_PLAN_ID, dates);
     }
 
     public static MemberSubscription GetSubscriptionWithPastEndDate()
     {
-      return new MemberSubscription
-      {
-        Dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(-20))
-      };
+      var dates = new DateTimeRange(new DateTime(2020, 3, 14), DateTime.Today.AddDays(-20));
+      return new MemberSubscription(TEST_MEMBER_ID, TEST_MEMBER_PLAN_ID, dates);
     }
 
     public static MemberSubscription GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(int daysToDate, int totalDays = 0)
     {
       int difference = totalDays - daysToDate;
-
-      return new MemberSubscription
-      {
-        Dates = new DateTimeRange(DateTime.Today.AddDays(daysToDate * -1), DateTime.Today.AddDays(totalDays))
-      };
+      var dates = new DateTimeRange(DateTime.Today.AddDays(daysToDate * -1), DateTime.Today.AddDays(totalDays));
+      return new MemberSubscription(TEST_MEMBER_ID, TEST_MEMBER_PLAN_ID, dates);
     }
   }
 }
