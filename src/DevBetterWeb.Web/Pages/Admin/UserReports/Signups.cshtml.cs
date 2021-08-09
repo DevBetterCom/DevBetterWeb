@@ -51,13 +51,19 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
       SubscribedBillingActivities = await _repository.ListAsync(spec);
     }
 
-    public IActionResult OnPostDownload()
+    public async Task<IActionResult> OnPostDownload()
     {
       byte[] array = new byte[] { 0 };
 
-      if(SubscribedBillingActivities.Count != 0)
+      DateTimeRange dates = new DateTimeRange((DateTime)_signupReportsDatesModel.StartDate!, _signupReportsDatesModel.EndDate);
+
+      var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
+      SubscribedBillingActivities = await _repository.ListAsync(spec);
+
+
+      if (SubscribedBillingActivities.Count != 0)
       {
-        array = _csvService.GetCsvByteArrayFromList(SubscribedBillingActivities);
+        array = _csvService.GetCsvByteArrayFromBillingActivityList(SubscribedBillingActivities);
       }
 
       return new FileContentResult(array, "text/csv")
