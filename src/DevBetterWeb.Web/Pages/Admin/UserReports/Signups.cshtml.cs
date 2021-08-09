@@ -63,7 +63,7 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
 
       if (SubscribedBillingActivities.Count != 0)
       {
-        array = _csvService.GetCsvByteArrayFromBillingActivityList(SubscribedBillingActivities);
+        array = _csvService.GetCsvByteArrayFromList(SubscribedBillingActivities);
       }
 
       return new FileContentResult(array, "text/csv")
