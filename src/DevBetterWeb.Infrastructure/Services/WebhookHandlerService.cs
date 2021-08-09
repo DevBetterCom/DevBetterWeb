@@ -99,23 +99,23 @@ namespace DevBetterWeb.Infrastructure.Services
 
     public async Task HandleNewCustomerSubscriptionAsync(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
+      var paymentHandlerSubscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
       var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
 
-      var newSubscriberIsAlreadyMember = await NewCustomerSubscriptionWithEmailAlreadyMember(subscriptionId);
+      var newSubscriberIsAlreadyMember = await NewCustomerSubscriptionWithEmailAlreadyMember(paymentHandlerSubscriptionId);
 
       if (newSubscriberIsAlreadyMember)
       {
-        await HandleNewCustomerSubscriptionWithEmailAlreadyMember(subscriptionId, paymentAmount);
+        await HandleNewCustomerSubscriptionWithEmailAlreadyMember(paymentHandlerSubscriptionId, paymentAmount);
       }
       else
       {
 
-        var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
+        var status = _paymentHandlerSubscription.GetStatus(paymentHandlerSubscriptionId);
 
         if (status == "active")
         {
-          var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
+          var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerSubscriptionId);
           var email = _paymentHandlerCustomer.GetCustomerEmail(customerId);
 
           if (string.IsNullOrEmpty(email))
@@ -123,14 +123,14 @@ namespace DevBetterWeb.Infrastructure.Services
             throw new InvalidEmailException();
           }
 
-          Invitation invite = await _newMemberService.CreateInvitationAsync(email, subscriptionId);
+          Invitation invite = await _newMemberService.CreateInvitationAsync(email, paymentHandlerSubscriptionId);
 
           var webhookMessage = $"A new customer with email {email} has subscribed to DevBetter. They will be receiving a registration email.";
           await _webhook.Send($"Webhook:\n{webhookMessage}");
 
           await _newMemberService.SendRegistrationEmailAsync(invite);
 
-          await AddNewSubscriberBillingActivity(subscriptionId, email, paymentAmount);
+          await AddNewSubscriberBillingActivity(paymentHandlerSubscriptionId, email, paymentAmount);
         }
       }
     }
