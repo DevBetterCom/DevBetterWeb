@@ -167,15 +167,13 @@ namespace DevBetterWeb.Web.Pages.Admin
 
       try
       {
-        var newSub = new MemberSubscription()
+        int subscriptionPlanId = 1; // monthly
+        if (subscription.MemberSubscriptionPlan != null)
         {
-          Dates = new DateTimeRange(subscription.StartDate, subscription.EndDate),
-          MemberId = member.Id
-        };
-        if(subscription.MemberSubscriptionPlan != null)
-        {
-          newSub.MemberSubscriptionPlanId = subscription.MemberSubscriptionPlan.Id;
+          subscriptionPlanId = subscription.MemberSubscriptionPlan.Id;
         }
+        var newSub = new MemberSubscription(member.Id, subscriptionPlanId, new DateTimeRange(subscription.StartDate, subscription.EndDate));
+
         await _subscriptionRepository.AddAsync(newSub);
       }
 
