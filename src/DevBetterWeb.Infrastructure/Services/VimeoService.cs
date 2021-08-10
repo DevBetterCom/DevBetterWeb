@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using VimeoDotNet;
 using VimeoDotNet.Authorization;
 using VimeoDotNet.Models;
@@ -22,10 +27,21 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly VimeoClient _vimeoClient;
     private readonly AuthorizationClient _authorizationClient;
     private readonly VimeoCredential _vimeoCredential;
+    private readonly string _accessToken = string.Empty;
+
     public VimeoService(VimeoCredential vimeoCredential)
     {
       _vimeoCredential = vimeoCredential;
-      _vimeoClient = new VimeoClient(_vimeoCredential.ClientId, _vimeoCredential.ClientSecret);
+      if (string.IsNullOrEmpty(vimeoCredential.AccessToken))
+      {
+        _vimeoClient = new VimeoClient(_vimeoCredential.ClientId, _vimeoCredential.ClientSecret);
+      }
+      else
+      {
+        _accessToken = vimeoCredential.AccessToken;
+        _vimeoClient = new VimeoClient(vimeoCredential.AccessToken);
+      }
+      
       _authorizationClient = new AuthorizationClient(_vimeoCredential.ClientId, _vimeoCredential.ClientSecret);
     }
 
@@ -50,6 +66,117 @@ namespace DevBetterWeb.Infrastructure.Services
       AccessTokenResponse accessToken = await _authorizationClient.GetUnauthenticatedTokenAsync();
 
       return accessToken.AccessToken;
+    }
+
+    public async Task<Paginated<Video>> GetAllVideosAsync()
+    {
+      var videos = await _vimeoClient.GetVideosAsync(UserId.Me, 1, 10);
+
+      return videos;
+    }
+
+    public async Task<User> GetAccountInformationAsync()
+    {
+      var user = await _vimeoClient.GetAccountInformationAsync();
+
+      return user;
+    }
+
+    public async Task UpdateVideoDetails(long videoId, VideoUpdateMetadata videoMetadata)
+    {
+      await _vimeoClient.UpdateVideoMetadataAsync(videoId, videoMetadata);
+    }
+
+    public async Task<bool> UploadVideoAsync(string videoName, byte[] fileData)
+    {
+      var uploadTicket = await GetUploadTicketAsync();
+      if (string.IsNullOrEmpty(uploadTicket?.CompleteUri) || string.IsNullOrEmpty(uploadTicket.UploadLinkSecure))
+      {
+        return false;
+      }
+
+      var uploadResult = await UploadVideoDataAsync(uploadTicket.UploadLinkSecure, fileData);
+      if (!uploadResult)
+      {
+        return false;
+      }
+      var deleteResult =  await DeleteUploadTicketAsync(uploadTicket.CompleteUri);
+      if (!deleteResult)
+      {
+        return false;
+      }
+
+      var videoDetails = new VideoUpdateMetadata();
+      videoDetails.Name = videoName;
+      var videoId = ParseVideoId(uploadTicket.CompleteUri);
+      await UpdateVideoDetails(videoId, videoDetails);
+
+      return true;
+    }
+
+    private long ParseVideoId(string completeUri)
+    {
+      var parts = completeUri.Split("?");
+      if (parts.Length <= 1)
+      {
+        return 0;
+      }
+
+      var items = HttpUtility.ParseQueryString(parts[1]);
+      var videoId = items["video_file_id"];
+      if (videoId == null)
+      {
+        return 0;
+      }
+
+      return long.Parse(videoId);
+    }
+
+    public async Task<bool> DeleteUploadTicketAsync(string completeUri)
+    {
+      var httpClient = new HttpClient();
+      httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {_accessToken}");
+
+      var response = await httpClient.DeleteAsync($"https://api.vimeo.com{completeUri}");
+      if (!response.IsSuccessStatusCode)
+      {
+        return false;
+      }
+      var contents = await response.Content.ReadAsStringAsync();
+
+      return true;
+    }
+
+    public async Task<UploadTicket> GetUploadTicketAsync()
+    {
+      var uploadTicket = await _vimeoClient.GetUploadTicketAsync();
+
+      return uploadTicket;
+    }
+
+    private async Task<bool> UploadVideoDataAsync(string uploadUri, byte[] fileData)
+    {
+      var httpClient = new HttpClient();
+      httpClient.Timeout = TimeSpan.FromMinutes(60);
+
+      httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {_accessToken}");
+      //httpClient.DefaultRequestHeaders
+      //  .Accept
+      //  .Add(new MediaTypeWithQualityHeaderValue("mp4"));
+      //httpClient.DefaultRequestHeaders.Add("Content-Length", $"{fileData.Length}");
+
+      var byteContent = new ByteArrayContent(fileData);
+      //var multipartContent = new MultipartFormDataContent();
+      //multipartContent.Add(byteContent, "video");
+
+      var response = await httpClient.PutAsync(uploadUri, byteContent);
+      if (!response.IsSuccessStatusCode)
+      {
+        return false;
+      }
+      var contents = await response.Content.ReadAsStringAsync();
+
+      return true;
     }
 
     private string GetFullAccessUrl()
