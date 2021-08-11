@@ -9,7 +9,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
     [Fact]
     public async Task ReturnsTrueCheckPasswordAsync()
     {
-      var vimeoCredential = new VimeoCredential("9adde280e2ec716c03c7f0b4d671059d");
+      var vimeoCredential = new VimeoCredential("PVT");
       var vimeoService = new VimeoService(vimeoCredential);
       var uploadTicket = await vimeoService.CheckPasswordAsync("585903732", "122324");
 
