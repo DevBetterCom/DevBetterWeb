@@ -9,32 +9,6 @@
     <div class="col-7">
         <div class="card">
             <div class="card-header">
-                Overview
-            </div>
-            <div class="card-body">
-                <p>@Model.GetOverviewBody()</p>
-            </div>
-        </div>
-        <br />
-        @if (!Model.GetIsAlumni())
-        {
-        <div class="card">
-            <div class="card-header">
-                Cancel
-            </div>
-            <div class="card-body">
-                @Model.GetCancellationBody()
-                <br />
-                <br />
-                <a class="btn btn-danger btn-sm" href="/User/MyProfile/Cancel">Cancel Subscription</a>
-            </div>
-        </div>
-        }
-    </div>
-    <br />
-    <div class="col-5">
-        <div class="card">
-            <div class="card-header">
                 <b>Recent Activity</b>
             </div>
             <div class="card-body">
@@ -44,13 +18,62 @@
                 }
                 else
                 {
-                    foreach (var activity in Model.UserBillingViewModel.BillingActivities)
-                    {
-                        <p>@activity.Details.GetMessageForMemberView()</p>
-                    }
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var activity in Model.UserBillingViewModel.BillingActivities)
+                            {
+                                <tr>
+                                    <td>@activity.Details.Date.ToShortDateString()</td>
+                                    <td>@activity.Details.ActionVerbPastTense</td>
+                                    @if (activity.Details.Amount != 0)
+                                    {
+                                        <td>@activity.Details.Amount</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
                 <p><i>Note: Activity shown here is only since DevBetter's transistion to the Stripe payment handler.</i></p>
             </div>
         </div>
+    </div>
+    <br />
+    <div class="col-5">
+        <div class="card">
+            <div class="card-header">
+                Overview
+            </div>
+            <div class="card-body">
+                <p>@Model.GetOverviewBody()</p>
+            </div>
+        </div>
+        <br />
+        @if (!Model.GetIsAlumni())
+        {
+            <div class="card">
+                <div class="card-header">
+                    Cancel
+                </div>
+                <div class="card-body">
+                    @Model.GetCancellationBody()
+                    <br />
+                    <br />
+                    <a class="btn btn-danger btn-sm" href="/User/MyProfile/Cancel">Cancel Subscription</a>
+                </div>
+            </div>
+        }
+
     </div>
 </div>

@@ -4,6 +4,7 @@ using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities
 {
+  // mainly here for UI in Billing view for User Profile, needs to correspond to things in Stripe
   public class MemberSubscriptionPlan : BaseEntity, IAggregateRoot
   {
     public MemberSubscriptionPlanDetails Details { get; set; }
