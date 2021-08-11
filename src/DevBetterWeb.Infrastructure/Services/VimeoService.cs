@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using VimeoDotNet;
 using VimeoDotNet.Authorization;
+using VimeoDotNet.Enums;
 using VimeoDotNet.Models;
 
 namespace DevBetterWeb.Infrastructure.Services
@@ -71,9 +73,24 @@ namespace DevBetterWeb.Infrastructure.Services
     public async Task<Paginated<Video>> GetAllVideosAsync()
     {
       var videos = await _vimeoClient.GetVideosAsync(UserId.Me, 1, 10);
-
       return videos;
     }
+    public async Task<bool> DeleteAllVideosAsync()
+    {
+      var videos = await GetAllVideosAsync();
+      foreach (var video in videos.Data)
+      {
+        if (video?.Id == null)
+        {
+          continue;
+        }
+        await _vimeoClient.DeleteVideoAsync(video.Id.Value);
+      }
+
+      return true;
+    }
+
+
 
     public async Task<User> GetAccountInformationAsync()
     {
@@ -100,16 +117,18 @@ namespace DevBetterWeb.Infrastructure.Services
       {
         return false;
       }
-      var deleteResult =  await DeleteUploadTicketAsync(uploadTicket.CompleteUri);
-      if (!deleteResult)
+      var videoId =  await DeleteUploadTicketAsync(uploadTicket.CompleteUri);
+      if (videoId == null)
       {
         return false;
       }
 
       var videoDetails = new VideoUpdateMetadata();
       videoDetails.Name = videoName;
-      var videoId = ParseVideoId(uploadTicket.CompleteUri);
-      await UpdateVideoDetails(videoId, videoDetails);
+      videoDetails.Privacy = VideoPrivacyEnum.Password;
+      videoDetails.Password = "122324";
+      videoDetails.AllowDownloadVideo = false;
+      await UpdateVideoDetails(videoId.Value, videoDetails);
 
       return true;
     }
@@ -132,7 +151,7 @@ namespace DevBetterWeb.Infrastructure.Services
       return long.Parse(videoId);
     }
 
-    public async Task<bool> DeleteUploadTicketAsync(string completeUri)
+    public async Task<long?> DeleteUploadTicketAsync(string completeUri)
     {
       var httpClient = new HttpClient();
       httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {_accessToken}");
@@ -140,11 +159,26 @@ namespace DevBetterWeb.Infrastructure.Services
       var response = await httpClient.DeleteAsync($"https://api.vimeo.com{completeUri}");
       if (!response.IsSuccessStatusCode)
       {
-        return false;
+        return null;
       }
       var contents = await response.Content.ReadAsStringAsync();
+      if (response.Headers.Location == null)
+      {
+        return null;
+      }
+      var headerLocation = response.Headers.GetValues("Location").FirstOrDefault();
+      if (string.IsNullOrEmpty(headerLocation))
+      {
+        return null;
+      }
 
-      return true;
+      var parts = headerLocation.Split("/");
+      if (parts.Length <= 0)
+      {
+        return null;
+      }
+
+      return long.Parse(parts[parts.Length - 1]);
     }
 
     public async Task<UploadTicket> GetUploadTicketAsync()
