@@ -39,24 +39,24 @@
 		<!-- added to fix error when upgrading to .net 5.0 -->
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
 		<!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.10.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Sendgrid" Version="9.24.1" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
-		<PackageReference Include="Stripe.net" Version="39.61.0" />
+		<PackageReference Include="Stripe.net" Version="39.62.0" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.5" />
 		<PackageReference Include="TagHelperSamples.Authorization" Version="3.0.56" />
 		<PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.6.0" />
 		<PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
