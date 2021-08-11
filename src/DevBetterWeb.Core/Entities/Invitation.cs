@@ -11,8 +11,8 @@ namespace DevBetterWeb.Core.Entities
     public string PaymentHandlerSubscriptionId { get; private set; }
     public bool Active { get; private set; } = true;
     public DateTime DateCreated { get; private set; }
-    public DateTime DateOfUserPing { get; private set; } = DateTime.MinValue;
-    public DateTime DateOfLastAdminPing { get; private set; } = DateTime.MinValue;
+    public DateTime? DateOfUserPing { get; private set; } = null;
+    public DateTime? DateOfLastAdminPing { get; private set; } = null;
 
     public Invitation(string email, string inviteCode, string paymentHandlerSubscriptionId)
     {

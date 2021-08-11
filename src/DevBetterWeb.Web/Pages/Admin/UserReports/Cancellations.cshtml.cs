@@ -53,9 +53,14 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
       CancelledBillingActivities = await _repository.ListAsync(spec);
     }
 
-    public IActionResult OnPostDownload()
+    public async Task<IActionResult> OnPostDownload()
     {
       byte[] array = new byte[] { 0 };
+
+      DateTimeRange dates = new DateTimeRange((DateTime)_cancellationReportsDatesModel.StartDate!, _cancellationReportsDatesModel.EndDate);
+
+      var spec = new BillingActivitiesByDateTimeRangeAndCancelledVerbSpec(dates);
+      CancelledBillingActivities = await _repository.ListAsync(spec);
 
       if (CancelledBillingActivities.Count != 0)
       {

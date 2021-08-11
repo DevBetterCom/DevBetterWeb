@@ -8,7 +8,7 @@
 
 <br />
 
-<form method="post" asp-page-handler="refresh">
+<form method="post">
     <div class="form-group">
         <label for="start">Start date:</label>
 
@@ -27,15 +27,13 @@
                max="@DateTime.Now"
                class="form-control form-control-sm">
     </div>
-    <input type="submit" value="Refresh Dates" class="btn btn-success" />
-</form>
-<br />
-<form method="post" asp-page-handler="download">
-    <input type="submit" value="Download Report" class="btn btn-success" />
+    <input type="submit" value="Refresh Dates" class="btn btn-success"  asp-page-handler="refresh"/>
+
+    <input type="submit" value="Download Report" class="btn btn-success" asp-page-handler="download"/>
 </form>
 <br />
 <p>
-    No data available until transition to Stripe is complete.
+    Data available since transition to Stripe in August 2021.
 </p>
 <br />
 <table class="table table-sm table-striped" id="signupsTable">
