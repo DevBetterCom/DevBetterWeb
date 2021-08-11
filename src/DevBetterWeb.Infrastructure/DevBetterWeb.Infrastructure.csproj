@@ -18,18 +18,18 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.1.0" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.4.0" />
-    <PackageReference Include="Sendgrid" Version="9.24.1" />
+    <PackageReference Include="Sendgrid" Version="9.24.2" />
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.9" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
-    <PackageReference Include="Stripe.net" Version="39.61.0" />
+    <PackageReference Include="Stripe.net" Version="39.62.0" />
     <PackageReference Include="VimeoDotNet" Version="2.1.1" />
   </ItemGroup>
 
