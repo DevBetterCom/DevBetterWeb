@@ -15,16 +15,20 @@ namespace DevBetterWeb.Infrastructure.Services
   {
     private TimeSpan TWO_DAYS = new TimeSpan(2, 0, 0, 0);
     private TimeSpan FOUR_DAYS = new TimeSpan(4, 0, 0, 0);
+    private int DAYS_IN_TWO_YEARS = 365 * 2;
 
-    public IRepository<Invitation> _repository;
+    public IRepository<Invitation> _inviteRepository;
+    public IRepository<Member> _memberRepository;
     public IEmailService _emailService;
     public UserManager<ApplicationUser> _userManager;
 
     public DailyCheckPingService(IRepository<Invitation> repository,
+      IRepository<Member> memberRepository,
       IEmailService emailService,
       UserManager<ApplicationUser> userManager)
     {
-      _repository = repository;
+      _inviteRepository = repository;
+      _memberRepository = memberRepository;
       _emailService = emailService;
       _userManager = userManager;
     }
@@ -32,7 +36,7 @@ namespace DevBetterWeb.Infrastructure.Services
     public async Task SendPingIfNeeded(AppendOnlyStringList messages)
     {
       var spec = new ActiveInvitationsSpec();
-      var activeInvitations = await _repository.ListAsync(spec);
+      var activeInvitations = await _inviteRepository.ListAsync(spec);
 
       var invitationsForUserPing = CheckIfAnyActiveInvitationsRequireUserPing(activeInvitations);
       if (invitationsForUserPing.Any())
@@ -50,10 +54,10 @@ namespace DevBetterWeb.Infrastructure.Services
       }
 
       var invitationsForAdminPing = CheckIfAnyActiveInvitationsRequireAdminPing(activeInvitations);
-      if(invitationsForAdminPing.Any())
+      if (invitationsForAdminPing.Any())
       {
         var listOfEmailsToRemindAdminsAbout = "";
-        foreach(var invitation in invitationsForAdminPing)
+        foreach (var invitation in invitationsForAdminPing)
         {
           listOfEmailsToRemindAdminsAbout += $"{invitation.Email}\n";
         }
@@ -64,11 +68,49 @@ namespace DevBetterWeb.Infrastructure.Services
       }
     }
 
+    public async Task PingAdminsAboutAlmostAlumsIfNeeded(AppendOnlyStringList messages)
+    {
+      var members = await _memberRepository.ListAsync();
+      var membersToPingAdminsAbout = new List<Member>();
+
+      var daysBeforeGraduationToPing = 10;
+
+      foreach (var member in members)
+      {
+        if (member.TotalSubscribedDays() == DAYS_IN_TWO_YEARS - daysBeforeGraduationToPing)
+        {
+          membersToPingAdminsAbout.Add(member);
+        }
+      }
+
+      if (membersToPingAdminsAbout.Any())
+      {
+
+        string listOfMembersToPingAdminsAbout = "";
+
+        foreach (var member in membersToPingAdminsAbout)
+        {
+          listOfMembersToPingAdminsAbout = $"{member.UserFullName()}\n";
+        }
+
+        messages.Append($"Admins need to be reminded not to renew the subscriptions of the following members about to graduate: {listOfMembersToPingAdminsAbout}");
+
+        var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
+
+        foreach(var user in usersInAdminRole)
+        {
+          await _emailService.SendEmailAsync(user.Email, "Upcoming DevBetter Graduation", $"Ensure that the following member(s)'s subscriptions are not renewed, as they will graduate to alumni status in {daysBeforeGraduationToPing} days:\n {listOfMembersToPingAdminsAbout}");
+        }
+
+        messages.Append($"Admins have been reminded not to renew the subscriptions of the following members about to graduate: {listOfMembersToPingAdminsAbout}");
+      }
+    }
+
     public List<Invitation> CheckIfAnyActiveInvitationsRequireAdminPing(List<Invitation> invitations)
     {
       var invitationsRequiringAdminPing = new List<Invitation>();
 
-      foreach(var invite in invitations)
+      foreach (var invite in invitations)
       {
         if (InviteRequiresAdminPing(invite)) invitationsRequiringAdminPing.Add(invite);
       }
@@ -93,9 +135,9 @@ namespace DevBetterWeb.Infrastructure.Services
     {
       var invitationsRequiringUserPing = new List<Invitation>();
 
-      foreach(var invite in invitations)
+      foreach (var invite in invitations)
       {
-        if((DateTime.Today - invite.DateCreated) >= TWO_DAYS && invite.DateOfUserPing.Equals(DateTime.MinValue))
+        if ((DateTime.Today - invite.DateCreated) >= TWO_DAYS && invite.DateOfUserPing.Equals(DateTime.MinValue))
         {
           invitationsRequiringUserPing.Add(invite);
         }
@@ -138,7 +180,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var listOfEmailsAdminsWereRemindedAbout = "";
 
-      foreach(var user in usersInAdminRole)
+      foreach (var user in usersInAdminRole)
       {
         await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
         listOfEmailsAdminsWereRemindedAbout += $"{user.Email}\n";
@@ -146,7 +188,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var message = $"Admins were reminded to remind these users to finish setting up their DevBetter accounts: {listOfEmailsAdminsWereRemindedAbout}";
 
-      foreach(var invitation in invitations)
+      foreach (var invitation in invitations)
       {
         invitation.UpdateAdminPingDate();
       }
