@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.Pages.Checkout
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class MonthlyModel : PageModel
   {
 
