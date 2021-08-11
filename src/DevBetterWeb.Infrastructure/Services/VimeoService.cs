@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -99,7 +100,7 @@ namespace DevBetterWeb.Infrastructure.Services
       return user;
     }
 
-    public async Task UpdateVideoDetails(long videoId, VideoUpdateMetadata videoMetadata)
+    public async Task UpdateVideoDetailsAsync(long videoId, VideoUpdateMetadata videoMetadata)
     {
       await _vimeoClient.UpdateVideoMetadataAsync(videoId, videoMetadata);
     }
@@ -125,13 +126,16 @@ namespace DevBetterWeb.Infrastructure.Services
 
       var videoDetails = new VideoUpdateMetadata();
       videoDetails.Name = videoName;
+      videoDetails.Description = videoName;
       videoDetails.Privacy = VideoPrivacyEnum.Password;
       videoDetails.Password = "122324";
       videoDetails.AllowDownloadVideo = false;
-      await UpdateVideoDetails(videoId.Value, videoDetails);
+      await UpdateVideoDetailsAsync(videoId.Value, videoDetails);
 
       return true;
     }
+
+    
 
     private long ParseVideoId(string completeUri)
     {
@@ -208,6 +212,38 @@ namespace DevBetterWeb.Infrastructure.Services
       {
         return false;
       }
+      var contents = await response.Content.ReadAsStringAsync();
+
+      return true;
+    }
+    
+    public async Task<bool> CheckPasswordAsync(string videoId, string password)
+    {
+      CookieContainer cookies = new CookieContainer();
+      HttpClientHandler handler = new HttpClientHandler();
+      handler.CookieContainer = cookies;
+
+      HttpClient httpClient = new HttpClient(handler);
+      httpClient.Timeout = TimeSpan.FromMinutes(60);
+
+      var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(password);
+      var base64 = System.Convert.ToBase64String(plainTextBytes);
+      var formContent = new FormUrlEncodedContent(new[]
+      {
+        new KeyValuePair<string?, string?>("password", base64),
+        new KeyValuePair<string?, string?>("Watch Video", null)
+      });
+
+      var response = await httpClient.PostAsync($"https://player.vimeo.com/video/{videoId}/check-password?referrer=null?badge=0&autopause=0&player_id=0&app_id=201136&h=49e2c205a6", formContent);
+      if (!response.IsSuccessStatusCode)
+      {
+        return false;
+      }
+
+      Uri uri = new Uri("https://player.vimeo.com");
+      IEnumerable<Cookie> responseCookies = cookies.GetCookies(uri).Cast<Cookie>();
+      foreach (Cookie cookie in responseCookies)
+        Console.WriteLine(cookie.Name + ": " + cookie.Value);
       var contents = await response.Content.ReadAsStringAsync();
 
       return true;
