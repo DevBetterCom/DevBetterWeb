@@ -169,6 +169,7 @@ namespace DevBetterWeb.Infrastructure.Services
 
       if(member != null)
       {
+        // TODO this should take in the subscription plan id
         member.AddSubscription(subscriptionDateTimeRange);
       }
     }

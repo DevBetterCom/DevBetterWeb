@@ -96,7 +96,7 @@ namespace DevBetterWeb.Core.Services
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
-
+      // TODO this should take in the subscription plan id
       member.AddSubscription(subscriptionDateTimeRange);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
