@@ -34,6 +34,7 @@ namespace DevBetterWeb.Web.Controllers
     public async Task<IActionResult> Index()
     {
       var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+      _logger.LogInformation($"Processing json\n{json}");
 
       try
       {
