@@ -90,8 +90,8 @@ namespace DevBetterWeb.Core.Services
       await AddUserToMemberRoleAsync(userId);
 
       var spec = new InvitationByInviteCodeSpec(inviteCode);
-
       var invite = await _invitationRepository.GetBySpecAsync(spec);
+      
       if (invite is null) throw new InvitationNotFoundException(inviteCode);
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
