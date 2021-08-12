@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using DevBetterWeb.Core;
 
 
@@ -14,14 +13,13 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly IAppLogger<StripeWebhookHandler> _logger;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    private readonly IPaymentHandlerEvent _paymentHandlerEvent;
+    private readonly IPaymentHandlerEventService _paymentHandlerEvent;
     private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
-
     private readonly IWebhookHandlerService _webhookHandlerService;
 
     public StripeWebhookHandler(IAppLogger<StripeWebhookHandler> logger,
       IPaymentHandlerSubscription paymentHandlerSubscription,
-      IPaymentHandlerEvent paymentHandlerEvent,
+      IPaymentHandlerEventService paymentHandlerEvent,
       IPaymentHandlerInvoice paymentHandlerInvoice,
       IWebhookHandlerService webhookHandlerService)
     {
@@ -40,6 +38,7 @@ namespace DevBetterWeb.Web.Controllers
       try
       {
         var stripeEventType = _paymentHandlerEvent.GetEventType(json);
+        _logger.LogInformation($"Processing Stripe Event Type: {stripeEventType}");
 
         if (stripeEventType.Equals(StripeConstants.INVOICE_PAYMENT_SUCCEEDED_EVENT_TYPE))
         {
@@ -80,19 +79,19 @@ namespace DevBetterWeb.Web.Controllers
       }
     }
 
-    private async Task HandleNewCustomerSubscription(string json)
+    private Task HandleNewCustomerSubscription(string json)
     {
-      await _webhookHandlerService.HandleNewCustomerSubscriptionAsync(json);
+      return _webhookHandlerService.HandleNewCustomerSubscriptionAsync(json);
     }
 
-    private async Task HandleCustomerSubscriptionRenewed(string json)
+    private Task HandleCustomerSubscriptionRenewed(string json)
     {
-      await _webhookHandlerService.HandleCustomerSubscriptionRenewedAsync(json);
+      return _webhookHandlerService.HandleCustomerSubscriptionRenewedAsync(json);
     }
 
-    private async Task HandleCustomerSubscriptionEnded(string json)
+    private Task HandleCustomerSubscriptionEnded(string json)
     {
-      await _webhookHandlerService.HandleCustomerSubscriptionEndedAsync(json);
+      return _webhookHandlerService.HandleCustomerSubscriptionEndedAsync(json);
     }
 
     private async Task HandleCustomerSubscriptionUpdatedEvent(string json)
@@ -106,9 +105,9 @@ namespace DevBetterWeb.Web.Controllers
       }
     }
 
-    private async Task HandleCustomerSubscriptionCancelledAtPeriodEnd(string json)
+    private Task HandleCustomerSubscriptionCancelledAtPeriodEnd(string json)
     {
-      await _webhookHandlerService.HandleCustomerSubscriptionCancelledAtPeriodEndAsync(json);
+      return _webhookHandlerService.HandleCustomerSubscriptionCancelledAtPeriodEndAsync(json);
     }
   }
 }

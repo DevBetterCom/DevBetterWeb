@@ -91,7 +91,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
-      services.AddScoped<IPaymentHandlerEvent, StripePaymentHandlerEventService>();
+      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
       services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
       services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
