@@ -145,7 +145,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
           await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
 
-          return RedirectToPage("./User/MyProfile/Index");
+          return RedirectToPage("/User/MyProfile/Index");
         }
         foreach (var error in result.Errors)
         {

@@ -66,7 +66,7 @@ namespace DevBetterWeb.Core.Services
         var storedInviteCode = await _invitationRepository.GetBySpecAsync(spec);
         if (storedInviteCode == null)
         {
-          throw new InvitationNotFoundException();
+          throw new InvitationNotFoundException(inviteCode);
         }
         if (!storedInviteCode.Active)
         {
