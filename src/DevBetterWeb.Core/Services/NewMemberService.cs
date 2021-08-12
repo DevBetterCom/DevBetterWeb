@@ -1,4 +1,5 @@
-﻿using Ardalis.Result;
+﻿using Ardalis.GuardClauses;
+using Ardalis.Result;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
@@ -86,13 +87,14 @@ namespace DevBetterWeb.Core.Services
 
     public async Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode)
     {
+      Guard.Against.NullOrEmpty(inviteCode, nameof(inviteCode));
       Member member = await CreateNewMemberAsync(userId, firstName, lastName);
       await AddUserToMemberRoleAsync(userId);
 
       var spec = new InvitationByInviteCodeSpec(inviteCode);
       var invite = await _invitationRepository.GetBySpecAsync(spec);
       
-      if (invite is null) throw new InvitationNotFoundException(inviteCode);
+      if (invite is null) throw new InvitationNotFoundException($"Could not find invitation with code {inviteCode}.");
       var subscriptionId = invite.PaymentHandlerSubscriptionId;
 
       var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
