@@ -3,7 +3,7 @@ using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
-  public class StripePaymentHandlerEventService : IPaymentHandlerEvent
+  public class StripePaymentHandlerEventService : IPaymentHandlerEventService
   {
     public string GetEventType(string json)
     {
