@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
@@ -59,7 +60,6 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     public string ReturnUrl { get; set; }
     public string? ErrorMessage { get; set; }
     public string? Email { get; set; }
-    public string? InviteCode { get; set; }
 
     public class InputModel
     {
@@ -97,7 +97,6 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
       // if we get this far, email and invite code are valid
       Email = email;
-      InviteCode = inviteCode;
 
       return Page();
     }
@@ -138,9 +137,11 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode!);
+          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!);
 
-          var inviteEntity = await _invitationRepository.GetBySpecAsync(new InvitationByInviteCodeSpec(inviteCode));
+          _logger.LogInformation($"Looking up invitation with code {inviteCode}");
+          var spec = new InvitationByInviteCodeSpec(inviteCode);
+          var inviteEntity = await _invitationRepository.GetBySpecAsync(spec);
 
           await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
 
