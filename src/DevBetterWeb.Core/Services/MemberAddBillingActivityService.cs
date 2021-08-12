@@ -22,6 +22,14 @@ namespace DevBetterWeb.Core.Services
       _memberLookupService = memberLookup;
     }
 
+    /// <summary>
+    /// This should only be called after a member has registered and been created.
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="amount"></param>
+    /// <param name="subscriptionPlanName"></param>
+    /// <param name="billingPeriod"></param>
+    /// <returns></returns>
     public async Task AddMemberSubscriptionCreationBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
     {
       var member = await _memberLookupService.GetMemberByEmailAsync(email);

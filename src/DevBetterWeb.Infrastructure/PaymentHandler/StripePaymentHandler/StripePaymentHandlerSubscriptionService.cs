@@ -72,6 +72,16 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return customerId;
     }
 
+    public decimal GetSubscriptionAmount(string subscriptionId)
+    {
+      Guard.Against.NullOrEmpty(subscriptionId, nameof(subscriptionId));
+      var subscription = GetSubscription(subscriptionId);
+
+      decimal? amount = subscription?.Items?.GetEnumerator()?.Current?.Price?.UnitAmountDecimal;
+
+      return amount ?? 0;
+    }
+
     public DateTimeRange GetDateTimeRange(string subscriptionId)
     {
       var subscription = GetSubscription(subscriptionId);

@@ -139,7 +139,8 @@ namespace DevBetterWeb.Infrastructure.Services
 
           await _newMemberService.SendRegistrationEmailAsync(invite);
 
-          await AddNewSubscriberBillingActivity(paymentHandlerSubscriptionId, email, paymentAmount);
+          // moved to NewMemberRegister.cshtml.cs
+          //await AddNewSubscriberBillingActivity(paymentHandlerSubscriptionId, email, paymentAmount);
         }
       }
     }
@@ -160,7 +161,6 @@ namespace DevBetterWeb.Infrastructure.Services
       var userIsMember = await _userLookupService.FindUserIsMemberByEmailAsync(email);
 
       return userIsMember;
-
     }
 
     private async Task HandleNewCustomerSubscriptionWithEmailAlreadyMember(string subscriptionId, decimal paymentAmount)
