@@ -13,7 +13,7 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly IAppLogger<StripeWebhookHandler> _logger;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    private readonly IPaymentHandlerEventService _paymentHandlerEvent;
+    private readonly IPaymentHandlerEventService _paymentHandlerEventService;
     private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
     private readonly IWebhookHandlerService _webhookHandlerService;
 
@@ -25,7 +25,7 @@ namespace DevBetterWeb.Web.Controllers
     {
       _logger = logger;
       _paymentHandlerSubscription = paymentHandlerSubscription;
-      _paymentHandlerEvent = paymentHandlerEvent;
+      _paymentHandlerEventService = paymentHandlerEvent;
       _paymentHandlerInvoice = paymentHandlerInvoice;
       _webhookHandlerService = webhookHandlerService;
     }
@@ -38,7 +38,7 @@ namespace DevBetterWeb.Web.Controllers
 
       try
       {
-        var stripeEventType = _paymentHandlerEvent.GetEventType(json);
+        var stripeEventType = _paymentHandlerEventService.GetEventType(json);
         _logger.LogInformation($"Processing Stripe Event Type: {stripeEventType}");
 
         if (stripeEventType.Equals(StripeConstants.INVOICE_PAYMENT_SUCCEEDED_EVENT_TYPE))
@@ -97,7 +97,7 @@ namespace DevBetterWeb.Web.Controllers
 
     private async Task HandleCustomerSubscriptionUpdatedEvent(string json)
     {
-      var subscriptionId = _paymentHandlerEvent.GetSubscriptionId(json);
+      var subscriptionId = _paymentHandlerEventService.GetSubscriptionId(json);
       var cancelAtPeriodEnd = _paymentHandlerSubscription.GetCancelAtPeriodEnd(subscriptionId);
 
       if (cancelAtPeriodEnd)

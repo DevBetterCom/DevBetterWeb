@@ -9,6 +9,14 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Integration\Stripe\stripeJson1.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Integration\Stripe\stripeJson1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="xunit.runner.json">

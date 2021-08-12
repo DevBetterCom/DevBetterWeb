@@ -13,18 +13,24 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return stripeEventType;
     }
 
+    // TODO: Add tests
     public string GetSubscriptionId(string json)
     {
       var stripeEvent = EventUtility.ParseEvent(json);
-      var subscriptionId = "";
 
-      if (stripeEvent.Type.Contains("subscription"))
+      var invoice = stripeEvent.Data.Object as Invoice;
+      if(invoice != null)
       {
-        var subscription = stripeEvent.Data.Object as Subscription;
-
-        subscriptionId = subscription!.Id;
+        return invoice.SubscriptionId;
       }
-      return subscriptionId;
+
+      var subscription = stripeEvent.Data.Object as Subscription;
+      if(subscription != null)
+      {
+        return subscription.Id;
+      }
+
+      return string.Empty;
     }
 
     public string GetInvoiceId(string json)
