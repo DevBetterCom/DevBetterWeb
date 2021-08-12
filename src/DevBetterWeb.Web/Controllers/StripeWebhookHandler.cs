@@ -12,14 +12,14 @@ namespace DevBetterWeb.Web.Controllers
   [Route(Constants.STRIPE_API_ENDPOINT)]
   public class StripeWebhookHandler : Controller
   {
-    private readonly ILogger<StripeWebhookHandler> _logger;
+    private readonly IAppLogger<StripeWebhookHandler> _logger;
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IPaymentHandlerEvent _paymentHandlerEvent;
     private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
 
     private readonly IWebhookHandlerService _webhookHandlerService;
 
-    public StripeWebhookHandler(ILogger<StripeWebhookHandler> logger,
+    public StripeWebhookHandler(IAppLogger<StripeWebhookHandler> logger,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IPaymentHandlerEvent paymentHandlerEvent,
       IPaymentHandlerInvoice paymentHandlerInvoice,
@@ -31,7 +31,6 @@ namespace DevBetterWeb.Web.Controllers
       _paymentHandlerInvoice = paymentHandlerInvoice;
       _webhookHandlerService = webhookHandlerService;
     }
-
 
     [HttpPost]
     public async Task<IActionResult> Index()
@@ -56,14 +55,14 @@ namespace DevBetterWeb.Web.Controllers
         }
         else
         {
-          _logger.LogError("Unhandled event type: {0}", stripeEventType);
+          throw new Exception($"Unhandled Stripe event type {stripeEventType}");
         }
         return Ok();
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        _logger.LogError($"{e.GetType()}");
-        return BadRequest();
+        _logger.LogError(ex, "Stripe callback error", json);
+        throw;
       }
     }
 
