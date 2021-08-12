@@ -1,11 +1,11 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 using System; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
     public class Periodic
     {
         [JsonPropertyName("free")]
-        public int Free { get; set; }
+        public long Free { get; set; }
 
         [JsonPropertyName("max")]
         public long Max { get; set; }

@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
     public class Metadata
@@ -16,7 +16,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public bool IsVimeoCreate { get; set; }
 
         [JsonPropertyName("metadata")]
-        public Metadata Metadata { get; set; }
+        public Metadata MetadataData { get; set; }
 
         [JsonPropertyName("public_videos")]
         public PublicVideos PublicVideos { get; set; }

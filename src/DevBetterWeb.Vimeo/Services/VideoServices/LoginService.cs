@@ -12,9 +12,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<bool>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<Upload> _logger;
+    private readonly ILogger<LoginService> _logger;
 
-    public LoginService(HttpService httpService, ILogger<Upload> logger)
+    public LoginService(HttpService httpService, ILogger<LoginService> logger)
     {
       _httpService = httpService;
       _logger = logger;

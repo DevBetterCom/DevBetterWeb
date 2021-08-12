@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 using System.Collections.Generic; 
 using System; 
 namespace DevBetterWeb.Vimeo.Models{ 
@@ -18,13 +18,13 @@ namespace DevBetterWeb.Vimeo.Models{
         public bool CanWorkRemotely { get; set; }
 
         [JsonPropertyName("capabilities")]
-        public List<object> Capabilities { get; set; }
+        public Capabilities Capabilities { get; set; }
 
         [JsonPropertyName("clients")]
         public string Clients { get; set; }
 
         [JsonPropertyName("content_filter")]
-        public List<object> ContentFilter { get; set; }
+        public List<string> ContentFilter { get; set; }
 
         [JsonPropertyName("created_time")]
         public DateTime CreatedTime { get; set; }
@@ -39,7 +39,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Location { get; set; }
 
         [JsonPropertyName("location_details")]
-        public List<LocationDetail> LocationDetails { get; set; }
+        public LocationDetails LocationDetails { get; set; }
 
         [JsonPropertyName("metadata")]
         public Metadata Metadata { get; set; }
@@ -48,7 +48,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Name { get; set; }
 
         [JsonPropertyName("pictures")]
-        public List<object> Pictures { get; set; }
+        public Pictures Pictures { get; set; }
 
         [JsonPropertyName("preferences")]
         public Preferences Preferences { get; set; }
@@ -60,7 +60,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string ShortBio { get; set; }
 
         [JsonPropertyName("skills")]
-        public Skills Skills { get; set; }
+        public List<Skill> Skills { get; set; }
 
         [JsonPropertyName("upload_quota")]
         public UploadQuota UploadQuota { get; set; }

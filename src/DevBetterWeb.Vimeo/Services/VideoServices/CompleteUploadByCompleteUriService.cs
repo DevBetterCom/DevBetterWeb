@@ -13,9 +13,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<long>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<Upload> _logger;
+    private readonly ILogger<CompleteUploadByCompleteUriService> _logger;
 
-    public CompleteUploadByCompleteUriService(HttpService httpService, ILogger<Upload> logger)
+    public CompleteUploadByCompleteUriService(HttpService httpService, ILogger<CompleteUploadByCompleteUriService> logger)
     {
       _httpService = httpService;
       _logger = logger;
@@ -38,7 +38,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public CompleteUploadByCompleteUriService SetToken(string token)
     {
-      _httpService.SetAuthorization(token);
+      _httpService.SetAuthorization($"bearer {token}");
 
       return this;
     }

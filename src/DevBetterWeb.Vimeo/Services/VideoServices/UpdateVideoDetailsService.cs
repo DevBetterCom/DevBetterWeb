@@ -13,9 +13,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<bool>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<Upload> _logger;
+    private readonly ILogger<UpdateVideoDetailsService> _logger;
 
-    public UpdateVideoDetailsService(HttpService httpService, ILogger<Upload> logger)
+    public UpdateVideoDetailsService(HttpService httpService, ILogger<UpdateVideoDetailsService> logger)
     {
       _httpService = httpService;
       _logger = logger;
@@ -39,7 +39,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public UpdateVideoDetailsService SetToken(string token)
     {
-      _httpService.SetAuthorization(token);
+      _httpService.SetAuthorization($"bearer {token}");
 
       return this;
     }

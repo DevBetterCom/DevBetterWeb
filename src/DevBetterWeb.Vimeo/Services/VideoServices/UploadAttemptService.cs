@@ -14,9 +14,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<UploadAttempt>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<Upload> _logger;
+    private readonly ILogger<UploadAttemptService> _logger;
 
-    public UploadAttemptService(HttpService httpService, ILogger<Upload> logger)
+    public UploadAttemptService(HttpService httpService, ILogger<UploadAttemptService> logger)
     {
       _httpService = httpService;
       _logger = logger;
@@ -41,7 +41,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public UploadAttemptService SetToken(string token)
     {
-      _httpService.SetAuthorization(token);
+      _httpService.SetAuthorization($"bearer {token}");
 
       return this;
     }

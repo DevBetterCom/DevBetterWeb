@@ -1,7 +1,7 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
-    public class Skills
+    public class Skill
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -9,5 +9,4 @@ namespace DevBetterWeb.Vimeo.Models{
         [JsonPropertyName("uri")]
         public string Uri { get; set; }
     }
-
 }

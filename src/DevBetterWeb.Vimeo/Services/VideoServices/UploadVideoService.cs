@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
-using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 
@@ -13,12 +12,12 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<long>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<Upload> _logger;
+    private readonly ILogger<UploadVideoService> _logger;
     private readonly UploadAttemptService _uploadAttemptService;
     private readonly CompleteUploadService _completeUploadService;
     private readonly UpdateVideoDetailsService _updateVideoDetailsService;
 
-    public UploadVideoService(HttpService httpService, ILogger<Upload> logger, UploadAttemptService uploadAttemptService, CompleteUploadService completeUploadService, UpdateVideoDetailsService updateVideoDetailsService)
+    public UploadVideoService(HttpService httpService, ILogger<UploadVideoService> logger, UploadAttemptService uploadAttemptService, CompleteUploadService completeUploadService, UpdateVideoDetailsService updateVideoDetailsService)
     {
       _httpService = httpService;
       _logger = logger;
@@ -68,7 +67,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public UploadVideoService SetToken(string token)
     {
-      _httpService.SetAuthorization(token);
+      _httpService.SetAuthorization($"bearer {token}");
 
       return this;
     }

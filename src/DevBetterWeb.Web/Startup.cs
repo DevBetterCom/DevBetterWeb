@@ -9,6 +9,7 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -112,6 +113,9 @@ namespace DevBetterWeb.Web
       services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
       services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
       services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
+
+      // Add all Vimeo Services
+      services.AddVimeoServices();
 
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 

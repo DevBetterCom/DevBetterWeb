@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
     public class Interactions
@@ -46,7 +46,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public AddSubfolder AddSubfolder { get; set; }
 
         [JsonPropertyName("interactions")]
-        public Interactions Interactions { get; set; }
+        public Interactions InteractionsData { get; set; }
 
         [JsonPropertyName("add_privacy_user")]
         public AddPrivacyUser AddPrivacyUser { get; set; }
