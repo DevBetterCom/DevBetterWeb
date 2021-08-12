@@ -4,6 +4,7 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Exceptions;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
@@ -19,10 +20,9 @@ namespace DevBetterWeb.Infrastructure.Services
     public async Task<string> FindUserIdByEmailAsync(string email)
     {
       var user = await _userManager.FindByEmailAsync(email);
+      if (user == null) throw new UserWithEmailAddressNotFoundException(email);
 
-      var id = user.Id;
-
-      return id;
+      return user.Id;
     }
 
     public async Task<bool> FindUserIsMemberByEmailAsync(string email)

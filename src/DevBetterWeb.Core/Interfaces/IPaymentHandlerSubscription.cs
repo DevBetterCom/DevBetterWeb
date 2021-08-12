@@ -17,5 +17,6 @@ namespace DevBetterWeb.Core.Interfaces
     Task CancelSubscriptionAtPeriodEnd(string customerEmail);
     BillingPeriod GetBillingPeriod(string subscriptionId);
     string GetAssociatedProductName(string subscriptionId);
+    decimal GetSubscriptionAmount(string subscriptionId);
   }
 }

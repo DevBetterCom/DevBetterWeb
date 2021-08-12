@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,9 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     private readonly IDomainEventDispatcher _dispatcher;
     private readonly ICaptchaValidator _captchaValidator;
     private readonly INewMemberService _newMemberService;
+    private readonly IRepository<Invitation> _invitationRepository;
+    private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
+    private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
 
     public NewMemberRegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -32,7 +36,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             IEmailService emailService,
             IDomainEventDispatcher dispatcher,
             ICaptchaValidator captchaValidator,
-            INewMemberService newMemberService)
+            INewMemberService newMemberService,
+            IRepository<Invitation> invitationRepository,
+            IPaymentHandlerSubscription paymentHandlerSubscription,
+            IMemberAddBillingActivityService memberAddBillingActivityService)
     {
       _userManager = userManager;
       _logger = logger;
@@ -40,8 +47,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       _dispatcher = dispatcher;
       _captchaValidator = captchaValidator;
       _newMemberService = newMemberService;
-
+      _invitationRepository = invitationRepository;
       ReturnUrl = "../User/MyProfile/Personal";
+      _paymentHandlerSubscription = paymentHandlerSubscription;
+      _memberAddBillingActivityService = memberAddBillingActivityService;
     }
 
     [BindProperty]
@@ -99,7 +108,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(string captcha, string? returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string captcha, string inviteCode, string email, string? returnUrl = null)
     {
       returnUrl = returnUrl ?? Url.Content("~/");
       if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
@@ -109,13 +118,13 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       if (ModelState.IsValid)
       {
         if (Input is null) throw new Exception("Input is null.");
-        var user = new ApplicationUser { UserName = Email, Email = Email };
+        var user = new ApplicationUser { UserName = email, Email = email };
         var result = await _userManager.CreateAsync(user, Input.Password);
         if (result.Succeeded)
         {
           _logger.LogInformation("User created a new account with password.");
 
-          var newUserEvent = new NewUserRegisteredEvent(Email!,
+          var newUserEvent = new NewUserRegisteredEvent(email,
             Request.HttpContext.Connection.RemoteIpAddress!.ToString());
 
           await _dispatcher.Dispatch(newUserEvent);
@@ -131,6 +140,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
           await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, InviteCode!);
 
+          var inviteEntity = await _invitationRepository.GetBySpecAsync(new InvitationByInviteCodeSpec(inviteCode));
+
+          await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
+
           // redirect to edit basic profile page
         }
         foreach (var error in result.Errors)
@@ -141,6 +154,16 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
       // If we got this far, something failed, redisplay form
       return Page();
+    }
+
+    // taken from WebhookHandlerService.cs
+    private Task AddNewSubscriberBillingActivity(string subscriptionId, string email)
+    {
+      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+      decimal paymentAmount = _paymentHandlerSubscription.GetSubscriptionAmount(subscriptionId);
+
+      return _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
     }
   }
 }
