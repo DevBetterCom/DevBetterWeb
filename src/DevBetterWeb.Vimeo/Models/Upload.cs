@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
     public class Upload
@@ -19,7 +19,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string RedirectUrl { get; set; }
 
         [JsonPropertyName("size")]
-        public int Size { get; set; }
+        public long? Size { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; }

@@ -13,15 +13,15 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
   {
     private readonly HttpService _httpService;
     private readonly ILogger<UploadVideoService> _logger;
-    private readonly UploadAttemptService _uploadAttemptService;
-    private readonly CompleteUploadService _completeUploadService;
+    private readonly GetStreamingTicketService _getStreamingTicketService;
+    private readonly CompleteUploadByCompleteUriService _completeUploadService;
     private readonly UpdateVideoDetailsService _updateVideoDetailsService;
 
-    public UploadVideoService(HttpService httpService, ILogger<UploadVideoService> logger, UploadAttemptService uploadAttemptService, CompleteUploadService completeUploadService, UpdateVideoDetailsService updateVideoDetailsService)
+    public UploadVideoService(HttpService httpService, ILogger<UploadVideoService> logger, GetStreamingTicketService getStreamingTicketService, CompleteUploadByCompleteUriService completeUploadService, UpdateVideoDetailsService updateVideoDetailsService)
     {
       _httpService = httpService;
       _logger = logger;
-      _uploadAttemptService = uploadAttemptService;
+      _getStreamingTicketService = getStreamingTicketService;
       _completeUploadService = completeUploadService;
       _updateVideoDetailsService = updateVideoDetailsService;
     }
@@ -30,31 +30,32 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     {
       try
       {
-        var uploadAttemptResponse = await _uploadAttemptService.ExecuteAsync(request.UserId);
-        if (uploadAttemptResponse?.Data == null)
+        var getStreamingTicketResponse = await _getStreamingTicketService.ExecuteAsync(cancellationToken);
+        if (getStreamingTicketResponse?.Data == null)
         {
-          return HttpResponse<long>.FromHttpResponseMessage(0, uploadAttemptResponse.Code);
+          return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
         }
 
-        var uploadAttempt = uploadAttemptResponse.Data;
-        if (string.IsNullOrEmpty(uploadAttempt.CompleteUri) || string.IsNullOrEmpty(uploadAttempt.UploadLink))
+        var uploadTicket = getStreamingTicketResponse.Data;
+        if (string.IsNullOrEmpty(uploadTicket.CompleteUri) || string.IsNullOrEmpty(uploadTicket.UploadLink))
         {
-          return HttpResponse<long>.FromHttpResponseMessage(0, uploadAttemptResponse.Code);
+          return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
         }
 
-        var uploadResult = await UploadVideoDataAsync(uploadAttempt.UploadLink, request.FileData);
+        var uploadResult = await UploadVideoDataAsync(uploadTicket.Upload.UploadLink, request.FileData);
         if (!uploadResult)
         {
-          return HttpResponse<long>.FromHttpResponseMessage(0, uploadAttemptResponse.Code);
+          return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
         }
-        var completeUploadResponse = await _completeUploadService.ExecuteAsync(uploadAttempt.CompleteUri);
+        var completeUploadRequest = new CompleteUploadRequest();
+        completeUploadRequest.CompleteUri = uploadTicket.CompleteUri;
+        var completeUploadResponse = await _completeUploadService.ExecuteAsync(completeUploadRequest, cancellationToken);
         if (completeUploadResponse.Data == 0)
         {
-          return HttpResponse<long>.FromHttpResponseMessage(0, uploadAttemptResponse.Code);
+          return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
         }
 
-        var videoId = completeUploadResponse.Data;
-        await _updateVideoDetailsService.ExecuteAsync(new UpdateVideoDetailsRequest(videoId, request.Video), cancellationToken);
+        await _updateVideoDetailsService.ExecuteAsync(new UpdateVideoDetailsRequest(completeUploadResponse.Data, request.Video), cancellationToken);
 
         return HttpResponse<long>.FromHttpResponseMessage(completeUploadResponse.Data, completeUploadResponse.Code);
       }

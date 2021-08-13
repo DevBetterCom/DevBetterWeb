@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 using System.Collections.Generic; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
@@ -8,7 +8,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public List<string> Options { get; set; }
 
         [JsonPropertyName("total")]
-        public int Total { get; set; }
+        public long Total { get; set; }
 
         [JsonPropertyName("uri")]
         public string Uri { get; set; }

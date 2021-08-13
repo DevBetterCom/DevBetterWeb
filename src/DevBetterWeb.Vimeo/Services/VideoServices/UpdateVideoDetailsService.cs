@@ -23,10 +23,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public override async Task<HttpResponse<bool>> ExecuteAsync(UpdateVideoDetailsRequest request, CancellationToken cancellationToken = default)
     {
-      var uri = $"/videos/{request.VideoId}";
+      var uri = $"videos/{request.VideoId}";
       try
       {
-        var response = await _httpService.HttpPatchAsync<HttpResponse<bool>>(uri, request.Video);
+        var response = await _httpService.HttpPatchWithoutResponseAsync(uri, request.Video);
 
         return response;
       }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using Ardalis.ApiCaller;
 
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+namespace DevBetterWeb.Vimeo.Services.UserServices
 {
   public class UserDetailsService : BaseAsyncApiCaller
     .WithRequest<string>
@@ -23,7 +23,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public override async Task<HttpResponse<User>> ExecuteAsync(string userId, CancellationToken cancellationToken = default)
     {
-      var uri = $"/users/{userId}";
+      var uri = $"users/{userId}";
       try
       {
         var response = await _httpService.HttpGetAsync<User>(uri);

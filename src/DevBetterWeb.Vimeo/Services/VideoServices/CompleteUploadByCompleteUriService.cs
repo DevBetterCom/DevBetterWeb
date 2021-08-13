@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
-using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 
@@ -48,14 +47,12 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       var headerLocation = response.GetFirstHeader("Location");
       if (string.IsNullOrEmpty(headerLocation))
       {
-        response.SetData(false);
         return 0;
       }
 
       var parts = headerLocation.Split("/");
       if (parts.Length <= 0)
       {
-        response.SetData(false);
         return 0;
       }
 

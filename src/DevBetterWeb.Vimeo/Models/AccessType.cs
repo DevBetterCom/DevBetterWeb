@@ -2,8 +2,8 @@
 {
   public static class AccessType
   {
-    public static string PrivateSetting = "private";
-    public static string publicSetting = "public";
-    public static string WhitelistSetting = "whitelist";
+    public static string PRIVATE_TYPE = "private";
+    public static string PUBLIC_TYPE = "public";
+    public static string WHITELIST_TYPE = "whitelist";
   }
 }

@@ -22,25 +22,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     public override async Task<HttpResponse<long>> ExecuteAsync(CompleteUploadRequest request, CancellationToken cancellationToken = default)
     {
-      var fullUri = $"/users";
+      var fullUri = $"users";
       try
       {
         var response = await _httpService.HttpDeleteAsync($"{fullUri}/{request.UserId}/uploads/{request.UploadId}");
-
-        return HttpResponse<long>.FromHttpResponseMessage(ParseVideoId(response), response.Code);
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<long>.FromException(exception.Message);
-      }
-    }
-
-    public async Task<HttpResponse<long>> ExecuteAsync(string completeUri)
-    {
-      try
-      {
-        var response = await _httpService.HttpDeleteAsync(completeUri);
 
         return HttpResponse<long>.FromHttpResponseMessage(ParseVideoId(response), response.Code);
       }
@@ -58,19 +43,17 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       return this;
     }
 
-    private long ParseVideoId(HttpResponse<bool> response)
+    public long ParseVideoId(HttpResponse<bool> response)
     {
       var headerLocation = response.GetFirstHeader("Location");
       if (string.IsNullOrEmpty(headerLocation))
       {
-        response.SetData(false);
         return 0;
       }
 
       var parts = headerLocation.Split("/");
       if (parts.Length <= 0)
       {
-        response.SetData(false);
         return 0;
       }
 

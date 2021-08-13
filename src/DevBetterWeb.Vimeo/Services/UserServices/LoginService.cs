@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Net;
 using Ardalis.ApiCaller;
-using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+namespace DevBetterWeb.Vimeo.Services.UserServices
 {
   public class LoginService : BaseApiCaller
     .WithRequest<string>

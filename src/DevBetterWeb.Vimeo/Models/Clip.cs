@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 using System.Collections.Generic; 
 using System; 
 namespace DevBetterWeb.Vimeo.Models{ 
@@ -21,7 +21,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Description { get; set; }
 
         [JsonPropertyName("duration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         [JsonPropertyName("edit_session")]
         public List<EditSession> EditSession { get; set; }

@@ -9,26 +9,26 @@ using DevBetterWeb.Vimeo.Extensions;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
-  public class UploadAttemptService : BaseAsyncApiCaller
-    .WithRequest<string>
+  public class GetAttemptService : BaseAsyncApiCaller
+    .WithRequest<GetAttemptRequest>
     .WithResponse<UploadAttempt>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<UploadAttemptService> _logger;
+    private readonly ILogger<GetAttemptService> _logger;
 
-    public UploadAttemptService(HttpService httpService, ILogger<UploadAttemptService> logger)
+    public GetAttemptService(HttpService httpService, ILogger<GetAttemptService> logger)
     {
       _httpService = httpService;
       _logger = logger;
     }
 
-    public override async Task<HttpResponse<UploadAttempt>> ExecuteAsync(string userId, CancellationToken cancellationToken = default)
+    public override async Task<HttpResponse<UploadAttempt>> ExecuteAsync(GetAttemptRequest request, CancellationToken cancellationToken = default)
     {
-      var fullUri = $"/users";
+      var uri = $"users";
       try
       {
         var uploadId = new RandomHelper().CreateNumber(10000, 99999);
-        var uploadAttempt = await _httpService.HttpGetAsync<UploadAttempt>($"{fullUri}/{userId}/uploads/{uploadId}");
+        var uploadAttempt = await _httpService.HttpGetAsync<UploadAttempt>($"{uri}/{request.UserId}/uploads/{request.UploadId}");
 
         return uploadAttempt;
       }
@@ -39,7 +39,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       }
     }
 
-    public UploadAttemptService SetToken(string token)
+    public GetAttemptService SetToken(string token)
     {
       _httpService.SetAuthorization($"bearer {token}");
 

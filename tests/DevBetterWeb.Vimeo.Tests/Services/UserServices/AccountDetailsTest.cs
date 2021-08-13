@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Services.UserServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Vimeo.Tests.Constants;
 using Microsoft.Extensions.Logging;

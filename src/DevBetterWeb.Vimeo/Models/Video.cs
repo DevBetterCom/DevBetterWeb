@@ -75,7 +75,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public List<object> Pictures { get; set; }
 
         [JsonPropertyName("privacy")]
-        public Privacy Privacy { get; set; }
+        public Privacy Privacy { get; set; } = new Privacy();
 
         [JsonPropertyName("release_time")]
         public DateTime ReleaseTime { get; set; }
