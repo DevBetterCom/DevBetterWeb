@@ -28,6 +28,8 @@ namespace DevBetterWeb.Vimeo.Extensions
       builder.RegisterType<AddDomainToVideoService>();
       builder.RegisterType<CompleteUploadByCompleteUriService>();
       builder.RegisterType<CompleteUploadService>();
+      builder.RegisterType<DeleteVideoService>();
+      builder.RegisterType<GetAllVideosService>(); 
       builder.RegisterType<GetAttemptService>();
       builder.RegisterType<GetOEmbedVideoService>();
       builder.RegisterType<GetStreamingTicketService>();

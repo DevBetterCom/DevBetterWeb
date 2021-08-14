@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace DevBetterWeb.Web.Pages.Videos
 {
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
-  public class ShowVideoModel : PageModel
+  public class DetailsModel : PageModel
   {
     [BindProperty]
     public OEmbedViewModel? OEmbedViewModel { get; set; }
@@ -16,7 +16,7 @@ namespace DevBetterWeb.Web.Pages.Videos
     private readonly GetOEmbedVideoService _getOEmbedVideoService;
     private readonly GetVideoService _getVideoService;
 
-    public ShowVideoModel(GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
+    public DetailsModel(GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
     {
       _getVideoService = getVideoService;
       _getVideoService.SetToken(AuthConstants.VIMEO_TOKEN);

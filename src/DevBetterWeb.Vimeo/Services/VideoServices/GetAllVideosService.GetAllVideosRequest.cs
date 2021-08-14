@@ -6,7 +6,7 @@
     public int? Page { get; set; }
     public int? PageSize { get; set; }
 
-    public GetAllVideosRequest(string userId, int? page=null, int? pageSize=null)
+    public GetAllVideosRequest(string userId=null, int? page=null, int? pageSize=null)
     {
       UserId = userId;
       Page = page;

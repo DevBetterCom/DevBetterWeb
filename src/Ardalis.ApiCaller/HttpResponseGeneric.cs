@@ -14,18 +14,21 @@ namespace Ardalis.ApiCaller
     public HttpStatusCode Code { get; }
     public Dictionary<string, string[]> Headers { get; } = new Dictionary<string, string[]>();
 
+    public HttpResponse(HttpStatusCode code)
+    {
+      Code = code;
+    }
+
     public HttpResponse(string result, HttpStatusCode code)
     {
       Text = result;
       Code = code;
-      Headers = new Dictionary<string, string[]>();
     }
 
     public HttpResponse(T result, HttpStatusCode code)
     {
       Data = result;
       Code = code;
-      Headers = new Dictionary<string, string[]>();
     }
 
     public HttpResponse(T result, HttpStatusCode code, HttpResponseHeaders headers) : this(result, code)
@@ -82,6 +85,11 @@ namespace Ardalis.ApiCaller
     public static HttpResponse<T> FromHttpResponseMessage(T result, HttpStatusCode code)
     {
       return new HttpResponse<T>(result, code);
+    }
+
+    public static HttpResponse<T> FromHttpResponseMessage(HttpStatusCode code)
+    {
+      return new HttpResponse<T>(code);
     }
 
     public static HttpResponse<T> FromHttpResponseMessage(T result, HttpStatusCode code, HttpResponseHeaders headers)

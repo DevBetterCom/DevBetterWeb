@@ -24,20 +24,15 @@ namespace DevBetterWeb.Vimeo.Tests
     }
 
     [Fact]
-    public async Task ReturnsAccountDetailsTest()
+    public async Task ReturnsAllVideosTest()
     {
       var request = new GetAllVideosRequest("me");
       var response = await _getAllVideosService
         .SetToken(AccountConstants.ACCESS_TOKEN)
         .ExecuteAsync(request);
 
-      response.Data.ShouldNotBe(null);
-    }
-
-    private Stream GetFileFromEmbeddedResources(string relativePath)
-    {
-      var assembly = typeof(UploadVideoTest).GetTypeInfo().Assembly;
-      return assembly.GetManifestResourceStream(relativePath);
+      response.Code.ShouldBe(System.Net.HttpStatusCode.OK);
+      response.Data.Data.Count.ShouldBeGreaterThan(0);
     }
   }
 }

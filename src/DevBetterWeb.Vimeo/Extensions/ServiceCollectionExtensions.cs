@@ -25,7 +25,9 @@ namespace DevBetterWeb.Vimeo.Extensions
       
       services.AddScoped<AddDomainToVideoService>();
       services.AddScoped<CompleteUploadByCompleteUriService>();
-      services.AddScoped<CompleteUploadService>();
+      services.AddScoped<CompleteUploadService>(); 
+      services.AddScoped<DeleteVideoService>();
+      services.AddScoped<GetAllVideosService>();
       services.AddScoped<GetAttemptService>(); 
       services.AddScoped<GetOEmbedVideoService>();
       services.AddScoped<GetStreamingTicketService>();

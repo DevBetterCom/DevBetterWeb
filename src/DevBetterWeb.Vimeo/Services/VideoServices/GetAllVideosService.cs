@@ -5,13 +5,12 @@ using Ardalis.ApiCaller;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
-using System.Collections.Generic;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
   public class GetAllVideosService : BaseAsyncApiCaller
     .WithRequest<GetAllVideosRequest>
-    .WithResponse<List<Video>>
+    .WithResponse<DataPaged<Video>>
   {
     private readonly HttpService _httpService;
     private readonly ILogger<GetAllVideosService> _logger;
@@ -22,9 +21,23 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       _logger = logger;
     }
 
-    public override async Task<HttpResponse<List<Video>>> ExecuteAsync(GetAllVideosRequest request, CancellationToken cancellationToken = default)
+    public override async Task<HttpResponse<DataPaged<Video>>> ExecuteAsync(GetAllVideosRequest request, CancellationToken cancellationToken = default)
     {
-      var uri = $"users/{request.UserId}/videos";
+      var uri = string.Empty;
+      if (string.IsNullOrEmpty(request.UserId))
+      {
+        uri = $"videos";
+      }else
+      {
+        if (request.UserId.ToLower().Equals("me"))
+        {
+          uri = $"{request.UserId}/videos";
+        }else
+        {
+          uri = $"users/{request.UserId}/videos";
+        }
+      }
+
       try
       {
         var query = new QueryBuilder()
@@ -32,14 +45,14 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
           .Add("per_page", request.PageSize);
 
 
-        var response = await _httpService.HttpGetAsync<List<Video>>($"{uri}", query);
+        var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query);
 
         return response;
       }
       catch (Exception exception)
       {
         _logger.LogError(exception);
-        return HttpResponse<List<Video>>.FromException(exception.Message);
+        return HttpResponse<DataPaged<Video>>.FromException(exception.Message);
       }
     }
 

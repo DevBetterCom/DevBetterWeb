@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
+using AutoMapper;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
@@ -76,6 +77,7 @@ namespace DevBetterWeb.Web
         _isDbContextAdded = true;
       }
 
+      services.AddAutoMapper(typeof(Startup).Assembly);
       services.AddMediatR(typeof(Startup).Assembly);
 
       services.AddMvc()
