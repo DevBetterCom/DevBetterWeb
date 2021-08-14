@@ -67,10 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="2020-10-23 MyHouseApp Status Call.mp4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="BuildReports\Coverage\" />
     <Folder Include="BuildReports\UnitTests\" />
   </ItemGroup>
