@@ -102,10 +102,11 @@ namespace Ardalis.ApiCaller
     }
 
     
-    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri)
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, QueryBuilder query=null)
         where T : class
     {
-      var result = await _httpClient.GetAsync($"{ApiBaseUrl}{uri}");
+      var uriToSend = query == null || query.IsEmpty()? $"{ApiBaseUrl}{uri}" : $"{ApiBaseUrl}{uri}?{query.Build()}";
+      var result = await _httpClient.GetAsync(uriToSend);
 
       return HttpResponse<T>.FromHttpResponseMessage(result);
     }
