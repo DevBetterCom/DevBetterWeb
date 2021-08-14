@@ -4,11 +4,10 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SixLabors.ImageSharp;
 
-namespace DevBetterWeb.Web.Pages.Resources
+namespace DevBetterWeb.Web.Pages.Videos
 {
-  [Authorize]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class ShowVideoModel : PageModel
   {
     [BindProperty]
@@ -19,10 +18,10 @@ namespace DevBetterWeb.Web.Pages.Resources
 
     public ShowVideoModel(GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
     {
-      _getOEmbedVideoService = getOEmbedVideoService;
-      _getOEmbedVideoService.SetToken(AuthConstants.VIMEO_TOKEN);
-
       _getVideoService = getVideoService;
+      _getVideoService.SetToken(AuthConstants.VIMEO_TOKEN);
+
+      _getOEmbedVideoService = getOEmbedVideoService;
     }
 
     public async Task<IActionResult> OnGet(string videoId, string startTime=null)
@@ -37,7 +36,9 @@ namespace DevBetterWeb.Web.Pages.Resources
       OEmbedViewModel.Name = video.Data.Name;
       OEmbedViewModel.Password = video.Data.Password;
       OEmbedViewModel.Description = video.Data.Description;
-      OEmbedViewModel.UpdateHtmlByStartTime(video.Data.Link, startTime);
+      OEmbedViewModel
+        .AddStartTime(startTime)
+        .BuildHtml(video.Data.Link);
 
       return Page();
     }

@@ -1,7 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using DevBetterWeb.Vimeo.Models;
+﻿using DevBetterWeb.Vimeo.Models;
 
-namespace DevBetterWeb.Web.Pages.Resources
+namespace DevBetterWeb.Web.Pages.Videos
 {
   public class OEmbedViewModel
   {
@@ -28,6 +27,7 @@ namespace DevBetterWeb.Web.Pages.Resources
     public string? UploadDate { get; set; }
     public int VideoId { get; set; }
     public string? Uri { get; set; }
+    public string? CustomEmbedLink { get; set; } = string.Empty;
 
     public OEmbedViewModel(OEmbed oEmbed)
     {
@@ -52,19 +52,32 @@ namespace DevBetterWeb.Web.Pages.Resources
       Uri = oEmbed.Uri;
     }
 
-    public OEmbedViewModel UpdateHtmlByStartTime(string link, string startTime)
+    public OEmbedViewModel AddStartTime(string startTime)
     {
-      if(string.IsNullOrEmpty(link) || string.IsNullOrEmpty(startTime))
+      if (string.IsNullOrEmpty(startTime))
+      {
+        return this;
+      }
+      CustomEmbedLink += $"autoplay=1#t={startTime}&";
+
+      return this;
+    }
+
+    public OEmbedViewModel BuildHtml(string link)
+    {
+      if (string.IsNullOrEmpty(link) || string.IsNullOrEmpty(CustomEmbedLink))
       {
         return this;
       }
       var parts = link.Split("/");
-      if(parts.Length == 0)
+      if (parts.Length == 0)
       {
         return this;
       }
       var vedioId = parts[parts.Length - 1];
-      Html = Html.Replace($"{vedioId}?", $"{vedioId}?autoplay=1#t={startTime}&");
+
+      CustomEmbedLink.Substring(CustomEmbedLink.Length - 1);
+      Html = Html.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
 
       return this;
     }
