@@ -8,7 +8,9 @@ using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.UserServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Vimeo.Tests.Builders;
 using DevBetterWeb.Vimeo.Tests.Constants;
+using DevBetterWeb.Vimeo.Tests.Helpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
@@ -22,20 +24,8 @@ namespace DevBetterWeb.Vimeo.Tests
 
     public UploadVideoTest()
     {
-      var loggerGetStreamingTicketService = new Mock<ILogger<GetStreamingTicketService>>().Object;
-
-      var loggerUploadVideoService = new Mock<ILogger<UploadVideoService>>().Object;
-      var loggerCompleteUploadByCompleteUriService = new Mock<ILogger<CompleteUploadByCompleteUriService>>().Object;
-      var loggerUpdateVideoDetailsService = new Mock<ILogger<UpdateVideoDetailsService>>().Object;
-
-      var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
-      var httpService = new HttpService(httpClient);
-
-      var getStreamingTicketService = new GetStreamingTicketService(httpService, loggerGetStreamingTicketService);
-      var completeUploadService = new CompleteUploadByCompleteUriService(httpService, loggerCompleteUploadByCompleteUriService);
-      var updateVideoDetailsService = new UpdateVideoDetailsService(httpService, loggerUpdateVideoDetailsService);
-
-      _uploadVideoService = new UploadVideoService(httpService, loggerUploadVideoService, getStreamingTicketService, completeUploadService, updateVideoDetailsService);
+      var httpService = HttpServiceBuilder.Build();
+      _uploadVideoService = UploadVideoServiceBuilder.Build(httpService);
     }
 
     [Fact]
@@ -45,10 +35,10 @@ namespace DevBetterWeb.Vimeo.Tests
       request.UserId = "me";
       request.Video.Name = "Test";
       request.Video.Description = "Test";
-      request.Video.Privacy.View = PrivacyViewType.PASSWORD_TYPE;
-      request.Video.Privacy.Password = AccessType.PRIVATE_TYPE;
-      request.Video.Privacy.Embed = AccessType.PUBLIC_TYPE;
-      request.Video.Password = "122324";
+      request.Video.Privacy.View = PrivacyViewType.DISABLE_TYPE;
+      //request.Video.Privacy.Password = AccessType.WHITELIST_TYPE;
+      request.Video.Privacy.Embed = AccessType.WHITELIST_TYPE;
+      //request.Video.Password = "122324";
       request.Video.Privacy.Download = false;
 
       var stream = GetFileFromEmbeddedResources("DevBetterWeb.Vimeo.Tests." + "2020-10-23 MyHouseApp Status Call.mp4");

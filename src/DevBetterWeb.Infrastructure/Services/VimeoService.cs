@@ -71,14 +71,14 @@ namespace DevBetterWeb.Infrastructure.Services
       return accessToken.AccessToken;
     }
 
-    public async Task<Paginated<Video>> GetAllVideosAsync()
+    public async Task<Paginated<Video>> GetAllVideosAsync(int page, int pageSize)
     {
-      var videos = await _vimeoClient.GetVideosAsync(UserId.Me, 1, 10);
+      var videos = await _vimeoClient.GetVideosAsync(UserId.Me, page, pageSize);
       return videos;
     }
     public async Task<bool> DeleteAllVideosAsync()
     {
-      var videos = await GetAllVideosAsync();
+      var videos = await GetAllVideosAsync(1, 100);
       foreach (var video in videos.Data)
       {
         if (video?.Id == null)
@@ -127,8 +127,9 @@ namespace DevBetterWeb.Infrastructure.Services
       var videoDetails = new VideoUpdateMetadata();
       videoDetails.Name = videoName;
       videoDetails.Description = videoName;
-      videoDetails.Privacy = VideoPrivacyEnum.Password;
-      videoDetails.Password = "122324";
+      //videoDetails.Privacy = VideoPrivacyEnum.Password;
+      //videoDetails.Password = "122324";
+      videoDetails.Privacy = VideoPrivacyEnum.Unlisted;
       videoDetails.AllowDownloadVideo = false;
       await UpdateVideoDetailsAsync(videoId.Value, videoDetails);
 

@@ -27,19 +27,19 @@ namespace DevBetterWeb.Vimeo.Models{
         public List<EditSession> EditSession { get; set; }
 
         [JsonPropertyName("embed")]
-        public List<Embed> Embed { get; set; }
+        public Embed Embed { get; set; }
 
         [JsonPropertyName("files")]
         public Files Files { get; set; }
 
         [JsonPropertyName("has_audio")]
-        public string HasAudio { get; set; }
+        public bool HasAudio { get; set; }
 
         [JsonPropertyName("height")]
         public int Height { get; set; }
 
         [JsonPropertyName("is_playable")]
-        public string IsPlayable { get; set; }
+        public bool IsPlayable { get; set; }
 
         [JsonPropertyName("language")]
         public string Language { get; set; }
@@ -72,7 +72,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Password { get; set; }
 
         [JsonPropertyName("pictures")]
-        public List<object> Pictures { get; set; }
+        public Pictures Pictures { get; set; }
 
         [JsonPropertyName("privacy")]
         public Privacy Privacy { get; set; } = new Privacy();
@@ -111,7 +111,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Uri { get; set; }
 
         [JsonPropertyName("user")]
-        public List<User> User { get; set; }
+        public User User { get; set; }
 
         [JsonPropertyName("vod")]
         public List<object> Vod { get; set; }

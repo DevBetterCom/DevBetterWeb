@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
@@ -10,7 +11,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Color { get; set; }
 
         [JsonPropertyName("end_screen")]
-        public EndScreen EndScreen { get; set; }
+        public List<EndScreen> EndScreen { get; set; }
 
         [JsonPropertyName("event_schedule")]
         public bool EventSchedule { get; set; }

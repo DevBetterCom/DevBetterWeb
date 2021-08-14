@@ -9,9 +9,9 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
     [Fact]
     public async Task ReturnsAllVideos()
     {
-      var vimeoCredential = new VimeoCredential("PVT");
+      var vimeoCredential = new VimeoCredential("TOKEN");
       var vimeoService = new VimeoService(vimeoCredential);
-      var videos = await vimeoService.GetAllVideosAsync();
+      var videos = await vimeoService.GetAllVideosAsync(1, 100);
 
       Assert.True(true);
     }

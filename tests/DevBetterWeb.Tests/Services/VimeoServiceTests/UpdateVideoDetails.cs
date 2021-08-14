@@ -13,7 +13,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
     {
       var vimeoCredential = new VimeoCredential("PVT");
       var vimeoService = new VimeoService(vimeoCredential);
-      var videos = await vimeoService.GetAllVideosAsync();
+      var videos = await vimeoService.GetAllVideosAsync(1, 100);
       var videoDetails = new VideoUpdateMetadata();
       videoDetails.Password = "122324";
       videoDetails.AllowDownloadVideo = false;

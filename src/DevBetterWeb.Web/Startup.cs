@@ -114,9 +114,6 @@ namespace DevBetterWeb.Web
       services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
       services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
-      // Add all Vimeo Services
-      services.AddVimeoServices();
-
       //            services.Configure<AuthMessageSenderOptions>(Configuration);
 
       // list services

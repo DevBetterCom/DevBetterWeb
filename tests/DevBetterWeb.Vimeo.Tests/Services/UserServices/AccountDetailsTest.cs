@@ -5,7 +5,9 @@ using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Services.UserServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Vimeo.Tests.Builders;
 using DevBetterWeb.Vimeo.Tests.Constants;
+using DevBetterWeb.Vimeo.Tests.Helpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
@@ -19,13 +21,8 @@ namespace DevBetterWeb.Vimeo.Tests
 
     public AccountDetailsTest()
     {
-      var loggerUserDetailsService = new Mock<ILogger<UserDetailsService>>().Object;
-      var loggerAccountDetailsService = new Mock<ILogger<AccountDetailsService>>().Object;
-      var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
-      var httpService = new HttpService(httpClient);
-      var userDetailsService = new UserDetailsService(httpService, loggerUserDetailsService);
-
-      _accountDetailsService = new AccountDetailsService(httpService, loggerAccountDetailsService, userDetailsService);
+      var httpService = HttpServiceBuilder.Build();
+      _accountDetailsService = AccountDetailsServiceBuilder.Build(httpService);
     }
 
     [Fact]

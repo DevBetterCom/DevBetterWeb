@@ -2,6 +2,6 @@
 {
   public class AccountConstants
   {
-    public static string ACCESS_TOKEN = "test";
+    public static string ACCESS_TOKEN = "TOKEN";
   }
 }

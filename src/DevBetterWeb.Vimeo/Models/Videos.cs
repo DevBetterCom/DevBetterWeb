@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization; 
 using System.Collections.Generic; 
 namespace DevBetterWeb.Vimeo.Models{ 
 
@@ -14,7 +14,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Uri { get; set; }
 
         [JsonPropertyName("privacy")]
-        public Privacy Privacy { get; set; }
+        public string Privacy { get; set; }
     }
 
 }

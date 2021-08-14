@@ -72,7 +72,7 @@ namespace DevBetterWeb.Vimeo.Models{
         public string Password { get; set; }
 
         [JsonPropertyName("pictures")]
-        public List<object> Pictures { get; set; }
+        public Pictures Pictures { get; set; }
 
         [JsonPropertyName("privacy")]
         public Privacy Privacy { get; set; }

@@ -9,7 +9,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
     [Fact]
     public async Task ReturnsTrueDeleteAllVideosAsync()
     {
-      var vimeoCredential = new VimeoCredential("PVT");
+      var vimeoCredential = new VimeoCredential("TOKEN");
       var vimeoService = new VimeoService(vimeoCredential);
       var result = await vimeoService.DeleteAllVideosAsync();
 

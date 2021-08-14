@@ -11,7 +11,7 @@ namespace DevBetterWeb.Tests.Services.VimeoServiceTests
     [Fact]
     public async Task ReturnsUploadVideoAsync()
     {
-      var vimeoCredential = new VimeoCredential("PVT");
+      var vimeoCredential = new VimeoCredential("TOKEN");
       var vimeoService = new VimeoService(vimeoCredential);
 
       var stream = GetFileFromEmbeddedResources("DevBetterWeb.Tests." + "2020-10-23 MyHouseApp Status Call.mp4");

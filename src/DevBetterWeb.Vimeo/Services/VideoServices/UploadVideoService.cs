@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
+using DevBetterWeb.Vimeo.Constants;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 
@@ -16,14 +17,22 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     private readonly GetStreamingTicketService _getStreamingTicketService;
     private readonly CompleteUploadByCompleteUriService _completeUploadService;
     private readonly UpdateVideoDetailsService _updateVideoDetailsService;
+    private readonly AddDomainToVideoService _addDomainToVideoService;
 
-    public UploadVideoService(HttpService httpService, ILogger<UploadVideoService> logger, GetStreamingTicketService getStreamingTicketService, CompleteUploadByCompleteUriService completeUploadService, UpdateVideoDetailsService updateVideoDetailsService)
+    public UploadVideoService(
+      HttpService httpService, 
+      ILogger<UploadVideoService> logger, 
+      GetStreamingTicketService getStreamingTicketService, 
+      CompleteUploadByCompleteUriService completeUploadService, 
+      UpdateVideoDetailsService updateVideoDetailsService,
+      AddDomainToVideoService addDomainToVideoService)
     {
       _httpService = httpService;
       _logger = logger;
       _getStreamingTicketService = getStreamingTicketService;
       _completeUploadService = completeUploadService;
       _updateVideoDetailsService = updateVideoDetailsService;
+      _addDomainToVideoService = addDomainToVideoService;
     }
 
     public override async Task<HttpResponse<long>> ExecuteAsync(UploadVideoRequest request, CancellationToken cancellationToken = default)
@@ -42,7 +51,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
           return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
         }
 
-        var uploadResult = await UploadVideoDataAsync(uploadTicket.Upload.UploadLink, request.FileData);
+        var uploadResult = await UploadVideoDataAsync(uploadTicket.UploadLinkSecure, request.FileData);
         if (!uploadResult)
         {
           return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
@@ -56,6 +65,12 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         }
 
         await _updateVideoDetailsService.ExecuteAsync(new UpdateVideoDetailsRequest(completeUploadResponse.Data, request.Video), cancellationToken);
+
+        var addDomainRequest = new AddDomainToVideoRequest(completeUploadResponse.Data, "localhost:5010");
+        await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
+
+        addDomainRequest.Domain = "devbetter.com";
+        await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
 
         return HttpResponse<long>.FromHttpResponseMessage(completeUploadResponse.Data, completeUploadResponse.Code);
       }
@@ -75,11 +90,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
     private async Task<bool> UploadVideoDataAsync(string uploadUri, byte[] fileData)
     {
-      _httpService.SetTimeout(60, TimeoutType.Minutes);
-
+      _httpService.ResetBaseUri();
       var response = await _httpService.HttpPutBytesWithoutResponseAsync(uploadUri, fileData);
-
-      _httpService.SetDefaultTimeout();
+      _httpService.ResetHttp(ServiceConstants.VIMEO_URI);
 
       return response;
     }

@@ -1,0 +1,39 @@
+﻿using System;
+using System.Net.Http;
+using Ardalis.ApiCaller;
+using Autofac;
+using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Services.UserServices;
+using DevBetterWeb.Vimeo.Services.VideoServices;
+
+namespace DevBetterWeb.Vimeo.Extensions
+{
+  public class AutofacExtensions
+  {
+    public static void RegisterVimeoServicesDependencies(ContainerBuilder builder)
+    {
+      var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
+      httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
+      httpClient.Timeout = TimeSpan.FromMinutes(60);
+
+      builder.Register(ctx => httpClient)
+        .SingleInstance();
+
+      builder.RegisterType<HttpService>();
+
+      builder.RegisterType<AccountDetailsService>();
+      builder.RegisterType<LoginService>();
+      builder.RegisterType<UserDetailsService>();
+
+      builder.RegisterType<AddDomainToVideoService>();
+      builder.RegisterType<CompleteUploadByCompleteUriService>();
+      builder.RegisterType<CompleteUploadService>();
+      builder.RegisterType<GetAttemptService>();
+      builder.RegisterType<GetOEmbedVideoService>();
+      builder.RegisterType<GetStreamingTicketService>();
+      builder.RegisterType<GetVideoService>();
+      builder.RegisterType<UpdateVideoDetailsService>();
+      builder.RegisterType<UploadVideoService>();
+    }
+  }
+}
