@@ -31,21 +31,20 @@ namespace DevBetterWeb.Vimeo.Tests
     [Fact]
     public async Task ReturnsAccountDetailsTest()
     {
-      var request = new UploadVideoRequest();
-      request.UserId = "me";
-      request.Video.Name = "Test";
-      request.Video.Description = "Test";
-      request.Video.Privacy.View = PrivacyViewType.DISABLE_TYPE;
-      //request.Video.Privacy.Password = AccessType.WHITELIST_TYPE;
-      request.Video.Privacy.Embed = AccessType.WHITELIST_TYPE;
-      //request.Video.Password = "122324";
-      request.Video.Privacy.Download = false;
-
       var stream = GetFileFromEmbeddedResources("DevBetterWeb.Vimeo.Tests." + "2020-10-23 MyHouseApp Status Call.mp4");
       Assert.NotNull(stream);
 
       var buffer = new byte[stream.Length];
       await stream.ReadAsync(buffer, 0, (int)stream.Length);
+
+      var video = new Video();
+      video.Name = "Test";
+      video.Description = "Test";
+      video.Privacy.View = PrivacyViewType.DISABLE_TYPE;
+      video.Privacy.Embed = AccessType.WHITELIST_TYPE;
+      video.Privacy.Download = false;
+
+      var request = new UploadVideoRequest("me", buffer, video);
 
       request.FileData = buffer;
 

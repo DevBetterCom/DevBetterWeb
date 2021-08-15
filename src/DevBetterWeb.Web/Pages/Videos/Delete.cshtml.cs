@@ -37,7 +37,9 @@ namespace DevBetterWeb.Web.Pages.Videos
       var video = await _getVideoService.ExecuteAsync(id);
       if (video == null || video.Data == null)
       {
-        return NotFound();
+        await _deleteVideoService.ExecuteAsync(id);
+
+        return RedirectToPage("./Index");
       }
       VideoToDelete = _mapper.Map<VideoModel>(video.Data);
 

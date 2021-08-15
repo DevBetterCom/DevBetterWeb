@@ -2,9 +2,9 @@
 @model DevBetterWeb.Web.Pages.Videos.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
-    if (Model is null) throw new Exception("Model is null.");
-    if (Model.VideoToDelete is null) throw new Exception("VideoToDelete is null.");
+	ViewData["Title"] = "Delete";
+	if (Model is null) throw new Exception("Model is null.");
+	if (Model.VideoToDelete is null) throw new Exception("VideoToDelete is null.");
 
 }
 
@@ -12,32 +12,32 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Video</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.VideoToDelete!.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.VideoToDelete!.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.VideoToDelete!.CreatedTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.VideoToDelete!.CreatedTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.VideoToDelete!.Duration)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.VideoToDelete!.Duration)
-        </dd>
-    </dl>
+	<h4>Video</h4>
+	<hr />
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.VideoToDelete!.Name)
+		</dt>
+		<dd>
+			@Html.DisplayFor(model => model.VideoToDelete!.Name)
+		</dd>
+		<dt>
+			@Html.DisplayNameFor(model => model.VideoToDelete!.CreatedTime)
+		</dt>
+		<dd>
+			@Html.DisplayFor(model => model.VideoToDelete!.CreatedTime)
+		</dd>
+		<dt>
+			@Html.DisplayNameFor(model => model.VideoToDelete!.Duration)
+		</dt>
+		<dd>
+			@Html.DisplayFor(model => model.VideoToDelete!.Duration)
+		</dd>
+	</dl>
 
-    <form method="post">
-        <input type="hidden" asp-for="VideoToDelete!.Id" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+	<form method="post">
+		<input type="hidden" asp-for="VideoToDelete!.Id" />
+		<input type="submit" value="Delete" class="btn btn-default" /> |
+		<a asp-page="./Index">Back to List</a>
+	</form>
 </div>

@@ -1,7 +1,7 @@
 ﻿@page "{videoId}/{startTime?}"
 @model DevBetterWeb.Web.Pages.Videos.DetailsModel
 @{
-    ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
+	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
 <h3>@Model!.OEmbedViewModel?.Name</h3>
@@ -15,8 +15,8 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script>
 
-    $(document).ready(function () {
-      
-    });
+	$(document).ready(function () {
+
+	});
 </script>
 }

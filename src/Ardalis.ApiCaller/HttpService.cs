@@ -231,10 +231,10 @@ namespace Ardalis.ApiCaller
       var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
-        return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
+        return HttpResponse<bool>.FromHttpResponseMessage(false, result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(result);
+      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
     }
 
     public async Task<HttpResponse<T>> HttpPutBytesAsync<T>(string uri, byte[] dataToSend)

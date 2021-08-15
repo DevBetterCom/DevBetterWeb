@@ -1,11 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System;
+using System.IO;
+using MediaInfo;
+
 namespace DevBetterWeb.Vimeo.Models
 {
 
   public class Video
   {
+    [JsonIgnore]
     public string Id
     {
       get
@@ -138,6 +142,107 @@ namespace DevBetterWeb.Vimeo.Models
 
     [JsonPropertyName("width")]
     public int Width { get; set; }
+
+    public Video SetName(string name)
+    {
+      Name = name;
+
+      return this;
+    }
+
+    public Video SetDescription(string description)
+    {
+      Description = description;
+
+      return this;
+    }    
+
+    public DateTime? GetEncodedDate(byte[] fileData)
+    {
+      string result = Path.GetTempPath();
+      var fileNameTemp = Path.Combine(result, "temp.mp4");
+      if(!ByteArrayToFile(fileNameTemp, fileData))
+      {
+        return null;
+      }
+      var mediaInfo = new MediaInfoWrapper(fileNameTemp);
+
+      return mediaInfo.Tags.EncodedDate;
+    }
+
+    public Video SetReleaseTime(DateTime? releaseTime, bool isNow = false)
+    {
+      if (isNow)
+      {
+        ReleaseTime = DateTime.UtcNow;
+        return this;
+      }
+
+      if (releaseTime != null)
+      {
+        ReleaseTime = releaseTime.Value;
+      }
+
+      return this;
+    }
+
+    public Video SetCreatedTime(DateTime? createdTime, bool isNow = false)
+    {
+      if (isNow)
+      {
+        ReleaseTime = DateTime.UtcNow;
+        return this;
+      }
+
+      if (createdTime != null)
+      {
+        CreatedTime = createdTime.Value;
+      }
+
+      return this;
+    }
+
+    public Video SetModifiedTime(DateTime? modifiedTime, bool isNow = false)
+    {
+      if (isNow)
+      {
+        ReleaseTime = DateTime.UtcNow;
+        return this;
+      }
+
+      if (modifiedTime != null)
+      {
+        ModifiedTime = modifiedTime.Value;
+      }
+
+      return this;
+    }
+
+    public Video SetEmbedProtecedPrivacy()
+    {
+      Privacy.View = PrivacyViewType.DISABLE_TYPE;
+      Privacy.Embed = AccessType.WHITELIST_TYPE;
+      Privacy.Download = false;
+
+      return this;
+    }
+
+    private bool ByteArrayToFile(string fileName, byte[] byteArray)
+    {
+      try
+      {
+        using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+        {
+          fs.Write(byteArray, 0, byteArray.Length);
+          return true;
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("Exception caught in process: {0}", ex);
+        return false;
+      }
+    }
   }
 
 }

@@ -8,7 +8,7 @@ namespace DevBetterWeb.Web.MappingProfiles
   {
     public VideoProfile()
     {
-      CreateMap<Video, VideoModel>();
+      CreateMap<Video, VideoModel>().ReverseMap();
     }
   }
 }
