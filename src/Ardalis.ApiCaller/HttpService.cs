@@ -93,7 +93,7 @@ namespace Ardalis.ApiCaller
     public void SetAuthorization(string value)
     {
       _httpClient.DefaultRequestHeaders.Remove("Authorization");
-      _httpClient.DefaultRequestHeaders.Add("Authorization", value);
+      _httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {value}");
     }
 
     public void SetDefaultTimeout()

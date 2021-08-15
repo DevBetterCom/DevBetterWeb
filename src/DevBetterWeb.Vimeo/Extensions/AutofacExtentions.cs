@@ -10,11 +10,15 @@ namespace DevBetterWeb.Vimeo.Extensions
 {
   public class AutofacExtensions
   {
-    public static void RegisterVimeoServicesDependencies(ContainerBuilder builder)
+    public static void RegisterVimeoServicesDependencies(ContainerBuilder builder, string token=null)
     {
       var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
       httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
       httpClient.Timeout = TimeSpan.FromMinutes(60);
+      if (!string.IsNullOrEmpty(token))
+      {
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+      }
 
       builder.Register(ctx => httpClient)
         .SingleInstance();

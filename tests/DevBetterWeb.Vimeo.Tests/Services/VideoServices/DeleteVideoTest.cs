@@ -9,31 +9,28 @@ using Xunit;
 
 namespace DevBetterWeb.Vimeo.Tests
 {
-  public class GetVideoTest
+  public class DeleteVideoTest
   {
+    private readonly DeleteVideoService _deleteVideoService;
     private readonly TestFileHelper _testFileHelper;
-    private readonly GetVideoService _getVideoService;
 
-    public GetVideoTest()
+    public DeleteVideoTest()
     {
       var httpService = HttpServiceBuilder.Build();
-      _getVideoService = GetVideoServiceBuilder.Build(httpService);
+      _deleteVideoService = DeleteVideoServiceBuilder.Build(httpService);
       _testFileHelper = new TestFileHelper();
     }
 
     [Fact]
-    public async Task ReturnsVideoTest()
+    public async Task ReturnsSuccessAccountDetailsTest()
     {
       var videoId = await _testFileHelper.UploadTest();
 
       videoId.ShouldNotBe(0);
 
-      var response = await _getVideoService
-        .ExecuteAsync(videoId.ToString());
+      var result = await _testFileHelper.DeleteTestFile(videoId.ToString());
 
-      await _testFileHelper.DeleteTestFile(response.Data.ToString());
-
-      response.Data.ShouldNotBe(null);
+      result.ShouldBe(System.Net.HttpStatusCode.NoContent);
     }
   }
 }

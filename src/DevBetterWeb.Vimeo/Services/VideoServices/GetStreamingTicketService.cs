@@ -39,12 +39,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return HttpResponse<UploadTicket>.FromException(exception.Message);
       }
     }
-
-    public GetStreamingTicketService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

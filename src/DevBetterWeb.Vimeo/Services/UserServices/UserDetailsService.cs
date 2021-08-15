@@ -23,7 +23,8 @@ namespace DevBetterWeb.Vimeo.Services.UserServices
 
     public override async Task<HttpResponse<User>> ExecuteAsync(string userId, CancellationToken cancellationToken = default)
     {
-      var uri = $"users/{userId}";
+      var uri = userId.ToLower() == "me" ? "me" : $"users/{userId}";
+
       try
       {
         var response = await _httpService.HttpGetAsync<User>(uri);
@@ -35,12 +36,6 @@ namespace DevBetterWeb.Vimeo.Services.UserServices
         _logger.LogError(exception);
         return HttpResponse<User>.FromException(exception.Message);
       }
-    }
-    public UserDetailsService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
     }
   }
 }

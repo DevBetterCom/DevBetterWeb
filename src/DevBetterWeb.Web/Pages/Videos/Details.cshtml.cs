@@ -19,7 +19,6 @@ namespace DevBetterWeb.Web.Pages.Videos
     public DetailsModel(GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
     {
       _getVideoService = getVideoService;
-      _getVideoService.SetToken(AuthConstants.VIMEO_TOKEN);
 
       _getOEmbedVideoService = getOEmbedVideoService;
     }

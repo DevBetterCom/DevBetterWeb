@@ -1,9 +1,5 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Builders;
-using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
 using Xunit;
@@ -12,28 +8,30 @@ namespace DevBetterWeb.Vimeo.Tests
 {
   public class GetOEmbedVideoTest
   {
+    private readonly TestFileHelper _testFileHelper;
     private readonly GetOEmbedVideoService _getOEmbedVideoService;
 
     public GetOEmbedVideoTest()
     {
       var httpService = HttpServiceBuilder.Build();
       _getOEmbedVideoService = GetOEmbedVideoServiceBuilder.Build(httpService);
+      _testFileHelper = new TestFileHelper();
     }
 
     [Fact]
     public async Task ReturnsOEmbedVideoTest()
     {
+      var videoId = await _testFileHelper.UploadTest();
+
+      videoId.ShouldNotBe(0);
+      var videoLink = $"https://vimeo.com/videos/{videoId}";
+
       var response = await _getOEmbedVideoService
-        .SetToken(AccountConstants.ACCESS_TOKEN)
-        .ExecuteAsync("https://vimeo.com/videos/585883066");
+        .ExecuteAsync(videoLink);
 
-      response.Data.ShouldNotBe(null);
-    }
+      await _testFileHelper.DeleteTestFile(videoId.ToString());
 
-    private Stream GetFileFromEmbeddedResources(string relativePath)
-    {
-      var assembly = typeof(UploadVideoTest).GetTypeInfo().Assembly;
-      return assembly.GetManifestResourceStream(relativePath);
+      response.Code.ShouldBe(System.Net.HttpStatusCode.NotFound);
     }
   }
 }

@@ -1,11 +1,9 @@
 ﻿using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Services.UserServices;
-using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Helpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DevBetterWeb.Vimeo.Tests.Builders
+namespace DevBetterWeb.Vimeo.Tests.Helpers
 {
   public class UserDetailsServiceBuilder
   {

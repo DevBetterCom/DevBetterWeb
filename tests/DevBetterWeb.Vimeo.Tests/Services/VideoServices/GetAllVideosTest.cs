@@ -1,11 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using Ardalis.ApiCaller;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Builders;
 using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
@@ -28,7 +22,6 @@ namespace DevBetterWeb.Vimeo.Tests
     {
       var request = new GetAllVideosRequest("me");
       var response = await _getAllVideosService
-        .SetToken(AccountConstants.ACCESS_TOKEN)
         .ExecuteAsync(request);
 
       response.Code.ShouldBe(System.Net.HttpStatusCode.OK);

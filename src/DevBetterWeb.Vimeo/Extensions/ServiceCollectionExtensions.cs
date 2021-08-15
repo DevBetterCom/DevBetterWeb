@@ -10,11 +10,15 @@ namespace DevBetterWeb.Vimeo.Extensions
 {
   public static class ServiceCollectionExtensions
   {
-    public static IServiceCollection AddVimeoServices(this IServiceCollection services)
+    public static IServiceCollection AddVimeoServices(this IServiceCollection services, string token=null)
     {
       var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
       httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
       httpClient.Timeout = TimeSpan.FromMinutes(60);
+      if (!string.IsNullOrEmpty(token))
+      {
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+      }
       services.AddScoped(sp => httpClient);
 
       services.AddScoped<HttpService>();

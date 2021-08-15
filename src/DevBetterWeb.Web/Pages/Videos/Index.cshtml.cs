@@ -23,7 +23,6 @@ namespace DevBetterWeb.Web.Pages.Videos
     {
       _mapper = mapper;
       _getAllVideosService = getAllVideosService;
-      _getAllVideosService.SetToken(AuthConstants.VIMEO_TOKEN);
     }
 
     public async Task<IActionResult> OnGetAsync(int? page=1, int? pageSize=10)

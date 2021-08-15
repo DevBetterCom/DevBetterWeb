@@ -37,12 +37,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return HttpResponse.FromException(exception.Message);
       }
     }
-
-    public DeleteVideoService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

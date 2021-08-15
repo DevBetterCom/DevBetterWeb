@@ -55,12 +55,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return HttpResponse<DataPaged<Video>>.FromException(exception.Message);
       }
     }
-
-    public GetAllVideosService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

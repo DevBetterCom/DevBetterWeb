@@ -1,18 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using Ardalis.ApiCaller;
-using DevBetterWeb.Vimeo.Constants;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.UserServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Builders;
 using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Shouldly;
 using Xunit;
 
@@ -20,22 +10,20 @@ namespace DevBetterWeb.Vimeo.Tests
 {
   public class UploadVideoTest
   {
+    private readonly TestFileHelper _testFileHelper;
     private readonly UploadVideoService _uploadVideoService;
 
     public UploadVideoTest()
     {
+      _testFileHelper = new TestFileHelper();
       var httpService = HttpServiceBuilder.Build();
       _uploadVideoService = UploadVideoServiceBuilder.Build(httpService);
     }
 
     [Fact]
-    public async Task ReturnsAccountDetailsTest()
+    public async Task ReturnsSuccessUploadVideoTest()
     {
-      var stream = GetFileFromEmbeddedResources("DevBetterWeb.Vimeo.Tests." + "2020-10-23 MyHouseApp Status Call.mp4");
-      Assert.NotNull(stream);
-
-      var buffer = new byte[stream.Length];
-      await stream.ReadAsync(buffer, 0, (int)stream.Length);
+      var buffer = await TestFileHelper.BuildAsync();
 
       var video = new Video();
       video.Name = "Test";
@@ -49,16 +37,11 @@ namespace DevBetterWeb.Vimeo.Tests
       request.FileData = buffer;
 
       var response = await _uploadVideoService
-        .SetToken(AccountConstants.ACCESS_TOKEN)
         .ExecuteAsync(request);
 
-      response.Data.ShouldNotBe(0);
-    }
+      await _testFileHelper.DeleteTestFile(response.Data.ToString());
 
-    private Stream GetFileFromEmbeddedResources(string relativePath)
-    {
-      var assembly = typeof(UploadVideoTest).GetTypeInfo().Assembly;
-      return assembly.GetManifestResourceStream(relativePath);
-    }
+      response.Data.ShouldNotBe(0);      
+    }    
   }
 }

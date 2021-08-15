@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Autofac;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -36,7 +37,7 @@ namespace DevBetterWeb.Infrastructure
       }
       RegisterCommonDependencies(builder);
       RegisterPaymentHandlerDependencies(builder);
-      AutofacExtensions.RegisterVimeoServicesDependencies(builder);
+      AutofacExtensions.RegisterVimeoServicesDependencies(builder, AuthConstants.VIMEO_TOKEN);
     }
 
     private void RegisterCommonDependencies(ContainerBuilder builder)

@@ -24,7 +24,6 @@ namespace DevBetterWeb.Web.Pages.Videos
     {
       _mapper = mapper;
       _uploadVideoService = uploadVideoService;
-      _uploadVideoService.SetToken(AuthConstants.VIMEO_TOKEN);
     }
 
     public IActionResult OnGet()
