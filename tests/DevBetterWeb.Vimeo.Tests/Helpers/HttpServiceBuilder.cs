@@ -2,7 +2,6 @@
 using System.Net.Http;
 using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
-using DevBetterWeb.Vimeo.Tests.Constants;
 
 namespace DevBetterWeb.Vimeo.Tests.Helpers
 {

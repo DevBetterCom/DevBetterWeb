@@ -1,8 +1,5 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
 using Xunit;
