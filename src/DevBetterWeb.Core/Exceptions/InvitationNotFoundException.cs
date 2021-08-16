@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace DevBetterWeb.Core.Exceptions
 {
   [Serializable]
   public class InvitationNotFoundException : Exception
   {
-    public InvitationNotFoundException()
-    {
-    }
-
-    public InvitationNotFoundException(string? message) : base(message)
+    public InvitationNotFoundException(string inviteCode) : base($"Could not find invitation with inviteCode {inviteCode}.")
     {
     }
   }
