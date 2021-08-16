@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class BillingModel : PageModel
   {
 #nullable disable

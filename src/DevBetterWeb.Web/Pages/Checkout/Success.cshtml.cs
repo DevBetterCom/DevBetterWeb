@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.Checkout
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 
   public class SuccessModel : PageModel
   {
