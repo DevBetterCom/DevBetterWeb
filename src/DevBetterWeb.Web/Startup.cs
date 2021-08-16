@@ -92,7 +92,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
-      services.AddScoped<IPaymentHandlerEvent, StripePaymentHandlerEventService>();
+      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
       services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
       services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
@@ -111,6 +111,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<ICsvService, CsvService>();
       services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
       services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
+      services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
       services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
       services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 

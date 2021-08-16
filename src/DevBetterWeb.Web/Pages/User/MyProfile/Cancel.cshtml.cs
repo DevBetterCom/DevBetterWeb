@@ -8,7 +8,7 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 
 namespace DevBetterWeb.Web.Pages.User.MyProfile
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class CancelModel : PageModel
   {
     private readonly UserManager<ApplicationUser> _userManager;
