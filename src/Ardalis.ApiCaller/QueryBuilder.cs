@@ -14,9 +14,22 @@ namespace Ardalis.ApiCaller
       Query = HttpUtility.ParseQueryString(string.Empty);
     }
 
-    public QueryBuilder Add(string key, string value)
+    public bool IsEmpty()
     {
-      Query[key] = value;
+      if(Query.Count == 0)
+      {
+        return true;
+      }
+
+      return false;
+    }
+
+    public QueryBuilder Add(string key, object value)
+    {
+      if (!string.IsNullOrEmpty(value?.ToString()))
+      {
+        Query[key] = value.ToString();
+      }      
 
       return this;
     }

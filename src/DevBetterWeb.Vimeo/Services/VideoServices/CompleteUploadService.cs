@@ -36,13 +36,6 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       }
     }
 
-    public CompleteUploadService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
-
     public long ParseVideoId(HttpResponse<bool> response)
     {
       var headerLocation = response.GetFirstHeader("Location");

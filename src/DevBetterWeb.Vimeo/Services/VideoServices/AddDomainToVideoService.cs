@@ -35,12 +35,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return HttpResponse<bool>.FromException(exception.Message);
       }
     }
-
-    public AddDomainToVideoService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

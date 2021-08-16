@@ -9,6 +9,14 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Integration\Stripe\stripeJson1.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Integration\Stripe\stripeJson1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
     <ItemGroup>
     <None Update="xunit.runner.json">
@@ -37,8 +45,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeCoverage" Version="16.10.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />

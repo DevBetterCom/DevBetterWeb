@@ -81,13 +81,6 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       }
     }
 
-    public UploadVideoService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
-
     private async Task<bool> UploadVideoDataAsync(string uploadUri, byte[] fileData)
     {
       _httpService.ResetBaseUri();

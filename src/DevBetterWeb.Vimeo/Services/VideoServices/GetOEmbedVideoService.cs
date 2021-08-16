@@ -39,12 +39,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return HttpResponse<OEmbed>.FromException(exception.Message);
       }
     }
-
-    public GetOEmbedVideoService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

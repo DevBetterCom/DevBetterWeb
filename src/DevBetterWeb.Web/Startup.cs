@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
+using AutoMapper;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
@@ -76,6 +77,7 @@ namespace DevBetterWeb.Web
         _isDbContextAdded = true;
       }
 
+      services.AddAutoMapper(typeof(Startup).Assembly);
       services.AddMediatR(typeof(Startup).Assembly);
 
       services.AddMvc()
@@ -92,7 +94,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
       services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
-      services.AddScoped<IPaymentHandlerEvent, StripePaymentHandlerEventService>();
+      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
       services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
       services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
@@ -111,6 +113,7 @@ namespace DevBetterWeb.Web
       services.AddScoped<ICsvService, CsvService>();
       services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
       services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
+      services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
       services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
       services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 

@@ -1,11 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using Ardalis.ApiCaller;
+﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Vimeo.Tests.Builders;
 using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
@@ -16,21 +10,28 @@ namespace DevBetterWeb.Vimeo.Tests
   public class AddDomainToVideoServiceTest
   {
     private readonly AddDomainToVideoService _addDomainToVideoService;
+    private readonly TestFileHelper _testFileHelper;
 
     public AddDomainToVideoServiceTest()
     {
       var httpService = HttpServiceBuilder.Build();
       _addDomainToVideoService = AddDomainToVideoServiceBuilder.Build(httpService);
+      _testFileHelper = new TestFileHelper();
     }
 
     [Fact]
-    public async Task ReturnsAddDomainToVideoTest()
+    public async Task ReturnsSuccessAddDomainToVideoTest()
     {
-      var response = await _addDomainToVideoService
-        .SetToken(AccountConstants.ACCESS_TOKEN)
-        .ExecuteAsync(new AddDomainToVideoRequest(587044076, "localhost:5010"));
+      var videoId = await _testFileHelper.UploadTest();
 
-      response.Data.ShouldNotBe(false);
+      videoId.ShouldNotBe(0);
+
+      var response = await _addDomainToVideoService
+        .ExecuteAsync(new AddDomainToVideoRequest(videoId, "localhost:5010"));
+
+      await _testFileHelper.DeleteTestFile(videoId.ToString());
+      
+      response.Data.ShouldBeTrue();
     }
   }
 }

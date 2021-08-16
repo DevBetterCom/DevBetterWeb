@@ -37,12 +37,5 @@ namespace DevBetterWeb.Vimeo.Services.UserServices
         return HttpResponse<User>.FromException(exception.Message);
       }
     }
-
-    public AccountDetailsService SetToken(string token)
-    {
-      _httpService.SetAuthorization($"bearer {token}");
-
-      return this;
-    }
   }
 }

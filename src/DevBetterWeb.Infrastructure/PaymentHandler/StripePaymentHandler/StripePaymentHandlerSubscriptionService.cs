@@ -7,6 +7,7 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
 using Stripe;
+using Ardalis.GuardClauses;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
@@ -63,11 +64,22 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     public string GetCustomerId(string subscriptionId)
     {
+      Guard.Against.NullOrEmpty(subscriptionId, nameof(subscriptionId));
       var subscription = GetSubscription(subscriptionId);
 
       var customerId = subscription.CustomerId;
 
       return customerId;
+    }
+
+    public decimal GetSubscriptionAmount(string subscriptionId)
+    {
+      Guard.Against.NullOrEmpty(subscriptionId, nameof(subscriptionId));
+      var subscription = GetSubscription(subscriptionId);
+
+      decimal? amount = subscription?.Items?.GetEnumerator()?.Current?.Price?.UnitAmountDecimal;
+
+      return amount ?? 0;
     }
 
     public DateTimeRange GetDateTimeRange(string subscriptionId)
@@ -109,7 +121,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return billingPeriod;
     }
 
-    private BillingPeriod GetSubscriptionBillingInterval(Stripe.Subscription subscription)
+    private BillingPeriod GetSubscriptionBillingInterval(Subscription subscription)
     {
       var item = subscription.Items.Data[0];
       var period = item.Price.Recurring.Interval;
@@ -125,22 +137,23 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       throw new InvalidBillingPeriodException();
     }
 
-    private DateTime GetEndDate(Stripe.Subscription subscription)
+    private DateTime GetEndDate(Subscription subscription)
     {
       DateTime endDate = subscription.CurrentPeriodEnd;
 
       return endDate;
     }
 
-    private DateTime GetStartDate(Stripe.Subscription subscription)
+    private DateTime GetStartDate(Subscription subscription)
     {
       DateTime startDate = subscription.CurrentPeriodStart;
 
       return startDate;
     }
 
-    private Stripe.Subscription GetSubscription(string subscriptionId)
+    private Subscription GetSubscription(string subscriptionId)
     {
+      Guard.Against.NullOrEmpty(subscriptionId, nameof(subscriptionId));
       var subscription = _subscriptionService.Get(subscriptionId);
 
       return subscription;
