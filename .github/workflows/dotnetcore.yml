@@ -6,6 +6,8 @@ jobs:
   build:
 
     runs-on: windows-latest
+    env:
+      VIMEO_TOKEN: ${{ secrets.VIMEO_TOKEN }}
 
     steps:
     - uses: actions/checkout@v2
