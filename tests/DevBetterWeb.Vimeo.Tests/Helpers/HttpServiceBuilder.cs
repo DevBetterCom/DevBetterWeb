@@ -10,7 +10,8 @@ namespace DevBetterWeb.Vimeo.Tests.Helpers
   {
     public static HttpService Build()
     {
-      var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
+      var vimeoToken = Environment.GetEnvironmentVariable("VIMEO_TOKEN");
+      var httpClient = new HttpClient { BaseAddress = new Uri(vimeoToken) };
       httpClient.DefaultRequestHeaders.Remove("Accept");
       httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
       httpClient.Timeout = TimeSpan.FromMinutes(60);
