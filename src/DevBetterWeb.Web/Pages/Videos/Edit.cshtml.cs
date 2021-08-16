@@ -61,8 +61,13 @@ namespace DevBetterWeb.Web.Pages.Videos
       }
 
       var videoToSave = _mapper.Map<Video>(VideoToEdit);
+      if (videoToSave == null)
+      {
+        return NotFound();
+      }
 
-      var request = new UpdateVideoDetailsRequest(long.Parse(VideoToEdit.Id), videoToSave);
+      _ = long.TryParse(VideoToEdit.Id, out var videoIdLong);
+      var request = new UpdateVideoDetailsRequest(videoIdLong, videoToSave);
       await _updateVideoDetailsService.ExecuteAsync(request);
 
       return RedirectToPage("./Index");

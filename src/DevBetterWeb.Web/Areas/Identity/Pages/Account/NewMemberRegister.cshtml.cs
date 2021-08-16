@@ -142,6 +142,10 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
           _logger.LogInformation($"Looking up invitation with code {inviteCode}");
           var spec = new InvitationByInviteCodeSpec(inviteCode);
           var inviteEntity = await _invitationRepository.GetBySpecAsync(spec);
+          if (inviteEntity == null)
+          {
+            throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
+          }
 
           await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
 

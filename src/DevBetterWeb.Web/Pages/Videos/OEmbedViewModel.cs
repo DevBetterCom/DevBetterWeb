@@ -52,7 +52,7 @@ namespace DevBetterWeb.Web.Pages.Videos
       Uri = oEmbed.Uri;
     }
 
-    public OEmbedViewModel AddStartTime(string startTime)
+    public OEmbedViewModel AddStartTime(string? startTime)
     {
       if (string.IsNullOrEmpty(startTime))
       {
@@ -77,7 +77,7 @@ namespace DevBetterWeb.Web.Pages.Videos
       var vedioId = parts[parts.Length - 1];
 
       CustomEmbedLink.Substring(CustomEmbedLink.Length - 1);
-      Html = Html.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
+      Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
 
       return this;
     }

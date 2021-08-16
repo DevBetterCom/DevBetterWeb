@@ -23,7 +23,7 @@ namespace DevBetterWeb.Web.Pages.Videos
       _getOEmbedVideoService = getOEmbedVideoService;
     }
 
-    public async Task<IActionResult> OnGet(string videoId, string startTime=null)
+    public async Task<IActionResult> OnGet(string videoId, string? startTime=null)
     {
       var video = await _getVideoService.ExecuteAsync(videoId);
       if (video?.Data == null) return NotFound(videoId);

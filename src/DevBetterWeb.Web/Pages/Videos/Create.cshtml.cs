@@ -32,7 +32,7 @@ namespace DevBetterWeb.Web.Pages.Videos
     }
 
     [BindProperty]
-    public VideoModel VideoModel { get; set; }
+    public VideoModel VideoModel { get; set; } = new VideoModel();
 
     public async Task<IActionResult> OnPostAsync(IFormFile videoFile)
     {
