@@ -16,7 +16,8 @@ namespace DevBetterWeb.Vimeo.Tests.Helpers
       httpClient.Timeout = TimeSpan.FromMinutes(60);
       var httpService = new HttpService(httpClient);
 
-      httpService.SetAuthorization(ConfigurationConstants.VIMEO_TOKEN);
+      var vimeoToken = Environment.GetEnvironmentVariable(ConfigurationConstants.VIMEO_TOKEN);
+      httpService.SetAuthorization(vimeoToken);
 
       return httpService;
     }

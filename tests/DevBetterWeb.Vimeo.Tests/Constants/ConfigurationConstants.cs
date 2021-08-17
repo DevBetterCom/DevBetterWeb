@@ -2,6 +2,6 @@
 {
   public static class ConfigurationConstants
   {
-    public static string VIMEO_TOKEN = "TOKEN";
+    public static string VIMEO_TOKEN = "VIMEO_TOKEN";
   }
 }
