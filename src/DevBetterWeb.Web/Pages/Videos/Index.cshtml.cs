@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevBetterWeb.Web.Pages.Videos
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class IndexModel : PageModel
   {
     private readonly IMapper _mapper;
