@@ -16,5 +16,5 @@ jobs:
       with:
         dotnet-version: 5.0.101
     - name: Build and Test with dotnet
-      run: dotnet test --configuration Release
+      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
     
