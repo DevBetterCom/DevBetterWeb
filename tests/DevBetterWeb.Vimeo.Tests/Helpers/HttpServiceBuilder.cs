@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Tests.Constants;
 
 namespace DevBetterWeb.Vimeo.Tests.Helpers
 {
@@ -15,8 +16,7 @@ namespace DevBetterWeb.Vimeo.Tests.Helpers
       httpClient.Timeout = TimeSpan.FromMinutes(60);
       var httpService = new HttpService(httpClient);
 
-      var vimeoToken = Environment.GetEnvironmentVariable("VIMEO_TOKEN");
-      httpService.SetAuthorization(vimeoToken);
+      httpService.SetAuthorization(ConfigurationConstants.VIMEO_TOKEN);
 
       return httpService;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
 using AutoMapper;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
@@ -134,7 +135,9 @@ namespace DevBetterWeb.Web
 
     public void ConfigureContainer(ContainerBuilder builder)
     {
-      builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
+      string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
+      
+      builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
     }
 
     public void Configure(IApplicationBuilder app,

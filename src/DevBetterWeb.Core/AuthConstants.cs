@@ -14,6 +14,5 @@
     }
 
     public const string DEFAULT_PASSWORD = "Pass@word1";
-    public const string VIMEO_TOKEN = "TOKEN";
   }
 }

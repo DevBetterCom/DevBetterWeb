@@ -20,9 +20,11 @@ namespace DevBetterWeb.Infrastructure
   public class DefaultInfrastructureModule : Module
   {
     private bool _isDevelopment = false;
-    public DefaultInfrastructureModule(bool isDevelopment)
+    private string _vimeoToken = string.Empty;
+    public DefaultInfrastructureModule(bool isDevelopment, string vimeoToken)
     {
       _isDevelopment = isDevelopment;
+      _vimeoToken = vimeoToken;
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -37,7 +39,7 @@ namespace DevBetterWeb.Infrastructure
       }
       RegisterCommonDependencies(builder);
       RegisterPaymentHandlerDependencies(builder);
-      AutofacExtensions.RegisterVimeoServicesDependencies(builder, AuthConstants.VIMEO_TOKEN);
+      AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
     }
 
     private void RegisterCommonDependencies(ContainerBuilder builder)
