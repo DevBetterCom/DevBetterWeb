@@ -1,0 +1,43 @@
+﻿@page "{id}"
+@model DevBetterWeb.Web.Pages.Videos.EditModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+
+<hr />
+<form method="post">
+	<div class="row">
+		<div class="col-md-4">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="VideoToEdit.Name" class="control-label"></label>
+				<input asp-for="VideoToEdit.Name" class="form-control" />
+				<span asp-validation-for="VideoToEdit.Name" class="text-danger"></span>
+			</div>
+		</div>
+	</div>
+	<div class="">
+		<div class="form-group">
+			<label asp-for="VideoToEdit.Description" class="control-label"></label>
+			<textarea asp-for="VideoToEdit.Description" class="form-control" style="max-width: 100%" rows="10"></textarea>
+			<span asp-validation-for="VideoToEdit.Description" class="text-danger"></span>
+		</div>
+	</div>
+
+	<input type="hidden" asp-for="VideoToEdit.Id" />
+	<div class="form-group">
+		<input type="submit" value="Save" class="btn btn-success" />
+	</div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+	$(document).ready(function () {
+
+	});
+</script>
+}

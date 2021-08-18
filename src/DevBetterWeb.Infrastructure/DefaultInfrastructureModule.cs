@@ -1,10 +1,17 @@
-﻿using Autofac;
+﻿using System;
+using System.Net.Http;
+using Autofac;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Extensions;
+using DevBetterWeb.Vimeo.Services.UserServices;
+using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
 
@@ -13,9 +20,11 @@ namespace DevBetterWeb.Infrastructure
   public class DefaultInfrastructureModule : Module
   {
     private bool _isDevelopment = false;
-    public DefaultInfrastructureModule(bool isDevelopment)
+    private string _vimeoToken = string.Empty;
+    public DefaultInfrastructureModule(bool isDevelopment, string vimeoToken)
     {
       _isDevelopment = isDevelopment;
+      _vimeoToken = vimeoToken;
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -30,6 +39,7 @@ namespace DevBetterWeb.Infrastructure
       }
       RegisterCommonDependencies(builder);
       RegisterPaymentHandlerDependencies(builder);
+      AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
     }
 
     private void RegisterCommonDependencies(ContainerBuilder builder)
@@ -75,6 +85,5 @@ namespace DevBetterWeb.Infrastructure
       builder.RegisterType<SendGridEmailService>().As<IEmailService>();
 
     }
-
   }
 }

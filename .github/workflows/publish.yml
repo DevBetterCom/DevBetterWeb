@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 5.0.100
     
     - name: Build and test
-      run: dotnet test --configuration Release
+      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
     - name: publish
       run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
 
