@@ -1,0 +1,67 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Videos.IndexModel
+@{
+	ViewData["Title"] = "Index";
+}
+<h3>Videos</h3>
+<p asp-authorize asp-roles="Administrators">
+	<a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.VideoList[0].Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.VideoList[0].ReleaseTime)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.VideoList[0].CreatedTime)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.VideoList[0].Status)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.VideoList)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ReleaseTime)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CreatedTime)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					<a href="Videos/Details/@item.Id">Details</a>
+					<span asp-authorize asp-roles="Administrators">
+						|
+						<a href="Videos/Edit/@item.Id">Edit</a> |
+						<a href="Videos/Delete/@item.Id">Delete</a>
+					</span>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<div asp-authorize asp-roles="Administrators">
+	<div>
+		<a href="./Admin/Users">
+			Manage Users
+		</a>
+	</div>
+	<div>
+		<a href="./Admin/Books">
+			Manage Books
+		</a>
+	</div>
+</div>
