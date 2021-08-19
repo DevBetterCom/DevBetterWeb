@@ -279,21 +279,24 @@ namespace DevBetterWeb.Core.Entities
     public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
     {
       private readonly IRepository<Member> _memberRepository;
+      private readonly IAppLogger<MemberAddressUpdatedHandler> _logger;
 
       public IMapCoordinateService _mapCoordinateService { get; }
 
       public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
-        IRepository<Member> memberRepository)
+        IRepository<Member> memberRepository,
+        IAppLogger<MemberAddressUpdatedHandler> logger)
       {
         _mapCoordinateService = mapCoordinateService;
         _memberRepository = memberRepository;
-        // TODO: Add ILogger to domain and inject here
+        _logger = logger;
       }
 
       public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
       {
         var member = addressUpdatedEvent.Member;
         var oldAddress = addressUpdatedEvent.OldAddress;
+        _logger.LogInformation($"Updating address and trying to compute lat/long for member {member.UserFullName()}");
 
         if (member.ShippingAddress == null)
         {
@@ -342,12 +345,11 @@ namespace DevBetterWeb.Core.Entities
           }
           await _memberRepository.UpdateAsync(member);
         }
-        catch
+        catch (Exception ex)
         {
-          // TODO: Log something
+          _logger.LogError(ex, "Error calculating geolocation", addressUpdatedEvent);
         }
       }
     }
-
   }
 }
