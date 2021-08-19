@@ -1,5 +1,6 @@
 ﻿namespace DevBetterWeb.Core.Interfaces
 {
+  // TODO: Make this a single method that returns a DTO with all the things
   public interface IPaymentHandlerEventService
   {
     string GetEventType(string json);
