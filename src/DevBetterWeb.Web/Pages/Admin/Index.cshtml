@@ -5,44 +5,44 @@
     ViewData["Title"] = "Index";
 }
 
-<ul>
-    <li>
+<div style="max-width:600px;padding:2em;font-size: 2rem;">
+<ul class="list-group">
+    <li class="list-group-item list-group-item-action">
         <a href="./Admin/Users">
-            Manage Users
+            <i class="fas fa-users fa-fw" aria-hidden="true"></i> Manage Users
         </a>
     </li>
 
-    <li>
+    <li class="list-group-item list-group-item-action">
         <a href="./Admin/Members">
-            Manage Members
+            <i class="fas fa-user-friends fa-fw" aria-hidden="true"></i> Manage Members
         </a>
     </li>
 
-    <li>
+    <li class="list-group-item list-group-item-action">
         <a href="./Admin/Books">
-            Manage Books
+            <i class="fas fa-book fa-fw" aria-hidden="true"></i> Manage Books
         </a>
     </li>
 
-    <li>
+    <li class="list-group-item list-group-item-action">
         <a href="./Videos">
-            Manage Videos
+            <i class="fas fa-video fa-fw" aria-hidden="true"></i> Manage Videos
         </a>
     </li>
-    <li>
+    <li class="list-group-item list-group-item-action">
         <a href="./Admin/SubscriptionPlans">
-            Manage Subscription Plans
+            <i class="fas fa-file-contract fa-fw" aria-hidden="true"></i> Manage Subscription Plans
         </a>
     </li>
-    <li>
+    <li class="list-group-item list-group-item-action">
         <a href="./Admin/UserReports">
-            View Reports
+            <i class="fas fa-file-alt fa-fw" aria-hidden="true"></i> View Reports
         </a>
     </li>
 </ul>
-
+</div>
 <b>Current environment: </b>@Model.HostingEnvironment.EnvironmentName
-
 
 @section scripts{
     <script src="~/js/admin.js" asp-append-version="true"></script>
