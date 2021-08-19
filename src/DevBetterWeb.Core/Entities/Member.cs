@@ -215,7 +215,7 @@ namespace DevBetterWeb.Core.Entities
     /// </summary>
     /// <param name="subscriptionDateTimeRange"></param>
     /// <param name="subscriptionPlanId">Defaults to Monthly (1)</param>
-    public void AddSubscription(DateTimeRange subscriptionDateTimeRange, int subscriptionPlanId = 1)
+    public void AddSubscription(DateTimeRange subscriptionDateTimeRange, int subscriptionPlanId)
     {
       var subscription = new MemberSubscription(this.Id, subscriptionPlanId, subscriptionDateTimeRange);
 

@@ -12,7 +12,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
       Member member = MemberHelpers.CreateWithDefaultConstructor();
       MemberSubscription subscription = SubscriptionHelpers.GetDefaultTestSubscription();
 
-      member.AddSubscription(subscription.Dates);
+      member.AddSubscription(subscription.Dates, 1);
 
       var subscriptionAdded = member.MemberSubscriptions.Any(s => s.Dates.Equals(subscription.Dates));
 

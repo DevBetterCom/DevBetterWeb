@@ -169,5 +169,4 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       return productNickname;
     }
   }
-
 }

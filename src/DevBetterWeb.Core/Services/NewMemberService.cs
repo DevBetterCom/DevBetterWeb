@@ -95,15 +95,26 @@ namespace DevBetterWeb.Core.Services
       var invite = await _invitationRepository.GetBySpecAsync(spec);
       
       if (invite is null) throw new InvitationNotFoundException($"Could not find invitation with code {inviteCode}.");
-      var subscriptionId = invite.PaymentHandlerSubscriptionId;
+      var paymentHandlerSubscriptionId = invite.PaymentHandlerSubscriptionId;
 
-      var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
-      // TODO this should take in the subscription plan id
-      member.AddSubscription(subscriptionDateTimeRange);
+      var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(paymentHandlerSubscriptionId);
+
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerSubscriptionId);
+
+      int devBetterSubscriptionPlanId = 1; // monthly
+
+      if(billingPeriod == Enums.BillingPeriod.Year)
+      {
+        devBetterSubscriptionPlanId = 2; // yearly
+      }
+
+      member.AddSubscription(subscriptionDateTimeRange, devBetterSubscriptionPlanId);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
       invite.Deactivate();
       await _invitationRepository.UpdateAsync(invite);
+
+      // TODO: Should we also update any other outstanding invites for this member's email?
 
       return member;
     }
