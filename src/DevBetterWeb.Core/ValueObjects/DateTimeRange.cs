@@ -18,6 +18,12 @@ namespace DevBetterWeb.Core.ValueObjects
       EndDate = endDate;
     }
 
+    /// <summary>
+    /// Returns total number of days in the DateTimeRange.
+    /// If no EndDate has been specified, will use provided endDateToUseIfMissing instead.
+    /// </summary>
+    /// <param name="endDateToUseIfMissing"></param>
+    /// <returns></returns>
     public int ToDays(DateTime endDateToUseIfMissing)
     {
       var end = EndDate ?? endDateToUseIfMissing;
@@ -25,9 +31,19 @@ namespace DevBetterWeb.Core.ValueObjects
       return (end - StartDate).Days;
     }
 
-    public int ToDaysToDate(DateTime endDate)
+    /// <summary>
+    /// Returns number of days the DateTimeRange covers from its start until some period end date.
+    /// If the DateTimeRange EndDate is less than the periodEndDate, returns ToDays()
+    /// </summary>
+    /// <param name="periodEndDate"></param>
+    /// <returns></returns>
+    public int ToDaysInRangeThroughPeriodEndDate(DateTime periodEndDate)
     {
-      var end = endDate;
+      DateTime end = periodEndDate;
+      if(EndDate.HasValue && EndDate.Value <= periodEndDate)
+      {
+        return ToDays(EndDate.Value);
+      }
       return (end - StartDate).Days;
     }
 

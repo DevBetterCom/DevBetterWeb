@@ -14,7 +14,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
       DateTime newEndDate = DateTime.Now.AddDays(30);
       DateTime originalStartDate = starterSubscription.Dates.StartDate;
 
-      member.AddSubscription(starterSubscription.Dates);
+      member.AddSubscription(starterSubscription.Dates, 1);
 
       member.ExtendCurrentSubscription(newEndDate);
 
@@ -32,7 +32,7 @@ namespace DevBetterWeb.Tests.Core.Entities.MemberTests
       DateTime newEndDate = DateTime.Now.AddDays(30);
       var originalEndDate = starterSubscription.Dates.EndDate;
 
-      member.AddSubscription(starterSubscription.Dates);
+      member.AddSubscription(starterSubscription.Dates, 1);
 
       member.ExtendCurrentSubscription(newEndDate);
 

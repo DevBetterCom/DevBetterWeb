@@ -14,7 +14,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5010/"
+      "applicationUrl": "http://localhost:5010/;https://localhost:5011"
     },
     "DevBetterWeb.Web - PROD": {
       "commandName": "Project",
@@ -22,7 +22,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://localhost:5011/"
+      "applicationUrl": "https://localhost:5020/"
     }
   }
 }
