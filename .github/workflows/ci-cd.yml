@@ -75,7 +75,7 @@ jobs:
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test ./DevBetterWeb.sln --configuration Release --no-build --output Artifacts
+          dotnet test ./DevBetterWeb.sln --filter FullyQualifiedName!~Vimeo.Tests --configuration Release --no-build --output Artifacts
 
       - name: Publish WebApp
         id: publish_webapp

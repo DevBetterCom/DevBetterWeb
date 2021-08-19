@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
+using AutoMapper;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
@@ -9,6 +11,7 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -75,6 +78,7 @@ namespace DevBetterWeb.Web
         _isDbContextAdded = true;
       }
 
+      services.AddAutoMapper(typeof(Startup).Assembly);
       services.AddMediatR(typeof(Startup).Assembly);
 
       services.AddMvc()
@@ -131,7 +135,9 @@ namespace DevBetterWeb.Web
 
     public void ConfigureContainer(ContainerBuilder builder)
     {
-      builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
+      string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
+      
+      builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
     }
 
     public void Configure(IApplicationBuilder app,
