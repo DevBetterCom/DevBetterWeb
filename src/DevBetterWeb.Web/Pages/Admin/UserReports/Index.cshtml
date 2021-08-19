@@ -1,10 +1,23 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.Admin.UserReports.IndexModel
 @{
+    ViewData["Title"] = "User Reports";
 }
 
 <h3>User Reports</h3>
-<br />
-<a href="./UserReports/Signups">Signups</a>
-<br />
-<a href="./UserReports/Cancellations">Cancellations</a>
+
+<div style="max-width:600px;padding:2em;font-size: 2rem;">
+<ul class="list-group">
+	    <li class="list-group-item list-group-item-action">
+        <a href="./UserReports/Signups">
+            <i class="fas fa-user-plus fa-fw" aria-hidden="true"></i> Member Signups
+        </a>
+    </li>
+
+    <li class="list-group-item list-group-item-action">
+        <a href="./UserReports/Cancellations">
+            <i class="fas fa-user-minus fa-fw" aria-hidden="true"></i> Member Cancellations
+        </a>
+    </li>
+</ul>
+</div>

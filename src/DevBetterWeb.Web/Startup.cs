@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
-using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
@@ -11,7 +10,6 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -23,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Stripe;
 
 namespace DevBetterWeb.Web
 {
@@ -178,13 +175,6 @@ namespace DevBetterWeb.Web
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
       });
-
-      StripeConfiguration.ApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
-
-      // run migrations automatically on startup
-      //migrationContext.Database.Migrate();
-      //migrationContext = null;
-
     }
   }
 }
