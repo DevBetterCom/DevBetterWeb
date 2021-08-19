@@ -31,12 +31,10 @@ namespace DevBetterWeb.Web.Pages.Videos
       var response = await _getAllVideosService
         .ExecuteAsync(request);
 
-      if(response.Data?.Data == null)
+      if (response.Data?.Data != null)
       {
-        return BadRequest("Server Error");
+        VideoList = _mapper.Map<List<VideoModel>>(response.Data.Data);
       }
-      VideoList = _mapper.Map<List<VideoModel>>(response.Data.Data);
-
       return Page();
     }
   }
