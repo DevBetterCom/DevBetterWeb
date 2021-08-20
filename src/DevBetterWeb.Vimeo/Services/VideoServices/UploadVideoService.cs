@@ -66,10 +66,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
         await _updateVideoDetailsService.ExecuteAsync(new UpdateVideoDetailsRequest(completeUploadResponse.Data, request.Video), cancellationToken);
 
-        var addDomainRequest = new AddDomainToVideoRequest(completeUploadResponse.Data, "localhost:5010");
-        await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
-
-        addDomainRequest.Domain = "devbetter.com";
+        var addDomainRequest = new AddDomainToVideoRequest(completeUploadResponse.Data, "devbetter.com");
         await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
 
         return HttpResponse<long>.FromHttpResponseMessage(completeUploadResponse.Data, completeUploadResponse.Code);
