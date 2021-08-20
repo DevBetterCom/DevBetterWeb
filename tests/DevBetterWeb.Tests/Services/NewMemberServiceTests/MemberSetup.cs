@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using Xunit;
@@ -11,12 +12,13 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
   public class MemberSetup
   {
-    private readonly Mock<IRepository<Member>> _memberRepository;
-    private readonly Mock<IRepository<Invitation>> _invitationRepository;
-    private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
-    private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
-    private readonly Mock<IEmailService> _emailService;
-    private readonly Mock<IMemberRegistrationService> _memberRegistrationService;
+    private readonly Mock<IRepository<Member>> _memberRepository = new();
+    private readonly Mock<IRepository<Invitation>> _invitationRepository = new();
+    private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService = new();
+    private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription = new();
+    private readonly Mock<IEmailService> _emailService = new();
+    private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
+    private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
 
     private readonly INewMemberService _newMemberService;
 
@@ -33,17 +35,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public MemberSetup()
     {
-      _invitationRepository = new Mock<IRepository<Invitation>>();
-      _memberRepository = new Mock<IRepository<Member>>();
-      _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
-      _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
-      _emailService = new Mock<IEmailService>();
-      _memberRegistrationService = new Mock<IMemberRegistrationService>();
       _newMemberService = new NewMemberService(_invitationRepository.Object,
         _userRoleMembershipService.Object,
         _paymentHandlerSubscription.Object,
         _emailService.Object,
-        _memberRegistrationService.Object);
+        _memberRegistrationService.Object,
+        _logger.Object);
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 
@@ -54,6 +51,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       var memberId = memberResult.Id;
 
       _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
+      _invitationRepository.Setup(r => r.ListAsync(It.IsAny<ActiveInvitationByEmailSpec>(), CancellationToken.None)).ReturnsAsync(new List<Invitation>());
       _memberRepository.Setup(r => r.GetByIdAsync(memberId, CancellationToken.None)).ReturnsAsync(memberResult);
       _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
 

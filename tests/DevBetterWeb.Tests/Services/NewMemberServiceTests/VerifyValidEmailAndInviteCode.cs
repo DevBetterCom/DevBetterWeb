@@ -11,12 +11,13 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 {
   public class VerifyValidEmailAndInviteCode
   {
-    private readonly Mock<IRepository<Member>> _memberRepository;
-    private readonly Mock<IRepository<Invitation>> _invitationRepository;
-    private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService;
-    private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription;
-    private readonly Mock<IEmailService> _emailService;
-    private readonly Mock<IMemberRegistrationService> _memberRegistrationService;
+    private readonly Mock<IRepository<Member>> _memberRepository = new();
+    private readonly Mock<IRepository<Invitation>> _invitationRepository = new();
+    private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService = new();
+    private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription = new();
+    private readonly Mock<IEmailService> _emailService = new();
+    private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
+    private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
 
     private readonly INewMemberService _newMemberService;
 
@@ -31,17 +32,12 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
 
     public VerifyValidEmailAndInviteCode()
     {
-      _memberRepository = new Mock<IRepository<Member>>();
-      _invitationRepository = new Mock<IRepository<Invitation>>();
-      _userRoleMembershipService = new Mock<IUserRoleMembershipService>();
-      _paymentHandlerSubscription = new Mock<IPaymentHandlerSubscription>();
-      _emailService = new Mock<IEmailService>();
-      _memberRegistrationService = new Mock<IMemberRegistrationService>();
       _newMemberService = new NewMemberService(_invitationRepository.Object,
         _userRoleMembershipService.Object,
         _paymentHandlerSubscription.Object,
         _emailService.Object,
-        _memberRegistrationService.Object);
+        _memberRegistrationService.Object,
+        _logger.Object);
     }
 
     [Fact]

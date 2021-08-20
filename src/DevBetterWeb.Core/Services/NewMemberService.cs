@@ -5,6 +5,7 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevBetterWeb.Core.Services
@@ -17,18 +18,21 @@ namespace DevBetterWeb.Core.Services
     private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
+    private readonly IAppLogger<NewMemberService> _logger;
 
     public NewMemberService(IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
-      IMemberRegistrationService memberRegistrationService)
+      IMemberRegistrationService memberRegistrationService,
+      IAppLogger<NewMemberService> logger)
     {
       _invitationRepository = invitationRepository;
       _userRoleMembershipService = userRoleMembershipService;
       _paymentHandlerSubscription = paymentHandlerSubscription;
       _emailService = emailService;
       _memberRegistrationService = memberRegistrationService;
+      _logger = logger;
     }
 
     public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
@@ -114,7 +118,17 @@ namespace DevBetterWeb.Core.Services
       invite.Deactivate();
       await _invitationRepository.UpdateAsync(invite);
 
-      // TODO: Should we also update any other outstanding invites for this member's email?
+      var activeInviteSpec = new ActiveInvitationByEmailSpec(invite.Email);
+      var moreActiveInvitesForEmail = await _invitationRepository.ListAsync(activeInviteSpec);
+      if(moreActiveInvitesForEmail.Any())
+      {
+        _logger.LogInformation($"User {invite.Email} had multiple active invites.");
+      }
+      foreach (var extraInvite in moreActiveInvitesForEmail)
+      {
+          extraInvite.Deactivate();
+      } 
+      await _invitationRepository.UpdateAsync(invite);
 
       return member;
     }
