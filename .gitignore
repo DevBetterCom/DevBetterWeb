@@ -327,10 +327,12 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Custom Rules
 /tests/DevBetterWeb.Tests/BuildReports
 Report
 src/DevBetterWeb.Web/appsettings.development.json
 az-create.txt
 src/DevBetterWeb.Web/web.config
-
+src/DevBetterWeb.Web/wwwroot/lib/*
 
