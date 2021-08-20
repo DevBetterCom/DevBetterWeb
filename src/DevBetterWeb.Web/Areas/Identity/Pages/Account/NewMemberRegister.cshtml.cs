@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
@@ -22,6 +23,8 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
   public class NewMemberRegisterModel : PageModel
   {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailService _emailService;
     private readonly IDomainEventDispatcher _dispatcher;
@@ -33,6 +36,8 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
     public NewMemberRegisterModel(
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IUserRoleMembershipService userRoleMembershipService,
             ILogger<RegisterModel> logger,
             IEmailService emailService,
             IDomainEventDispatcher dispatcher,
@@ -43,6 +48,8 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             IMemberAddBillingActivityService memberAddBillingActivityService)
     {
       _userManager = userManager;
+      _roleManager = roleManager;
+      _userRoleMembershipService = userRoleMembershipService;
       _logger = logger;
       _emailService = emailService;
       _dispatcher = dispatcher;
@@ -149,10 +156,14 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
 
           await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
 
-          // TODO: Add User to Member Role
-
-          // TODO: Fix Redirect
-          return RedirectToPage("/User/MyProfile/Index");
+          _logger.LogInformation($"Adding user {user.Email} to Member Role");
+          var roles = await _roleManager.Roles.ToListAsync();
+          var memberRole = roles.FirstOrDefault(r => r.Name == "Member");
+          if (memberRole != null)
+          {
+            await _userRoleMembershipService.AddUserToRoleAsync(userId, memberRole.Id);
+          }
+          return RedirectToRoute("/User/MyProfile");
         }
         foreach (var error in result.Errors)
         {

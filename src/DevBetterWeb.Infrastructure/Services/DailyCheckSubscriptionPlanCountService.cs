@@ -28,10 +28,10 @@ namespace DevBetterWeb.Infrastructure.Services
     public async Task WarnIfNumberOfMemberSubscriptionPlansDifferentThanExpected(AppendOnlyStringList messages)
     {
       // TODO this can be removed once stripe is live
-      if(!EXPECTED_NUMBER_OF_SUBSCRIPTION_PLANS_NOT_IN_PAYMENT_PROVIDER.HasValue || EXPECTED_NUMBER_OF_SUBSCRIPTION_PLANS_NOT_IN_PAYMENT_PROVIDER <= 0)
-      {
-        return;
-      }
+      // if(!EXPECTED_NUMBER_OF_SUBSCRIPTION_PLANS_NOT_IN_PAYMENT_PROVIDER.HasValue || EXPECTED_NUMBER_OF_SUBSCRIPTION_PLANS_NOT_IN_PAYMENT_PROVIDER <= 0)
+      // {
+      //   return;
+      // }
 
       var subscriptionPlans = await _repository.ListAsync();
       int numberOfSubscriptionPlans = subscriptionPlans.Count();

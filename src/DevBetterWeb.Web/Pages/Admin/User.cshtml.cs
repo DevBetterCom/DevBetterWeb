@@ -78,6 +78,7 @@ namespace DevBetterWeb.Web.Pages.Admin
 
       var unassignedRoles = new List<IdentityRole>();
       var assignedRoles = new List<IdentityRole>();
+      // TODO: Fix this awful performing code
       foreach (var role in roles)
       {
         if (!(await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
