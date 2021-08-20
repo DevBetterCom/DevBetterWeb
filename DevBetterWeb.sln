@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.156
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{106AE906-5075-410A-B941-912F811848EE}"
 EndProject
@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevBetterWeb.Vimeo", "src\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevBetterWeb.Vimeo.Tests", "tests\DevBetterWeb.Vimeo.Tests\DevBetterWeb.Vimeo.Tests.csproj", "{77FEAB83-ACCB-4287-8011-84426B8636BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ardalis.ApiCaller", "src\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj", "{14181121-A71B-410A-AEED-C48F24BD2DEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ardalis.ApiCaller", "src\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj", "{14181121-A71B-410A-AEED-C48F24BD2DEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevBetterWeb.UploaderApp", "src\DevBetterWeb.UploaderApp\DevBetterWeb.UploaderApp.csproj", "{121812D0-65B9-4271-B8C4-EB6DE9F20A16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +129,18 @@ Global
 		{14181121-A71B-410A-AEED-C48F24BD2DEA}.Release|x64.Build.0 = Release|Any CPU
 		{14181121-A71B-410A-AEED-C48F24BD2DEA}.Release|x86.ActiveCfg = Release|Any CPU
 		{14181121-A71B-410A-AEED-C48F24BD2DEA}.Release|x86.Build.0 = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|x64.Build.0 = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Debug|x86.Build.0 = Debug|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|x64.ActiveCfg = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|x64.Build.0 = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|x86.ActiveCfg = Release|Any CPU
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +153,7 @@ Global
 		{07B190B4-A1AD-4967-896B-A1A7040DDB76} = {106AE906-5075-410A-B941-912F811848EE}
 		{77FEAB83-ACCB-4287-8011-84426B8636BB} = {B31B4797-1D9F-4288-808C-BE9A31A98C7D}
 		{14181121-A71B-410A-AEED-C48F24BD2DEA} = {106AE906-5075-410A-B941-912F811848EE}
+		{121812D0-65B9-4271-B8C4-EB6DE9F20A16} = {106AE906-5075-410A-B941-912F811848EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0F19343-8185-4A9F-9165-0EA8544BC925}
