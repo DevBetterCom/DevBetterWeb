@@ -8,6 +8,7 @@ using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
+using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Services;
@@ -91,7 +92,7 @@ namespace DevBetterWeb.Web
       //services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
       services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
-      services.AddScoped<IPaymentHandlerCustomer, StripePaymentHandlerCustomerService>();
+      services.AddScoped<IPaymentHandlerCustomerService, StripePaymentHandlerCustomerService>();
       services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
       services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
       services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
