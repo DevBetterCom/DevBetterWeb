@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Core;
-
+using DevBetterWeb.Infrastructure.Interfaces;
 
 namespace DevBetterWeb.Web.Controllers
 {
@@ -38,24 +38,24 @@ namespace DevBetterWeb.Web.Controllers
 
       try
       {
-        var stripeEventType = _paymentHandlerEventService.GetEventType(json);
-        _logger.LogInformation($"Processing Stripe Event Type: {stripeEventType}");
+        var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
+        _logger.LogInformation($"Processing Stripe Event Type: {paymentHandlerEvent.EventType}");
 
-        if (stripeEventType.Equals(StripeConstants.INVOICE_PAYMENT_SUCCEEDED_EVENT_TYPE))
+        if (paymentHandlerEvent.EventType.Equals(StripeConstants.INVOICE_PAYMENT_SUCCEEDED_EVENT_TYPE))
         {
           await HandleInvoicePaymentSucceeded(json);
         }
-        else if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_DELETED_EVENT_TYPE))
+        else if (paymentHandlerEvent.EventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_DELETED_EVENT_TYPE))
         {
           await HandleCustomerSubscriptionEnded(json);
         }
-        else if (stripeEventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
+        else if (paymentHandlerEvent.EventType.Equals(StripeConstants.CUSTOMER_SUBSCRIPTION_UPDATED_EVENT_TYPE))
         {
           await HandleCustomerSubscriptionUpdatedEvent(json);
         }
         else
         {
-          throw new Exception($"Unhandled Stripe event type {stripeEventType}");
+          throw new Exception($"Unhandled Stripe event type {paymentHandlerEvent.EventType}");
         }
         return Ok();
       }
@@ -97,8 +97,8 @@ namespace DevBetterWeb.Web.Controllers
 
     private async Task HandleCustomerSubscriptionUpdatedEvent(string json)
     {
-      var subscriptionId = _paymentHandlerEventService.GetSubscriptionId(json);
-      var cancelAtPeriodEnd = _paymentHandlerSubscription.GetCancelAtPeriodEnd(subscriptionId);
+      var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
+      var cancelAtPeriodEnd = _paymentHandlerSubscription.GetCancelAtPeriodEnd(paymentHandlerEvent.SubscriptionId);
 
       if (cancelAtPeriodEnd)
       {
