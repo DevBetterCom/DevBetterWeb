@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Interfaces;
 using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
@@ -8,11 +9,11 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
   {
     private readonly SubscriptionService _subscriptionService;
     private readonly IPaymentHandlerPaymentMethod _paymentHandlerPaymentMethod;
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
+    private readonly IPaymentHandlerCustomerService _paymentHandlerCustomer;
 
     public StripePaymentHandlerSubscriptionCreationService(SubscriptionService subscriptionService,
       IPaymentHandlerPaymentMethod paymentHandlerPaymentMethod,
-      IPaymentHandlerCustomer paymentHandlerCustomer)
+      IPaymentHandlerCustomerService paymentHandlerCustomer)
     {
       _subscriptionService = subscriptionService;
       _paymentHandlerPaymentMethod = paymentHandlerPaymentMethod;
