@@ -60,6 +60,7 @@ namespace DevBetterWeb.Infrastructure
         .InstancePerDependency();
 
       builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
+      builder.RegisterDecorator<MarkdigService, IMarkdown>();
 
       builder.RegisterAssemblyTypes(this.ThisAssembly)
           .AsClosedTypesOf(typeof(IHandle<>));
