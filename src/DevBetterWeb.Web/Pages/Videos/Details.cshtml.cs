@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,11 @@ namespace DevBetterWeb.Web.Pages.Videos
 
     private readonly GetOEmbedVideoService _getOEmbedVideoService;
     private readonly GetVideoService _getVideoService;
+    private readonly IMarkdown _markdownService;
 
-    public DetailsModel(GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
+    public DetailsModel(IMarkdown markdownService, GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
     {
+      _markdownService = markdownService;
       _getVideoService = getVideoService;
 
       _getOEmbedVideoService = getOEmbedVideoService;
@@ -34,7 +37,7 @@ namespace DevBetterWeb.Web.Pages.Videos
       OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
       OEmbedViewModel.Name = video.Data.Name;
       OEmbedViewModel.Password = video.Data.Password;
-      OEmbedViewModel.Description = video.Data.Description;
+      OEmbedViewModel.Description = _markdownService.RenderHTMLFromMD(video.Data.Description);
       OEmbedViewModel
         .AddStartTime(startTime)
         .BuildHtml(video.Data.Link);
