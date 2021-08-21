@@ -49,6 +49,10 @@ namespace DevBetterWeb.UploaderApp
           continue;
         }
         Console.WriteLine($"Starting Uploading {video.Name}");
+        if (string.IsNullOrEmpty(video.Description))
+        {
+          Console.WriteLine($"{video.Name} Without MD files");
+        }
         var request = new UploadVideoRequest("me", video.Data, video);
         request.FileData = video.Data;
 
