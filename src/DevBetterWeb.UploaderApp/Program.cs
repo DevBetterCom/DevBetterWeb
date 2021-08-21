@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 
@@ -39,8 +40,14 @@ namespace DevBetterWeb.UploaderApp
       var token = argsList[tokenIndex];
       var httpService = Builders.BuildHttpService(token);
       var uploader = Builders.BuildUploadVideoService(httpService);
+
+      var allExisVideos = await GetExistVideosAsync(httpService);
       foreach (var video in videos)
       {
+        if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower())) {
+          Console.WriteLine($"{video.Name} Exist");
+          continue;
+        }
         Console.WriteLine($"Starting Uploading {video.Name}");
         var request = new UploadVideoRequest("me", video.Data, video);
         request.FileData = video.Data;
@@ -58,6 +65,16 @@ namespace DevBetterWeb.UploaderApp
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
     }    
+
+    private static async Task<List<Video>> GetExistVideosAsync(HttpService httpService)
+    {
+      var allExistVideosService = Builders.BuildGetAllVideosService(httpService);
+
+      var getAllVideosRequest = new GetAllVideosRequest("me");
+      var allExisVideos = await allExistVideosService.ExecuteAsync(getAllVideosRequest);
+
+      return allExisVideos.Data.Data;
+    }
 
     private static List<Video> GetVideos(string folderPath)
     {

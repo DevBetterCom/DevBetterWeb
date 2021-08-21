@@ -25,6 +25,11 @@ namespace DevBetterWeb.UploaderApp
       return new UploadVideoService(httpService, _loggerFactory.CreateLogger<UploadVideoService>(), getStreamingTicketService, completeUploadByCompleteUriService, updateVideoDetailsService, addDomainToVideoService);
     }
 
+    public static GetAllVideosService BuildGetAllVideosService(HttpService httpService)
+    {
+      return new GetAllVideosService(httpService, _loggerFactory.CreateLogger<GetAllVideosService>());
+    }
+
     public static HttpService BuildHttpService(string token)
     {
       var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
