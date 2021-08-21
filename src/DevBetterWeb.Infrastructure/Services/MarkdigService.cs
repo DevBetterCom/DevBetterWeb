@@ -16,11 +16,9 @@ namespace DevBetterWeb.Infrastructure.Services
         .Build();
     }
 
-    public string RenderHTMLFromMD(string mdFilepath)
+    public string RenderHTMLFromMD(string mdContent)
     {
-      string Document = System.IO.File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + mdFilepath);
-
-      var result = Markdown.ToHtml(Document, _pipeline);
+      var result = Markdown.ToHtml(mdContent, _pipeline);
 
       return result;
     }

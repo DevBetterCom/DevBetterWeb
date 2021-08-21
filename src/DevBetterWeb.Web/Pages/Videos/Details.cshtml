@@ -9,7 +9,7 @@
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
 <br />
-<h1>@Model!.OEmbedViewModel?.Description</h1>
+<h1>@Html.Raw(@Model!.OEmbedViewModel?.Description)</h1>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
