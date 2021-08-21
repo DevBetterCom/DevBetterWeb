@@ -35,7 +35,7 @@ namespace DevBetterWeb.UploaderApp
       var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };
       httpClient.DefaultRequestHeaders.Remove("Accept");
       httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
-      httpClient.Timeout = TimeSpan.FromMinutes(60);
+      httpClient.Timeout = TimeSpan.FromHours(2);
       var httpService = new HttpService(httpClient);
 
       httpService.SetAuthorization(token);
