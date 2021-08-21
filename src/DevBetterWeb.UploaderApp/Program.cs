@@ -102,7 +102,8 @@ namespace DevBetterWeb.UploaderApp
         video.SetName(Path.GetFileNameWithoutExtension(videoPath));
 
         var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
-        video.SetDescription(File.ReadAllText(mdFilePath));
+        var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
+        video.SetDescription(description);
 
         video.Data = File.ReadAllBytes(videoPath);
         if (video.Data == null || video.Data.Length <= 0)
