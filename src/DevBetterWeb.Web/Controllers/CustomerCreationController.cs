@@ -1,4 +1,4 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using DevBetterWeb.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -9,9 +9,9 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class CustomerCreationController : Controller
   {
-    private readonly IPaymentHandlerCustomer _paymentHandlerCustomer;
+    private readonly IPaymentHandlerCustomerService _paymentHandlerCustomer;
 
-    public CustomerCreationController(IPaymentHandlerCustomer paymentHandlerCustomer)
+    public CustomerCreationController(IPaymentHandlerCustomerService paymentHandlerCustomer)
     {
       _paymentHandlerCustomer = paymentHandlerCustomer;
     }

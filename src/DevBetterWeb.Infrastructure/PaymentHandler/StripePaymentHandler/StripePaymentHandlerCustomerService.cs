@@ -1,9 +1,10 @@
 ﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.Interfaces;
 using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 {
-  public class StripePaymentHandlerCustomerService : IPaymentHandlerCustomer
+  public class StripePaymentHandlerCustomerService : IPaymentHandlerCustomerService
   {
     private readonly CustomerService _customerService;
 
@@ -12,24 +13,14 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       _customerService = customerService;
     }
 
-    public string CreateCustomer(string email)
+    public PaymentHandlerCustomer CreateCustomer(string email)
     {
       var customer = _customerService.Create(new CustomerCreateOptions
       {
         Email = email,
       });
 
-      return customer.Id;
-    }
-
-    public string GetCustomerEmail(string customerId)
-    {
-      var customer = GetCustomer(customerId);
-
-      var email = customer.Email;
-
-      return email;
-
+      return new PaymentHandlerCustomer(customer.Id, customer.Email);
     }
 
     public void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId)
@@ -44,12 +35,11 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       _customerService.Update(customerId, customerOptions);
     }
 
-    private Stripe.Customer GetCustomer(string customerId)
+    public PaymentHandlerCustomer GetCustomer(string customerId)
     {
       var customer = _customerService.Get(customerId);
 
-      return customer;
+      return new PaymentHandlerCustomer(customer.Id, customer.Email);
     }
   }
-
 }
