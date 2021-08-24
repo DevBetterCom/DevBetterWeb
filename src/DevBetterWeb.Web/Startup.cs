@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 namespace DevBetterWeb.Web
 {
@@ -176,6 +177,8 @@ namespace DevBetterWeb.Web
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
       });
+
+      StripeConfiguration.ApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
     }
   }
 }
