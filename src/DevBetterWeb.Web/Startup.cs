@@ -22,13 +22,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 namespace DevBetterWeb.Web
 {
   public class Startup
   {
-    public const string DEFAULT_CONNECTION_STRING_NAME = "DefaultConnection";
-
     private bool _isDbContextAdded = false;
     private readonly IWebHostEnvironment _env;
 
@@ -47,7 +46,7 @@ namespace DevBetterWeb.Web
       {
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration
-                .GetConnectionString(DEFAULT_CONNECTION_STRING_NAME)));
+                .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
         _isDbContextAdded = true;
       }
 
@@ -72,51 +71,29 @@ namespace DevBetterWeb.Web
         string dbName = Guid.NewGuid().ToString();
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration
-                .GetConnectionString(DEFAULT_CONNECTION_STRING_NAME)));
+                .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
         _isDbContextAdded = true;
       }
+      services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
       services.AddAutoMapper(typeof(Startup).Assembly);
       services.AddMediatR(typeof(Startup).Assembly);
 
-      services.AddMvc()
-          .AddControllersAsServices()
-          .AddRazorRuntimeCompilation();
-
-      services.AddSwaggerGen(c =>
-      {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-      });
-
-      services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-      //services.AddScoped<IRepository, EfRepository>();
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
-      services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
-      services.AddScoped<IPaymentHandlerCustomerService, StripePaymentHandlerCustomerService>();
-      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
-      services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
-      services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
-      services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
-      services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
-      services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
-      services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
-      services.AddScoped<INewMemberService, NewMemberService>();
-      services.AddScoped<IMemberLookupService, MemberLookupService>();
-      services.AddScoped<IMemberCancellationService, MemberSubscriptionCancellationService>();
-      services.AddScoped<IMemberSubscriptionRenewalService, MemberSubscriptionRenewalService>();
-      services.AddScoped<IMemberAddBillingActivityService, MemberAddBillingActivityService>();
-      services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
-      services.AddScoped<IMemberSubscriptionEndedAdminEmailService, MemberSubscriptionEndedAdminEmailService>();
+
+      // configure Stripe
+      string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
+      services.AddStripeServices(stripeApiKey);
+
+      services.AddMemberSubscriptionServices();
+
       services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
-      services.AddScoped<IUserLookupService, UserLookupService>();
       services.AddScoped<ICsvService, CsvService>();
       services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
-      services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
-      services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
       services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
-      services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
-      //            services.Configure<AuthMessageSenderOptions>(Configuration);
+      services.AddScoped<IUserLookupService, UserLookupService>();
+      services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
       // list services
       services.Configure<ServiceConfig>(config =>
@@ -127,14 +104,22 @@ namespace DevBetterWeb.Web
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
-      services.AddHostedService<DailyCheckService>();
+      services.AddDailyCheckServices();
 
+      services.AddMvc()
+        .AddControllersAsServices()
+        .AddRazorRuntimeCompilation();
+
+      services.AddSwaggerGen(c =>
+      {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+      });
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
     {
       string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
-      
+
       builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
     }
 
@@ -176,6 +161,41 @@ namespace DevBetterWeb.Web
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
       });
+    }
+  }
+
+  public static class ConfigureServicesExtensions
+  {
+    public static void AddStripeServices(this IServiceCollection services, string stripeApiKey)
+    {
+      StripeConfiguration.ApiKey = stripeApiKey;
+      services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
+      services.AddScoped<IPaymentHandlerCustomerService, StripePaymentHandlerCustomerService>();
+      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
+      services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
+      services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
+      services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
+      services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
+      services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
+      services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
+    }
+
+    public static void AddDailyCheckServices(this IServiceCollection services)
+    {
+      services.AddHostedService<DailyCheckService>();
+      services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
+      services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
+    }
+
+    public static void AddMemberSubscriptionServices(this IServiceCollection services)
+    {
+      services.AddScoped<INewMemberService, NewMemberService>();
+      services.AddScoped<IMemberLookupService, MemberLookupService>();
+      services.AddScoped<IMemberCancellationService, MemberSubscriptionCancellationService>();
+      services.AddScoped<IMemberSubscriptionRenewalService, MemberSubscriptionRenewalService>();
+      services.AddScoped<IMemberAddBillingActivityService, MemberAddBillingActivityService>();
+      services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
+      services.AddScoped<IMemberSubscriptionEndedAdminEmailService, MemberSubscriptionEndedAdminEmailService>();
     }
   }
 }
