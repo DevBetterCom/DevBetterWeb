@@ -16,9 +16,9 @@ namespace DevBetterWeb.Web.Pages.Videos
 
     private readonly GetOEmbedVideoService _getOEmbedVideoService;
     private readonly GetVideoService _getVideoService;
-    private readonly IMarkdown _markdownService;
+    private readonly IMarkdownService _markdownService;
 
-    public DetailsModel(IMarkdown markdownService, GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
+    public DetailsModel(IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService)
     {
       _markdownService = markdownService;
       _getVideoService = getVideoService;

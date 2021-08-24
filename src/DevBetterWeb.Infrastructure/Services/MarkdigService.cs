@@ -4,7 +4,7 @@ using Markdig;
 
 namespace DevBetterWeb.Infrastructure.Services
 {
-  public class MarkdigService : IMarkdown
+  public class MarkdigService : IMarkdownService
   {
     private readonly MarkdownPipeline _pipeline;
 
