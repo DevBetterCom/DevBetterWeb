@@ -29,6 +29,9 @@ namespace DevBetterWeb.Vimeo.Models
       }
     }
 
+    [JsonIgnore]
+    public byte[] Data { get; set; }
+
     [JsonPropertyName("categories")]
     public List<Category> Categories { get; set; }
 
