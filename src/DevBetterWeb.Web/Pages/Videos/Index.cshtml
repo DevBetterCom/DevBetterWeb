@@ -3,11 +3,37 @@
 @{
 	ViewData["Title"] = "Index";
 }
+
+<style>
+	#videos {
+	  font-family: Arial, Helvetica, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+
+	#videos td, #videos th {
+	  border: 1px solid #ddd;
+	  padding: 8px;
+	}
+
+	#videos tr:nth-child(even){background-color: #f2f2f2;}
+
+	#videos tr:hover {background-color: #ddd;}
+
+	#videos th {
+	  padding-top: 12px;
+	  padding-bottom: 12px;
+	  text-align: left;
+	  background-color: #007bff;
+	  color: white;
+	}
+</style>
+
 <h3>Videos</h3>
 <p asp-authorize asp-roles="Administrators">
-	<a asp-page="Create">Create New</a>
+	<a class="btn btn-primary" asp-page="Create" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Create New</a>
 </p>
-<table class="table">
+<table class="table" id="videos">
 	<thead>
 		<tr>
 			<th>
@@ -42,11 +68,11 @@
 					@Html.DisplayFor(modelItem => item.Status)
 				</td>
 				<td>
-					<a href="Videos/Details/@item.Id">Details</a>
+					<a href="Videos/Details/@item.Id"><i class="fas fa-info-circle"></i></a>
 					<span asp-authorize asp-roles="Administrators">
 						|
-						<a href="Videos/Edit/@item.Id">Edit</a> |
-						<a href="Videos/Delete/@item.Id">Delete</a>
+						<a href="Videos/Edit/@item.Id"><i class="fas fa-edit"></i></a> |
+						<a href="Videos/Delete/@item.Id"><i class="far fa-trash-alt"></i></a>
 					</span>
 				</td>
 			</tr>
