@@ -3,6 +3,7 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.User
@@ -15,17 +16,20 @@ namespace DevBetterWeb.Web.Pages.User
 #pragma warning restore CS0436 // Type conflicts with imported type
     private readonly IRepository<Member> _memberRepository;
     private readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
+    private readonly IAppLogger<DetailsModel> _logger;
 
     public MemberSubscriptionPercentBarViewModel PercentModel { get; set; } = new MemberSubscriptionPercentBarViewModel(0);
 
     public DetailsModel(IRepository<Member> memberRepository,
-      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
+      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService,
+      IAppLogger<DetailsModel> logger)
     {
       _memberRepository = memberRepository;
       _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
+      _logger = logger;
     }
 
-    public async Task OnGet(string userId)
+    public async Task<ActionResult> OnGet(string userId)
     {
 
       var spec = new MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec(userId);
@@ -33,8 +37,8 @@ namespace DevBetterWeb.Web.Pages.User
 
       if (member == null)
       {
-        // TODO: Add logging
-        BadRequest();
+        _logger.LogWarning($"No member found for userId {userId}");
+        return NotFound();
       }
 
 #pragma warning disable CS0436 // Type conflicts with imported type
@@ -44,6 +48,8 @@ namespace DevBetterWeb.Web.Pages.User
       int percentageNum = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member!);
 
       PercentModel.Percentage = percentageNum;
+
+      return Page();
     }
   }
 }
