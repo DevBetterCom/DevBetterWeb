@@ -204,7 +204,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             if (x._errorMessage) {
                 showError(x._errorMessage);
 
-                throw x._errorMessage;
+                //throw x._errorMessage;
             }
             return x;
         })
@@ -249,7 +249,6 @@ async function createPayment(card, customer, priceId, customerEmail) {
                 email: customerEmail,
             },
         });
-    debugger;
     if (error) {
         showError(error.message);
     } else {
@@ -326,17 +325,11 @@ var handleForm = function () {
             var customer = "customer not set";
 
             await createCustomer()
-                .then((customerData) => customer = customerData._customer)
-                .catch((error) => {
-                    showError(error.message);
-                });
+                .then((customerData) => customer = customerData._customer);
 
             await createPayment(card, customer, PriceId, customerEmail)
                 .then((paymentData) => {
                     payment = paymentData;
-                })
-                .catch((error) => {
-                    showError(error.message);
                 });
 
         })();
