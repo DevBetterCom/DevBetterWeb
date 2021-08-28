@@ -23,7 +23,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
       var customer = _customerService.Create(new CustomerCreateOptions
       {
-        Email = email,
+        Email = email.ToLower(),
       });
 
       return new PaymentHandlerCustomer(customer.Id, customer.Email);
@@ -52,7 +52,7 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
     {
       var options = new CustomerListOptions
       {
-        Email = email,
+        Email = email.ToLower(),
         Limit = 1,
       };
 
