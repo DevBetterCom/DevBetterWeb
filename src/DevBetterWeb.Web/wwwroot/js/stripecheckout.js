@@ -235,39 +235,32 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
 }
 
-async function createPayment(card, customerId, priceId, customerEmail) {
+async function createPayment(card, customer, priceId, customerEmail) {
 
-    var CustomerId = customerId;
+    var CustomerId = customer.customerId;
 
     var PriceId = priceId;
 
-    const output = stripe
+    const { paymentMethod, error } = await stripe
         .createPaymentMethod({
             type: 'card',
             card: card,
             billing_details: {
                 email: customerEmail,
             },
-        })
-        .then((paymentResult) => {
-            if (paymentResult.error) {
-                showError(paymentResult.error.message);
-            } else {
-                (async () => {
-                    await createSubscription({
-                        customerIdInput: CustomerId,
-                        paymentMethodIdInput: paymentResult.paymentMethod.id,
-                        priceIdInput: PriceId
-                    });
-                })();
-
-            }
-
-            return paymentResult.paymentMethod.id;
-
         });
+    debugger;
+    if (error) {
+        showError(error.message);
+    } else {
+        await createSubscription({
+            customerIdInput: CustomerId,
+            paymentMethodIdInput: paymentMethod?.id,
+            priceIdInput: PriceId
+        });
+    }
 
-    return output;
+    return paymentMethod?.id;
 }
 
 async function getCustomerEmail(customer) {
@@ -333,11 +326,17 @@ var handleForm = function () {
             var customer = "customer not set";
 
             await createCustomer()
-                .then((customerData) => customer = customerData._customer);
+                .then((customerData) => customer = customerData._customer)
+                .catch((error) => {
+                    showError(error.message);
+                });
 
             await createPayment(card, customer, PriceId, customerEmail)
                 .then((paymentData) => {
                     payment = paymentData;
+                })
+                .catch((error) => {
+                    showError(error.message);
                 });
 
         })();
