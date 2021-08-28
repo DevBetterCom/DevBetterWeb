@@ -15,6 +15,12 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
 
     public PaymentHandlerCustomer CreateCustomer(string email)
     {
+      var paymentHandlerCustomer = GetCustomerByEmail(email);
+      if (paymentHandlerCustomer != null)
+      {
+        return paymentHandlerCustomer;
+      }
+
       var customer = _customerService.Create(new CustomerCreateOptions
       {
         Email = email,
@@ -40,6 +46,25 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
       var customer = _customerService.Get(customerId);
 
       return new PaymentHandlerCustomer(customer.Id, customer.Email);
+    }
+
+    public PaymentHandlerCustomer? GetCustomerByEmail(string email)
+    {
+      var options = new CustomerListOptions
+      {
+        Email = email,
+        Limit = 1,
+      };
+
+      StripeList<Customer> customers = _customerService.List(
+        options
+      );
+      if (customers.Data.Count > 0)
+      {
+        return new PaymentHandlerCustomer(customers.Data[0].Id, customers.Data[0].Email);
+      }
+
+      return null;
     }
   }
 }
