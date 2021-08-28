@@ -1,5 +1,4 @@
-﻿
-var this_js_script = document.currentScript;
+﻿var this_js_script = document.currentScript;
 
 var stripeKey = this_js_script.getAttribute("data-stripe_key");
 var subscriptionPlanPriceId = this_js_script.getAttribute('data-subscription_plan_price_id');
@@ -237,29 +236,37 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
 async function createPayment(card, customer, priceId, customerEmail) {
 
-    var CustomerId = customer.customerId;
+    var CustomerId = customer?.customerId;
 
     var PriceId = priceId;
 
-    const { paymentMethod, error } = await stripe
+    const output = stripe
         .createPaymentMethod({
             type: 'card',
             card: card,
             billing_details: {
                 email: customerEmail,
             },
-        });
-    if (error) {
-        showError(error.message);
-    } else {
-        await createSubscription({
-            customerIdInput: CustomerId,
-            paymentMethodIdInput: paymentMethod?.id,
-            priceIdInput: PriceId
-        });
-    }
+        })
+        .then((paymentResult) => {
+            if (paymentResult.error) {
+                showError(paymentResult.error.message);
+            } else {
+                (async () => {
+                    await createSubscription({
+                        customerIdInput: CustomerId,
+                        paymentMethodIdInput: paymentResult?.paymentMethod?.id,
+                        priceIdInput: PriceId
+                    });
+                })();
 
-    return paymentMethod?.id;
+            }
+
+            return paymentResult?.paymentMethod?.id;
+
+        });
+
+    return output;
 }
 
 async function getCustomerEmail(customer) {
