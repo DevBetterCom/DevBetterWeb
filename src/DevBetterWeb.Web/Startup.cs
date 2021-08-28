@@ -66,6 +66,7 @@ namespace DevBetterWeb.Web
       services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
 
       // TODO: Consider changing to check services collection for dbContext
+      // See: https://stackoverflow.com/a/49377724/13729
       if (!_isDbContextAdded)
       {
         string dbName = Guid.NewGuid().ToString();
