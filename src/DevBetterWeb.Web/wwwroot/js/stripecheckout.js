@@ -1,5 +1,4 @@
-﻿
-var this_js_script = document.currentScript;
+﻿var this_js_script = document.currentScript;
 
 var stripeKey = this_js_script.getAttribute("data-stripe_key");
 var subscriptionPlanPriceId = this_js_script.getAttribute('data-subscription_plan_price_id');
@@ -204,7 +203,7 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
             if (x._errorMessage) {
                 showError(x._errorMessage);
 
-                throw x._errorMessage;
+                //throw x._errorMessage;
             }
             return x;
         })
@@ -235,9 +234,9 @@ var createSubscription = async function ({ customerIdInput, paymentMethodIdInput
 
 }
 
-async function createPayment(card, customerId, priceId, customerEmail) {
+async function createPayment(card, customer, priceId, customerEmail) {
 
-    var CustomerId = customerId;
+    var CustomerId = customer?.customerId;
 
     var PriceId = priceId;
 
@@ -256,14 +255,14 @@ async function createPayment(card, customerId, priceId, customerEmail) {
                 (async () => {
                     await createSubscription({
                         customerIdInput: CustomerId,
-                        paymentMethodIdInput: paymentResult.paymentMethod.id,
+                        paymentMethodIdInput: paymentResult?.paymentMethod?.id,
                         priceIdInput: PriceId
                     });
                 })();
 
             }
 
-            return paymentResult.paymentMethod.id;
+            return paymentResult?.paymentMethod?.id;
 
         });
 
@@ -400,12 +399,10 @@ var showError = function (errorMsgText) {
 var loading = function (isLoading) {
     if (isLoading) {
         // Disable the button and show a spinner
+        document.querySelector("#submit").classList.toggle('button--loading');
         document.querySelector("#submit").disabled = true;
-        document.querySelector("#spinner").classList.remove("hidden");
-        document.querySelector("#button-text").classList.add("hidden");
     } else {
+        document.querySelector("#submit").classList.toggle('button--loading');
         document.querySelector("#submit").disabled = false;
-        document.querySelector("#spinner").classList.add("hidden");
-        document.querySelector("#button-text").classList.remove("hidden");
     }
 };
