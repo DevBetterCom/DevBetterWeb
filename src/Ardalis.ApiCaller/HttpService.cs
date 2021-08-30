@@ -73,21 +73,19 @@ namespace Ardalis.ApiCaller
       return allValues.ToArray();
     }
 
-    public void SetTimeout(int minutes, TimeoutType timeType = TimeoutType.Seconds)
+    public void SetTimeout(int units, TimeoutType timeType = TimeoutType.Seconds)
     {
-      // TODO: Why is the first parameter called minutes if it might not be minutes?
-      // TODO: Minutes isn't even the default. Better name might be units?
       if(timeType == TimeoutType.Seconds)
       {
-        _httpClient.Timeout = TimeSpan.FromSeconds(minutes);
+        _httpClient.Timeout = TimeSpan.FromSeconds(units);
       } 
       else if(timeType == TimeoutType.Minutes)
       {
-        _httpClient.Timeout = TimeSpan.FromMinutes(minutes);
+        _httpClient.Timeout = TimeSpan.FromMinutes(units);
       }
       else if (timeType == TimeoutType.Hours)
       {
-        _httpClient.Timeout = TimeSpan.FromHours(minutes);
+        _httpClient.Timeout = TimeSpan.FromHours(units);
       }   
     }
 
