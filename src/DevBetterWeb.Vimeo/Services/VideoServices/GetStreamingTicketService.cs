@@ -27,10 +27,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       var uri = $"me/videos";
       try
       {
-        var query = new Dictionary<string, string>()
-        {
-            { "type", UploadVideoType.STREAMING?.ToString() }
-        };
+        var query = new Dictionary<string, string>();
+
+        query.AddIfNotNull("type", UploadVideoType.STREAMING?.ToString());
 
         var response = await _httpService.HttpPostByQueryAsync<UploadTicket>(uri, query);
 

@@ -41,11 +41,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
       try
       {
-        var query = new Dictionary<string, string>()
-        {
-            { "page", request.Page?.ToString() },
-            { "per_page", request.PageSize?.ToString() }
-        };
+        var query = new Dictionary<string, string>();
+
+        query.AddIfNotNull("page", request.Page?.ToString());
+        query.AddIfNotNull("per_page", request.PageSize?.ToString());
 
         var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query);
 
