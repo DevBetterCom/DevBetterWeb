@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.Videos
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
   public class DetailsModel : PageModel
   {
     [BindProperty]
