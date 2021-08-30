@@ -64,6 +64,7 @@ namespace DevBetterWeb.Web
       services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
       services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
       services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
+      services.Configure<SubscriptionPlanOptions>(Configuration.GetSection("SubscriptionPlanOptions"));
 
       // TODO: Consider changing to check services collection for dbContext
       // See: https://stackoverflow.com/a/49377724/13729
