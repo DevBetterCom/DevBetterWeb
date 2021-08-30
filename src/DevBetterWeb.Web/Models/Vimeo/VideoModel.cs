@@ -15,11 +15,11 @@ namespace DevBetterWeb.Web.Models.Vimeo
     public int? Width { get; set; }
 
     [Display(Name = "Creation Date")]
-    [DisplayFormat(DataFormatString = "0:dd MMM yyyy hh:mm")]
+    [DisplayFormat(DataFormatString = "{0:dd MMM yyyy hh:mm}")]
     public DateTime? CreatedTime { get; set; }
     public DateTime? ModifiedTime { get; set; }
     [Display(Name = "Recording Date")]
-    [DisplayFormat(DataFormatString = "0:dd MMM yyyy")]
+    [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
     public DateTime? ReleaseTime { get; set; }
   }
 }
