@@ -5,6 +5,7 @@ using Ardalis.ApiCaller;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
+using System.Collections.Generic;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
@@ -26,8 +27,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       var uri = $"me/videos";
       try
       {
-        var query = new QueryBuilder()
-          .Add("type", UploadVideoType.STREAMING);
+        var query = new Dictionary<string, string>()
+        {
+            { "type", UploadVideoType.STREAMING?.ToString() }
+        };
 
         var response = await _httpService.HttpPostByQueryAsync<UploadTicket>(uri, query);
 

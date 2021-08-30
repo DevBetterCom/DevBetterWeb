@@ -5,6 +5,7 @@ using Ardalis.ApiCaller;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
+using System.Collections.Generic;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
@@ -40,10 +41,11 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
 
       try
       {
-        var query = new QueryBuilder()
-          .Add("page", request.Page)
-          .Add("per_page", request.PageSize);
-
+        var query = new Dictionary<string, string>()
+        {
+            { "page", request.Page?.ToString() },
+            { "per_page", request.PageSize?.ToString() }
+        };
 
         var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query);
 

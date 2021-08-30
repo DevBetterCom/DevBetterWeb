@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Ardalis.ApiCaller
 {
@@ -99,11 +102,26 @@ namespace Ardalis.ApiCaller
     {
       _httpClient.Timeout = TimeSpan.FromSeconds(60);
     }
-    
-    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, QueryBuilder query=null)
+
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri)
         where T : class
     {
-      var uriToSend = query == null || query.IsEmpty()? $"{ApiBaseUrl}{uri}" : $"{ApiBaseUrl}{uri}?{query.Build()}";
+      var uriToSend = $"{ApiBaseUrl}{uri}";
+
+      var result = await _httpClient.GetAsync(uriToSend);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      return HttpResponse<T>.FromHttpResponseMessage(result);
+    }
+
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, Dictionary<string, string> query)
+        where T : class
+    {
+      var uriToSend = $"{ApiBaseUrl}{QueryHelpers.AddQueryString(uri, query)}";      
+      
       var result = await _httpClient.GetAsync(uriToSend);
       if (!result.IsSuccessStatusCode)
       {
@@ -156,10 +174,12 @@ namespace Ardalis.ApiCaller
       return HttpResponse<T>.FromHttpResponseMessage(result);
     }
 
-    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, QueryBuilder query)
+    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, Dictionary<string, string> query)
       where T : class
     {
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}?{query.Build()}", null);
+      var uriToSend = QueryHelpers.AddQueryString(uri, query);
+
+      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -168,10 +188,10 @@ namespace Ardalis.ApiCaller
       return HttpResponse<T>.FromHttpResponseMessage(result);
     }
 
-    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, QueryBuilder query)
+    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, NameValueCollection query)
       where T : class
     {
-      var formContent = new FormUrlEncodedContent(query.ToListKeyValuePair().ToArray());
+      var formContent = new FormUrlEncodedContent(ToListKeyValuePair(query).ToArray());
       var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent);
       if (!result.IsSuccessStatusCode)
       {
@@ -282,6 +302,17 @@ namespace Ardalis.ApiCaller
     private StringContent ToJson(object obj)
     {
       return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
+    }
+
+    public List<KeyValuePair<string, string>> ToListKeyValuePair(NameValueCollection query) 
+    {
+      var result = new List<KeyValuePair<string, string>>();
+      foreach (var item in query.AllKeys.SelectMany(query.GetValues, (k, v) => new { key = k, value = v }))
+      {
+        result.Add(new KeyValuePair<string, string>(item.key, item.value));
+      }
+
+      return result;
     }
   }
 }
