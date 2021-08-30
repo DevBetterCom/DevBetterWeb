@@ -38,28 +38,15 @@ namespace Ardalis.ApiCaller
       {
         acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
       }
-      var token = GetFirstHeader("Authorization");
-      var timeout = _httpClient.Timeout;
 
-      _httpClient = new HttpClient();
-      _httpClient.BaseAddress = baseUriToAdd;
-      _httpClient.DefaultRequestHeaders.Add("accept", acceptToAdd);
-      _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-      _httpClient.Timeout = timeout;
+      SetHeaders(acceptToAdd, baseUriToAdd);
     }
 
     public void ResetBaseUri()
     {
       var acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
-      
-      // TODO: Eliminate duplication with above method
-      var token = GetFirstHeader("Authorization");
-      var timeout = _httpClient.Timeout;
 
-      _httpClient = new HttpClient();
-      _httpClient.DefaultRequestHeaders.Add("accept", acceptToAdd);
-      _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-      _httpClient.Timeout = timeout;
+      SetHeaders(acceptToAdd);
     }
 
     public string GetFirstHeader(string key)
@@ -313,6 +300,20 @@ namespace Ardalis.ApiCaller
       }
 
       return result;
+    }
+
+    private void SetHeaders(string accept, Uri baseUri = null)
+    {
+      var token = GetFirstHeader("Authorization");
+      var timeout = _httpClient.Timeout;
+
+      if (baseUri != null)
+      {
+        _httpClient.BaseAddress = baseUri;
+      }
+      _httpClient.DefaultRequestHeaders.Add("accept", accept);
+      _httpClient.DefaultRequestHeaders.Add("Authorization", token);
+      _httpClient.Timeout = timeout;
     }
   }
 }
