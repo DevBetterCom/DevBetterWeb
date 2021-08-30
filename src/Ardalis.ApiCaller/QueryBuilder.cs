@@ -7,6 +7,8 @@ namespace Ardalis.ApiCaller
 {
   public class QueryBuilder
   {
+    // TODO: Do we need this when this exists?
+    // TODO: https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.queryhelpers?view=aspnetcore-5.0
     public NameValueCollection Query { get; }
 
     public QueryBuilder()
