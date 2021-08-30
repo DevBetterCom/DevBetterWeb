@@ -35,13 +35,13 @@ namespace DevBetterWeb.UploaderApp
       {
         if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
         {
-          Console.WriteLine($"{video.Name} Exist");
+          Console.WriteLine($"{video.Name} already exists - skipping.");
           continue;
         }
         Console.WriteLine($"Starting Uploading {video.Name}");
         if (string.IsNullOrEmpty(video.Description))
         {
-          Console.WriteLine($"{video.Name} Without MD files");
+          Console.WriteLine($"{video.Name} has no associated MD file(s)...");
         }
         var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video);
         request.FileData = video.Data;
@@ -49,11 +49,11 @@ namespace DevBetterWeb.UploaderApp
         var response = await _uploadVideoService.ExecuteAsync(request);
         if (response.Data > 0)
         {
-          Console.WriteLine($"{video.Name} Uploaded");
+          Console.WriteLine($"{video.Name} Uploaded!");
         }
         else
         {
-          Console.WriteLine($"{video.Name} Upload Error");
+          Console.WriteLine($"{video.Name} Upload Error!");
         }
       }
     }
@@ -65,8 +65,6 @@ namespace DevBetterWeb.UploaderApp
 
       return allExisVideos.Data.Data;
     }
-
-
 
     private List<Video> GetVideos(string folderPath)
     {
