@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ardalis.ApiCaller
@@ -51,6 +49,7 @@ namespace Ardalis.ApiCaller
     {
       var acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
       
+      // TODO: Eliminate duplication with above method
       var token = GetFirstHeader("Authorization");
       var timeout = _httpClient.Timeout;
 
@@ -76,6 +75,8 @@ namespace Ardalis.ApiCaller
 
     public void SetTimeout(int minutes, TimeoutType timeType = TimeoutType.Seconds)
     {
+      // TODO: Why is the first parameter called minutes if it might not be minutes?
+      // TODO: Minutes isn't even the default. Better name might be units?
       if(timeType == TimeoutType.Seconds)
       {
         _httpClient.Timeout = TimeSpan.FromSeconds(minutes);
@@ -100,7 +101,6 @@ namespace Ardalis.ApiCaller
     {
       _httpClient.Timeout = TimeSpan.FromSeconds(60);
     }
-
     
     public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, QueryBuilder query=null)
         where T : class
