@@ -16,7 +16,8 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     private readonly HttpService _httpService;
     private readonly ILogger<GetAllVideosService> _logger;
 
-    public GetAllVideosService(HttpService httpService, ILogger<GetAllVideosService> logger)
+    public GetAllVideosService(HttpService httpService,
+      ILogger<GetAllVideosService> logger)
     {
       _httpService = httpService;
       _logger = logger;
@@ -28,12 +29,14 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       if (string.IsNullOrEmpty(request.UserId))
       {
         uri = $"videos";
-      }else
+      }
+      else
       {
         if (request.UserId.ToLower().Equals("me"))
         {
           uri = $"{request.UserId}/videos";
-        }else
+        }
+        else
         {
           uri = $"users/{request.UserId}/videos";
         }
