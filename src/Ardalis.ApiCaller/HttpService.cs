@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Ardalis.ApiCaller
 {
@@ -35,26 +38,28 @@ namespace Ardalis.ApiCaller
       {
         acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
       }
-      var token = GetFirstHeader("Authorization");
-      var timeout = _httpClient.Timeout;
 
-      _httpClient = new HttpClient();
-      _httpClient.BaseAddress = baseUriToAdd;
-      _httpClient.DefaultRequestHeaders.Add("accept", acceptToAdd);
-      _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-      _httpClient.Timeout = timeout;
+      SetBaseUri(acceptToAdd, baseUriToAdd);
     }
 
     public void ResetBaseUri()
     {
       var acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
-      
-      // TODO: Eliminate duplication with above method
+
+      SetBaseUri(acceptToAdd);
+    }
+
+    public void SetBaseUri(string accept, Uri baseUriToAdd=null)
+    {
       var token = GetFirstHeader("Authorization");
       var timeout = _httpClient.Timeout;
 
       _httpClient = new HttpClient();
-      _httpClient.DefaultRequestHeaders.Add("accept", acceptToAdd);
+      if (baseUriToAdd != null)
+      {
+        _httpClient.BaseAddress = baseUriToAdd;
+      }      
+      _httpClient.DefaultRequestHeaders.Add("accept", accept);
       _httpClient.DefaultRequestHeaders.Add("Authorization", token);
       _httpClient.Timeout = timeout;
     }
@@ -73,21 +78,19 @@ namespace Ardalis.ApiCaller
       return allValues.ToArray();
     }
 
-    public void SetTimeout(int minutes, TimeoutType timeType = TimeoutType.Seconds)
+    public void SetTimeout(int units, TimeoutType timeType = TimeoutType.Seconds)
     {
-      // TODO: Why is the first parameter called minutes if it might not be minutes?
-      // TODO: Minutes isn't even the default. Better name might be units?
       if(timeType == TimeoutType.Seconds)
       {
-        _httpClient.Timeout = TimeSpan.FromSeconds(minutes);
+        _httpClient.Timeout = TimeSpan.FromSeconds(units);
       } 
       else if(timeType == TimeoutType.Minutes)
       {
-        _httpClient.Timeout = TimeSpan.FromMinutes(minutes);
+        _httpClient.Timeout = TimeSpan.FromMinutes(units);
       }
       else if (timeType == TimeoutType.Hours)
       {
-        _httpClient.Timeout = TimeSpan.FromHours(minutes);
+        _httpClient.Timeout = TimeSpan.FromHours(units);
       }   
     }
 
@@ -101,11 +104,26 @@ namespace Ardalis.ApiCaller
     {
       _httpClient.Timeout = TimeSpan.FromSeconds(60);
     }
-    
-    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, QueryBuilder query=null)
+
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri)
         where T : class
     {
-      var uriToSend = query == null || query.IsEmpty()? $"{ApiBaseUrl}{uri}" : $"{ApiBaseUrl}{uri}?{query.Build()}";
+      var uriToSend = $"{ApiBaseUrl}{uri}";
+
+      var result = await _httpClient.GetAsync(uriToSend);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      return HttpResponse<T>.FromHttpResponseMessage(result);
+    }
+
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, Dictionary<string, string> query)
+        where T : class
+    {
+      var uriToSend = $"{ApiBaseUrl}{QueryHelpers.AddQueryString(uri, query)}";      
+      
       var result = await _httpClient.GetAsync(uriToSend);
       if (!result.IsSuccessStatusCode)
       {
@@ -158,10 +176,12 @@ namespace Ardalis.ApiCaller
       return HttpResponse<T>.FromHttpResponseMessage(result);
     }
 
-    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, QueryBuilder query)
+    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, Dictionary<string, string> query)
       where T : class
     {
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}?{query.Build()}", null);
+      var uriToSend = QueryHelpers.AddQueryString(uri, query);
+
+      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -170,10 +190,10 @@ namespace Ardalis.ApiCaller
       return HttpResponse<T>.FromHttpResponseMessage(result);
     }
 
-    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, QueryBuilder query)
+    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, NameValueCollection query)
       where T : class
     {
-      var formContent = new FormUrlEncodedContent(query.ToListKeyValuePair().ToArray());
+      var formContent = new FormUrlEncodedContent(ToListKeyValuePair(query).ToArray());
       var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent);
       if (!result.IsSuccessStatusCode)
       {
@@ -284,6 +304,17 @@ namespace Ardalis.ApiCaller
     private StringContent ToJson(object obj)
     {
       return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
+    }
+
+    public List<KeyValuePair<string, string>> ToListKeyValuePair(NameValueCollection query) 
+    {
+      var result = new List<KeyValuePair<string, string>>();
+      foreach (var item in query.AllKeys.SelectMany(query.GetValues, (k, v) => new { key = k, value = v }))
+      {
+        result.Add(new KeyValuePair<string, string>(item.key, item.value));
+      }
+
+      return result;
     }
   }
 }
