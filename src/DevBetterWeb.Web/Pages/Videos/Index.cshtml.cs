@@ -18,6 +18,11 @@ namespace DevBetterWeb.Web.Pages.Videos
 
     [BindProperty]
     public IList<VideoModel> VideoList { get; set; } = new List<VideoModel>();
+    [BindProperty]
+    public int PagesCount { get; set; } = 0;
+    [BindProperty]
+    public int SelectedPage { get; set; } = 1;
+
 
     public IndexModel(IMapper mapper, GetAllVideosService getAllVideosService)
     {
@@ -25,15 +30,17 @@ namespace DevBetterWeb.Web.Pages.Videos
       _getAllVideosService = getAllVideosService;
     }
 
-    public async Task<IActionResult> OnGetAsync(int? page=1, int? pageSize=10)
+    public async Task<IActionResult> OnGetAsync(int? pageIndex = 1, int? pageSize=10)
     {
-      var request = new GetAllVideosRequest("me", page, pageSize);
+      SelectedPage = pageIndex.Value;
+      var request = new GetAllVideosRequest("me", pageIndex, pageSize);
       var response = await _getAllVideosService
         .ExecuteAsync(request);
 
       if (response.Data?.Data != null)
       {
         VideoList = _mapper.Map<List<VideoModel>>(response.Data.Data);
+        PagesCount = response.Data.Total/pageSize.Value;
       }
       return Page();
     }

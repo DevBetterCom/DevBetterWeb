@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{pageIndex:int?}/{pageSize:int?}"
 @model DevBetterWeb.Web.Pages.Videos.IndexModel
 @{
 	ViewData["Title"] = "Index";
@@ -26,6 +26,42 @@
 	  text-align: left;
 	  background-color: #007bff;
 	  color: white;
+	}
+
+	.pagination-disabled {
+		cursor: not-allowed;
+		background-color: #fff !important;
+	}
+
+	.pagination {
+	  display: inline-block;
+	  float: right;
+	}
+
+	.pagination a {
+	  color: black;
+	  float: left;
+	  padding: 8px 16px;
+	  text-decoration: none;
+	  border: 1px solid #007bff;
+	}
+
+	.pagination a.active {
+	  background-color: #007bff;
+	  color: white;
+	  border: 1px solid #007bff;
+	}
+
+	.pagination a:hover:not(.active) {background-color: #007bff;}
+
+	.pagination a:first-child {
+	  border-top-left-radius: 5px;
+	  border-bottom-left-radius: 5px;
+	}
+
+	.pagination a:last-child {
+	  border-top-right-radius: 5px;
+	  border-bottom-right-radius: 5px;
 	}
 </style>
 
@@ -77,3 +113,30 @@
 		}
 	</tbody>
 </table>
+<div class="pagination">
+  @if (Model.SelectedPage > 1) 
+  {
+	<a href="/Videos/@(Model.SelectedPage-1)">&laquo;</a>
+  } else 
+  {
+	  <a class="pagination-disabled" href="#">&laquo;</a>
+  }
+  @for (var i=0; i<Model.PagesCount; i++) 
+  {
+	@if (Model.SelectedPage == i+1) 
+	{
+		<a class="active" href="/Videos/@(i+1)">@(i+1)</a>
+	}
+	else 
+	{
+		<a class="" href="/Videos/@(i+1)">@(i+1)</a>
+	}
+  }
+  @if (Model.SelectedPage < Model.PagesCount) 
+  {
+	<a href="/Videos/@(Model.SelectedPage+1)">&raquo;</a>
+  } else 
+  {
+	  <a class="pagination-disabled" href="#">&raquo;</a>
+  }
+</a>
