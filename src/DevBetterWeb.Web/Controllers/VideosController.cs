@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,12 +25,12 @@ namespace DevBetterWeb.Web.Controllers
     }
 
     [HttpPost("list")]
-    public async Task<IActionResult> ListAsync()
+    public async Task<IActionResult> ListAsync([FromForm] DataTableParameterModel dataTableParameterModel)
     {
-      var draw = Request.Form["draw"].FirstOrDefault();      
-      var length = Request.Form["length"].FirstOrDefault();
+      var draw = dataTableParameterModel.Draw;
+      var length = dataTableParameterModel.Length;
       int pageSize = length != null ? Convert.ToInt32(length) : 0;
-      var startIndex = Convert.ToInt32(Request.Form["start"].FirstOrDefault());
+      var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
       var start = startIndex == 0 ? 1 : (startIndex / pageSize)+1;
 
       var request = new GetAllVideosRequest("me", start, pageSize);
