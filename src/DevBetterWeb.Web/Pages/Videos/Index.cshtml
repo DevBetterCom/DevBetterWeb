@@ -5,27 +5,63 @@
 }
 
 <style>
-	#videos {
+	#videosDatatable {
 	  font-family: Arial, Helvetica, sans-serif;
 	  border-collapse: collapse;
 	  width: 100%;
 	}
 
-	#videos td, #videos th {
+	#videosDatatable td, #videosDatatable th {
 	  border: 1px solid #ddd;
 	  padding: 8px;
 	}
 
-	#videos tr:nth-child(even){background-color: #f2f2f2;}
+	#videosDatatable tr:nth-child(even){background-color: #f2f2f2;}
 
-	#videos tr:hover {background-color: #ddd;}
+	#videosDatatable tr:hover {background-color: #ddd;}
 
-	#videos th {
+	#videosDatatable th {
 	  padding-top: 12px;
 	  padding-bottom: 12px;
 	  text-align: left;
 	  background-color: #007bff;
 	  color: white;
+	}
+
+	.pagination-disabled {
+		cursor: not-allowed;
+		background-color: #fff !important;
+	}
+
+	.pagination {
+	  display: inline-block;
+	  float: right;
+	}
+
+	.pagination a {
+	  color: black;
+	  float: left;
+	  padding: 8px 16px;
+	  text-decoration: none;
+	  border: 1px solid #007bff;
+	}
+
+	.pagination a.active {
+	  background-color: #007bff;
+	  color: white;
+	  border: 1px solid #007bff;
+	}
+
+	.pagination a:hover:not(.active) {background-color: #007bff;}
+
+	.pagination a:first-child {
+	  border-top-left-radius: 5px;
+	  border-bottom-left-radius: 5px;
+	}
+
+	.pagination a:last-child {
+	  border-top-right-radius: 5px;
+	  border-bottom-right-radius: 5px;
 	}
 </style>
 
@@ -33,47 +69,29 @@
 <p asp-authorize asp-roles="Administrators">
 	<a class="btn btn-primary" asp-page="Create" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Create New</a>
 </p>
-<table class="table" id="videos">
+<table class="table" id="videosDatatable">
 	<thead>
         <tr>
+			<th>Id</th>
             <th>
-                @Html.DisplayNameFor(model => model.VideoList[0].Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VideoList[0].ReleaseTime)
+                Release Time
             </th>
             <th asp-authorize asp-roles="Administrators">
-                @Html.DisplayNameFor(model => model.VideoList[0].CreatedTime)
+                Created Time
             </th>
             <th asp-authorize asp-roles="Administrators">
-                @Html.DisplayNameFor(model => model.VideoList[0].Status)
+                Status
             </th>
-            <th></th>
+			<th asp-authorize asp-roles="Administrators">
+			</th>
         </tr>
 	</thead>
-	<tbody>
-		@foreach (var item in Model.VideoList)
-		{
-        <tr>
-            <td>
-                <a href="Videos/Details/@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseTime)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                <a href="Videos/Details/@item.Id"><i class="fas fa-info-circle"></i></a>
-                    |
-                    <a href="Videos/Edit/@item.Id"><i class="fas fa-edit"></i></a> |
-                    <a href="Videos/Delete/@item.Id"><i class="far fa-trash-alt"></i></a>
-            </td>
-        </tr>
-		}
-	</tbody>
 </table>
+
+
+@section scripts{
+    <script src="~/js/videos.js" asp-append-version="true"></script>
+}
