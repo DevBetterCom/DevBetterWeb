@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.1.0" />
+    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.2.0" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.4.0" />
     <PackageReference Include="Markdig" Version="0.26.0" />
     <PackageReference Include="Sendgrid" Version="9.24.2" />
