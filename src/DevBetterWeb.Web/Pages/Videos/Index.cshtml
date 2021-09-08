@@ -1,4 +1,4 @@
-﻿@page "{pageIndex:int?}/{pageSize:int?}"
+﻿@page
 @model DevBetterWeb.Web.Pages.Videos.IndexModel
 @{
 	ViewData["Title"] = "Index";
@@ -69,74 +69,29 @@
 <p asp-authorize asp-roles="Administrators">
 	<a class="btn btn-primary" asp-page="Create" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Create New</a>
 </p>
-<table class="table" id="videos">
+<table class="table" id="videosDatatable">
 	<thead>
         <tr>
+			<th>Id</th>
             <th>
-                @Html.DisplayNameFor(model => model.VideoList[0].Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VideoList[0].ReleaseTime)
+                Release Time
             </th>
             <th asp-authorize asp-roles="Administrators">
-                @Html.DisplayNameFor(model => model.VideoList[0].CreatedTime)
+                Created Time
             </th>
             <th asp-authorize asp-roles="Administrators">
-                @Html.DisplayNameFor(model => model.VideoList[0].Status)
+                Status
             </th>
-            <th></th>
+			<th asp-authorize asp-roles="Administrators">
+			</th>
         </tr>
 	</thead>
-	<tbody>
-		@foreach (var item in Model.VideoList)
-		{
-        <tr>
-            <td>
-                <a href="Videos/Details/@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseTime)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td asp-authorize asp-roles="Administrators">
-                <a href="Videos/Details/@item.Id"><i class="fas fa-info-circle"></i></a>
-                    |
-                    <a href="Videos/Edit/@item.Id"><i class="fas fa-edit"></i></a> |
-                    <a href="Videos/Delete/@item.Id"><i class="far fa-trash-alt"></i></a>
-            </td>
-        </tr>
-		}
-	</tbody>
 </table>
-<div class="pagination">
-  @if (Model.SelectedPage > 1) 
-  {
-	<a href="/Videos/@(Model.SelectedPage-1)">&laquo;</a>
-  } else 
-  {
-	  <a class="pagination-disabled" href="#">&laquo;</a>
-  }
-  @for (var i=0; i<Model.PagesCount; i++) 
-  {
-	@if (Model.SelectedPage == i+1) 
-	{
-		<a class="active" href="/Videos/@(i+1)">@(i+1)</a>
-	}
-	else 
-	{
-		<a class="" href="/Videos/@(i+1)">@(i+1)</a>
-	}
-  }
-  @if (Model.SelectedPage < Model.PagesCount) 
-  {
-	<a href="/Videos/@(Model.SelectedPage+1)">&raquo;</a>
-  } else 
-  {
-	  <a class="pagination-disabled" href="#">&raquo;</a>
-  }
-</a>
+
+
+@section scripts{
+    <script src="~/js/videos.js" asp-append-version="true"></script>
+}
