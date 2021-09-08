@@ -24,7 +24,7 @@ namespace DevBetterWeb.Web.Controllers
     }
 
     [HttpPost("list")]
-    public async Task<IActionResult> GetVideosAsync()
+    public async Task<IActionResult> ListAsync()
     {
       var draw = Request.Form["draw"].FirstOrDefault();      
       var length = Request.Form["length"].FirstOrDefault();
