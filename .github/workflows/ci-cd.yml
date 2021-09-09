@@ -101,7 +101,7 @@ jobs:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
     name: Continuous Deployment
     needs: ci
-    runs-on: ubuntu-18.04
+    runs-on: windows-latest
     steps:
       - name: Download publish artifacts
         id: dl_publish_artifacts
