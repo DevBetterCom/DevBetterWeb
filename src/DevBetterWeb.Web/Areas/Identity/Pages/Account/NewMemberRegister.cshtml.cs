@@ -26,45 +26,32 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly ILogger<RegisterModel> _logger;
-    //private readonly IEmailService _emailService;
     private readonly IDomainEventDispatcher _dispatcher;
     private readonly ICaptchaValidator _captchaValidator;
     private readonly INewMemberService _newMemberService;
-    //private readonly IRepository<Invitation> _invitationRepository;
-    //private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    //private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
 
     public NewMemberRegisterModel(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserRoleMembershipService userRoleMembershipService,
             ILogger<RegisterModel> logger,
-            //IEmailService emailService,
             IDomainEventDispatcher dispatcher,
             ICaptchaValidator captchaValidator,
             INewMemberService newMemberService)
-            //IRepository<Invitation> invitationRepository,
-            //IPaymentHandlerSubscription paymentHandlerSubscription,
-            //IMemberAddBillingActivityService memberAddBillingActivityService)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _userRoleMembershipService = userRoleMembershipService;
       _logger = logger;
-      //_emailService = emailService;
       _dispatcher = dispatcher;
       _captchaValidator = captchaValidator;
       _newMemberService = newMemberService;
-      //_invitationRepository = invitationRepository;
-      ReturnUrl = "../User/MyProfile/Personal";
-      //_paymentHandlerSubscription = paymentHandlerSubscription;
-      //_memberAddBillingActivityService = memberAddBillingActivityService;
     }
 
     [BindProperty]
     public InputModel? Input { get; set; }
 
-    public string ReturnUrl { get; set; }
+    public string ReturnUrl { get; set; } = "../User/MyProfile/Personal";
     public string? ErrorMessage { get; set; }
     public string? Email { get; set; }
 
@@ -164,15 +151,5 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
       // If we got this far, something failed, redisplay form
       return Page();
     }
-
-    // taken from WebhookHandlerService.cs
-    //private Task AddNewSubscriberBillingActivity(string subscriptionId, string email)
-    //{
-    //  var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
-    //  var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-    //  decimal paymentAmount = _paymentHandlerSubscription.GetSubscriptionAmount(subscriptionId);
-
-    //  return _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
-    //}
   }
 }
