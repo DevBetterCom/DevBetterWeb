@@ -11,11 +11,11 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IDomainEventDispatcher _dispatcher;
-    private readonly ILogger _logger;
+    private readonly ILogger<HomeController> _logger;
 
     public HomeController(IWebHostEnvironment webHostEnvironment,
             IDomainEventDispatcher dispatcher,
-            ILogger logger)
+            ILogger<HomeController> logger)
     {
       _webHostEnvironment = webHostEnvironment;
       _dispatcher = dispatcher;
