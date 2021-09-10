@@ -26,39 +26,39 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRoleMembershipService _userRoleMembershipService;
     private readonly ILogger<RegisterModel> _logger;
-    private readonly IEmailService _emailService;
+    //private readonly IEmailService _emailService;
     private readonly IDomainEventDispatcher _dispatcher;
     private readonly ICaptchaValidator _captchaValidator;
     private readonly INewMemberService _newMemberService;
-    private readonly IRepository<Invitation> _invitationRepository;
-    private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
-    private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
+    //private readonly IRepository<Invitation> _invitationRepository;
+    //private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
+    //private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
 
     public NewMemberRegisterModel(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserRoleMembershipService userRoleMembershipService,
             ILogger<RegisterModel> logger,
-            IEmailService emailService,
+            //IEmailService emailService,
             IDomainEventDispatcher dispatcher,
             ICaptchaValidator captchaValidator,
-            INewMemberService newMemberService,
-            IRepository<Invitation> invitationRepository,
-            IPaymentHandlerSubscription paymentHandlerSubscription,
-            IMemberAddBillingActivityService memberAddBillingActivityService)
+            INewMemberService newMemberService)
+            //IRepository<Invitation> invitationRepository,
+            //IPaymentHandlerSubscription paymentHandlerSubscription,
+            //IMemberAddBillingActivityService memberAddBillingActivityService)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _userRoleMembershipService = userRoleMembershipService;
       _logger = logger;
-      _emailService = emailService;
+      //_emailService = emailService;
       _dispatcher = dispatcher;
       _captchaValidator = captchaValidator;
       _newMemberService = newMemberService;
-      _invitationRepository = invitationRepository;
+      //_invitationRepository = invitationRepository;
       ReturnUrl = "../User/MyProfile/Personal";
-      _paymentHandlerSubscription = paymentHandlerSubscription;
-      _memberAddBillingActivityService = memberAddBillingActivityService;
+      //_paymentHandlerSubscription = paymentHandlerSubscription;
+      //_memberAddBillingActivityService = memberAddBillingActivityService;
     }
 
     [BindProperty]
@@ -144,17 +144,7 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
             throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
           }
 
-          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!);
-
-          _logger.LogInformation($"Looking up invitation with code {inviteCode}");
-          var spec = new InvitationByInviteCodeSpec(inviteCode);
-          var inviteEntity = await _invitationRepository.GetBySpecAsync(spec);
-          if (inviteEntity == null)
-          {
-            throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
-          }
-
-          await AddNewSubscriberBillingActivity(inviteEntity.PaymentHandlerSubscriptionId, email);
+          await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email);
 
           _logger.LogInformation($"Adding user {user.Email} to Member Role");
           var roles = await _roleManager.Roles.ToListAsync();
@@ -176,13 +166,13 @@ namespace DevBetterWeb.Web.Areas.Identity.Pages.Account
     }
 
     // taken from WebhookHandlerService.cs
-    private Task AddNewSubscriberBillingActivity(string subscriptionId, string email)
-    {
-      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
-      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
-      decimal paymentAmount = _paymentHandlerSubscription.GetSubscriptionAmount(subscriptionId);
+    //private Task AddNewSubscriberBillingActivity(string subscriptionId, string email)
+    //{
+    //  var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+    //  var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+    //  decimal paymentAmount = _paymentHandlerSubscription.GetSubscriptionAmount(subscriptionId);
 
-      return _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
-    }
+    //  return _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
+    //}
   }
 }
