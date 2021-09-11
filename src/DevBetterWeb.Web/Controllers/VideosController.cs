@@ -6,6 +6,7 @@ using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Models.Vimeo;
@@ -40,17 +41,11 @@ namespace DevBetterWeb.Web.Controllers
       var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
       var start = startIndex == 0 ? 1 : (startIndex / pageSize)+1;
 
-      var request = new GetAllVideosRequest("me", start, pageSize);
-      var response = await _getAllVideosService
-        .ExecuteAsync(request);
+      var spec = new ArchiveVideoByPageSpec(start, pageSize);
+      var archiveVideos = await _repository.ListAsync(spec);
+      var archiveVideosDto = _mapper.Map<List<VideoModel>>(archiveVideos);      
 
-      var videoList = new List<VideoModel>();
-      if (response.Data?.Data != null)
-      {
-        videoList = _mapper.Map<List<VideoModel>>(response.Data.Data);
-      }
-
-      var jsonData = new { draw = draw, recordsFiltered = response.Data == null ? 0 : response.Data.Total, recordsTotal = response.Data == null ? 0 : response.Data.Total, data = videoList };
+      var jsonData = new { draw = draw, recordsFiltered = archiveVideos == null ? 0 : archiveVideos.Count, recordsTotal = archiveVideos == null ? 0 : archiveVideos.Count, data = archiveVideosDto };
 
       return Ok(jsonData);
     }
