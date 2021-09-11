@@ -16,6 +16,7 @@ namespace DevBetterWeb.Core.Entities
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUploaded { get; set; }
     public string? VideoUrl { get; set; }
+    public string? Status { get; set; }
 
     public List<Question> Questions { get; private set; } = new List<Question>();    
 
