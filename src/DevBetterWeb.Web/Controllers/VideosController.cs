@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Models.Vimeo;
@@ -20,11 +22,13 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly IMapper _mapper;
     private readonly GetAllVideosService _getAllVideosService;
+    private readonly IRepository<ArchiveVideo> _repository;
 
-    public VideosController(IMapper mapper, GetAllVideosService getAllVideosService)
+    public VideosController(IMapper mapper, IRepository<ArchiveVideo> repository, GetAllVideosService getAllVideosService)
     {
       _mapper = mapper;
       _getAllVideosService = getAllVideosService;
+      _repository = repository;
     }
 
     [HttpPost("list")]
@@ -49,6 +53,17 @@ namespace DevBetterWeb.Web.Controllers
       var jsonData = new { draw = draw, recordsFiltered = response.Data == null ? 0 : response.Data.Total, recordsTotal = response.Data == null ? 0 : response.Data.Total, data = videoList };
 
       return Ok(jsonData);
+    }
+
+    // TODO: need to add authorization and add this call on console application.
+    [HttpPost("add-video-info")]
+    public async Task<IActionResult> AddVideoInfoAsync([FromBody] ArchiveVideoDto archiveVideoDto)
+    {
+      var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+
+      archiveVideo = await _repository.AddAsync(archiveVideo);
+
+      return Ok(archiveVideo);
     }
   }
 
