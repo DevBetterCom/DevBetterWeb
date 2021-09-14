@@ -57,7 +57,19 @@ namespace DevBetterWeb.Core.Entities
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
     public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
+    public List<MemberVideo> Videos { get; private set; } = new List<MemberVideo>();
 
+    public void AddVideo(MemberVideo video)
+    {
+      Guard.Against.Null(video, nameof(video));
+      Videos.Add(video);
+    }
+
+    public void AddVideo(ArchiveVideo archiveVideo, int secondWatch)
+    {
+      var video = new MemberVideo(Id, archiveVideo, secondWatch);
+      Videos.Add(video);
+    }
 
     public string UserFullName()
     {

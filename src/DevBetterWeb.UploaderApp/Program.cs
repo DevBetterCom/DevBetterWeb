@@ -9,9 +9,9 @@ namespace DevBetterWeb.UploaderApp
     static async Task Main(string[] args)
     {
       var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t"))
+      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
       {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token]");
+        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link]");
         return;
       }
 
@@ -31,7 +31,15 @@ namespace DevBetterWeb.UploaderApp
       }      
       var token = argsList[tokenIndex];
 
-      var uploaderManager = new UploaderManager(token);
+      var apiLinkIndex = argsList.FindIndex(x => x.ToLower() == "-a") + 1;
+      if (apiLinkIndex <= 0)
+      {
+        Console.WriteLine("Please use -a [api link]");
+        return;
+      }
+      var apiLink = argsList[apiLinkIndex];
+
+      var uploaderManager = new UploaderManager(token, apiLink);
       await uploaderManager.SyncAsync(folderToUpload);
 
       Console.WriteLine("Done, press any key to close");

@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using MediaInfo;
 
 namespace DevBetterWeb.UploaderApp
 {
@@ -18,12 +20,19 @@ namespace DevBetterWeb.UploaderApp
     private readonly HttpService _httpService;
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
+    private readonly AddVideoInfo _addVideoInfo;
 
-    public UploaderManager(string token)
+    public UploaderManager(string token, string apiLink)
     {
       _httpService = Builders.BuildHttpService(token);
        _uploadVideoService = Builders.BuildUploadVideoService(_httpService);
       _getAllVideosService = Builders.BuildGetAllVideosService(_httpService);
+
+      var clientHttp = new System.Net.Http.HttpClient();
+      clientHttp.BaseAddress = new Uri(apiLink);
+
+      var httpService = new HttpService(clientHttp);
+      _addVideoInfo = new AddVideoInfo(httpService);
     }
 
     public async Task SyncAsync(string folderToUpload)
@@ -37,7 +46,8 @@ namespace DevBetterWeb.UploaderApp
         {
           Console.WriteLine($"{video.Name} already exists - skipping.");
           continue;
-        }
+        }        
+
         Console.WriteLine($"Starting Uploading {video.Name}");
         if (string.IsNullOrEmpty(video.Description))
         {
@@ -49,6 +59,16 @@ namespace DevBetterWeb.UploaderApp
         var response = await _uploadVideoService.ExecuteAsync(request);
         if (response.Data > 0)
         {
+          var archiveVideo = new ArchiveVideo
+          {
+            Title = video.Name,
+            DateCreated = video.CreatedTime,
+            DateUploaded = DateTimeOffset.UtcNow,
+            Duration = video.Duration,
+            VideoId = video.Id
+          };
+          await _addVideoInfo.ExecuteAsync(archiveVideo);
+
           Console.WriteLine($"{video.Name} Uploaded!");
         }
         else
@@ -85,15 +105,21 @@ namespace DevBetterWeb.UploaderApp
       {
         return result;
       }
-
+      
       foreach (var videoPath in videosPaths)
       {
         var video = new Video();
-        video.SetName(Path.GetFileNameWithoutExtension(videoPath));
 
         var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
         var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
-        video.SetDescription(description);
+
+        var mediaInfo = new MediaInfoWrapper(videoPath);
+        video
+          .SetCreatedTime(mediaInfo.Tags.EncodedDate)
+          .SetDuration(mediaInfo.Duration)
+          .SetDuration(mediaInfo.Duration)
+          .SetName(Path.GetFileNameWithoutExtension(videoPath))
+          .SetDescription(description);
 
         video.Data = File.ReadAllBytes(videoPath);
         if (video.Data == null || video.Data.Length <= 0)
