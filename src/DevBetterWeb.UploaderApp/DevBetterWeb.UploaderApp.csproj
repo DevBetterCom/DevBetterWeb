@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj" />
-    <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
     <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
   </ItemGroup>
 
