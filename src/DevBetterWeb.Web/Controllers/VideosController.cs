@@ -41,11 +41,12 @@ namespace DevBetterWeb.Web.Controllers
       var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
       var start = startIndex == 0 ? 1 : (startIndex / pageSize)+1;
 
-      var spec = new ArchiveVideoByPageSpec(start, pageSize);
+      var spec = new ArchiveVideoByPageSpec(startIndex, pageSize);
+      var totalRecords = await _repository.CountAsync();
       var archiveVideos = await _repository.ListAsync(spec);
-      var archiveVideosDto = _mapper.Map<List<VideoModel>>(archiveVideos);      
+      var archiveVideosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);      
 
-      var jsonData = new { draw = draw, recordsFiltered = archiveVideos == null ? 0 : archiveVideos.Count, recordsTotal = archiveVideos == null ? 0 : archiveVideos.Count, data = archiveVideosDto };
+      var jsonData = new { draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
 
       return Ok(jsonData);
     }

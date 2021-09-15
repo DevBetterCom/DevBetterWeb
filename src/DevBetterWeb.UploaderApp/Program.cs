@@ -9,9 +9,7 @@ namespace DevBetterWeb.UploaderApp
   {
     static async Task Main(string[] args)
     {
-      
-      var argsList = input.Split(" ").ToList();
-      //var argsList = args.ToList();
+      var argsList = args.ToList();
       if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
       {
         Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link]");

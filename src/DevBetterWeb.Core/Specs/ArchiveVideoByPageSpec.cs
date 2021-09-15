@@ -5,9 +5,9 @@ namespace DevBetterWeb.Core.Specs
 {
     public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>, ISingleResultSpecification
     {
-        public ArchiveVideoByPageSpec(int page, int size)
+        public ArchiveVideoByPageSpec(int skip, int size)
         {
-            Query.Skip(page*size).Take(size);
+            Query.Skip(skip).Take(size);
         }
     }
 }
