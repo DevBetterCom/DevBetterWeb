@@ -2,10 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
-using Microsoft.Extensions.Logging;
-using DevBetterWeb.Vimeo.Extensions;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.UploaderApp
 {
