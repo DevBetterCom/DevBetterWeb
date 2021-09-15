@@ -39,7 +39,6 @@ namespace DevBetterWeb.Web.Controllers
       var length = dataTableParameterModel.Length;
       int pageSize = length != null ? Convert.ToInt32(length) : 0;
       var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
-      var start = startIndex == 0 ? 1 : (startIndex / pageSize)+1;
 
       var spec = new ArchiveVideoByPageSpec(startIndex, pageSize);
       var totalRecords = await _repository.CountAsync();

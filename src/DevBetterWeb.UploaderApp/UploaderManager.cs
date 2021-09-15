@@ -64,7 +64,10 @@ namespace DevBetterWeb.UploaderApp
             DateCreated = video.CreatedTime,
             DateUploaded = DateTimeOffset.UtcNow,
             Duration = video.Duration,
-            VideoId = response.Data.ToString()
+            VideoId = response.Data.ToString(),
+            Password = video.Password,
+            Description = video.Description,
+            VideoUrl = video.Link
           };
           await _addVideoInfo.ExecuteAsync(archiveVideo);
 
