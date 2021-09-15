@@ -51,6 +51,7 @@ namespace DevBetterWeb.Web.Controllers
     }
 
     // TODO: need to add authorization and add this call on console application.
+    [AllowAnonymous]
     [HttpPost("add-video-info")]
     public async Task<IActionResult> AddVideoInfoAsync([FromBody] ArchiveVideoDto archiveVideoDto)
     {
