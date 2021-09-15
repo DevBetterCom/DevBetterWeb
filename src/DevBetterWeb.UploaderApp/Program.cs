@@ -9,7 +9,7 @@ namespace DevBetterWeb.UploaderApp
   {
     static async Task Main(string[] args)
     {
-      var input = @"-d C:\Users\Shady\source\repos\ShadyNagy\DevBetterWeb\src\DevBetterWeb.UploaderApp\bin\Debug\net5.0\test -t 9adde280e2ec716c03c7f0b4d671059d -a https://localhost:5011/";
+      
       var argsList = input.Split(" ").ToList();
       //var argsList = args.ToList();
       if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
