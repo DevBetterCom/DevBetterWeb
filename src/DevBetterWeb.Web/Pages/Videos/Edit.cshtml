@@ -12,9 +12,9 @@
 		<div class="col-md-4">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
-				<label asp-for="VideoToEdit.Name" class="control-label"></label>
-				<input asp-for="VideoToEdit.Name" class="form-control" />
-				<span asp-validation-for="VideoToEdit.Name" class="text-danger"></span>
+				<label asp-for="VideoToEdit.Title" class="control-label"></label>
+				<input asp-for="VideoToEdit.Title" class="form-control" />
+				<span asp-validation-for="VideoToEdit.Title" class="text-danger"></span>
 			</div>
 		</div>
 	</div>
@@ -26,7 +26,7 @@
 		</div>
 	</div>
 
-	<input type="hidden" asp-for="VideoToEdit.Id" />
+	<input type="hidden" asp-for="VideoToEdit.VideoId" />
 	<div class="form-group">
 		<input type="submit" value="Save" class="btn btn-success" />
 	</div>

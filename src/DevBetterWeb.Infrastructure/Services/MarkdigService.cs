@@ -16,8 +16,12 @@ namespace DevBetterWeb.Infrastructure.Services
         .Build();
     }
 
-    public string RenderHTMLFromMD(string mdContent)
+    public string RenderHTMLFromMD(string? mdContent)
     {
+      if (string.IsNullOrEmpty(mdContent))
+      {
+        return string.Empty;
+      }
       var result = Markdown.ToHtml(mdContent, _pipeline);
 
       return result;

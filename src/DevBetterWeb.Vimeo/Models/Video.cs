@@ -158,7 +158,14 @@ namespace DevBetterWeb.Vimeo.Models
       Description = description;
 
       return this;
-    }    
+    }
+
+    public Video SetDuration(int duration)
+    {
+      Duration = duration;
+
+      return this;
+    }
 
     public DateTime? GetEncodedDate(byte[] fileData)
     {

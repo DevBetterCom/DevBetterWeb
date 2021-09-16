@@ -2,6 +2,6 @@
 {
   public interface IMarkdownService
   {
-    string RenderHTMLFromMD(string mdContent);
+    string RenderHTMLFromMD(string? mdContent);
   }
 }
