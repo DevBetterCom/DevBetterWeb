@@ -9,6 +9,6 @@ namespace DevBetterWeb.Core.Interfaces
     Task<Invitation> CreateInvitationAsync(string email, string stripeEventId);
     Task SendRegistrationEmailAsync(Invitation invitation);
     Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
-    Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode);
+    Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode, string email);
   }
 }

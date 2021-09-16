@@ -19,6 +19,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
     private readonly Mock<IEmailService> _emailService = new();
     private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
     private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
+    private readonly Mock<IMemberAddBillingActivityService> _memberAddBillingActivityService = new();
 
     private readonly INewMemberService _newMemberService;
 
@@ -40,7 +41,8 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
         _paymentHandlerSubscription.Object,
         _emailService.Object,
         _memberRegistrationService.Object,
-        _logger.Object);
+        _logger.Object,
+        _memberAddBillingActivityService.Object);
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 
@@ -55,7 +57,7 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
       _memberRepository.Setup(r => r.GetByIdAsync(memberId, CancellationToken.None)).ReturnsAsync(memberResult);
       _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
 
-      Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode);
+      Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode, "");
 
       Assert.Equal(_firstName, member.FirstName);
       Assert.Equal(_lastName, member.LastName);
