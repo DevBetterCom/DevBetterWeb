@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using DevBetterWeb.Core;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Web.Models.Vimeo;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,19 +15,17 @@ namespace DevBetterWeb.Web.Pages.Videos
   public class EditModel : PageModel
   {
     private readonly IMapper _mapper;
-    private readonly GetVideoService _getVideoService;
-    private readonly UpdateVideoDetailsService _updateVideoDetailsService;
+    private readonly IRepository<ArchiveVideo> _repository;
 
-    public EditModel(IMapper mapper, GetVideoService getVideoService, UpdateVideoDetailsService updateVideoDetailsService)
+    public EditModel(IMapper mapper, IRepository<ArchiveVideo> repository)
     {
       _mapper = mapper;
-      _getVideoService = getVideoService;
-      _updateVideoDetailsService = updateVideoDetailsService;
+      _repository = repository;
     }
 
 #nullable disable
     [BindProperty]
-    public VideoModel VideoToEdit { get; set; }
+    public ArchiveVideoDto VideoToEdit { get; set; }
 #nullable enable
 
     public async Task<IActionResult> OnGetAsync(string? id)
@@ -36,13 +35,11 @@ namespace DevBetterWeb.Web.Pages.Videos
         return NotFound();
       }
 
-      var video = await _getVideoService.ExecuteAsync(id);
-      if (video == null || video.Data == null)
-      {
-        return NotFound();
-      }
+      var spec = new ArchiveVideoByVideoIdSpec(id);
+      var archiveVideo = await _repository.GetBySpecAsync(spec);
+      if (archiveVideo == null) return NotFound(id);
 
-      VideoToEdit = _mapper.Map<VideoModel>(video.Data);
+      VideoToEdit = _mapper.Map<ArchiveVideoDto>(archiveVideo);
 
       return Page();
     }
@@ -54,21 +51,17 @@ namespace DevBetterWeb.Web.Pages.Videos
         return Page();
       }
 
-      var currentVideo = await _getVideoService.ExecuteAsync(VideoToEdit.Id);
-      if (currentVideo == null || currentVideo.Data == null)
-      {
-        return NotFound();
-      }
+      var spec = new ArchiveVideoByVideoIdSpec(VideoToEdit.VideoId!);
+      var archiveVideo = await _repository.GetBySpecAsync(spec);
+      if (archiveVideo == null) return NotFound(VideoToEdit.VideoId);
 
-      var videoToSave = _mapper.Map<Video>(VideoToEdit);
+      var videoToSave = _mapper.Map<ArchiveVideo>(VideoToEdit);
       if (videoToSave == null)
       {
         return NotFound();
       }
 
-      _ = long.TryParse(VideoToEdit.Id, out var videoIdLong);
-      var request = new UpdateVideoDetailsRequest(videoIdLong, videoToSave);
-      await _updateVideoDetailsService.ExecuteAsync(request);
+      await _repository.UpdateAsync(videoToSave);
 
       return RedirectToPage("./Index");
     }

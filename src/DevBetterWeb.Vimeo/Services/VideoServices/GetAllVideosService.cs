@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
 using System.Collections.Generic;
+using DevBetterWeb.Vimeo.Constants;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
@@ -32,7 +33,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       }
       else
       {
-        if (request.UserId.ToLower().Equals("me"))
+        if (request.UserId.ToLower().Equals(ServiceConstants.ME))
         {
           uri = $"{request.UserId}/videos";
         }

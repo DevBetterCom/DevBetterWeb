@@ -1,0 +1,15 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Videos.DeleteAllModel
+
+@{
+	ViewData["Title"] = "Delete All";
+
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete all?</h3>
+<form method="post">
+	<input type="submit" value="Delete All" class="btn btn-default" /> |
+	<a asp-page="./Index">Back to List</a>
+</form>
