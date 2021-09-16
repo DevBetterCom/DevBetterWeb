@@ -3,7 +3,7 @@ using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities
 {
-  public class MemberVideo : BaseEntity, IAggregateRoot
+  public class MemberVideoProgress: BaseEntity, IAggregateRoot
   {
     public int MemberId { get; set; }
     public int ArchiveVideoId { get; set; }
@@ -11,13 +11,13 @@ namespace DevBetterWeb.Core.Entities
     public bool IsCompleted { get; set; }
     public ArchiveVideo ArchiveVideo { get; set; } = new ArchiveVideo();
 
-    public MemberVideo(int memberId, int archiveVideoId)
+    public MemberVideoProgress(int memberId, int archiveVideoId)
     {
       MemberId = memberId;
       ArchiveVideoId = archiveVideoId;      
     }
 
-    public MemberVideo(int memberId, ArchiveVideo archiveVideo, int secondWatched)
+    public MemberVideoProgress(int memberId, ArchiveVideo archiveVideo, int secondWatched)
     {
       MemberId = memberId;
 

@@ -57,17 +57,17 @@ namespace DevBetterWeb.Core.Entities
     public decimal? CityLatitude { get; set; }
     public decimal? CityLongitude { get; set; }
     public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
-    public List<MemberVideo> Videos { get; private set; } = new List<MemberVideo>();
+    public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
 
-    public void AddVideo(MemberVideo video)
+    public void AddVideoProgress(MemberVideoProgress videoProgress)
     {
-      Guard.Against.Null(video, nameof(video));
-      Videos.Add(video);
+      Guard.Against.Null(videoProgress, nameof(videoProgress));
+      Videos.Add(videoProgress);
     }
 
-    public void AddVideo(ArchiveVideo archiveVideo, int secondWatch)
+    public void AddVideoProgress(ArchiveVideo archiveVideo, int secondWatch)
     {
-      var video = new MemberVideo(Id, archiveVideo, secondWatch);
+      var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
       Videos.Add(video);
     }
 
