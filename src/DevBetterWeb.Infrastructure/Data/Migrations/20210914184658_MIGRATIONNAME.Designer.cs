@@ -4,14 +4,16 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210914184658_MIGRATIONNAME")]
+    partial class MIGRATIONNAME
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,7 +298,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("MemberSubscriptionPlan");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -317,11 +319,9 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArchiveVideoId");
-
                     b.HasIndex("MemberId");
 
-                    b.ToTable("MemberVideoProgress");
+                    b.ToTable("MemberVideo");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
@@ -559,21 +559,13 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideo", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "ArchiveVideo")
-                        .WithMany()
-                        .HasForeignKey("ArchiveVideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DevBetterWeb.Core.Entities.Member", null)
                         .WithMany("Videos")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ArchiveVideo");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>

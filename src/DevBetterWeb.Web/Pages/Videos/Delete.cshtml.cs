@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Authorization;
@@ -15,13 +18,15 @@ namespace DevBetterWeb.Web.Pages.Videos
     private readonly IMapper _mapper;
     private readonly GetVideoService _getVideoService;
     private readonly DeleteVideoService _deleteVideoService;
+    private readonly IRepository<ArchiveVideo> _repository;
 
-    public DeleteModel(IMapper mapper, GetVideoService getVideoService, DeleteVideoService deleteVideoService)
+    public DeleteModel(IMapper mapper, GetVideoService getVideoService, DeleteVideoService deleteVideoService, IRepository<ArchiveVideo> repository)
     {
       _mapper = mapper;
       _getVideoService = getVideoService;
 
       _deleteVideoService = deleteVideoService;
+      _repository = repository;
     }
 
     public VideoModel? VideoToDelete { get; set; }
@@ -57,9 +62,16 @@ namespace DevBetterWeb.Web.Pages.Videos
       {
         return NotFound();
       }
-
+      
       await _deleteVideoService.ExecuteAsync(id);
-     
+
+      var spec = new ArchiveVideoByVideoIdSpec(id);
+      var archiveVideo = await _repository.GetBySpecAsync(spec);
+      if (archiveVideo != null)
+      {
+        await _repository.DeleteAsync(archiveVideo);
+      }
+
       return RedirectToPage("./Index");
     }
   }

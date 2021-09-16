@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,33 +10,49 @@ namespace DevBetterWeb.UploaderApp
     static async Task Main(string[] args)
     {
       var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t"))
+      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
       {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token]");
+        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link]");
         return;
       }
 
-      var folderToUploadIndex = argsList.FindIndex(x => x.ToLower() == "-d") + 1;
-      if(folderToUploadIndex <= 0)
+      var folderToUpload = GetArgument(argsList, "-d");
+      if (string.IsNullOrEmpty(folderToUpload))
       {
         Console.WriteLine("Please use -d [destination folder]");
         return;
       }
-      var folderToUpload = argsList[folderToUploadIndex];
 
-      var tokenIndex = argsList.FindIndex(x => x.ToLower() == "-t") + 1;
-      if (tokenIndex <= 0)
+      var token = GetArgument(argsList, "-t");
+      if (string.IsNullOrEmpty(token))
       {
         Console.WriteLine("Please use -t [Vimeo token]");
         return;
-      }      
-      var token = argsList[tokenIndex];
+      }
 
-      var uploaderManager = new UploaderManager(token);
+      var apiLink = GetArgument(argsList, "-a");
+      if (string.IsNullOrEmpty(apiLink))
+      {
+        Console.WriteLine("Please use -a [api link]");
+        return;
+      }
+
+      var uploaderManager = new UploaderManager(token, apiLink);
       await uploaderManager.SyncAsync(folderToUpload);
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
-    }        
+    }       
+    
+    public static string GetArgument(List<string> argsList, string argValue)
+    {
+      var index  = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
+      if (index <= 0)
+      {
+        return null;
+      }
+
+      return argsList[index];
+    }
   }
 }

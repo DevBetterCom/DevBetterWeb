@@ -69,6 +69,9 @@
 <p asp-authorize asp-roles="Administrators">
 	<a class="btn btn-primary" asp-page="Create" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Create New</a>
 </p>
+<p asp-authorize asp-roles="Administrators">
+	<a class="btn btn-primary" asp-page="DeleteAll" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Delete All</a>
+</p>
 <table class="table" id="videosDatatable">
 	<thead>
         <tr>
