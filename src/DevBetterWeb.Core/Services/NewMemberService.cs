@@ -19,13 +19,15 @@ namespace DevBetterWeb.Core.Services
     private readonly IEmailService _emailService;
     private readonly IMemberRegistrationService _memberRegistrationService;
     private readonly IAppLogger<NewMemberService> _logger;
+    private readonly IMemberAddBillingActivityService _memberAddBillingActivityService;
 
     public NewMemberService(IRepository<Invitation> invitationRepository,
       IUserRoleMembershipService userRoleMembershipService,
       IPaymentHandlerSubscription paymentHandlerSubscription,
       IEmailService emailService,
       IMemberRegistrationService memberRegistrationService,
-      IAppLogger<NewMemberService> logger)
+      IAppLogger<NewMemberService> logger,
+      IMemberAddBillingActivityService memberAddBillingActivityService)
     {
       _invitationRepository = invitationRepository;
       _userRoleMembershipService = userRoleMembershipService;
@@ -33,6 +35,7 @@ namespace DevBetterWeb.Core.Services
       _emailService = emailService;
       _memberRegistrationService = memberRegistrationService;
       _logger = logger;
+      _memberAddBillingActivityService = memberAddBillingActivityService;
     }
 
     public async Task<Invitation> CreateInvitationAsync(string email, string stripeSubscriptionId)
@@ -89,7 +92,8 @@ namespace DevBetterWeb.Core.Services
       return Result<string>.Success(ValidEmailAndInviteCode);
     }
 
-    public async Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode)
+    public async Task<Member> MemberSetupAsync(string userId,
+      string firstName, string lastName, string inviteCode, string email)
     {
       Guard.Against.NullOrEmpty(inviteCode, nameof(inviteCode));
       Member member = await CreateNewMemberAsync(userId, firstName, lastName);
@@ -97,7 +101,8 @@ namespace DevBetterWeb.Core.Services
 
       var spec = new InvitationByInviteCodeSpec(inviteCode);
       var invite = await _invitationRepository.GetBySpecAsync(spec);
-      
+
+      _logger.LogInformation($"Looking up invitation with code {inviteCode}");
       if (invite is null) throw new InvitationNotFoundException($"Could not find invitation with code {inviteCode}.");
       var paymentHandlerSubscriptionId = invite.PaymentHandlerSubscriptionId;
 
@@ -107,7 +112,7 @@ namespace DevBetterWeb.Core.Services
 
       int devBetterSubscriptionPlanId = 1; // monthly
 
-      if(billingPeriod == Enums.BillingPeriod.Year)
+      if (billingPeriod == Enums.BillingPeriod.Year)
       {
         devBetterSubscriptionPlanId = 2; // yearly
       }
@@ -115,22 +120,29 @@ namespace DevBetterWeb.Core.Services
       member.AddSubscription(subscriptionDateTimeRange, devBetterSubscriptionPlanId);
 
       // Member has now been created and set up from the invite used. Invite should now be deactivated
+      await DeactivateInviteAndDuplicates(invite);
+
+      await AddNewSubscriberBillingActivity(invite.PaymentHandlerSubscriptionId, email);
+
+      return member;
+    }
+
+    private async Task DeactivateInviteAndDuplicates(Invitation invite)
+    {
       invite.Deactivate();
       await _invitationRepository.UpdateAsync(invite);
 
       var activeInviteSpec = new ActiveInvitationByEmailSpec(invite.Email);
       var moreActiveInvitesForEmail = await _invitationRepository.ListAsync(activeInviteSpec);
-      if(moreActiveInvitesForEmail.Any())
+      if (moreActiveInvitesForEmail.Any())
       {
         _logger.LogInformation($"User {invite.Email} had multiple active invites.");
       }
       foreach (var extraInvite in moreActiveInvitesForEmail)
       {
-          extraInvite.Deactivate();
-      } 
+        extraInvite.Deactivate();
+      }
       await _invitationRepository.UpdateAsync(invite);
-
-      return member;
     }
 
     private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName)
@@ -154,5 +166,15 @@ namespace DevBetterWeb.Core.Services
 
       return url;
     }
+
+    private Task AddNewSubscriberBillingActivity(string subscriptionId, string email)
+    {
+      var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+      var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
+      decimal paymentAmount = _paymentHandlerSubscription.GetSubscriptionAmount(subscriptionId);
+
+      return _memberAddBillingActivityService.AddMemberSubscriptionCreationBillingActivity(email, paymentAmount, subscriptionPlanName, billingPeriod);
+    }
+
   }
 }

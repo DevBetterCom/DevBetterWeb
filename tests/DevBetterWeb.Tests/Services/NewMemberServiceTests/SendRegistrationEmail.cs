@@ -32,7 +32,9 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests
         _paymentHandlerSubscription.Object,
         _emailService.Object,
         _memberRegistrationService.Object,
-        _logger.Object);
+        _logger.Object,
+                null); // TODO: Add dependency
+
       _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
     }
 
