@@ -1,9 +1,11 @@
 ﻿using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web;
 using DevBetterWeb.Web.Controllers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,7 +56,7 @@ namespace DevBetterWeb.Tests.Integration.Web
           try
           {
             // Seed the database with test data.
-            SeedData.PopulateTestData(db);
+            SeedData.PopulateTestData(db, scopedServices.GetRequiredService<UserManager<ApplicationUser>>());
           }
           catch (Exception ex)
           {

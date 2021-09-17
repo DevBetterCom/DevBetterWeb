@@ -50,6 +50,12 @@ namespace DevBetterWeb.Web
         _isDbContextAdded = true;
       }
 
+      // configure Stripe
+      string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
+      services.AddStripeServices(stripeApiKey);
+
+      services.AddDailyCheckServices();
+
       ConfigureServices(services);
     }
 
@@ -85,10 +91,6 @@ namespace DevBetterWeb.Web
 
       services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
 
-      // configure Stripe
-      string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
-      services.AddStripeServices(stripeApiKey);
-
       services.AddMemberSubscriptionServices();
 
       services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
@@ -107,8 +109,6 @@ namespace DevBetterWeb.Web
       });
 
       services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
-
-      services.AddDailyCheckServices();
 
       services.AddMvc()
         .AddControllersAsServices()

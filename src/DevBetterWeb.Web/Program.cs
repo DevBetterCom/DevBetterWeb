@@ -37,17 +37,6 @@ namespace DevBetterWeb.Web
         logger.LogInformation("Seeding database...");
         try
         {
-          var context = services.GetRequiredService<AppDbContext>();
-          if (await context.Questions!.AnyAsync())
-          {
-            logger.LogDebug("Database already has data in it.");
-          }
-          else
-          {
-            SeedData.PopulateTestData(context);
-            logger.LogDebug("Populated AppDbContext test data.");
-          }
-
           var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
           var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
           if (userManager.Users.Any() || roleManager.Roles.Any())
@@ -58,6 +47,16 @@ namespace DevBetterWeb.Web
           {
             await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
             logger.LogDebug("Populated AppIdentityDbContext test data.");
+          }
+          var context = services.GetRequiredService<AppDbContext>();
+          if (await context.Questions!.AnyAsync())
+          {
+            logger.LogDebug("Database already has data in it.");
+          }
+          else
+          {
+            SeedData.PopulateTestData(context, userManager);
+            logger.LogDebug("Populated AppDbContext test data.");
           }
         }
         catch (Exception ex)
