@@ -29,6 +29,13 @@ namespace DevBetterWeb.Core.Entities
       Events.Add(new NewMemberCreatedEvent(this));
     }
 
+    internal Member(string userId, string firstName, string lastName)
+    {
+      UserId = userId;
+      FirstName = firstName;
+      LastName = lastName;
+    }
+
     public string UserId { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
@@ -362,6 +369,11 @@ namespace DevBetterWeb.Core.Entities
           _logger.LogError(ex, "Error calculating geolocation", addressUpdatedEvent);
         }
       }
+    }
+
+    public static Member SeedData(string userId, string firstName, string lastName)
+    {
+      return new Member(userId, firstName, lastName);
     }
   }
 }
