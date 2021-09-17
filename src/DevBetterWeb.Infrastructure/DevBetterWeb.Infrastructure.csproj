@@ -32,7 +32,7 @@
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
 
-    <PackageReference Include="Stripe.net" Version="39.66.0" />
+    <PackageReference Include="Stripe.net" Version="39.68.0" />
     <PackageReference Include="VimeoDotNet" Version="2.1.1" />
   </ItemGroup>
 
