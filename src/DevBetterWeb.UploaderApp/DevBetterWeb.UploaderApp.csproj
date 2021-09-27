@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.3.6" />
+    <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.3.7" />
   </ItemGroup>
 
   <ItemGroup>
