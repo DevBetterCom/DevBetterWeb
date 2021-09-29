@@ -5,7 +5,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Tests.Core.Entities.MemberTests;
 using Moq;
 using Xunit;
 
