@@ -20,7 +20,7 @@
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.2.0" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.4.0" />
     <PackageReference Include="Markdig" Version="0.26.0" />
-    <PackageReference Include="Sendgrid" Version="9.24.2" />
+    <PackageReference Include="Sendgrid" Version="9.24.3" />
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.10" />
@@ -32,7 +32,7 @@
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
 
-    <PackageReference Include="Stripe.net" Version="39.68.0" />
+    <PackageReference Include="Stripe.net" Version="39.69.0" />
     <PackageReference Include="VimeoDotNet" Version="2.1.1" />
   </ItemGroup>
 
