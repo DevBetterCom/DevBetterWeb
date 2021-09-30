@@ -100,6 +100,9 @@ namespace DevBetterWeb.Web.Pages.Admin
       var subscriptions = new List<MemberSubscription>();
       if (member != null)
       {
+
+        MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
+
         var subscriptionByMemberSpec = new MemberSubscriptionsByMemberSpec(member.Id);
         subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
 
@@ -110,6 +113,7 @@ namespace DevBetterWeb.Web.Pages.Admin
             Id = subscription.Id,
             StartDate = subscription.Dates.StartDate,
             EndDate = subscription.Dates.EndDate,
+            MemberSubscriptionPlan = MemberSubscriptionPlans.FirstOrDefault(msp => msp.Id == subscription.MemberSubscriptionPlanId)
           });
 
           var totalDaysInSubscription = subscription.Dates.EndDate != null ? ((DateTime)subscription.Dates.EndDate - subscription.Dates.StartDate).TotalDays : (DateTime.Today - subscription.Dates.StartDate).TotalDays;
@@ -117,7 +121,6 @@ namespace DevBetterWeb.Web.Pages.Admin
         }
       }
 
-      MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
 
       EmailConfirmation.IsConfirmedString = IdentityUser.EmailConfirmed ? "Yes" : "No";
       string emailAddressMessage = "the email address";
