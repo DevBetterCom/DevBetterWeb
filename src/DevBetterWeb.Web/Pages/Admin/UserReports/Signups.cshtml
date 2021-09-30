@@ -12,7 +12,7 @@
     <div class="form-group">
         <label for="start">Start date:</label>
 
-        <input asp-for="_signupReportsDatesModel.StartDate"
+        <input asp-for="SignupReportsDatesModel.StartDate"
                type="date" id="start" name="StartDate"
                asp-format="{0:yyyy-MM-dd}"
                max="@DateTime.Now"
@@ -20,14 +20,13 @@
 
         <label for="end">End date:</label>
 
-        <input asp-for="_signupReportsDatesModel.EndDate"
+        <input asp-for="SignupReportsDatesModel.EndDate"
                type="date" id="end" name="EndDate"
                asp-format="{0:yyyy-MM-dd}"
                max="@DateTime.Now"
                class="form-control form-control-sm">
     </div>
     <input type="submit" value="Refresh Dates" class="btn btn-success"  asp-page-handler="refresh"/>
-
     <input type="submit" value="Download Report" class="btn btn-success" asp-page-handler="download"/>
 </form>
 <br />

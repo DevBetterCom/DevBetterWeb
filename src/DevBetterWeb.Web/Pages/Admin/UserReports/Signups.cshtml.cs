@@ -23,19 +23,19 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
     private readonly ICsvService _csvService;
 
     [BindProperty]
-    public ReportsDatesModel _signupReportsDatesModel { get; set; }
+    public ReportsDatesModel SignupReportsDatesModel { get; set; }
 
     public SignupsModel(IRepository<BillingActivity> repository,
       ICsvService csvService)
     {
       _repository = repository;
-      _signupReportsDatesModel = new ReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
       _csvService = csvService;
     }
 
     public async Task<IActionResult> OnGetAsync()
     {
-      DateTimeRange dates = new DateTimeRange((DateTime)_signupReportsDatesModel.StartDate!, _signupReportsDatesModel.EndDate);
+      SignupReportsDatesModel = new ReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
+      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
 
       var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
       SubscribedBillingActivities = await _repository.ListAsync(spec);
@@ -45,7 +45,7 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
 
     public async Task OnPostRefresh()
     {
-      DateTimeRange dates = new DateTimeRange((DateTime)_signupReportsDatesModel.StartDate!, _signupReportsDatesModel.EndDate);
+      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
 
       var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
       SubscribedBillingActivities = await _repository.ListAsync(spec);
@@ -55,7 +55,7 @@ namespace DevBetterWeb.Web.Pages.Admin.UserReports
     {
       byte[] array = new byte[] { 0 };
 
-      DateTimeRange dates = new DateTimeRange((DateTime)_signupReportsDatesModel.StartDate!, _signupReportsDatesModel.EndDate);
+      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
 
       var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
       SubscribedBillingActivities = await _repository.ListAsync(spec);
