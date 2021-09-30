@@ -7,8 +7,9 @@ namespace DevBetterWeb.Core.Specs
     {
         public MemberSubscriptionsByMemberSpec(int memberId)
         {
-            Query.Where(subscription => subscription.MemberId == memberId)
-            .OrderBy(subscription => subscription.Dates.StartDate);
+            Query
+              .Where(subscription => subscription.MemberId == memberId)
+              .OrderBy(subscription => subscription.Dates.StartDate);
         }
     }
 }
