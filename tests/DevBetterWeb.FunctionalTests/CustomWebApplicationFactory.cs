@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
+using DevBetterWeb.Web.Models;
 
 namespace DevBetterWeb.FunctionalTests
 {
@@ -35,6 +36,7 @@ namespace DevBetterWeb.FunctionalTests
       {
         var scopedServices = scope.ServiceProvider;
         var db = scopedServices.GetRequiredService<AppDbContext>();
+        var identitydb = scopedServices.GetRequiredService<IdentityDbContext>();
         var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
         var logger = scopedServices
@@ -42,6 +44,7 @@ namespace DevBetterWeb.FunctionalTests
 
         // Ensure the database is created.
         db.Database.EnsureCreated();
+        identitydb.Database.EnsureCreated();
 
         try
         {
