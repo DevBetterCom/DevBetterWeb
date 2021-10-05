@@ -78,7 +78,7 @@ namespace DevBetterWeb.UploaderApp
             VideoUrl = video.Link
           };
           var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
-
+          archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
           await _addVideoInfo.ExecuteAsync(archiveVideo);
 
           Console.WriteLine($"{video.Name} Uploaded!");

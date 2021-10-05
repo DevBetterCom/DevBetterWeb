@@ -14,6 +14,21 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     public string Status { get; set; }
     public string Uri { get; set; }
     public string PictureId => Uri?.Split("/")?.LastOrDefault();
+    public string AnimatedThumbnailUri
+    {
+      get
+      {
+        var linkWithPlay = Thumbnails?.FirstOrDefault(x => !string.IsNullOrEmpty(x.LinkWithPlayButton))?.LinkWithPlayButton;
+        if (!string.IsNullOrEmpty(linkWithPlay))
+        {
+          return linkWithPlay;
+        }
+
+        var linkWithoutPlay = Thumbnails?.FirstOrDefault(x => !string.IsNullOrEmpty(x.Link))?.Link;
+        return linkWithoutPlay;
+      }
+    }
+    
     [JsonPropertyName("sizes")]
     public List<Thumbnail> Thumbnails { get; set; }
   }
