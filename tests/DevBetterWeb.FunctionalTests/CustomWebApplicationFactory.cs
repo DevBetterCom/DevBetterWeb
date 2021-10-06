@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using DevBetterWeb.Web.Models;
+using DevBetterWeb.Web.Areas.Identity;
 
 namespace DevBetterWeb.FunctionalTests
 {
@@ -38,6 +39,7 @@ namespace DevBetterWeb.FunctionalTests
         var db = scopedServices.GetRequiredService<AppDbContext>();
         var identitydb = scopedServices.GetRequiredService<IdentityDbContext>();
         var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = scopedServices.GetRequiredService<RoleManager<IdentityRole>>();
 
         var logger = scopedServices
             .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
@@ -49,6 +51,8 @@ namespace DevBetterWeb.FunctionalTests
         try
         {
           // Seed the database with test data.
+          AppIdentityDbContextSeed.SeedAsync(userManager, roleManager).GetAwaiter().GetResult();
+
           SeedData.PopulateTestData(db, userManager);
         }
         catch (Exception ex)
