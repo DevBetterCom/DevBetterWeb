@@ -46,7 +46,7 @@ namespace DevBetterWeb.FunctionalTests
 
         // Ensure the database is created.
         db.Database.EnsureCreated();
-        // identitydb.Database.EnsureCreated();
+        identitydb.Database.EnsureCreated();
 
         try
         {
@@ -89,6 +89,25 @@ namespace DevBetterWeb.FunctionalTests
             services.AddDbContext<AppDbContext>(options =>
             {
               options.UseInMemoryDatabase(inMemoryCollectionName);
+            });
+
+            // Remove the app's ApplicationDbContext registration.
+            var descriptorIdentityDbContext = services.SingleOrDefault(
+                d => d.ServiceType ==
+                    typeof(DbContextOptions<IdentityDbContext>));
+
+            if (descriptorIdentityDbContext != null)
+            {
+              services.Remove(descriptorIdentityDbContext);
+            }
+
+            // This should be set for each individual test run
+            string inMemoryCollectionNameIdentityDbContext = Guid.NewGuid().ToString();
+
+            // Add ApplicationDbContext using an in-memory database for testing.
+            services.AddDbContext<IdentityDbContext>(options =>
+            {
+              options.UseInMemoryDatabase(inMemoryCollectionNameIdentityDbContext);
             });
 
             //services.AddScoped<IMediator, NoOpMediator>();
