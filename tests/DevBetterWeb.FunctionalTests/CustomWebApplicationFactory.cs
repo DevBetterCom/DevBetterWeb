@@ -46,7 +46,7 @@ namespace DevBetterWeb.FunctionalTests
 
         // Ensure the database is created.
         db.Database.EnsureCreated();
-        identitydb.Database.EnsureCreated();
+        // identitydb.Database.EnsureCreated();
 
         try
         {
