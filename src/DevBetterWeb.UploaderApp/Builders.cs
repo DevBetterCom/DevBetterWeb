@@ -30,6 +30,21 @@ namespace DevBetterWeb.UploaderApp
       return new GetAllVideosService(httpService, _loggerFactory.CreateLogger<GetAllVideosService>());
     }
 
+    public static GetAnimatedThumbnailService BuildGetAnimatedThumbnailService(HttpService httpService)
+    {
+      return new GetAnimatedThumbnailService(httpService, _loggerFactory.CreateLogger<GetAnimatedThumbnailService>());
+    }
+
+    public static GetStatusAnimatedThumbnailService BuildGetStatusAnimatedThumbnailService(HttpService httpService)
+    {
+      return new GetStatusAnimatedThumbnailService(httpService, _loggerFactory.CreateLogger<GetStatusAnimatedThumbnailService>());
+    }
+
+    public static AddAnimatedThumbnailsToVideoService BuildAddAnimatedThumbnailsToVideoService(HttpService httpService)
+    {
+      return new AddAnimatedThumbnailsToVideoService(httpService, _loggerFactory.CreateLogger<AddAnimatedThumbnailsToVideoService>());
+    }
+
     public static HttpService BuildHttpService(string token)
     {
       var httpClient = new HttpClient { BaseAddress = new Uri(ServiceConstants.VIMEO_URI) };

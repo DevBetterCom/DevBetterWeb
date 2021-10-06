@@ -63,6 +63,16 @@
 	  border-top-right-radius: 5px;
 	  border-bottom-right-radius: 5px;
 	}
+
+	
+	.ytd-video-meta-block:not(:last-of-type)::after {
+		content: "•";
+		margin: 0 4px;
+	}
+
+	.padding-10 {
+		padding: 10px;
+	}
 </style>
 
 <h3>Recorded Coaching Sessions</h3>
@@ -72,7 +82,7 @@
 <p asp-authorize asp-roles="Administrators">
 	<a class="btn btn-primary" asp-page="DeleteAll" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Delete All</a>
 </p>
-<table class="table" id="videosDatatable">
+<table class="table" id="videosDatatable" asp-authorize asp-roles="Administrators">
 	<thead>
         <tr>
 			<th>Id</th>
@@ -94,7 +104,12 @@
 	</thead>
 </table>
 
+<div asp-authorize asp-roles="Administrators,Members,Alumni">
+	<div id="members-videos-list" class="row">
+	</div>		
+</div>
+
 
 @section scripts{
-    <script src="~/js/videos.js" asp-append-version="true"></script>
+    <script src="~/js/videos.js" asp-append-version="true" asp-authorize asp-roles="Administrators"></script>
 }
