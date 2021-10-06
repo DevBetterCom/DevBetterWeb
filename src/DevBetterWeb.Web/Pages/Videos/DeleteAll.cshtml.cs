@@ -38,6 +38,14 @@ namespace DevBetterWeb.Web.Pages.Videos
 
     public async Task<IActionResult> OnPostAsync()
     {
+      await deleteAllVimeoVideosAsync();
+      await deleteAllArchiveVideosAsync();
+
+      return RedirectToPage("./Index");
+    }
+
+    private async Task deleteAllVimeoVideosAsync()
+    {
       HttpResponse<DataPaged<Video>> allVideos;
       var videosToDelete = new List<Video>();
       var pageNumber = 1;
@@ -50,20 +58,21 @@ namespace DevBetterWeb.Web.Pages.Videos
           videosToDelete.AddRange(allVideos.Data.Data);
         }
         pageNumber++;
-      } while (allVideos != null && allVideos.Data != null);     
-      
-      foreach(var video in videosToDelete)
+      } while (allVideos != null && allVideos.Data != null);
+
+      foreach (var video in videosToDelete)
       {
         await _deleteVideoService.ExecuteAsync(video.Id);
-        var spec = new ArchiveVideoByVideoIdSpec(video.Id);
-        var archiveVideo = await _repository.GetBySpecAsync(spec);
-        if (archiveVideo != null)
-        {
-          await _repository.DeleteAsync(archiveVideo);
-        }
-      }            
+      }
+    }
 
-      return RedirectToPage("./Index");
+    private async Task deleteAllArchiveVideosAsync()
+    {
+      var archiveVideos = await _repository.ListAsync();
+      if (archiveVideos != null)
+      {
+        await _repository.DeleteRangeAsync(archiveVideos);
+      }
     }
   }
 }

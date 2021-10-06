@@ -17,6 +17,8 @@ namespace DevBetterWeb.Core.Entities
     public DateTimeOffset DateUploaded { get; set; }
     public string? VideoUrl { get; set; }
     public string? Status { get; set; }
+    public string? AnimatedThumbnailUri { get; set; }
+    public int Views { get; set; } = 0;
 
     public List<Question> Questions { get; private set; } = new List<Question>();    
 
