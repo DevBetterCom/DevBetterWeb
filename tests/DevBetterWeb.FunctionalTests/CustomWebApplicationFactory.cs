@@ -91,7 +91,7 @@ namespace DevBetterWeb.FunctionalTests
               options.UseInMemoryDatabase(inMemoryCollectionName);
             });
 
-            // Remove the app's ApplicationDbContext registration.
+            // Remove the app's IdentityDbContext registration.
             var descriptorIdentityDbContext = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<IdentityDbContext>));
@@ -104,7 +104,7 @@ namespace DevBetterWeb.FunctionalTests
             // This should be set for each individual test run
             string inMemoryCollectionNameIdentityDbContext = Guid.NewGuid().ToString();
 
-            // Add ApplicationDbContext using an in-memory database for testing.
+            // Add IdentityDbContext using an in-memory database for testing.
             services.AddDbContext<IdentityDbContext>(options =>
             {
               options.UseInMemoryDatabase(inMemoryCollectionNameIdentityDbContext);
