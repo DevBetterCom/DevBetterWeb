@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
@@ -14,8 +15,9 @@ namespace DevBetterWeb.Vimeo.Tests
     private static int DURATION = 2;
 
     private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService; 
-      private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
+    private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
     private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
+    private readonly GetVideoService _getVideoService;
     private readonly TestFileHelper _testFileHelper;
 
     public AddAnimatedThumbnailsToVideoTest()
@@ -24,6 +26,7 @@ namespace DevBetterWeb.Vimeo.Tests
       _addAnimatedThumbnailsToVideoService = AddAnimatedThumbnailsToVideoServiceBuilder.Build(httpService);
       _getStatusAnimatedThumbnailService = GetStatusAnimatedThumbnailServiceBuilder.Build(httpService);
       _getAnimatedThumbnailService = GetAnimatedThumbnailServiceBuilder.Build(httpService);
+      _getVideoService = GetVideoServiceBuilder.Build(httpService);
       _testFileHelper = new TestFileHelper();
     }
 
@@ -33,7 +36,13 @@ namespace DevBetterWeb.Vimeo.Tests
       var videoId = await _testFileHelper.UploadTest();
       videoId.ShouldNotBe(0);
 
-      Thread.Sleep(60*1000);
+      Video video = new Video();
+      while (video.Status != "available")
+      {
+        Thread.Sleep(20 * 1000);
+        video = (await _getVideoService.ExecuteAsync(videoId.ToString())).Data;
+      }
+
       var request = new AddAnimatedThumbnailsToVideoRequest(videoId, START_TIME, DURATION);
       var result = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(request);
       result.ShouldNotBeNull();
