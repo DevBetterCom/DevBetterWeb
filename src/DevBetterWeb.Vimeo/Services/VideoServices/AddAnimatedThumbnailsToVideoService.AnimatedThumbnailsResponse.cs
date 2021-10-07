@@ -11,9 +11,15 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     public string ClipUri { get; set; }
     [JsonPropertyName("created_on")]
     public long CreatedOn { get; set; }
+    [JsonPropertyName("status")]
     public string Status { get; set; }
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
+    [JsonPropertyName("sizes")]
+    public List<Thumbnail> Thumbnails { get; set; }
+    [JsonIgnore]
     public string PictureId => Uri?.Split("/")?.LastOrDefault();
+    [JsonIgnore]
     public string AnimatedThumbnailUri
     {
       get
@@ -28,8 +34,5 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
         return linkWithoutPlay;
       }
     }
-    
-    [JsonPropertyName("sizes")]
-    public List<Thumbnail> Thumbnails { get; set; }
   }
 }
