@@ -303,7 +303,8 @@ namespace Ardalis.ApiCaller
 
     private StringContent ToJson(object obj)
     {
-      return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
+      var json = JsonSerializer.Serialize(obj);
+      return new StringContent(json, Encoding.UTF8, "application/json");
     }
 
     public List<KeyValuePair<string, string>> ToListKeyValuePair(NameValueCollection query) 

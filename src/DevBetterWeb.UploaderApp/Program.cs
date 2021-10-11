@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Ardalis.ApiCaller;
+using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Services.VideoServices;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DevBetterWeb.UploaderApp
 {
   class Program
   {
+    private static IServiceProvider _serviceProvider;
     static async Task Main(string[] args)
-    {
+    {      
       var argsList = args.ToList();
       if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
       {
@@ -37,14 +43,16 @@ namespace DevBetterWeb.UploaderApp
         return;
       }
 
-      var uploaderManager = new UploaderManager(token, apiLink);
-      await uploaderManager.SyncAsync(folderToUpload);
+      _serviceProvider = SetupDi(token, apiLink);
+
+      var uploaderService = GetUploaderService();
+      await uploaderService.SyncAsync(folderToUpload);
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
     }       
     
-    public static string GetArgument(List<string> argsList, string argValue)
+    private static string GetArgument(List<string> argsList, string argValue)
     {
       var index  = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
       if (index <= 0)
@@ -53,6 +61,54 @@ namespace DevBetterWeb.UploaderApp
       }
 
       return argsList[index];
+    }
+
+    private static ServiceProvider SetupDi(string token, string apiLink)
+    {
+      var services = new ServiceCollection()
+            .AddLogging()
+            .AddScoped(sp => HttpClientBuilder())
+            .AddScoped<HttpService>()
+            .AddScoped<GetAllVideosService>()
+            .AddScoped<GetAnimatedThumbnailService>()
+            .AddScoped<GetStatusAnimatedThumbnailService>()
+            .AddScoped<AddAnimatedThumbnailsToVideoService>()
+            .AddScoped<AddDomainToVideoService>()
+            .AddScoped<CompleteUploadByCompleteUriService>()
+            .AddScoped<GetStreamingTicketService>()
+            .AddScoped<UpdateVideoDetailsService>()
+            .AddScoped<UploadVideoService>()
+            .AddScoped<GetVideoService>()
+            .AddScoped(sp => new UploaderService(
+              token,  
+              apiLink, 
+              sp.GetRequiredService<HttpService>(), 
+              sp.GetRequiredService<UploadVideoService>(), 
+              sp.GetRequiredService<GetAllVideosService>(),
+              sp.GetRequiredService<GetStatusAnimatedThumbnailService>(),
+              sp.GetRequiredService<GetAnimatedThumbnailService>(),
+              sp.GetRequiredService<AddAnimatedThumbnailsToVideoService>(),
+              sp.GetRequiredService<GetVideoService>()));
+
+      return services.BuildServiceProvider();
+    }
+
+    private static UploaderService GetUploaderService()
+    {
+      return _serviceProvider
+        .GetService<UploaderService>();
+    }
+
+    private static HttpClient HttpClientBuilder()
+    {
+      var httpClient = new HttpClient
+      {
+        BaseAddress = new Uri(ServiceConstants.VIMEO_URI),
+        Timeout = TimeSpan.FromHours(2)
+      };
+      httpClient.DefaultRequestHeaders.Add("Accept", ServiceConstants.VIMEO_HTTP_ACCEPT);
+
+      return httpClient;
     }
   }
 }
