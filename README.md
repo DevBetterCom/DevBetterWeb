@@ -1,4 +1,6 @@
 [![CI/CD Pipeline](https://github.com/DevBetterCom/DevBetterWeb/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/ardalis/DevBetterWeb/actions)
+[![UptimeRobot Status](https://img.shields.io/uptimerobot/status/m781614473-ee8694b6320f5a9ae94ffd29)](https://devbetter.com/)
+![UptimeRobot 30-day Uptime](https://img.shields.io/uptimerobot/ratio/m781614473-ee8694b6320f5a9ae94ffd29)
 
 # DevBetterWeb
 
