@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages.Videos
+namespace DevBetterWeb.Web.Pages.Admin.Videos
 {
   [RequestFormLimits(MultipartBodyLengthLimit = Constants.MAX_UPLOAD_FILE_SIZE)]
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
