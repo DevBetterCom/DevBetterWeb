@@ -18,6 +18,7 @@
     {
       public const string FileStorageConnectionString = "storageconnectionstring";
       public const string VimeoToken = "VIMEO_TOKEN";
+      public const string ApiKey = "API_KEY";
     }
   }
 }
