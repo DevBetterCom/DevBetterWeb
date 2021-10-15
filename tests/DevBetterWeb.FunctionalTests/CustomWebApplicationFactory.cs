@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using DevBetterWeb.Web.Models;
+using DevBetterWeb.Web.Areas.Identity;
 
 namespace DevBetterWeb.FunctionalTests
 {
@@ -38,6 +39,7 @@ namespace DevBetterWeb.FunctionalTests
         var db = scopedServices.GetRequiredService<AppDbContext>();
         var identitydb = scopedServices.GetRequiredService<IdentityDbContext>();
         var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = scopedServices.GetRequiredService<RoleManager<IdentityRole>>();
 
         var logger = scopedServices
             .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
@@ -49,6 +51,8 @@ namespace DevBetterWeb.FunctionalTests
         try
         {
           // Seed the database with test data.
+          AppIdentityDbContextSeed.SeedAsync(userManager, roleManager).GetAwaiter().GetResult();
+
           SeedData.PopulateTestData(db, userManager);
         }
         catch (Exception ex)
@@ -85,6 +89,25 @@ namespace DevBetterWeb.FunctionalTests
             services.AddDbContext<AppDbContext>(options =>
             {
               options.UseInMemoryDatabase(inMemoryCollectionName);
+            });
+
+            // Remove the app's IdentityDbContext registration.
+            var descriptorIdentityDbContext = services.SingleOrDefault(
+                d => d.ServiceType ==
+                    typeof(DbContextOptions<IdentityDbContext>));
+
+            if (descriptorIdentityDbContext != null)
+            {
+              services.Remove(descriptorIdentityDbContext);
+            }
+
+            // This should be set for each individual test run
+            string inMemoryCollectionNameIdentityDbContext = Guid.NewGuid().ToString();
+
+            // Add IdentityDbContext using an in-memory database for testing.
+            services.AddDbContext<IdentityDbContext>(options =>
+            {
+              options.UseInMemoryDatabase(inMemoryCollectionNameIdentityDbContext);
             });
 
             //services.AddScoped<IMediator, NoOpMediator>();

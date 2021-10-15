@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
@@ -11,34 +12,49 @@ using MediaInfo;
 
 namespace DevBetterWeb.UploaderApp
 {
-  public class UploaderManager
+  public class UploaderService
   {
     private static string MP4_FILES = "*.mp4";
     private static string MD_FILES = "*.md";
-
-    private readonly HttpService _httpService;
+    
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
+    private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
+    private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
+    private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
+    private readonly GetVideoService _getVideoService;
     private readonly AddVideoInfo _addVideoInfo;
 
-    public UploaderManager(string token, string apiLink)
+    public UploaderService(string token, string apiLink, HttpService httpService, UploadVideoService uploadVideoServicestring,
+      GetAllVideosService getAllVideosService, GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, GetAnimatedThumbnailService getAnimatedThumbnailService,
+      AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, GetVideoService getVideoService)
     {
-      _httpService = Builders.BuildHttpService(token);
-       _uploadVideoService = Builders.BuildUploadVideoService(_httpService);
-      _getAllVideosService = Builders.BuildGetAllVideosService(_httpService);
+      httpService.SetAuthorization(token);
+      _uploadVideoService = uploadVideoServicestring;
+      _getAllVideosService = getAllVideosService;
+      _addAnimatedThumbnailsToVideoService = addAnimatedThumbnailsToVideoService;
+      _getAnimatedThumbnailService = getAnimatedThumbnailService;
+      _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
+      _getVideoService = getVideoService;
 
       var clientHttp = new System.Net.Http.HttpClient();
       clientHttp.BaseAddress = new Uri(apiLink);
 
-      var httpService = new HttpService(clientHttp);
-      _addVideoInfo = new AddVideoInfo(httpService);
+      var videoInfoHttpService = new HttpService(clientHttp);
+      _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
     }
 
     public async Task SyncAsync(string folderToUpload)
     {
+      Console.WriteLine($"Getting Exist Videos.");
+
       var videos = GetVideos(folderToUpload);            
 
       var allExisVideos = await GetExistVideosAsync();
+      Console.WriteLine($"Found {allExisVideos.Count} videos on Vimeo.");
+
+      Console.WriteLine($"Getting Exist Videos Done.");
+
       foreach (var video in videos)
       {
         if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
@@ -56,7 +72,8 @@ namespace DevBetterWeb.UploaderApp
         request.FileData = video.Data;
 
         var response = await _uploadVideoService.ExecuteAsync(request);
-        if (response.Data > 0)
+        var videoId = response.Data;
+        if (videoId > 0)
         {
           var archiveVideo = new ArchiveVideo
           {
@@ -69,6 +86,8 @@ namespace DevBetterWeb.UploaderApp
             Description = video.Description,
             VideoUrl = video.Link
           };
+          var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+          archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
           await _addVideoInfo.ExecuteAsync(archiveVideo);
 
           Console.WriteLine($"{video.Name} Uploaded!");
@@ -78,6 +97,42 @@ namespace DevBetterWeb.UploaderApp
           Console.WriteLine($"{video.Name} Upload Error!");
         }
       }
+    }
+
+    private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
+    {
+      Console.WriteLine($"Creating Animated Thumbnails");
+
+      Video video = new Video();
+      while(video.Status != "available")
+      {
+        Thread.Sleep(20 * 1000);
+        video = (await _getVideoService.ExecuteAsync(videoId.ToString())).Data;
+      }
+
+      var addAnimatedThumbnailsToVideoRequest = new AddAnimatedThumbnailsToVideoRequest(videoId, 0, 6);
+      var addAnimatedThumbnailsToVideoResult = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(addAnimatedThumbnailsToVideoRequest);
+      var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
+      if (string.IsNullOrEmpty(pictureId))
+      {
+        Console.WriteLine($"Creating Animated Thumbnails Error!");
+        return null;
+      }
+
+      var statusAnimatedThumbnails = string.Empty;
+      var getStatusAnimatedThumbnailRequest = new GetAnimatedThumbnailRequest(videoId, pictureId);
+      while (statusAnimatedThumbnails != "completed")
+      {
+        var statusResult = await _getStatusAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
+
+        statusAnimatedThumbnails = statusResult.Data.Status;
+        Thread.Sleep(5 * 1000);
+      }
+      var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
+
+      Console.WriteLine($"Creating Animated Thumbnails Done!");
+
+      return getAnimatedThumbnailResult.Data;
     }
 
     private async Task<List<Video>> GetExistVideosAsync()

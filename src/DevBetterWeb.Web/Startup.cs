@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ardalis.ListStartupServices;
 using Autofac;
 using DevBetterWeb.Core;
@@ -59,6 +60,16 @@ namespace DevBetterWeb.Web
       ConfigureServices(services);
     }
 
+    public void ConfigureTestingServices(IServiceCollection services)
+    {
+      string dbName = Guid.NewGuid().ToString();
+
+      services.AddDbContext<AppDbContext>(options =>
+        options.UseInMemoryDatabase(dbName));
+
+      ConfigureServices(services);
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
       services.Configure<CookiePolicyOptions>(options =>
@@ -76,13 +87,12 @@ namespace DevBetterWeb.Web
 
       // TODO: Consider changing to check services collection for dbContext
       // See: https://stackoverflow.com/a/49377724/13729
-      if (!_isDbContextAdded)
+
+      if (!services.Any(x => x.ServiceType == typeof(AppDbContext)))
       {
-        string dbName = Guid.NewGuid().ToString();
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration
                 .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
-        _isDbContextAdded = true;
       }
       services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
