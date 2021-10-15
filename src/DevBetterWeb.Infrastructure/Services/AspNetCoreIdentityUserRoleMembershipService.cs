@@ -13,15 +13,17 @@ namespace DevBetterWeb.Infrastructure.Services
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IDomainEventDispatcher _dispatcher;
+    private readonly IAppLogger<AspNetCoreIdentityUserEmailConfirmationService> _logger;
 
     public AspNetCoreIdentityUserRoleMembershipService(UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        IDomainEventDispatcher dispatcher)
+        IDomainEventDispatcher dispatcher,
+        IAppLogger<AspNetCoreIdentityUserEmailConfirmationService> logger)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _dispatcher = dispatcher;
-
+      _logger = logger;
     }
 
     public async Task AddUserToRoleAsync(string userId, string roleId)
@@ -54,10 +56,18 @@ namespace DevBetterWeb.Infrastructure.Services
       var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
       if (role == null) throw new RoleNotFoundException(roleId);
 
-      await _userManager.RemoveFromRoleAsync(user, role.Name);
+      // check if user is in role?
+      if (await _userManager.IsInRoleAsync(user, role.Name))
+      {
+        await _userManager.RemoveFromRoleAsync(user, role.Name);
 
-      var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
-      await _dispatcher.Dispatch(userRemovedFromRoleEvent);
+        var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
+        await _dispatcher.Dispatch(userRemovedFromRoleEvent);
+      }
+      else
+      {
+        _logger.LogWarning($"Attempted to remove {user.UserName} from role {role.Name} they weren't in.");
+      }
     }
 
     public async Task RemoveUserFromRoleByRoleNameAsync(string userId, string roleName)
