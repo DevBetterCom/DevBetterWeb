@@ -16,9 +16,9 @@ namespace DevBetterWeb.UploaderApp
     static async Task Main(string[] args)
     {      
       var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
+      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
       {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link]");
+        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link] -akey [api key]");
         return;
       }
 
@@ -43,7 +43,14 @@ namespace DevBetterWeb.UploaderApp
         return;
       }
 
-      _serviceProvider = SetupDi(token, apiLink);
+      var apiKey = GetArgument(argsList, "-akey");
+      if (string.IsNullOrEmpty(apiKey))
+      {
+        Console.WriteLine("Please use -akey [api key]");
+        return;
+      }
+
+      _serviceProvider = SetupDi(token, apiLink, apiKey);
 
       var uploaderService = GetUploaderService();
       await uploaderService.SyncAsync(folderToUpload);
@@ -63,7 +70,7 @@ namespace DevBetterWeb.UploaderApp
       return argsList[index];
     }
 
-    private static ServiceProvider SetupDi(string token, string apiLink)
+    private static ServiceProvider SetupDi(string token, string apiLink, string apiKey)
     {
       var services = new ServiceCollection()
             .AddLogging()
@@ -81,7 +88,8 @@ namespace DevBetterWeb.UploaderApp
             .AddScoped<GetVideoService>()
             .AddScoped(sp => new UploaderService(
               token,  
-              apiLink, 
+              apiLink,
+              apiKey,
               sp.GetRequiredService<HttpService>(), 
               sp.GetRequiredService<UploadVideoService>(), 
               sp.GetRequiredService<GetAllVideosService>(),

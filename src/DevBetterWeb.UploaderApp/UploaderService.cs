@@ -16,7 +16,8 @@ namespace DevBetterWeb.UploaderApp
   {
     private static string MP4_FILES = "*.mp4";
     private static string MD_FILES = "*.md";
-    
+    private static string API_KEY_NAME = "ApiKey";
+
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
     private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
@@ -25,7 +26,7 @@ namespace DevBetterWeb.UploaderApp
     private readonly GetVideoService _getVideoService;
     private readonly AddVideoInfo _addVideoInfo;
 
-    public UploaderService(string token, string apiLink, HttpService httpService, UploadVideoService uploadVideoServicestring,
+    public UploaderService(string token, string apiLink, string apiKey, HttpService httpService, UploadVideoService uploadVideoServicestring,
       GetAllVideosService getAllVideosService, GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, GetAnimatedThumbnailService getAnimatedThumbnailService,
       AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, GetVideoService getVideoService)
     {
@@ -39,6 +40,7 @@ namespace DevBetterWeb.UploaderApp
 
       var clientHttp = new System.Net.Http.HttpClient();
       clientHttp.BaseAddress = new Uri(apiLink);
+      clientHttp.DefaultRequestHeaders.Add(API_KEY_NAME, apiKey);
 
       var videoInfoHttpService = new HttpService(clientHttp);
       _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
