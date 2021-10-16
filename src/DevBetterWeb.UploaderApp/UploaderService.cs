@@ -70,7 +70,7 @@ namespace DevBetterWeb.UploaderApp
         {
           Console.WriteLine($"{video.Name} has no associated MD file(s)...");
         }
-        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video);
+        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, "devbetter.com");
         request.FileData = video.Data;
 
         var response = await _uploadVideoService.ExecuteAsync(request);
@@ -185,7 +185,9 @@ namespace DevBetterWeb.UploaderApp
         {
           continue;
         }
-        video.SetEmbedProtecedPrivacy();
+        video
+          .SetEmbedProtecedPrivacy()
+          .SetEmbed();
         result.Add(video);
       }
 

@@ -52,9 +52,10 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
       videoEntity
         .SetCreatedTime(videoEntity.GetEncodedDate(fileData))
         .SetReleaseTime(videoEntity.GetEncodedDate(fileData))
-        .SetEmbedProtecedPrivacy();
+        .SetEmbedProtecedPrivacy()
+        .SetEmbed();
 
-      var request = new UploadVideoRequest("me", fileData, videoEntity);
+      var request = new UploadVideoRequest("me", fileData, videoEntity, Constants.VIMEO_ALLOWED_DOMAIN);
       var response = await _uploadVideoService.ExecuteAsync(request);
 
       if (response.Data > 0)

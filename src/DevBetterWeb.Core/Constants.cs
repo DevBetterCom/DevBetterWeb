@@ -11,6 +11,7 @@
     public const string MEMBER_ROLE_NAME = "Members";
     public const string ALUMNI_ROLE_NAME = "Alumni";
 
+    public const string VIMEO_ALLOWED_DOMAIN = "devbetter.com";
 
     public const string STRIPE_API_ENDPOINT = "api/stripecallback";
 
