@@ -42,6 +42,9 @@ namespace DevBetterWeb.Web.Pages.Videos
       var archiveVideo = await _repository.GetBySpecAsync(spec);
       if (archiveVideo == null) return NotFound(videoId);
 
+      archiveVideo.Views++;
+      await _repository.UpdateAsync(archiveVideo);
+
       OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
       OEmbedViewModel.Name = archiveVideo.Title;
       OEmbedViewModel.Password = video.Data.Password;
