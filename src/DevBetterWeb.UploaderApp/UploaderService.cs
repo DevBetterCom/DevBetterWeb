@@ -14,9 +14,9 @@ namespace DevBetterWeb.UploaderApp
 {
   public class UploaderService
   {
-    private static string MP4_FILES = "*.mp4";
-    private static string MD_FILES = "*.md";
-    private static string API_KEY_NAME = "ApiKey";
+    private const string MP4_FILES = "*.mp4";
+    private const string MD_FILES = "*.md";
+    private const string API_KEY_NAME = "ApiKey";
 
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
