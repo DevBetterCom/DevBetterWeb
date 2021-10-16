@@ -50,7 +50,8 @@ namespace DevBetterWeb.UploaderApp
         return;
       }
 
-      _serviceProvider = SetupDi(token, apiLink, apiKey);
+      var configInfo = new ConfigInfo(token, apiLink, apiKey);
+      _serviceProvider = SetupDi(configInfo);
 
       var uploaderService = GetUploaderService();
       await uploaderService.SyncAsync(folderToUpload);
@@ -70,10 +71,11 @@ namespace DevBetterWeb.UploaderApp
       return argsList[index];
     }
 
-    private static ServiceProvider SetupDi(string token, string apiLink, string apiKey)
+    private static ServiceProvider SetupDi(ConfigInfo configInfo)
     {
       var services = new ServiceCollection()
             .AddLogging()
+            .AddSingleton(configInfo)
             .AddScoped(sp => HttpClientBuilder())
             .AddScoped<HttpService>()
             .AddScoped<GetAllVideosService>()
@@ -86,17 +88,7 @@ namespace DevBetterWeb.UploaderApp
             .AddScoped<UpdateVideoDetailsService>()
             .AddScoped<UploadVideoService>()
             .AddScoped<GetVideoService>()
-            .AddScoped(sp => new UploaderService(
-              token,  
-              apiLink,
-              apiKey,
-              sp.GetRequiredService<HttpService>(), 
-              sp.GetRequiredService<UploadVideoService>(), 
-              sp.GetRequiredService<GetAllVideosService>(),
-              sp.GetRequiredService<GetStatusAnimatedThumbnailService>(),
-              sp.GetRequiredService<GetAnimatedThumbnailService>(),
-              sp.GetRequiredService<AddAnimatedThumbnailsToVideoService>(),
-              sp.GetRequiredService<GetVideoService>()));
+            .AddScoped<UploaderService>();
 
       return services.BuildServiceProvider();
     }
