@@ -21,6 +21,9 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class VideosController : Controller
   {
+    public static string API_KEY = string.Empty;
+
+    private static string API_KEY_NAME = "ApiKey";
     private readonly IMapper _mapper;
     private readonly GetAllVideosService _getAllVideosService;
     private readonly IRepository<ArchiveVideo> _repository;
@@ -55,6 +58,16 @@ namespace DevBetterWeb.Web.Controllers
     [HttpPost("add-video-info")]
     public async Task<IActionResult> AddVideoInfoAsync([FromBody] ArchiveVideoDto archiveVideoDto)
     {
+      if (!Request.Headers.TryGetValue(API_KEY_NAME, out var apiKey))
+      {
+        return Unauthorized();
+      }
+
+      if (apiKey != API_KEY)
+      {
+        return Unauthorized();
+      }
+
       var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
       archiveVideo = await _repository.AddAsync(archiveVideo);

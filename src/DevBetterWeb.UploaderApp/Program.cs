@@ -16,9 +16,9 @@ namespace DevBetterWeb.UploaderApp
     static async Task Main(string[] args)
     {      
       var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a"))
+      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
       {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link]");
+        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link] -akey [api key]");
         return;
       }
 
@@ -43,7 +43,15 @@ namespace DevBetterWeb.UploaderApp
         return;
       }
 
-      _serviceProvider = SetupDi(token, apiLink);
+      var apiKey = GetArgument(argsList, "-akey");
+      if (string.IsNullOrEmpty(apiKey))
+      {
+        Console.WriteLine("Please use -akey [api key]");
+        return;
+      }
+
+      var configInfo = new ConfigInfo(token, apiLink, apiKey);
+      _serviceProvider = SetupDi(configInfo);
 
       var uploaderService = GetUploaderService();
       await uploaderService.SyncAsync(folderToUpload);
@@ -63,10 +71,11 @@ namespace DevBetterWeb.UploaderApp
       return argsList[index];
     }
 
-    private static ServiceProvider SetupDi(string token, string apiLink)
+    private static ServiceProvider SetupDi(ConfigInfo configInfo)
     {
       var services = new ServiceCollection()
             .AddLogging()
+            .AddSingleton(configInfo)
             .AddScoped(sp => HttpClientBuilder())
             .AddScoped<HttpService>()
             .AddScoped<GetAllVideosService>()
@@ -79,16 +88,7 @@ namespace DevBetterWeb.UploaderApp
             .AddScoped<UpdateVideoDetailsService>()
             .AddScoped<UploadVideoService>()
             .AddScoped<GetVideoService>()
-            .AddScoped(sp => new UploaderService(
-              token,  
-              apiLink, 
-              sp.GetRequiredService<HttpService>(), 
-              sp.GetRequiredService<UploadVideoService>(), 
-              sp.GetRequiredService<GetAllVideosService>(),
-              sp.GetRequiredService<GetStatusAnimatedThumbnailService>(),
-              sp.GetRequiredService<GetAnimatedThumbnailService>(),
-              sp.GetRequiredService<AddAnimatedThumbnailsToVideoService>(),
-              sp.GetRequiredService<GetVideoService>()));
+            .AddScoped<UploaderService>();
 
       return services.BuildServiceProvider();
     }

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Web.Pages.Videos
+namespace DevBetterWeb.Web.Pages.Admin.Videos
 {
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class DeleteAllModel : PageModel
