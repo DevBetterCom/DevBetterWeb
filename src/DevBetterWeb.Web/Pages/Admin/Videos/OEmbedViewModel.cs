@@ -1,6 +1,6 @@
 ﻿using DevBetterWeb.Vimeo.Models;
 
-namespace DevBetterWeb.Web.Pages.Videos
+namespace DevBetterWeb.Web.Pages.Admin.Videos
 {
   public class OEmbedViewModel
   {
