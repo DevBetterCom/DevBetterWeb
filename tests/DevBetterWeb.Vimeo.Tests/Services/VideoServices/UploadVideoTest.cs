@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Vimeo.Tests.Constants;
 using DevBetterWeb.Vimeo.Tests.Helpers;
 using Shouldly;
 using Xunit;
@@ -31,7 +32,7 @@ namespace DevBetterWeb.Vimeo.Tests
       video.Privacy.Embed = AccessType.WHITELIST_TYPE;
       video.Privacy.Download = false;
 
-      var request = new UploadVideoRequest("me", buffer, video);
+      var request = new UploadVideoRequest("me", buffer, video, ConfigurationConstants.VIMEO_ALLOWED_DOMAIN);
 
       request.FileData = buffer;
 

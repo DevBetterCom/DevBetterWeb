@@ -237,6 +237,31 @@ namespace DevBetterWeb.Vimeo.Models
       return this;
     }
 
+    public Video SetEmbed(bool isShare = true, bool isHd = true, bool isFullScreen = true, bool isLike = true, bool isWatchLater = true, bool isScaling = true)
+    {
+      if (Embed == null)
+      {
+        Embed = new Embed();
+        Embed.Playbar = true;
+        Embed.Speed = true;
+        Embed.Volume = true;
+      }
+
+      if (Embed.Buttons == null)
+      {
+        Embed.Buttons = new Buttons();
+      }
+      
+      Embed.Buttons.Share = isShare;
+      Embed.Buttons.Fullscreen = isFullScreen;
+      Embed.Buttons.Hd = isHd;
+      Embed.Buttons.Watchlater = isWatchLater;
+      Embed.Buttons.Scaling = isScaling;
+      Embed.Buttons.Like = isLike;
+
+      return this;
+    }
+
     private bool ByteArrayToFile(string fileName, byte[] byteArray)
     {
       try
