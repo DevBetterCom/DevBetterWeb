@@ -9,6 +9,19 @@
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
 <br />
+<div class="row g-3">
+  <div class="col-auto">
+    <input type="text" readonly class="form-control-plaintext" value="Start By Seconds">
+  </div>
+  <div class="col-auto">
+    <input type="text" class="form-control" id="startVideo" placeholder="Seconds">
+  </div>
+  <div class="col-auto">
+    <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">Copy Link</button>
+  </div>
+</div>
+
+<br />
 <h1>@Html.Raw(@Model!.OEmbedViewModel?.Description)</h1>
 
 @section Scripts {
@@ -18,5 +31,11 @@
 	$(document).ready(function () {
 
 	});
+
+    function createAndCopyLink() {
+        var startVideo = document.getElementById("startVideo").value;
+        var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + startVideo;
+        navigator.clipboard.writeText(link);
+    }
 </script>
 }
