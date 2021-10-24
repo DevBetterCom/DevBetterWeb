@@ -89,7 +89,7 @@ namespace DevBetterWeb.UploaderApp
             DateCreated = video.CreatedTime,
             DateUploaded = DateTimeOffset.UtcNow,
             Duration = video.Duration,
-            VideoId = response.Data.ToString(),
+            VideoId = videoId.ToString(),
             Password = video.Password,
             Description = video.Description,
             VideoUrl = video.Link
@@ -118,10 +118,15 @@ namespace DevBetterWeb.UploaderApp
       Console.WriteLine($"Creating Animated Thumbnails");
 
       Video video = new Video();
-      while(video.Status != "available")
+      while(video == null || video.Status != "available")
       {
         Thread.Sleep(20 * 1000);
-        video = (await _getVideoService.ExecuteAsync(videoId.ToString())).Data;
+        var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+        if (response.Code == System.Net.HttpStatusCode.InternalServerError || response.Code == System.Net.HttpStatusCode.Unauthorized || response.Code == System.Net.HttpStatusCode.NotFound)
+        {
+          Console.WriteLine($"Get Video {videoId} Error: Status Code is {response.Code}, Error Text is {response.Text}");
+        }
+        video = response.Data;
       }
 
       var startAnimation = GetRandomStart(video.Duration>6? video.Duration:0);
@@ -139,8 +144,15 @@ namespace DevBetterWeb.UploaderApp
       while (statusAnimatedThumbnails != "completed")
       {
         var statusResult = await _getStatusAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
-
-        statusAnimatedThumbnails = statusResult.Data.Status;
+        if (statusResult.Code == System.Net.HttpStatusCode.InternalServerError || statusResult.Code == System.Net.HttpStatusCode.Unauthorized || statusResult.Code == System.Net.HttpStatusCode.NotFound)
+        {
+          Console.WriteLine($"Get Video {videoId} Error: Status Code is {statusResult.Code}, Error Text is {statusResult.Text}");
+          statusAnimatedThumbnails = string.Empty;
+        }else
+        {
+          statusAnimatedThumbnails = statusResult.Data.Status;
+        }
+        
         Thread.Sleep(5 * 1000);
       }
       var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
