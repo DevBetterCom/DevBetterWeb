@@ -69,14 +69,24 @@ Add a new migration (from the DevBetter.Web folder):
 dotnet ef migrations add MIGRATIONNAME -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
 ```
 
-Update AppDbContext model:
+Update AppDbContext model (from the DevBetter.Web folder):
 
 ```powershell
 dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
 ```
 
-Generate Idempotent Update Script (for production):
+Generate Idempotent Update Script (for production)(from the DevBetter.Web folder):
 
 ```powershell
 dotnet ef migrations script -c AppDbContext -i -o migrate.sql -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+```
+
+## Video Upload Instructions (admin only)
+
+Put the video files and their associated markdown files in a folder you wish to upload from. Specify the Vimeo token and devBetter API key.
+
+For the API link, the production link should be the root web site, https://devbetter.com/ 
+
+```powershell
+.\DevBetterWeb.UploaderApp.exe -d [folder] -t [Vimeo token] -a [api link] -akey [api key]
 ```
