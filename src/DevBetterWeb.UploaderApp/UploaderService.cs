@@ -122,10 +122,6 @@ namespace DevBetterWeb.UploaderApp
       {
         Thread.Sleep(20 * 1000);
         var response = await _getVideoService.ExecuteAsync(videoId.ToString());
-        if (response.Code == System.Net.HttpStatusCode.InternalServerError || response.Code == System.Net.HttpStatusCode.Unauthorized || response.Code == System.Net.HttpStatusCode.NotFound)
-        {
-          Console.WriteLine($"Get Video {videoId} Error: Status Code is {response.Code}, Error Text is {response.Text}");
-        }
         video = response.Data;
       }
 
@@ -146,7 +142,6 @@ namespace DevBetterWeb.UploaderApp
         var statusResult = await _getStatusAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
         if (statusResult.Code == System.Net.HttpStatusCode.InternalServerError || statusResult.Code == System.Net.HttpStatusCode.Unauthorized || statusResult.Code == System.Net.HttpStatusCode.NotFound)
         {
-          Console.WriteLine($"Get Video {videoId} Error: Status Code is {statusResult.Code}, Error Text is {statusResult.Text}");
           statusAnimatedThumbnails = string.Empty;
         }else
         {
