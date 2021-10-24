@@ -4,14 +4,13 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages.Videos
+namespace DevBetterWeb.Web.Pages.Admin.Videos
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class DetailsModel : PageModel
   {
     [BindProperty]
@@ -41,9 +40,6 @@ namespace DevBetterWeb.Web.Pages.Videos
       var spec = new ArchiveVideoByVideoIdSpec(videoId);
       var archiveVideo = await _repository.GetBySpecAsync(spec);
       if (archiveVideo == null) return NotFound(videoId);
-
-      archiveVideo.Views++;
-      await _repository.UpdateAsync(archiveVideo);
 
       OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
       OEmbedViewModel.Name = archiveVideo.Title;

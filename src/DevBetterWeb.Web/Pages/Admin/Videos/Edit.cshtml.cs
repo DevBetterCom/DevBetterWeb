@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Web.Pages.Videos
+namespace DevBetterWeb.Web.Pages.Admin.Videos
 {
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
   public class EditModel : PageModel

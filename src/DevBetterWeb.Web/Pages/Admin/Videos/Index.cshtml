@@ -1,5 +1,5 @@
 ﻿@page
-@model DevBetterWeb.Web.Pages.Videos.IndexModel
+@model DevBetterWeb.Web.Pages.Admin.Videos.IndexModel
 @{
 	ViewData["Title"] = "Index";
 }
@@ -76,13 +76,34 @@
 </style>
 
 <h3>Recorded Coaching Sessions</h3>
-
-<div asp-authorize asp-roles="Administrators,Members,Alumni">
-	<div id="members-videos-list" class="row">
-	</div>		
-</div>
-
+<p asp-authorize asp-roles="Administrators">
+	<a class="btn btn-primary" asp-page="Create" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Create New</a>
+</p>
+<p asp-authorize asp-roles="Administrators">
+	<a class="btn btn-primary" asp-page="DeleteAll" style="margin-bottom: 10px;"><i class="fa fa-plus"></i> Delete All</a>
+</p>
+<table class="table" id="videosDatatable" asp-authorize asp-roles="Administrators">
+	<thead>
+        <tr>
+			<th>Id</th>
+            <th>
+                Name
+            </th>
+            <th>
+                Release Time
+            </th>
+            <th asp-authorize asp-roles="Administrators">
+                Created Time
+            </th>
+            <th asp-authorize asp-roles="Administrators">
+                Status
+            </th>
+			<th asp-authorize asp-roles="Administrators">
+			</th>
+        </tr>
+	</thead>
+</table>
 
 @section scripts{
-    <script src="~/js/videos.js" asp-append-version="true" asp-authorize asp-roles="Administrators,Members,Alumni"></script>
+    <script src="~/js/videos.js" asp-append-version="true" asp-authorize asp-roles="Administrators"></script>
 }
