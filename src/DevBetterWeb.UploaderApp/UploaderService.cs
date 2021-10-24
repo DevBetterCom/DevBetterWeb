@@ -50,14 +50,14 @@ namespace DevBetterWeb.UploaderApp
 
     public async Task SyncAsync(string folderToUpload)
     {
-      Console.WriteLine($"Getting Exist Videos.");
+      Console.WriteLine($"Getting existing videos on Vimeo.");
 
       var videos = GetVideos(folderToUpload);            
 
       var allExisVideos = await GetExistVideosAsync();
       Console.WriteLine($"Found {allExisVideos.Count} videos on Vimeo.");
 
-      Console.WriteLine($"Getting Exist Videos Done.");
+      Console.WriteLine($"Getting existing Videos DONE.");
 
       foreach (var video in videos)
       {
@@ -153,9 +153,13 @@ namespace DevBetterWeb.UploaderApp
     private async Task<List<Video>> GetExistVideosAsync()
     {      
       var getAllVideosRequest = new GetAllVideosRequest(ServiceConstants.ME);
-      var allExisVideos = await _getAllVideosService.ExecuteAsync(getAllVideosRequest);
+      var allExistingVideos = await _getAllVideosService.ExecuteAsync(getAllVideosRequest);
 
-      return allExisVideos.Data.Data;
+      if(allExistingVideos.Code != System.Net.HttpStatusCode.OK)
+      {
+        throw new Exception($"Non-successful status code: {allExistingVideos.Code}");
+      }
+      return allExistingVideos.Data.Data;
     }
 
     private List<Video> GetVideos(string folderPath)
