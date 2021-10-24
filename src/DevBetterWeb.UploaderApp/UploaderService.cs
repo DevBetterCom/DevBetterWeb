@@ -16,7 +16,7 @@ namespace DevBetterWeb.UploaderApp
   {
     private const string MP4_FILES = "*.mp4";
     private const string MD_FILES = "*.md";
-    private const string API_KEY_NAME = "ApiKey";
+    private const string API_KEY_NAME = "API_KEY";
 
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
@@ -96,7 +96,7 @@ namespace DevBetterWeb.UploaderApp
           };
           var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
           archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-          await _addVideoInfo.ExecuteAsync(archiveVideo);
+          var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
 
           Console.WriteLine($"{video.Name} Uploaded!");
         }
