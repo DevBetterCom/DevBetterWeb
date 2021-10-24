@@ -1,0 +1,22 @@
+﻿@page "{videoId}/{startTime?}"
+@model DevBetterWeb.Web.Pages.Videos.DetailsModel
+@{
+	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
+}
+
+<h3>@Model!.OEmbedViewModel?.Name</h3>
+
+@Html.Raw(@Model!.OEmbedViewModel?.Html)
+
+<br />
+<h1>@Html.Raw(@Model!.OEmbedViewModel?.Description)</h1>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+	$(document).ready(function () {
+
+	});
+</script>
+}

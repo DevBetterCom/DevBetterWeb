@@ -14,9 +14,10 @@ namespace DevBetterWeb.UploaderApp
 {
   public class UploaderService
   {
-    private static string MP4_FILES = "*.mp4";
-    private static string MD_FILES = "*.md";
-    
+    private const string MP4_FILES = "*.mp4";
+    private const string MD_FILES = "*.md";
+    private const string API_KEY_NAME = "ApiKey";
+
     private readonly UploadVideoService _uploadVideoService;
     private readonly GetAllVideosService _getAllVideosService;
     private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
@@ -24,12 +25,14 @@ namespace DevBetterWeb.UploaderApp
     private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
     private readonly GetVideoService _getVideoService;
     private readonly AddVideoInfo _addVideoInfo;
+    private readonly ConfigInfo _configInfo;
 
-    public UploaderService(string token, string apiLink, HttpService httpService, UploadVideoService uploadVideoServicestring,
+    public UploaderService(ConfigInfo configInfo, HttpService httpService, UploadVideoService uploadVideoServicestring,
       GetAllVideosService getAllVideosService, GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, GetAnimatedThumbnailService getAnimatedThumbnailService,
       AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, GetVideoService getVideoService)
     {
-      httpService.SetAuthorization(token);
+      _configInfo = configInfo;
+      httpService.SetAuthorization(_configInfo.Token);
       _uploadVideoService = uploadVideoServicestring;
       _getAllVideosService = getAllVideosService;
       _addAnimatedThumbnailsToVideoService = addAnimatedThumbnailsToVideoService;
@@ -38,7 +41,8 @@ namespace DevBetterWeb.UploaderApp
       _getVideoService = getVideoService;
 
       var clientHttp = new System.Net.Http.HttpClient();
-      clientHttp.BaseAddress = new Uri(apiLink);
+      clientHttp.BaseAddress = new Uri(_configInfo.ApiLink);
+      clientHttp.DefaultRequestHeaders.Add(API_KEY_NAME, _configInfo.ApiKey);
 
       var videoInfoHttpService = new HttpService(clientHttp);
       _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
@@ -68,7 +72,11 @@ namespace DevBetterWeb.UploaderApp
         {
           Console.WriteLine($"{video.Name} has no associated MD file(s)...");
         }
-        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video);
+        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
+          .Replace("https://", String.Empty)
+          .Replace("http://", String.Empty)
+          .Replace("/", String.Empty));
+
         request.FileData = video.Data;
 
         var response = await _uploadVideoService.ExecuteAsync(request);
@@ -99,6 +107,12 @@ namespace DevBetterWeb.UploaderApp
       }
     }
 
+    private int GetRandomStart(int max)
+    {
+      Random number = new Random();
+      return number.Next(1, max);
+    }
+
     private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
     {
       Console.WriteLine($"Creating Animated Thumbnails");
@@ -110,7 +124,8 @@ namespace DevBetterWeb.UploaderApp
         video = (await _getVideoService.ExecuteAsync(videoId.ToString())).Data;
       }
 
-      var addAnimatedThumbnailsToVideoRequest = new AddAnimatedThumbnailsToVideoRequest(videoId, 0, 6);
+      var startAnimation = GetRandomStart(video.Duration>6? video.Duration:0);
+      var addAnimatedThumbnailsToVideoRequest = new AddAnimatedThumbnailsToVideoRequest(videoId, startAnimation, video.Duration>=6?6: video.Duration);
       var addAnimatedThumbnailsToVideoResult = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(addAnimatedThumbnailsToVideoRequest);
       var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
       if (string.IsNullOrEmpty(pictureId))
@@ -183,7 +198,9 @@ namespace DevBetterWeb.UploaderApp
         {
           continue;
         }
-        video.SetEmbedProtecedPrivacy();
+        video
+          .SetEmbedProtecedPrivacy()
+          .SetEmbed();
         result.Add(video);
       }
 

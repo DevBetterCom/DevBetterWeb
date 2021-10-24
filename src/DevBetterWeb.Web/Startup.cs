@@ -12,6 +12,7 @@ using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Web.Controllers;
 using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -135,6 +136,7 @@ namespace DevBetterWeb.Web
     public void ConfigureContainer(ContainerBuilder builder)
     {
       string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
+      VideosController.API_KEY = Configuration[Constants.ConfigKeys.ApiKey];
 
       builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
     }
