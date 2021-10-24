@@ -9,11 +9,9 @@ using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
-using DevBetterWeb.Infrastructure.Interfaces;
-using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Controllers;
-using DevBetterWeb.Web.Services;
+using DevBetterWeb.Web.Models;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
 using MediatR;
@@ -24,7 +22,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Stripe;
 
 namespace DevBetterWeb.Web
 {
@@ -85,6 +82,7 @@ namespace DevBetterWeb.Web
       services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
       services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
       services.Configure<SubscriptionPlanOptions>(Configuration.GetSection("SubscriptionPlanOptions"));
+      services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
 
       // TODO: Consider changing to check services collection for dbContext
       // See: https://stackoverflow.com/a/49377724/13729
@@ -136,8 +134,6 @@ namespace DevBetterWeb.Web
     public void ConfigureContainer(ContainerBuilder builder)
     {
       string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
-      VideosController.API_KEY = Configuration[Constants.ConfigKeys.ApiKey];
-
       builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
     }
 
@@ -179,41 +175,6 @@ namespace DevBetterWeb.Web
         endpoints.MapRazorPages();
         endpoints.MapDefaultControllerRoute();
       });
-    }
-  }
-
-  public static class ConfigureServicesExtensions
-  {
-    public static void AddStripeServices(this IServiceCollection services, string stripeApiKey)
-    {
-      StripeConfiguration.ApiKey = stripeApiKey;
-      services.AddScoped<IPaymentHandlerSubscription, StripePaymentHandlerSubscriptionService>();
-      services.AddScoped<IPaymentHandlerCustomerService, StripePaymentHandlerCustomerService>();
-      services.AddScoped<IPaymentHandlerEventService, StripePaymentHandlerEventService>();
-      services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
-      services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
-      services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
-      services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
-      services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
-      services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
-    }
-
-    public static void AddDailyCheckServices(this IServiceCollection services)
-    {
-      services.AddHostedService<DailyCheckService>();
-      services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
-      services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
-    }
-
-    public static void AddMemberSubscriptionServices(this IServiceCollection services)
-    {
-      services.AddScoped<INewMemberService, NewMemberService>();
-      services.AddScoped<IMemberLookupService, MemberLookupService>();
-      services.AddScoped<IMemberCancellationService, MemberSubscriptionCancellationService>();
-      services.AddScoped<IMemberSubscriptionRenewalService, MemberSubscriptionRenewalService>();
-      services.AddScoped<IMemberAddBillingActivityService, MemberAddBillingActivityService>();
-      services.AddScoped<IMemberSubscriptionPeriodCalculationsService, MemberSubscriptionPeriodCalculationsService>();
-      services.AddScoped<IMemberSubscriptionEndedAdminEmailService, MemberSubscriptionEndedAdminEmailService>();
     }
   }
 }

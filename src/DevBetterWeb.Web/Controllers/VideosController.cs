@@ -12,7 +12,7 @@ using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.Controllers
 {
@@ -21,18 +21,20 @@ namespace DevBetterWeb.Web.Controllers
   [ApiController]
   public class VideosController : Controller
   {
-    public static string API_KEY = string.Empty;
-
-    private static string API_KEY_NAME = "ApiKey";
+    private readonly string _expectedApiKey;
     private readonly IMapper _mapper;
     private readonly GetAllVideosService _getAllVideosService;
     private readonly IRepository<ArchiveVideo> _repository;
 
-    public VideosController(IMapper mapper, IRepository<ArchiveVideo> repository, GetAllVideosService getAllVideosService)
+    public VideosController(IMapper mapper,
+      IRepository<ArchiveVideo> repository,
+      GetAllVideosService getAllVideosService,
+      IOptions<ApiSettings> apiSettings)
     {
       _mapper = mapper;
       _getAllVideosService = getAllVideosService;
       _repository = repository;
+      _expectedApiKey = apiSettings.Value.ApiKey;
     }
 
     [HttpPost("list")]
@@ -53,17 +55,13 @@ namespace DevBetterWeb.Web.Controllers
       return Ok(jsonData);
     }
 
-    // TODO: need to add authorization and add this call on console application.
     [AllowAnonymous]
     [HttpPost("add-video-info")]
     public async Task<IActionResult> AddVideoInfoAsync([FromBody] ArchiveVideoDto archiveVideoDto)
     {
-      if (!Request.Headers.TryGetValue(API_KEY_NAME, out var apiKey))
-      {
-        return Unauthorized();
-      }
+      var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
 
-      if (apiKey != API_KEY)
+      if (apiKey != _expectedApiKey)
       {
         return Unauthorized();
       }
