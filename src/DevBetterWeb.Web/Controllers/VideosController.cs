@@ -68,7 +68,18 @@ namespace DevBetterWeb.Web.Controllers
 
       var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
-      archiveVideo = await _repository.AddAsync(archiveVideo);
+      var existVideo = await _repository.GetByIdAsync(archiveVideo.Id);
+      if (existVideo == null)
+      {
+        archiveVideo = await _repository.AddAsync(archiveVideo);
+      }else
+      {
+        existVideo.Description = archiveVideo.Description;
+        existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+        existVideo.Title = archiveVideo.Title;
+        existVideo.Duration = archiveVideo.Duration;
+        await _repository.UpdateAsync(existVideo);
+      }      
 
       return Ok(archiveVideo);
     }
