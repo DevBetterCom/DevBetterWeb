@@ -7,16 +7,64 @@ using Ardalis.ApiCaller;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.DependencyInjection;
+using McMaster.Extensions.CommandLineUtils;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.UploaderApp
 {
-  class Program
+  // TODO: Simplify using CommandLineUtils package
+  // See: https://briancaos.wordpress.com/2020/02/12/command-line-parameters-in-net-core-console-applications/
+  // TODO: Add a logger
+  // TODO: Add a verbose flag to the command line that turns logger verbosity up/down
+
+  public class AsyncProgram
+  {
+    // working from this example
+    // https://github.com/natemcmaster/CommandLineUtils/blob/main/docs/samples/dependency-injection/generic-host/Program.cs
+
+    public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<AsyncProgram>(args);
+
+    [Argument(0, Description = "Folder with files to upload")]
+    public string FolderPath { get; }
+
+    [Required]
+    [Option("-t|--token", Description = "Vimeo token")]
+    public string Token { get; }
+
+    [Required]
+    [Option("-l|--link", Description = "devBetter API Link (ex. devbetter.com/)")]
+    public string ApiLink { get; }
+
+    [Required]
+    [Option("-k|--key", Description = "devBetter API Key")]
+    public string ApiKey { get; }
+
+    [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, information, warning, error")]
+    public string Verbose { get; } = "error";
+
+    private async Task OnExecuteAsync()
+    {
+      // use properties here knowing they're initialized
+      var subject = FolderPath ?? "world";
+
+      // This pause here is just for indication that some awaitable operation could happens here.
+      await Task.Delay(5000);
+
+
+      Console.WriteLine($"Hello {subject}!");
+    }
+  }
+
+
+
+  class Program2
   {
     private static IServiceProvider _serviceProvider;
-    static async Task Main(string[] args)
-    {      
+    static async Task Main2(string[] args)
+    {
       var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
+      if (argsList.Count == 0 || argsList.All(x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
       {
         Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link] -akey [api key]");
         return;
@@ -58,11 +106,11 @@ namespace DevBetterWeb.UploaderApp
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
-    }       
-    
+    }
+
     private static string GetArgument(List<string> argsList, string argValue)
     {
-      var index  = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
+      var index = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
       if (index <= 0)
       {
         return null;

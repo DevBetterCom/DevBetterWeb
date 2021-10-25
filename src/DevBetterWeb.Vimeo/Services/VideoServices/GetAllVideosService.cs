@@ -24,7 +24,8 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       _logger = logger;
     }
 
-    public override async Task<HttpResponse<DataPaged<Video>>> ExecuteAsync(GetAllVideosRequest request, CancellationToken cancellationToken = default)
+    public override async Task<HttpResponse<DataPaged<Video>>> ExecuteAsync(GetAllVideosRequest request,
+      CancellationToken cancellationToken = default)
     {
       var uri = string.Empty;
       if (string.IsNullOrEmpty(request.UserId))

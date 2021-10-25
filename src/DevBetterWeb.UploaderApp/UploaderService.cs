@@ -12,6 +12,7 @@ using MediaInfo;
 
 namespace DevBetterWeb.UploaderApp
 {
+  // TODO: Refactor - this is way too big and has too many responsibilities and abstraction levels in it.
   public class UploaderService
   {
     private const string MP4_FILES = "*.mp4";
@@ -27,9 +28,13 @@ namespace DevBetterWeb.UploaderApp
     private readonly AddVideoInfo _addVideoInfo;
     private readonly ConfigInfo _configInfo;
 
-    public UploaderService(ConfigInfo configInfo, HttpService httpService, UploadVideoService uploadVideoServicestring,
-      GetAllVideosService getAllVideosService, GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, GetAnimatedThumbnailService getAnimatedThumbnailService,
-      AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, GetVideoService getVideoService)
+    public UploaderService(ConfigInfo configInfo, HttpService httpService,
+      UploadVideoService uploadVideoServicestring,
+      GetAllVideosService getAllVideosService,
+      GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService,
+      GetAnimatedThumbnailService getAnimatedThumbnailService,
+      AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService,
+      GetVideoService getVideoService)
     {
       _configInfo = configInfo;
       httpService.SetAuthorization(_configInfo.Token);
@@ -50,60 +55,63 @@ namespace DevBetterWeb.UploaderApp
 
     public async Task SyncAsync(string folderToUpload)
     {
-      Console.WriteLine($"Getting existing videos on Vimeo.");
+      Console.WriteLine($"Getting existing videos from devBetter API");
+      var allExisVideos = await GetExistingVideosAsync();
+      Console.WriteLine($"Found {allExisVideos.Count} videos in devBetter API.");
 
-      var videos = GetVideos(folderToUpload);            
-
-      var allExisVideos = await GetExistVideosAsync();
-      Console.WriteLine($"Found {allExisVideos.Count} videos on Vimeo.");
-
-      Console.WriteLine($"Getting existing Videos DONE.");
-
-      foreach (var video in videos)
+      var videosToUpload = GetVideos(folderToUpload);
+      Console.WriteLine($"Found {videosToUpload.Count} videos in {folderToUpload}.");
+      foreach (var video in videosToUpload)
       {
         if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
         {
           Console.WriteLine($"{video.Name} already exists - skipping.");
           continue;
-        }        
+        }
 
         Console.WriteLine($"Starting Uploading {video.Name}");
-        if (string.IsNullOrEmpty(video.Description))
-        {
-          Console.WriteLine($"{video.Name} has no associated MD file(s)...");
-        }
-        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
-          .Replace("https://", String.Empty)
-          .Replace("http://", String.Empty)
-          .Replace("/", String.Empty));
+        // TODO: Would be good to have some progress indicator here...
+        await UploadVideoAsync(video);
+      }
+    }
 
-        request.FileData = video.Data;
+    private async Task UploadVideoAsync(Video video)
+    {
+      if (string.IsNullOrEmpty(video.Description))
+      {
+        Console.WriteLine($"{video.Name} has no associated MD file(s)...");
+      }
+      var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
+        .Replace("https://", String.Empty)
+        .Replace("http://", String.Empty)
+        .Replace("/", String.Empty));
 
-        var response = await _uploadVideoService.ExecuteAsync(request);
-        var videoId = response.Data;
-        if (videoId > 0)
-        {
-          var archiveVideo = new ArchiveVideo
-          {
-            Title = video.Name,
-            DateCreated = video.CreatedTime,
-            DateUploaded = DateTimeOffset.UtcNow,
-            Duration = video.Duration,
-            VideoId = videoId.ToString(),
-            Password = video.Password,
-            Description = video.Description,
-            VideoUrl = video.Link
-          };
-          var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
-          archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-          var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+      request.FileData = video.Data;
 
-          Console.WriteLine($"{video.Name} Uploaded!");
-        }
-        else
+      var response = await _uploadVideoService.ExecuteAsync(request);
+      var videoId = response.Data;
+      if (videoId > 0)
+      {
+        var archiveVideo = new ArchiveVideo
         {
-          Console.WriteLine($"{video.Name} Upload Error!");
-        }
+          Title = video.Name,
+          DateCreated = video.CreatedTime,
+          DateUploaded = DateTimeOffset.UtcNow,
+          Duration = video.Duration,
+          VideoId = videoId.ToString(),
+          Password = video.Password,
+          Description = video.Description,
+          VideoUrl = video.Link
+        };
+        var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+        archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+        var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+
+        Console.WriteLine($"{video.Name} Uploaded!");
+      }
+      else
+      {
+        Console.WriteLine($"{video.Name} Upload Error!");
       }
     }
 
@@ -157,7 +165,7 @@ namespace DevBetterWeb.UploaderApp
       return getAnimatedThumbnailResult.Data;
     }
 
-    private async Task<List<Video>> GetExistVideosAsync()
+    private async Task<List<Video>> GetExistingVideosAsync()
     {      
       var getAllVideosRequest = new GetAllVideosRequest(ServiceConstants.ME);
       var allExistingVideos = await _getAllVideosService.ExecuteAsync(getAllVideosRequest);
