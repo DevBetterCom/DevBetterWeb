@@ -109,6 +109,34 @@ namespace DevBetterWeb.UploaderApp
       {
         _logger.LogError($"{video.Name} Upload Error!");
       }
+    }    
+
+    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId)
+    {
+      var archiveVideo = new ArchiveVideo
+      {
+        Title = video.Name,
+        DateCreated = video.CreatedTime,
+        DateUploaded = DateTimeOffset.UtcNow,
+        Duration = video.Duration,
+        VideoId = videoId.ToString(),
+        Password = video.Password,
+        Description = video.Description,
+        VideoUrl = video.Link
+      };
+
+      var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+      archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+      if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
+      {
+        Console.WriteLine($"{video.Name} - {videoId} Add/Update info Error!");
+        Console.WriteLine($"Error: {videoInfoResponse.Text}");
+        return false;
+      }
+
+      Console.WriteLine($"{video.Name} - {videoId} Add/Update info Done.");
+      return true;
     }
 
     private int GetRandomStart(int max)
