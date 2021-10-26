@@ -36,7 +36,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       }
       catch (Exception exception)
       {
-        _logger.LogError(exception);
+        if (!exception.Message.Contains("The JSON value could not be converted to System.Collections.Generic.List`1[System.String]"))
+        {
+          _logger.LogError(exception);
+        }
         return HttpResponse<Video>.FromException(exception.Message);
       }
     }
