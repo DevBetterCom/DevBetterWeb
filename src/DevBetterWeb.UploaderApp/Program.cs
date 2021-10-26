@@ -9,6 +9,11 @@ using McMaster.Extensions.CommandLineUtils;
 using System.ComponentModel.DataAnnotations;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Hosting;
+using Serilog.Extensions.Logging;
+using McMaster.Extensions.Hosting.CommandLine;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.UploaderApp
 {
@@ -41,77 +46,49 @@ namespace DevBetterWeb.UploaderApp
     [Option("-k|--key", Description = "devBetter API Key")]
     public string ApiKey { get; }
 
-    [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, information, warning, error")]
+    [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, info, warning, error")]
     public string Verbose { get; } = "error";
 
     private async Task OnExecuteAsync()
     {
-      // use properties here knowing they're initialized
-      var folderPath = FolderPath ?? "world";
-
+      // ideally I'd like all of this setup of config, services, and logging to happen in the generic host builder above
       var configInfo = new ConfigInfo(Token, ApiLink, ApiKey);
-      _serviceProvider = SetupDi(configInfo);
-      EnableLogger();
+      var logger = CreateLogger();
+      _serviceProvider = SetupDi(configInfo,logger);
 
-      Log.Debug("Logger Enabled");
-      Log.Debug("DI Setup Done");
+      logger.Debug("Logger Enabled"); // I'm never seeing these displayed in the console -Steve
+      logger.Debug("DI Setup Done");
 
+      // I'd like this to be the first line of OnExecuteAsync
       var uploaderService = GetUploaderService();
-      await uploaderService.SyncAsync(folderPath);
+      await uploaderService.SyncAsync(FolderPath);
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
     }
 
-    private LogEventLevel? GetLoggerLevel(string level)
+    private Serilog.ILogger CreateLogger()
     {
-      if (string.IsNullOrEmpty(level))
-      {
-        return null;
-      }
-      else if (level == "error")
-      {
-        return LogEventLevel.Error;
-      }
-      else if (level == "debug")
-      {
-        return LogEventLevel.Debug;
-      }
-      else if (level == "trace")
-      {
-        return LogEventLevel.Verbose;
-      }
-      else if (level == "info")
-      {
-        return LogEventLevel.Information;
-      }
-      else if (level == "warning")
-      {
-        return LogEventLevel.Warning;
-      }
-      else
-      {
-        return LogEventLevel.Verbose;
-      }
+      var loggerLevel = Verbose.ToLower().ToLogEventLevel().Value;
+
+      var loggerConfiguration = new LoggerConfiguration()
+        .MinimumLevel.Is(loggerLevel)
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+      var logger = loggerConfiguration.CreateLogger();
+      Log.Logger = logger;
+
+      logger.Debug("Logger created with level {0}", loggerLevel);
+
+      return logger;
     }
 
-    private void EnableLogger()
-    {
-      var loggerConfiguration = new LoggerConfiguration();        
-
-      var loggerLevel = GetLoggerLevel(Verbose);
-      if (loggerLevel != null)
-      {
-        loggerConfiguration = loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: loggerLevel.Value);
-      }
-
-      Log.Logger = loggerConfiguration.CreateLogger();
-    }
-
-    private static ServiceProvider SetupDi(ConfigInfo configInfo)
+    private static ServiceProvider SetupDi(ConfigInfo configInfo, Serilog.ILogger logger)
     {
       var services = new ServiceCollection()
             .AddLogging()
+            .AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory(logger, false))
             .AddSingleton(configInfo)
             .AddScoped(sp => HttpClientBuilder())
             .AddScoped<HttpService>()

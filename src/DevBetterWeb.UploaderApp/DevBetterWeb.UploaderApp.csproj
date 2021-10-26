@@ -1,22 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
-    <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="2.10.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
+        <PackageReference Include="McMaster.Extensions.Hosting.CommandLine" Version="3.1.0" />
+        <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
+        
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj" />
-    <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj" />
+        <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
+    </ItemGroup>
 
 </Project>

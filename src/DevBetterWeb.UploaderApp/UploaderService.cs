@@ -9,6 +9,7 @@ using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using MediaInfo;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace DevBetterWeb.UploaderApp
@@ -26,6 +27,7 @@ namespace DevBetterWeb.UploaderApp
     private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
     private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
     private readonly GetVideoService _getVideoService;
+    private readonly ILogger<UploaderService> _logger;
     private readonly AddVideoInfo _addVideoInfo;
     private readonly ConfigInfo _configInfo;
 
@@ -35,7 +37,8 @@ namespace DevBetterWeb.UploaderApp
       GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService,
       GetAnimatedThumbnailService getAnimatedThumbnailService,
       AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService,
-      GetVideoService getVideoService)
+      GetVideoService getVideoService,
+      ILogger<UploaderService> logger)
     {
       _configInfo = configInfo;
       httpService.SetAuthorization(_configInfo.Token);
@@ -45,7 +48,7 @@ namespace DevBetterWeb.UploaderApp
       _getAnimatedThumbnailService = getAnimatedThumbnailService;
       _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
       _getVideoService = getVideoService;
-
+      _logger = logger;
       var clientHttp = new System.Net.Http.HttpClient();
       clientHttp.BaseAddress = new Uri(_configInfo.ApiLink);
       clientHttp.DefaultRequestHeaders.Add(API_KEY_NAME, _configInfo.ApiKey);
@@ -56,23 +59,23 @@ namespace DevBetterWeb.UploaderApp
 
     public async Task SyncAsync(string folderToUpload)
     {
-      Serilog.Log.Debug("SyncAsync Started");
+      _logger.LogInformation("SyncAsync Started");
 
-      Console.WriteLine($"Getting existing videos from devBetter API");
-      var allExisVideos = await GetExistingVideosAsync();
-      Console.WriteLine($"Found {allExisVideos.Count} videos in devBetter API.");
+      _logger.LogDebug($"Getting existing videos from devBetter API");
+      var allExistingVideos = await GetExistingVideosAsync();
+      _logger.LogDebug($"Found {allExistingVideos.Count} videos in devBetter API.");
 
       var videosToUpload = GetVideos(folderToUpload);
-      Console.WriteLine($"Found {videosToUpload.Count} videos in {folderToUpload}.");
+      _logger.LogInformation($"Found {videosToUpload.Count} videos in {folderToUpload}.");
       foreach (var video in videosToUpload)
       {
-        if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
+        if (allExistingVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
         {
-          Console.WriteLine($"{video.Name} already exists - skipping.");
+          _logger.LogWarning($"{video.Name} already exists - skipping.");
           continue;
         }
 
-        Console.WriteLine($"Starting Uploading {video.Name}");
+        _logger.LogInformation($"Starting Uploading {video.Name}");
         // TODO: Would be good to have some progress indicator here...
         await UploadVideoAsync(video);
       }
@@ -82,7 +85,7 @@ namespace DevBetterWeb.UploaderApp
     {
       if (string.IsNullOrEmpty(video.Description))
       {
-        Console.WriteLine($"{video.Name} has no associated MD file(s)...");
+        _logger.LogWarning($"{video.Name} has no associated MD file(s)...");
       }
       var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
         .Replace("https://", String.Empty)
@@ -110,11 +113,11 @@ namespace DevBetterWeb.UploaderApp
         archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
         var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
 
-        Console.WriteLine($"{video.Name} Uploaded!");
+        _logger.LogInformation("{0} Uploaded!", video.Name, video);
       }
       else
       {
-        Console.WriteLine($"{video.Name} Upload Error!");
+        _logger.LogError("{0} Upload Error!", video.Name, video);
       }
     }
 
@@ -126,7 +129,7 @@ namespace DevBetterWeb.UploaderApp
 
     private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
     {
-      Console.WriteLine($"Creating Animated Thumbnails");
+      _logger.LogInformation($"Creating Animated Thumbnails");
 
       Video video = new Video();
       while(video == null || video.Status != "available")
@@ -142,7 +145,7 @@ namespace DevBetterWeb.UploaderApp
       var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
       if (string.IsNullOrEmpty(pictureId))
       {
-        Console.WriteLine($"Creating Animated Thumbnails Error!");
+        _logger.LogError($"Creating Animated Thumbnails Error!");
         return null;
       }
 
@@ -163,7 +166,7 @@ namespace DevBetterWeb.UploaderApp
       }
       var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
 
-      Console.WriteLine($"Creating Animated Thumbnails Done!");
+      _logger.LogInformation($"Creating Animated Thumbnails Done!");
 
       return getAnimatedThumbnailResult.Data;
     }
