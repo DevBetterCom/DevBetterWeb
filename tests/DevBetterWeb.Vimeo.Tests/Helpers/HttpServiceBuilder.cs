@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Http;
-using Ardalis.ApiCaller;
+using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Tests.Constants;
 
