@@ -70,7 +70,7 @@ namespace DevBetterWeb.Web.Controllers
         return BadRequest();
       }
 
-      var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);      
+      var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
       var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
       var existVideo = await _repository.GetBySpecAsync(spec);
