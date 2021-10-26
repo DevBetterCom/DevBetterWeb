@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Http;
-using Ardalis.ApiCaller;
+using Ardalis.ApiClient;
 using Autofac;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Services.UserServices;
