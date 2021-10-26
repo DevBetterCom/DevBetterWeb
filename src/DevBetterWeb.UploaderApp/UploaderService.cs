@@ -9,6 +9,7 @@ using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using MediaInfo;
+using Serilog;
 
 namespace DevBetterWeb.UploaderApp
 {
@@ -55,6 +56,8 @@ namespace DevBetterWeb.UploaderApp
 
     public async Task SyncAsync(string folderToUpload)
     {
+      Serilog.Log.Debug("SyncAsync Started");
+
       Console.WriteLine($"Getting existing videos from devBetter API");
       var allExisVideos = await GetExistingVideosAsync();
       Console.WriteLine($"Found {allExisVideos.Count} videos in devBetter API.");

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ardalis.ApiCaller;
@@ -9,7 +7,8 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.DependencyInjection;
 using McMaster.Extensions.CommandLineUtils;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace DevBetterWeb.UploaderApp
 {
@@ -22,6 +21,8 @@ namespace DevBetterWeb.UploaderApp
   {
     // working from this example
     // https://github.com/natemcmaster/CommandLineUtils/blob/main/docs/samples/dependency-injection/generic-host/Program.cs
+
+    private static IServiceProvider _serviceProvider;
 
     public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<AsyncProgram>(args);
 
@@ -46,77 +47,65 @@ namespace DevBetterWeb.UploaderApp
     private async Task OnExecuteAsync()
     {
       // use properties here knowing they're initialized
-      var subject = FolderPath ?? "world";
+      var folderPath = FolderPath ?? "world";
 
-      // This pause here is just for indication that some awaitable operation could happens here.
-      await Task.Delay(5000);
-
-
-      Console.WriteLine($"Hello {subject}!");
-    }
-  }
-
-
-
-  class Program2
-  {
-    private static IServiceProvider _serviceProvider;
-    static async Task Main2(string[] args)
-    {
-      var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All(x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
-      {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link] -akey [api key]");
-        return;
-      }
-
-      var folderToUpload = GetArgument(argsList, "-d");
-      if (string.IsNullOrEmpty(folderToUpload))
-      {
-        Console.WriteLine("Please use -d [destination folder]");
-        return;
-      }
-
-      var token = GetArgument(argsList, "-t");
-      if (string.IsNullOrEmpty(token))
-      {
-        Console.WriteLine("Please use -t [Vimeo token]");
-        return;
-      }
-
-      var apiLink = GetArgument(argsList, "-a");
-      if (string.IsNullOrEmpty(apiLink))
-      {
-        Console.WriteLine("Please use -a [api link]");
-        return;
-      }
-
-      var apiKey = GetArgument(argsList, "-akey");
-      if (string.IsNullOrEmpty(apiKey))
-      {
-        Console.WriteLine("Please use -akey [api key]");
-        return;
-      }
-
-      var configInfo = new ConfigInfo(token, apiLink, apiKey);
+      var configInfo = new ConfigInfo(Token, ApiLink, ApiKey);
       _serviceProvider = SetupDi(configInfo);
+      EnableLogger();
+
+      Log.Debug("Logger Enabled");
+      Log.Debug("DI Setup Done");
 
       var uploaderService = GetUploaderService();
-      await uploaderService.SyncAsync(folderToUpload);
+      await uploaderService.SyncAsync(folderPath);
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
     }
 
-    private static string GetArgument(List<string> argsList, string argValue)
+    private LogEventLevel? GetLoggerLevel(string level)
     {
-      var index = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
-      if (index <= 0)
+      if (string.IsNullOrEmpty(level))
       {
         return null;
       }
+      else if (level == "error")
+      {
+        return LogEventLevel.Error;
+      }
+      else if (level == "debug")
+      {
+        return LogEventLevel.Debug;
+      }
+      else if (level == "trace")
+      {
+        return LogEventLevel.Verbose;
+      }
+      else if (level == "info")
+      {
+        return LogEventLevel.Information;
+      }
+      else if (level == "warning")
+      {
+        return LogEventLevel.Warning;
+      }
+      else
+      {
+        return LogEventLevel.Verbose;
+      }
+    }
 
-      return argsList[index];
+    private void EnableLogger()
+    {
+      var loggerConfiguration = new LoggerConfiguration();        
+
+      var loggerLevel = GetLoggerLevel(Verbose);
+      if (loggerLevel != null)
+      {
+        loggerConfiguration = loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: loggerLevel.Value);
+      }
+
+      Log.Logger = loggerConfiguration.CreateLogger();
     }
 
     private static ServiceProvider SetupDi(ConfigInfo configInfo)
