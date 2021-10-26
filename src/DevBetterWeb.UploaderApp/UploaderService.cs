@@ -72,7 +72,9 @@ namespace DevBetterWeb.UploaderApp
         var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
         if (vimeoVideo != null)
         {
-          _logger.LogWarning($"{video.Name} already exists - skipping.");
+          _logger.LogWarning($"{video.Name} already exists on vimeo.");
+          _logger.LogInformation($"{video.Name} updating video info.");
+          await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id));
           continue;
         }
 
