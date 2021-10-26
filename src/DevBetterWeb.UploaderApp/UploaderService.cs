@@ -140,8 +140,11 @@ namespace DevBetterWeb.UploaderApp
       var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
       if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
       {
-        _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
-        _logger.LogError($"Error: {videoInfoResponse.Text}");
+        if (!videoInfoResponse.Text.StartsWith("The JSON value could not be converted to System.Collections.Generic.List`1[System.String]"))
+        {
+          _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
+          _logger.LogError($"Error: {videoInfoResponse.Text}");
+        }
         return false;
       }
 
