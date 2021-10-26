@@ -9,9 +9,12 @@ using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using MediaInfo;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace DevBetterWeb.UploaderApp
 {
+  // TODO: Refactor - this is way too big and has too many responsibilities and abstraction levels in it.
   public class UploaderService
   {
     private const string MP4_FILES = "*.mp4";
@@ -24,12 +27,18 @@ namespace DevBetterWeb.UploaderApp
     private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
     private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
     private readonly GetVideoService _getVideoService;
+    private readonly ILogger<UploaderService> _logger;
     private readonly AddVideoInfo _addVideoInfo;
     private readonly ConfigInfo _configInfo;
 
-    public UploaderService(ConfigInfo configInfo, HttpService httpService, UploadVideoService uploadVideoServicestring,
-      GetAllVideosService getAllVideosService, GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, GetAnimatedThumbnailService getAnimatedThumbnailService,
-      AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, GetVideoService getVideoService)
+    public UploaderService(ConfigInfo configInfo, HttpService httpService,
+      UploadVideoService uploadVideoServicestring,
+      GetAllVideosService getAllVideosService,
+      GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService,
+      GetAnimatedThumbnailService getAnimatedThumbnailService,
+      AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService,
+      GetVideoService getVideoService,
+      ILogger<UploaderService> logger)
     {
       _configInfo = configInfo;
       httpService.SetAuthorization(_configInfo.Token);
@@ -39,7 +48,7 @@ namespace DevBetterWeb.UploaderApp
       _getAnimatedThumbnailService = getAnimatedThumbnailService;
       _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
       _getVideoService = getVideoService;
-
+      _logger = logger;
       var clientHttp = new System.Net.Http.HttpClient();
       clientHttp.BaseAddress = new Uri(_configInfo.ApiLink);
       clientHttp.DefaultRequestHeaders.Add(API_KEY_NAME, _configInfo.ApiKey);
@@ -50,50 +59,62 @@ namespace DevBetterWeb.UploaderApp
 
     public async Task SyncAsync(string folderToUpload)
     {
-      Console.WriteLine($"Getting existing videos on Vimeo.");
+      _logger.LogInformation("SyncAsync Started");
 
-      var videos = GetVideos(folderToUpload);            
+      _logger.LogDebug($"Getting existing videos from devBetter API");
+      var allExistingVideos = await GetExistingVideosAsync();
+      _logger.LogDebug($"Found {allExistingVideos.Count} videos in devBetter API.");
 
-      var allExisVideos = await GetExistVideosAsync();
-      Console.WriteLine($"Found {allExisVideos.Count} videos on Vimeo.");
-
-      Console.WriteLine($"Getting existing Videos DONE.");
-
-      foreach (var video in videos)
+      var videosToUpload = GetVideos(folderToUpload);
+      _logger.LogInformation($"Found {videosToUpload.Count} videos in {folderToUpload}.");
+      foreach (var video in videosToUpload)
       {
-        var vimeoVideo = allExisVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+        var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
         if (vimeoVideo != null)
         {
-          Console.WriteLine($"{video.Name} already exists on vimeo.");
+          _logger.LogWarning($"{video.Name} already exists on vimeo.");
+          _logger.LogInformation($"{video.Name} updating video info.");
           await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id));
           continue;
-        }        
-
-        Console.WriteLine($"Starting Uploading {video.Name}");
-        if (string.IsNullOrEmpty(video.Description))
-        {
-          Console.WriteLine($"{video.Name} has no associated MD file(s)...");
         }
-        var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
-          .Replace("https://", String.Empty)
-          .Replace("http://", String.Empty)
-          .Replace("/", String.Empty));
 
-        request.FileData = video.Data;
-
-        var response = await _uploadVideoService.ExecuteAsync(request);
-        var videoId = response.Data;
-        if (videoId > 0)
-        {
-          Console.WriteLine($"{video.Name} Uploaded!");
-
-          await UpdateVideoInfoAsync(video, videoId);          
-        }
-        else
-        {
-          Console.WriteLine($"{video.Name} Upload Error!");
-        }
+        _logger.LogInformation($"Starting Uploading {video.Name}");
+        // TODO: Would be good to have some progress indicator here...
+        await UploadVideoAsync(video);
       }
+    }
+
+    private async Task UploadVideoAsync(Video video)
+    {
+      if (string.IsNullOrEmpty(video.Description))
+      {
+        _logger.LogWarning($"{video.Name} has no associated MD file(s)...");
+      }
+      var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
+        .Replace("https://", String.Empty)
+        .Replace("http://", String.Empty)
+        .Replace("/", String.Empty));
+
+      request.FileData = video.Data;
+
+      var response = await _uploadVideoService.ExecuteAsync(request);
+      var videoId = response.Data;
+      if (videoId > 0)
+      {
+        _logger.LogInformation($"{video.Name} Uploaded!");
+
+        await UpdateVideoInfoAsync(video, videoId);
+      }
+      else
+      {
+        _logger.LogError($"{video.Name} Upload Error!");
+      }
+    }    
+
+    private int GetRandomStart(int max)
+    {
+      Random number = new Random();
+      return number.Next(1, max);
     }
 
     private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId)
@@ -115,24 +136,18 @@ namespace DevBetterWeb.UploaderApp
       var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
       if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
       {
-        Console.WriteLine($"{video.Name} - {videoId} Add/Update info Error!");
-        Console.WriteLine($"Error: {videoInfoResponse.Text}");
+        _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
+        _logger.LogError($"Error: {videoInfoResponse.Text}");
         return false;
       }
 
-      Console.WriteLine($"{video.Name} - {videoId} Add/Update info Done.");
+      _logger.LogInformation($"{video.Name} - {videoId} Add/Update info Done.");
       return true;
-    }
-
-    private int GetRandomStart(int max)
-    {
-      Random number = new Random();
-      return number.Next(1, max);
     }
 
     private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
     {
-      Console.WriteLine($"Creating Animated Thumbnails");
+      _logger.LogInformation($"Creating Animated Thumbnails");
 
       Video video = new Video();
       while(video == null || video.Status != "available")
@@ -148,7 +163,7 @@ namespace DevBetterWeb.UploaderApp
       var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
       if (string.IsNullOrEmpty(pictureId))
       {
-        Console.WriteLine($"Creating Animated Thumbnails Error!");
+        _logger.LogError($"Creating Animated Thumbnails Error!");
         return null;
       }
 
@@ -169,12 +184,12 @@ namespace DevBetterWeb.UploaderApp
       }
       var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
 
-      Console.WriteLine($"Creating Animated Thumbnails Done!");
+      _logger.LogInformation($"Creating Animated Thumbnails Done!");
 
       return getAnimatedThumbnailResult.Data;
     }
 
-    private async Task<List<Video>> GetExistVideosAsync()
+    private async Task<List<Video>> GetExistingVideosAsync()
     {      
       var getAllVideosRequest = new GetAllVideosRequest(ServiceConstants.ME);
       var allExistingVideos = await _getAllVideosService.ExecuteAsync(getAllVideosRequest);

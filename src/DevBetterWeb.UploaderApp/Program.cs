@@ -1,80 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.DependencyInjection;
+using McMaster.Extensions.CommandLineUtils;
+using System.ComponentModel.DataAnnotations;
+using Serilog;
+using Serilog.Events;
+using Serilog.Extensions.Hosting;
+using Serilog.Extensions.Logging;
+using McMaster.Extensions.Hosting.CommandLine;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.UploaderApp
 {
-  class Program
+  // TODO: Simplify using CommandLineUtils package
+  // See: https://briancaos.wordpress.com/2020/02/12/command-line-parameters-in-net-core-console-applications/
+  // TODO: Add a logger
+  // TODO: Add a verbose flag to the command line that turns logger verbosity up/down
+
+  public class AsyncProgram
   {
+    // working from this example
+    // https://github.com/natemcmaster/CommandLineUtils/blob/main/docs/samples/dependency-injection/generic-host/Program.cs
+
     private static IServiceProvider _serviceProvider;
-    static async Task Main(string[] args)
-    {      
-      var argsList = args.ToList();
-      if (argsList.Count == 0 || argsList.All( x => x.ToLower() != "-d") || argsList.All(x => x.ToLower() != "-t") || argsList.All(x => x.ToLower() != "-a") || argsList.All(x => x.ToLower() != "-akey"))
-      {
-        Console.WriteLine("Please use -d [destination folder] -t [Vimeo token] -a [api link] -akey [api key]");
-        return;
-      }
 
-      var folderToUpload = GetArgument(argsList, "-d");
-      if (string.IsNullOrEmpty(folderToUpload))
-      {
-        Console.WriteLine("Please use -d [destination folder]");
-        return;
-      }
+    public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<AsyncProgram>(args);
 
-      var token = GetArgument(argsList, "-t");
-      if (string.IsNullOrEmpty(token))
-      {
-        Console.WriteLine("Please use -t [Vimeo token]");
-        return;
-      }
+    [Argument(0, Description = "Folder with files to upload")]
+    public string FolderPath { get; }
 
-      var apiLink = GetArgument(argsList, "-a");
-      if (string.IsNullOrEmpty(apiLink))
-      {
-        Console.WriteLine("Please use -a [api link]");
-        return;
-      }
+    [Required]
+    [Option("-t|--token", Description = "Vimeo token")]
+    public string Token { get; }
 
-      var apiKey = GetArgument(argsList, "-akey");
-      if (string.IsNullOrEmpty(apiKey))
-      {
-        Console.WriteLine("Please use -akey [api key]");
-        return;
-      }
+    [Required]
+    [Option("-l|--link", Description = "devBetter API Link (ex. devbetter.com/)")]
+    public string ApiLink { get; }
 
-      var configInfo = new ConfigInfo(token, apiLink, apiKey);
-      _serviceProvider = SetupDi(configInfo);
+    [Required]
+    [Option("-k|--key", Description = "devBetter API Key")]
+    public string ApiKey { get; }
 
+    [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, info, warning, error")]
+    public string Verbose { get; } = "error";
+
+    private async Task OnExecuteAsync()
+    {
+      // ideally I'd like all of this setup of config, services, and logging to happen in the generic host builder above
+      var configInfo = new ConfigInfo(Token, ApiLink, ApiKey);
+      var logger = CreateLogger();
+      _serviceProvider = SetupDi(configInfo,logger);
+
+      logger.Debug("Logger Enabled"); // I'm never seeing these displayed in the console -Steve
+      logger.Debug("DI Setup Done");
+
+      // I'd like this to be the first line of OnExecuteAsync
       var uploaderService = GetUploaderService();
-      await uploaderService.SyncAsync(folderToUpload);
+      await uploaderService.SyncAsync(FolderPath);
 
       Console.WriteLine("Done, press any key to close");
       Console.ReadKey();
-    }       
-    
-    private static string GetArgument(List<string> argsList, string argValue)
-    {
-      var index  = argsList.FindIndex(x => x.ToLower() == argValue) + 1;
-      if (index <= 0)
-      {
-        return null;
-      }
-
-      return argsList[index];
     }
 
-    private static ServiceProvider SetupDi(ConfigInfo configInfo)
+    private Serilog.ILogger CreateLogger()
+    {
+      var loggerLevel = Verbose.ToLower().ToLogEventLevel().Value;
+
+      var loggerConfiguration = new LoggerConfiguration()
+        .MinimumLevel.Is(loggerLevel)
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+      var logger = loggerConfiguration.CreateLogger();
+      Log.Logger = logger;
+
+      logger.Debug("Logger created with level {0}", loggerLevel);
+
+      return logger;
+    }
+
+    private static ServiceProvider SetupDi(ConfigInfo configInfo, Serilog.ILogger logger)
     {
       var services = new ServiceCollection()
             .AddLogging()
+            .AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory(logger, false))
             .AddSingleton(configInfo)
             .AddScoped(sp => HttpClientBuilder())
             .AddScoped<HttpService>()
