@@ -68,7 +68,7 @@ namespace DevBetterWeb.Web.Controllers
 
       var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
-      var existVideo = await _repository.GetByIdAsync(archiveVideo.Id);
+      var existVideo = await _repository.GetByIdAsync(archiveVideo.VideoId);
       if (existVideo == null)
       {
         archiveVideo = await _repository.AddAsync(archiveVideo);
