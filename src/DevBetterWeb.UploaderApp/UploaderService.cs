@@ -98,26 +98,13 @@ namespace DevBetterWeb.UploaderApp
       var videoId = response.Data;
       if (videoId > 0)
       {
-        var archiveVideo = new ArchiveVideo
-        {
-          Title = video.Name,
-          DateCreated = video.CreatedTime,
-          DateUploaded = DateTimeOffset.UtcNow,
-          Duration = video.Duration,
-          VideoId = videoId.ToString(),
-          Password = video.Password,
-          Description = video.Description,
-          VideoUrl = video.Link
-        };
-        var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
-        archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-        var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+        _logger.LogInformation($"{video.Name} Uploaded!");
 
-        _logger.LogInformation("{0} Uploaded!", video.Name, video);
+        await UpdateVideoInfoAsync(video, videoId);
       }
       else
       {
-        _logger.LogError("{0} Upload Error!", video.Name, video);
+        _logger.LogError($"{video.Name} Upload Error!");
       }
     }
 
@@ -125,6 +112,34 @@ namespace DevBetterWeb.UploaderApp
     {
       Random number = new Random();
       return number.Next(1, max);
+    }
+
+    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId)
+    {
+      var archiveVideo = new ArchiveVideo
+      {
+        Title = video.Name,
+        DateCreated = video.CreatedTime,
+        DateUploaded = DateTimeOffset.UtcNow,
+        Duration = video.Duration,
+        VideoId = videoId.ToString(),
+        Password = video.Password,
+        Description = video.Description,
+        VideoUrl = video.Link
+      };
+
+      var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+      archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+      if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
+      {
+        _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
+        _logger.LogError($"Error: {videoInfoResponse.Text}");
+        return false;
+      }
+
+      _logger.LogInformation($"{video.Name} - {videoId} Add/Update info Done.");
+      return true;
     }
 
     private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
