@@ -7,7 +7,7 @@ namespace DevBetterWeb.Core.Specs
     {
         public ArchiveVideoByPageSpec(int skip, int size)
         {
-            Query.Skip(skip).Take(size);
+            Query.OrderByDescending(x => x.DateCreated).Skip(skip).Take(size);
         }
     }
 }
