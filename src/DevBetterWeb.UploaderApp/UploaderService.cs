@@ -117,7 +117,7 @@ namespace DevBetterWeb.UploaderApp
       return number.Next(1, max);
     }
 
-    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId, bool isCreateAnimated=true)
+    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId, bool createdAnimatedThumbnails = true)
     {
       var archiveVideo = new ArchiveVideo
       {
@@ -131,7 +131,7 @@ namespace DevBetterWeb.UploaderApp
         VideoUrl = video.Link
       };
 
-      if (isCreateAnimated)
+      if (createdAnimatedThumbnails)
       {
         var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
         archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
