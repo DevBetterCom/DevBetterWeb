@@ -69,7 +69,8 @@ namespace DevBetterWeb.UploaderApp
       _logger.LogInformation($"Found {videosToUpload.Count} videos in {folderToUpload}.");
       foreach (var video in videosToUpload)
       {
-        if (allExistingVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
+        var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+        if (vimeoVideo != null)
         {
           _logger.LogWarning($"{video.Name} already exists - skipping.");
           continue;
