@@ -61,9 +61,11 @@ namespace DevBetterWeb.UploaderApp
 
       foreach (var video in videos)
       {
-        if (allExisVideos.Any(x => x.Name.ToLower() == video.Name.ToLower()))
+        var vimeoVideo = allExisVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+        if (vimeoVideo != null)
         {
-          Console.WriteLine($"{video.Name} already exists - skipping.");
+          Console.WriteLine($"{video.Name} already exists on vimeo.");
+          await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id));
           continue;
         }        
 
@@ -83,28 +85,43 @@ namespace DevBetterWeb.UploaderApp
         var videoId = response.Data;
         if (videoId > 0)
         {
-          var archiveVideo = new ArchiveVideo
-          {
-            Title = video.Name,
-            DateCreated = video.CreatedTime,
-            DateUploaded = DateTimeOffset.UtcNow,
-            Duration = video.Duration,
-            VideoId = videoId.ToString(),
-            Password = video.Password,
-            Description = video.Description,
-            VideoUrl = video.Link
-          };
-          var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
-          archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-          var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
-
           Console.WriteLine($"{video.Name} Uploaded!");
+
+          await UpdateVideoInfoAsync(video, videoId);          
         }
         else
         {
           Console.WriteLine($"{video.Name} Upload Error!");
         }
       }
+    }
+
+    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId)
+    {
+      var archiveVideo = new ArchiveVideo
+      {
+        Title = video.Name,
+        DateCreated = video.CreatedTime,
+        DateUploaded = DateTimeOffset.UtcNow,
+        Duration = video.Duration,
+        VideoId = videoId.ToString(),
+        Password = video.Password,
+        Description = video.Description,
+        VideoUrl = video.Link
+      };
+
+      var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+      archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
+      if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
+      {
+        Console.WriteLine($"{video.Name} - {videoId} Add/Update info Error!");
+        Console.WriteLine($"Error: {videoInfoResponse.Text}");
+        return false;
+      }
+
+      Console.WriteLine($"{video.Name} - {videoId} Add/Update info Done.");
+      return true;
     }
 
     private int GetRandomStart(int max)
