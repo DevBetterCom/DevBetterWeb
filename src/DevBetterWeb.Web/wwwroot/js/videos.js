@@ -61,7 +61,7 @@
                     var divHtml = "";
                     if (videosReponse && videosReponse.data && videosReponse.data.length > 0) {
                         videosReponse.data.forEach(video => {
-                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='Videos/Details/" + video?.videoId + "'><img class='img-fluid' src='" + video?.animatedThumbnailUri + "'></a><h3>" + video?.title + "</h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span></div>";
+                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10' style='height: 160px'><a href='Videos/Details/" + video?.videoId + "'><img class='img-fluid' src='" + video?.animatedThumbnailUri + "'></a><h3>" + video?.title + "</h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span></div>";
                         });
                     }
                     document.getElementById('members-videos-list').innerHTML = divHtml;
