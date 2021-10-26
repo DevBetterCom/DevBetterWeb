@@ -1,4 +1,4 @@
-﻿using Ardalis.ApiCaller;
+﻿using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.Logging;
 using Moq;

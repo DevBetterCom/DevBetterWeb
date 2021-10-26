@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiCaller;
+using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Helpers;
 using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
