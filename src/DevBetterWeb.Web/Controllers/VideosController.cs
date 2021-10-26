@@ -65,17 +65,21 @@ namespace DevBetterWeb.Web.Controllers
       {
         return Unauthorized();
       }
+      if (archiveVideoDto == null)
+      {
+        return BadRequest();
+      }
 
-      var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+      var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);      
 
-      var existVideo = await _repository.GetByIdAsync(archiveVideo.VideoId);
+      var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+      var existVideo = await _repository.GetBySpecAsync(spec);
       if (existVideo == null)
       {
         archiveVideo = await _repository.AddAsync(archiveVideo);
       }else
       {
         existVideo.Description = archiveVideo.Description;
-        existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
         existVideo.Title = archiveVideo.Title;
         existVideo.Duration = archiveVideo.Duration;
         await _repository.UpdateAsync(existVideo);
