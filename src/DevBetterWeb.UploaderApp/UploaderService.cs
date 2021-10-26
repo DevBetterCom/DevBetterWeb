@@ -74,7 +74,7 @@ namespace DevBetterWeb.UploaderApp
         {
           _logger.LogWarning($"{video.Name} already exists on vimeo.");
           _logger.LogInformation($"{video.Name} updating video info.");
-          await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id));
+          await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id), false);
           continue;
         }
 
@@ -117,7 +117,7 @@ namespace DevBetterWeb.UploaderApp
       return number.Next(1, max);
     }
 
-    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId)
+    private async Task<bool> UpdateVideoInfoAsync(Video video, long videoId, bool createThumbnails = true)
     {
       var archiveVideo = new ArchiveVideo
       {
@@ -131,8 +131,12 @@ namespace DevBetterWeb.UploaderApp
         VideoUrl = video.Link
       };
 
-      var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
-      archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      if (createThumbnails)
+      {
+        var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(videoId);
+        archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      }
+      
       var videoInfoResponse = await _addVideoInfo.ExecuteAsync(archiveVideo);
       if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
       {
