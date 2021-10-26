@@ -1,4 +1,4 @@
-﻿using Ardalis.ApiCaller;
+﻿using Ardalis.ApiClient;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;

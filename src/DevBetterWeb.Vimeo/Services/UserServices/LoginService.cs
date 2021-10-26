@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using Ardalis.ApiCaller;
+using Ardalis.ApiClient;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 

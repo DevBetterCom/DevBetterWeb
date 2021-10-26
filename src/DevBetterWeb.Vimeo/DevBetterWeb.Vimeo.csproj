@@ -5,14 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.ApiClient" Version="0.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Ardalis.ApiCaller\Ardalis.ApiCaller.csproj" />
   </ItemGroup>
 
 </Project>
