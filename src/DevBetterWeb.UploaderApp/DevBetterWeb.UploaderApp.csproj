@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.ApiClient" Version="0.1.1" />
+    <PackageReference Include="Ardalis.ApiClient" Version="0.1.4" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
     <PackageReference Include="McMaster.Extensions.Hosting.CommandLine" Version="3.1.0" />
     <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.9.2" />
