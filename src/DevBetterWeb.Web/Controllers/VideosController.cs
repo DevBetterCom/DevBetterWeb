@@ -62,7 +62,7 @@ namespace DevBetterWeb.Web.Controllers
       return Ok(jsonData);
     }
 
-    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     [HttpPost("update-description")]
     public async Task<IActionResult> UpdateDescriptionAsync([FromForm] UpdateDescription updateDescription)
     {
