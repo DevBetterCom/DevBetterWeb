@@ -65,6 +65,8 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
 
     public OEmbedViewModel BuildHtml(string link)
     {
+      Html = Html?.Replace("iframe", "iframe id='videoIframe'");
+
       if (string.IsNullOrEmpty(link) || string.IsNullOrEmpty(CustomEmbedLink))
       {
         return this;
@@ -77,8 +79,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
       var vedioId = parts[parts.Length - 1];
 
       CustomEmbedLink.Substring(CustomEmbedLink.Length - 1);
-      Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
-      Html = Html?.Replace("iframe", "iframe id='videoIframe'");
+      Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");      
 
       return this;
     }
