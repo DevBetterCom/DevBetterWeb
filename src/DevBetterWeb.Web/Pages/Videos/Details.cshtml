@@ -39,6 +39,9 @@
         clipboard.on('success', function(e) {
             e.clearSelection();
             e.trigger.textContent = 'Copied!';
+            setTimeout(function() {
+              e.trigger.textContent = 'Copy Link';
+            }, 2000);
         });
 	});
 
