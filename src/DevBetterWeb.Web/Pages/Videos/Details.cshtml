@@ -4,46 +4,6 @@
 	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
-<style>
-.tooltip {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 140px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 150%;
-  left: 50%;
-  margin-left: -75px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-</style>
-
 <h3>@Model!.OEmbedViewModel?.Name</h3>
 
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
@@ -58,11 +18,9 @@
     <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link">
   </div>
   <div class="col-auto">
-    <div class="tooltip">
-        <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()" onmouseout="outFunc()">
-            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>Copy Link
-        </button>
-    </div>
+    <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">
+        Copy Link
+    </button>
   </div>
 </div>
 
@@ -81,6 +39,9 @@
         clipboard.on('success', function(e) {
             e.clearSelection();
             e.trigger.textContent = 'Copied!';
+            setTimeout(function() {
+              e.trigger.textContent = 'Copy Link';
+            }, 2000);
         });
 	});
 
@@ -104,13 +65,7 @@
             var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId;
             document.getElementById("copiedLink").value = link;
             navigator.clipboard.writeText(link);    
-        }       
-        var tooltip = document.getElementById("myTooltip");
-        tooltip.innerHTML = "Copied!";
-    }
-    function outFunc() {
-        var tooltip = document.getElementById("myTooltip");
-        tooltip.innerHTML = "Copy to clipboard";
+        }
     }
 </script>
 }
