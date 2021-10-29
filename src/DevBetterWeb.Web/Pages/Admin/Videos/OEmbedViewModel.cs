@@ -78,6 +78,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
 
       CustomEmbedLink.Substring(CustomEmbedLink.Length - 1);
       Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
+      Html = Html?.Replace("iframe", "iframe id='videoIframe'");
 
       return this;
     }

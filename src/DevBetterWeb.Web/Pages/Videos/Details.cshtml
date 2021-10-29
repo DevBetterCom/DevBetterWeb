@@ -11,10 +11,7 @@
 <br />
 <div class="row g-3">
   <div class="col-auto">
-    <input type="text" readonly class="form-control-plaintext" value="Start By Seconds">
-  </div>
-  <div class="col-auto">
-    <input type="text" class="form-control" id="startVideo" placeholder="Seconds">
+    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link">
   </div>
   <div class="col-auto">
     <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">Copy Link</button>
@@ -33,9 +30,14 @@
 	});
 
     function createAndCopyLink() {
-        var startVideo = document.getElementById("startVideo").value;
-        var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + startVideo;
-        navigator.clipboard.writeText(link);
+        var iframe = document.querySelector('videoIframe');
+        var player = new Vimeo.Player(iframe);
+
+         player.getCurrentTime().then(function(seconds) {
+            var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
+            navigator.clipboard.writeText(link);
+            document.getElementById("copiedLink").value = link;
+        });
     }
 </script>
 }
