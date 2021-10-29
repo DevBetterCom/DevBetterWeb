@@ -33,25 +33,27 @@ namespace DevBetterWeb.Web.Pages.Videos
     public async Task<IActionResult> OnGet(string videoId, string? startTime=null)
     {
       var video = await _getVideoService.ExecuteAsync(videoId);
-      if (video?.Data == null) return NotFound(videoId);
+      if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
 
       var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
-      if (oEmbed?.Data == null) return NotFound(videoId);
+      if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
 
       var spec = new ArchiveVideoByVideoIdSpec(videoId);
       var archiveVideo = await _repository.GetBySpecAsync(spec);
-      if (archiveVideo == null) return NotFound(videoId);
+      if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
 
       archiveVideo.Views++;
       await _repository.UpdateAsync(archiveVideo);
 
-      OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
+      OEmbedViewModel = new OEmbedViewModel(oEmbed?.Data);
+      OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
       OEmbedViewModel.Name = archiveVideo.Title;
-      OEmbedViewModel.Password = video.Data.Password;
-      OEmbedViewModel.Description = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
+      OEmbedViewModel.Password = video?.Data?.Password;
+      OEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
+      OEmbedViewModel.Description = archiveVideo.Description;
       OEmbedViewModel
         .AddStartTime(startTime)
-        .BuildHtml(video.Data.Link);
+        .BuildHtml(video?.Data?.Link);
 
       return Page();
     }
