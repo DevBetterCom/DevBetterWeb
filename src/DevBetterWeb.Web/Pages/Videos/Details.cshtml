@@ -58,9 +58,11 @@
     <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link">
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()" onmouseout="outFunc()">
-        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>Copy Link
-    </button>
+    <div class="tooltip">
+        <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()" onmouseout="outFunc()">
+            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>Copy Link
+        </button>
+    </div>
   </div>
 </div>
 
