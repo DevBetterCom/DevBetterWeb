@@ -18,7 +18,7 @@
     <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link">
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">
+    <button id="copyLinkBtn" type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">
         Copy Link
     </button>
   </div>
@@ -36,13 +36,6 @@
         isTimestamp = false;
         var checkBox = document.getElementById("isTimestamp");
         checkBox.value = isTimestamp;
-        clipboard.on('success', function(e) {
-            e.clearSelection();
-            e.trigger.textContent = 'Copied!';
-            setTimeout(function() {
-              e.trigger.textContent = 'Copy Link';
-            }, 2000);
-        });
 	});
 
     function changeIsTimestamp() {
@@ -66,6 +59,18 @@
             document.getElementById("copiedLink").value = link;
             navigator.clipboard.writeText(link);    
         }
+
+        changeButtonText('copyLinkBtn', 'Copied!');
+        setTimeout(function() {
+            changeButtonText('copyLinkBtn', 'Copy Link');
+        }, 2000);
+    }
+
+    function changeButtonText(buttonId, value) {
+        var button = document.getElementById(buttonId);
+        button.innerHTML = value;
+        button.innerText = value;
+        button.textContent = value;
     }
 </script>
 }
