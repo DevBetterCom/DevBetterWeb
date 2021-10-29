@@ -10,6 +10,7 @@ using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Models.Vimeo;
+using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -23,18 +24,24 @@ namespace DevBetterWeb.Web.Controllers
   {
     private readonly string _expectedApiKey;
     private readonly IMapper _mapper;
-    private readonly GetAllVideosService _getAllVideosService;
+    private readonly GetOEmbedVideoService _getOEmbedVideoService;
+    private readonly GetVideoService _getVideoService;
     private readonly IRepository<ArchiveVideo> _repository;
+    private readonly IMarkdownService _markdownService;
 
     public VideosController(IMapper mapper,
       IRepository<ArchiveVideo> repository,
-      GetAllVideosService getAllVideosService,
-      IOptions<ApiSettings> apiSettings)
+      IOptions<ApiSettings> apiSettings,
+      GetOEmbedVideoService getOEmbedVideoService,
+      GetVideoService getVideoService,
+      IMarkdownService markdownService)
     {
       _mapper = mapper;
-      _getAllVideosService = getAllVideosService;
+      _getOEmbedVideoService = getOEmbedVideoService;
+      _getVideoService = getVideoService;
       _repository = repository;
       _expectedApiKey = apiSettings.Value.ApiKey;
+      _markdownService = markdownService;
     }
 
     [HttpPost("list")]
@@ -53,6 +60,37 @@ namespace DevBetterWeb.Web.Controllers
       var jsonData = new { draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
 
       return Ok(jsonData);
+    }
+
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+    [HttpPost("update-description")]
+    public async Task<IActionResult> UpdateDescriptionAsync([FromForm] UpdateDescription updateDescription)
+    {
+      var video = await _getVideoService.ExecuteAsync(updateDescription.VideoId);
+      if (video?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
+
+      var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
+      if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
+
+      var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId);
+      var archiveVideo = await _repository.GetBySpecAsync(spec);
+      if (archiveVideo == null)
+      {
+        return NotFound($"Video Not Found {updateDescription.VideoId}");
+      }
+
+      archiveVideo.Description = updateDescription.Description;
+      await _repository.UpdateAsync(archiveVideo);
+      await _repository.SaveChangesAsync();
+  
+      var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
+      oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
+      oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
+      oEmbedViewModel.Description = archiveVideo.Description;
+      oEmbedViewModel
+        .BuildHtml(video?.Data?.Link);
+
+      return Ok(oEmbedViewModel);
     }
 
     [AllowAnonymous]

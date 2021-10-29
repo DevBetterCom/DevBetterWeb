@@ -20,6 +20,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
     public int Height { get; set; }
     public int Duration { get; set; }
     public string? Description { get; set; }
+    public string? DescriptionMd { get; set; } = string.Empty;
     public string? ThumbnailUrl { get; set; }
     public int ThumbnailWidth { get; set; }
     public int ThumbnailHeight { get; set; }
