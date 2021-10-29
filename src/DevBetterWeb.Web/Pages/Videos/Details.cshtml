@@ -30,7 +30,7 @@
 	});
 
     function createAndCopyLink() {
-        var iframe = document.querySelector('videoIframe');
+        var iframe = document.getElementById('videoIframe');
         var player = new Vimeo.Player(iframe);
 
          player.getCurrentTime().then(function(seconds) {
