@@ -76,6 +76,10 @@
         isTimestamp = false;
         var checkBox = document.getElementById("isTimestamp");
         checkBox.value = isTimestamp;
+        clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.textContent = 'Copied!';
+        });
 	});
 
     function changeIsTimestamp() {
