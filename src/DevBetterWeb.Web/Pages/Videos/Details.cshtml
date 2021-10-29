@@ -4,9 +4,29 @@
 	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
+<style>
+textarea {
+    width:90%;
+    max-width:90%;
+}
+</style>
+
+<span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
 <h3>@Model!.OEmbedViewModel?.Name</h3>
 
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
+
+<div class="row">
+    <p asp-authorize asp-roles="Administrators">
+        <textarea id="description" rows="20" cols="100">
+            @Model!.OEmbedViewModel?.Description
+        </textarea>	
+    </p>
+</div>
+
+<p asp-authorize asp-roles="Administrators">
+	<a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer" onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
+</p>
 
 <br />
 <div class="row">
@@ -15,7 +35,7 @@
     <label for="isTimestamp"> With Timestamp</label><br>
   </div>
   <div class="col-auto">
-    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 425px;max-width: 425px;">
+    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
   </div>
   <div class="col-auto">
     <button id="copyLinkBtn" type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">
@@ -25,7 +45,7 @@
 </div>
 
 <br />
-<h1>@Html.Raw(@Model!.OEmbedViewModel?.Description)</h1>
+<h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -37,6 +57,25 @@
         var checkBox = document.getElementById("isTimestamp");
         checkBox.value = isTimestamp;
 	});
+
+    function saveDescriptionClick() {
+        var videoId = document.getElementById("videoId").innerHTML;
+        var description = document.getElementById("description").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/videos/update-description",
+            data: { videoId: videoId, description: description },
+            dataType: "json",
+            success: function (videosReponse) {
+                document.getElementById('Description').value = videosReponse.Description;
+                document.getElementById('DescriptionMd').value = videosReponse.DescriptionMd;
+            },
+            error: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
 
     function changeIsTimestamp() {
         var checkBox = document.getElementById("isTimestamp");
