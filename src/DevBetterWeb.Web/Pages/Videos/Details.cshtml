@@ -38,8 +38,7 @@ textarea {
     <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
   </div>
   <div class="col-auto">
-    <button id="copyLinkBtn" type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">
-        Copy Link
+    <button id="copyLinkBtn" type="button" class="btn btn-primary" onclick="createAndCopyLink()">
     </button>
   </div>
 </div>
@@ -51,11 +50,13 @@ textarea {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script>
     var isTimestamp = false;
+    var copyLinkBtnLabel = 'Copy Link';
 
 	$(document).ready(function () {
         isTimestamp = false;
         var checkBox = document.getElementById("isTimestamp");
         checkBox.value = isTimestamp;
+        changeButtonText('copyLinkBtn', copyLinkBtnLabel);
 	});
 
     function saveDescriptionClick() {
@@ -98,15 +99,25 @@ textarea {
             document.getElementById("copiedLink").value = link;
             navigator.clipboard.writeText(link);    
         }
-
+        
+        
         changeButtonText('copyLinkBtn', 'Copied!');
         setTimeout(function() {
-            changeButtonText('copyLinkBtn', 'Copy Link');
+            changeButtonText('copyLinkBtn', copyLinkBtnLabel);
         }, 2000);
     }
 
     function changeButtonText(buttonId, value) {
         var button = document.getElementById(buttonId);
+
+        if ( value === copyLinkBtnLabel ) {
+            element.classList.remove("btn-secondary");
+            element.classList.add("btn-primary");                   
+        } else {
+            element.classList.remove("btn-primary");
+            element.classList.add("btn-secondary"); 
+        }
+
         button.innerHTML = value;
         button.innerText = value;
         button.textContent = value;
