@@ -1,40 +1,37 @@
-﻿namespace DevBetterWeb.Vimeo.Models
+﻿using System.Text.Json.Serialization;
+
+namespace DevBetterWeb.Vimeo.Models
 {
   public class TextTrack
   {
-    public enum TextTrackType
-    {
-      Captions, //  - The text track is the captions type.
-      Chapters, // - The text track is the chapters type.
-      Descriptions, // - The text track is the descriptions type.
-      Metadata, // - The text track is the metadata type.
-      Subtitles //- The text track is the subtitles type.
-    }
+    [JsonPropertyName("active")]
+    public bool Active { get; set; }
 
-    public TextTrack(TextTrackType type)
-    {
-      Type = type;
-    }
+    [JsonPropertyName("hls_link")]
+    public string HlsLink { get; set; }
 
-    public TextTrackType Type {  get; private set; }
+    [JsonPropertyName("hls_link_expires_time")]
+    public string HlsLinkExpiresTime { get; set; }
 
-    public override string ToString()
-    {
-      switch (Type)
-      {
-        case TextTrackType.Captions:
-          return "captions";
-        case TextTrackType.Chapters:
-          return "chapters";
-        case TextTrackType.Descriptions:
-          return "descriptions";
-        case TextTrackType.Metadata:
-          return "metadata";
-        case TextTrackType.Subtitles:
-          return "subtitles";
-        default:
-          return string.Empty;
-      }
-    }
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
+
+    [JsonPropertyName("language")]
+    public string Language { get; set; }
+
+    [JsonPropertyName("link")]
+    public string Link { get; set; }
+
+    [JsonPropertyName("link_expires_time")]
+    public string LinkExpiresTime { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
+
+    [JsonPropertyName("uri")]
+    public string Uri { get; set; }
   }
 }

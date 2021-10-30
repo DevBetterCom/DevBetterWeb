@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
+using DevBetterWeb.Vimeo.Models;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
@@ -12,9 +13,9 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     .WithResponse<GetUploadLinkTextTrackResponse>
   {
     private readonly HttpService _httpService;
-    private readonly ILogger<AddAnimatedThumbnailsToVideoService> _logger;
+    private readonly ILogger<GetUploadLinkTextTrackService> _logger;
 
-    public GetUploadLinkTextTrackService(HttpService httpService, ILogger<AddAnimatedThumbnailsToVideoService> logger)
+    public GetUploadLinkTextTrackService(HttpService httpService, ILogger<GetUploadLinkTextTrackService> logger)
     {
       _httpService = httpService;
       _logger = logger;
@@ -25,7 +26,12 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
       var uri = request.Uri;
       try
       {
-        var response = await _httpService.HttpPostAsync<GetUploadLinkTextTrackResponse>(uri, request);
+        var texttack = new TextTrack();
+        texttack.Name = request.Name;
+        texttack.Language = request.Language;
+        texttack.Type = request.Type;
+
+        var response = await _httpService.HttpPostAsync<GetUploadLinkTextTrackResponse>(uri, texttack);
 
         return response;
       }

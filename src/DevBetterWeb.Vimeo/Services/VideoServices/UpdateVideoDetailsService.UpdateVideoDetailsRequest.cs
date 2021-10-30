@@ -1,16 +1,14 @@
-﻿using DevBetterWeb.Vimeo.Models;
-
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+﻿namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
-  public class UpdateVideoDetailsRequest
+  public class UploadTextTrackFileRequest
   {
-    public long VideoId { get; set; }
-    public Video Video { get; set; }
+    public string Link { get; set; }
+    public byte[] FileData { get; set; }
 
-    public UpdateVideoDetailsRequest(long videoId, Video video)
+    public UploadTextTrackFileRequest(string link, byte[] fileData)
     {
-      VideoId = videoId;
-      Video = video;
+      Link = link;
+      FileData = fileData;      
     }
   }
 }

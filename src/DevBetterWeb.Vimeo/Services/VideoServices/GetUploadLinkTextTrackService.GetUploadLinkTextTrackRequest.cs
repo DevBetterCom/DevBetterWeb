@@ -1,5 +1,5 @@
 ﻿using DevBetterWeb.Vimeo.Models;
-using static DevBetterWeb.Vimeo.Models.TextTrack;
+using static DevBetterWeb.Vimeo.Models.TextTrackType;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices
 {
@@ -10,10 +10,10 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
     public string Language { get; set; }
     public string Name { get; set; }
 
-    public GetUploadLinkTextTrackRequest(string uri, TextTrackType textTrackType, string language="en", string name=null)
+    public GetUploadLinkTextTrackRequest(string uri, TextTrackEnum textTrackType, string language="en", string name=null)
     {
       Uri = uri;
-      Type = new TextTrack(textTrackType).ToString();
+      Type = new TextTrackType(textTrackType).ToString();
       Language = language;
       Name = name;
     }

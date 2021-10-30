@@ -38,6 +38,11 @@ namespace DevBetterWeb.Vimeo.Extensions
       services.AddScoped<GetVideoService>();
       services.AddScoped<UpdateVideoDetailsService>();       
       services.AddScoped<UploadVideoService>();
+      services.AddScoped<ActiveTextTrackService>();
+      services.AddScoped<GetUploadLinkTextTrackService>();
+      services.AddScoped<UploadTextTrackFileService>();
+      services.AddScoped<UploadSubtitleToVideoService>();
+      services.AddScoped<GetAllTextTracksService>();
 
       return services;
     }
