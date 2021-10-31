@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Vimeo.Services.UserServices;
-using DevBetterWeb.Vimeo.Tests.Helpers;
+using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 

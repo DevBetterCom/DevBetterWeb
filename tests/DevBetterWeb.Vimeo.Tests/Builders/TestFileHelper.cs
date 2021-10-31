@@ -6,7 +6,7 @@ using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Vimeo.Tests.Constants;
 
-namespace DevBetterWeb.Vimeo.Tests.Helpers
+namespace DevBetterWeb.Vimeo.Tests.Builders
 {
   public class TestFileHelper
   {
@@ -57,6 +57,26 @@ namespace DevBetterWeb.Vimeo.Tests.Helpers
       await stream.ReadAsync(buffer, 0, (int)stream.Length);
 
       return buffer;
+    }
+
+    public static async Task<string> BuildSrtAsync()
+    {
+      var stream = GetFileFromEmbeddedResources("DevBetterWeb.Vimeo.Tests." + "2019-04-12.srt");
+
+      var buffer = new byte[stream.Length];
+      await stream.ReadAsync(buffer, 0, (int)stream.Length);
+
+      return System.Text.Encoding.UTF8.GetString(buffer);
+    }
+
+    public static async Task<string> BuildVttAsync()
+    {
+      var stream = GetFileFromEmbeddedResources("DevBetterWeb.Vimeo.Tests." + "2019-04-12.vtt");
+
+      var buffer = new byte[stream.Length];
+      await stream.ReadAsync(buffer, 0, (int)stream.Length);
+
+      return System.Text.Encoding.UTF8.GetString(buffer);
     }
 
     private static Stream GetFileFromEmbeddedResources(string relativePath)
