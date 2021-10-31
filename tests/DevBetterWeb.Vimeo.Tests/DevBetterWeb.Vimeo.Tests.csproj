@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="2019-04-12.srt" />
+    <None Remove="2019-04-12.vtt" />
     <None Remove="Test.mp4" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="2019-04-12.srt" />
+    <EmbeddedResource Include="2019-04-12.vtt" />
     <EmbeddedResource Include="Test.mp4" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DevBetterWeb.Vimeo.Tests.Helpers
+namespace DevBetterWeb.Vimeo.Tests.Builders
 {
   public class GetOEmbedVideoServiceBuilder
   {

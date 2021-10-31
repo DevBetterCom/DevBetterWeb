@@ -4,7 +4,7 @@ using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Tests.Constants;
 
-namespace DevBetterWeb.Vimeo.Tests.Helpers
+namespace DevBetterWeb.Vimeo.Tests.Builders
 {
   public class HttpServiceBuilder
   {

@@ -3,7 +3,7 @@ using DevBetterWeb.Vimeo.Services.UserServices;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DevBetterWeb.Vimeo.Tests.Helpers
+namespace DevBetterWeb.Vimeo.Tests.Builders
 {
   public class UserDetailsServiceBuilder
   {
