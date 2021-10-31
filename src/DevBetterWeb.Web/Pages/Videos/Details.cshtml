@@ -4,38 +4,185 @@
 	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
+<style>
+textarea {
+    width:90%;
+    max-width:90%;
+}
+</style>
+
+<span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
 <h3>@Model!.OEmbedViewModel?.Name</h3>
 
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
+<div class="row" asp-authorize asp-roles="Administrators">
+    <div class="col-auto">
+        <label class="form-label" for="subtitleFile">Subtitle VTT File</label>
+    </div>
+    <div class="col-auto">
+        <input type="file" class="form-control" id="subtitleFile"  accept=".vtt,.srt" />
+    </div>
+    <div class="col-auto">
+        <select id="subtiteLanguageSelect" class="form-select" aria-label="Language">
+            <option value="en" selected>English</option>
+        </select>
+    </div>
+    <div class="col-auto">
+	    <a id="uploadSubtitleBtn" class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="uploadSubtitleClick()"><i class="fa fa-save"></i> Upload Subtitle</a>
+    </div>
+</div>
+
+<div class="row">
+    <p asp-authorize asp-roles="Administrators">
+        <textarea id="description" rows="20" cols="100">
+            @Model!.OEmbedViewModel?.Description
+        </textarea>	
+    </p>
+</div>
+
+<p asp-authorize asp-roles="Administrators">
+	<a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
+</p>
+
 <br />
-<div class="row g-3">
+<div class="row">
   <div class="col-auto">
-    <input type="text" readonly class="form-control-plaintext" value="Start By Seconds">
+    <input type="checkbox" id="isTimestamp" name="isTimestamp" value="false" onclick="changeIsTimestamp()">
+    <label for="isTimestamp"> With Timestamp</label><br>
   </div>
   <div class="col-auto">
-    <input type="text" class="form-control" id="startVideo" placeholder="Seconds">
+    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary mb-3" onclick="createAndCopyLink()">Copy Link</button>
+    <button id="copyLinkBtn" type="button" class="btn btn-primary" onclick="createAndCopyLink()">
+    </button>
   </div>
 </div>
 
 <br />
-<h1>@Html.Raw(@Model!.OEmbedViewModel?.Description)</h1>
+<h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script>
+    var isTimestamp = false;
+    var copyLinkBtnLabel = 'Copy Link';
+    var subtitleFile = null;
 
 	$(document).ready(function () {
+        changeButtonEnable('uploadSubtitleBtn', false);
 
+        isTimestamp = false;
+        var checkBox = document.getElementById("isTimestamp");
+        checkBox.value = isTimestamp;
+        changeButtonText('copyLinkBtn', copyLinkBtnLabel);
+
+        const fileSelector = document.getElementById('subtitleFile');
+        fileSelector.addEventListener('change', (event) => {
+            var fileReader = new FileReader();
+            fileReader.onload=function() {
+                subtitleFile = fileReader.result;
+            }
+              
+            if (event.target.files && event.target.files.length > 0) {
+                fileReader.readAsText(event.target.files[0]);
+                changeButtonEnable('uploadSubtitleBtn', true);
+            } else {
+                changeButtonEnable('uploadSubtitleBtn', false);
+            }            
+        });
 	});
 
+    function saveDescriptionClick() {
+        var videoId = document.getElementById("videoId").innerHTML;
+        var description = document.getElementById("description").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/videos/update-description",
+            data: { videoId: videoId, description: description },
+            dataType: "json",
+            success: function (videosReponse) {
+                document.getElementById('Description').value = videosReponse.Description;
+                document.getElementById('DescriptionMd').value = videosReponse.DescriptionMd;
+            },
+            error: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
+
+    function changeIsTimestamp() {
+        var checkBox = document.getElementById("isTimestamp");
+        isTimestamp = checkBox.checked;
+    }
+
     function createAndCopyLink() {
-        var startVideo = document.getElementById("startVideo").value;
-        var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + startVideo;
-        navigator.clipboard.writeText(link);
+        if (isTimestamp == true) {
+            var iframe = document.getElementById('videoIframe');
+            var player = new Vimeo.Player(iframe);
+
+             player.getCurrentTime().then(function(seconds) {
+                var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
+                document.getElementById("copiedLink").value = link;
+                navigator.clipboard.writeText(link);            
+            });
+        }
+        else {
+            var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId;
+            document.getElementById("copiedLink").value = link;
+            navigator.clipboard.writeText(link);    
+        }
+        
+        
+        changeButtonText('copyLinkBtn', 'Copied!');
+        setTimeout(function() {
+            changeButtonText('copyLinkBtn', copyLinkBtnLabel);
+        }, 2000);
+    }
+
+    function changeButtonText(buttonId, value) {
+        var button = document.getElementById(buttonId);
+
+        if ( value === copyLinkBtnLabel ) {
+            button.classList.remove("btn-success");
+            button.classList.add("btn-primary");                   
+        } else {
+            button.classList.remove("btn-primary");
+            button.classList.add("btn-success"); 
+        }
+
+        button.innerHTML = value;
+        button.innerText = value;
+        button.textContent = value;
+    }
+
+    function changeButtonEnable(buttonId, isEnabled) {
+        var button = document.getElementById(buttonId);
+
+        if ( isEnabled ) {
+            button.classList.remove("disabled");                
+        } else {
+            button.classList.add("disabled"); 
+        }
+    }
+
+    function uploadSubtitleClick() {
+        var videoId = document.getElementById("videoId").innerHTML;
+        var language = document.getElementById("subtiteLanguageSelect").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/videos/upload-subtitle",
+            data: { videoId: videoId, subtitle: subtitleFile, language: language },
+            dataType: "json",
+            success: function (videosReponse) {
+            },
+            error: function (errMsg) {
+                alert(errMsg);
+            }
+        });
     }
 </script>
 }

@@ -20,6 +20,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
     public int Height { get; set; }
     public int Duration { get; set; }
     public string? Description { get; set; }
+    public string? DescriptionMd { get; set; } = string.Empty;
     public string? ThumbnailUrl { get; set; }
     public int ThumbnailWidth { get; set; }
     public int ThumbnailHeight { get; set; }
@@ -65,6 +66,8 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
 
     public OEmbedViewModel BuildHtml(string link)
     {
+      Html = Html?.Replace("iframe", "iframe id='videoIframe'");
+
       if (string.IsNullOrEmpty(link) || string.IsNullOrEmpty(CustomEmbedLink))
       {
         return this;
@@ -77,7 +80,7 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos
       var vedioId = parts[parts.Length - 1];
 
       CustomEmbedLink.Substring(CustomEmbedLink.Length - 1);
-      Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");
+      Html = Html?.Replace($"{vedioId}?", $"{vedioId}?{CustomEmbedLink}");      
 
       return this;
     }
