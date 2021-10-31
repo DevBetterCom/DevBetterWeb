@@ -177,7 +177,8 @@ textarea {
             url: "/videos/upload-subtitle",
             data: { videoId: videoId, subtitle: subtitleFile, language: language },
             dataType: "json",
-            success: function (videosReponse) {
+            success: function () {
+
             },
             error: function (errMsg) {
                 alert(errMsg);
