@@ -102,7 +102,12 @@ namespace DevBetterWeb.UploaderApp
             .AddScoped<UpdateVideoDetailsService>()
             .AddScoped<UploadVideoService>()
             .AddScoped<GetVideoService>()
-            .AddScoped<UploaderService>();
+            .AddScoped<UploaderService>()
+            .AddScoped<ActiveTextTrackService>()
+            .AddScoped<GetUploadLinkTextTrackService>()
+            .AddScoped<UploadTextTrackFileService>()
+            .AddScoped<UploadSubtitleToVideoService>()
+            .AddScoped<GetAllTextTracksService>();
 
       return services.BuildServiceProvider();
     }

@@ -32,6 +32,9 @@ namespace DevBetterWeb.Vimeo.Models
     [JsonIgnore]
     public byte[] Data { get; set; }
 
+    [JsonIgnore]
+    public string Subtitle { get; set; }
+
     [JsonPropertyName("categories")]
     public List<Category> Categories { get; set; }
 
@@ -163,6 +166,13 @@ namespace DevBetterWeb.Vimeo.Models
     public Video SetDuration(int duration)
     {
       Duration = duration;
+
+      return this;
+    }
+
+    public Video SetSubtitle(string subtitle)
+    {
+      Subtitle = subtitle;
 
       return this;
     }
