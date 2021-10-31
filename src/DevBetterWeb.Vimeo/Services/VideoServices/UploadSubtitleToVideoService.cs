@@ -53,7 +53,7 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices
           return new HttpResponse<bool>(false, getUploadLinkTextTrackresponse.Code);
         }
 
-        var uploadTextTrackFileRequest = new UploadTextTrackFileRequest(getUploadLinkTextTrackresponse?.Data?.Link, request.VttFile);
+        var uploadTextTrackFileRequest = new UploadTextTrackFileRequest(getUploadLinkTextTrackresponse?.Data?.Link, request.SubtitleFile);
         var uploadTextTrackFileResponse = await _uploadTextTrackFileService.ExecuteAsync(uploadTextTrackFileRequest);
         if (uploadTextTrackFileResponse.Code != System.Net.HttpStatusCode.OK)
         {
