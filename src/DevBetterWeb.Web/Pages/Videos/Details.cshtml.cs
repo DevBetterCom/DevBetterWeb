@@ -44,7 +44,7 @@ namespace DevBetterWeb.Web.Pages.Videos
 
       archiveVideo.Views++;
       await _repository.UpdateAsync(archiveVideo);
-
+      
       OEmbedViewModel = new OEmbedViewModel(oEmbed?.Data);
       OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
       OEmbedViewModel.Name = archiveVideo.Title;
