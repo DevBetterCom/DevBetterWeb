@@ -110,10 +110,11 @@ namespace DevBetterWeb.UploaderApp
         if (string.IsNullOrEmpty(video.Subtitle))
         {
           _logger.LogWarning($"{video.Name} has no associated Subtitle file(s)...");
-        }
-
-        var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(videoId.ToString(), video.Subtitle, "en");
-        _ = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+        }else
+        {
+          var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(videoId.ToString(), video.Subtitle, "en");
+          _ = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+        }        
 
         _logger.LogInformation($"{video.Name} Uploaded!");
 
