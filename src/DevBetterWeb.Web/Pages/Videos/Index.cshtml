@@ -73,6 +73,14 @@
 	.padding-10 {
 		padding: 10px;
 	}
+
+    .paging {
+        display: flex;
+    }
+
+    .page-item {
+        border-radius: 0px !important;
+    }
 </style>
 
 <h3>Recorded Coaching Sessions</h3>
@@ -80,12 +88,10 @@
 <div asp-authorize asp-roles="Administrators,Members,Alumni">
 	<div id="members-videos-list" class="row">
 	</div>		
-    <p>
-        <a href="#" id="btn-prev" onclick="prevPage()">Prev</a>
-        <a href="#" id="btn-next" onclick="nextPage()">Next</a>
-    </p>
-
-    <p>Page <span id="page"></span></p>
+    <div class="row">
+        <ul id="pagination-demo" class="pagination-md paging"></ul>
+    </div>
+    
 </div>
 
 
@@ -97,31 +103,15 @@
     function numPages() {
         return Math.ceil(recordsTotal / recordsPage);
     }
-
-    function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            page--;
-            refreshMembersVideos(currentPage);
-        }
-    }
-
-    function nextPage() {
-        if (currentPage < numPages()) {
-            currentPage++;
-            page++;
-            refreshMembersVideos(currentPage);
-        }
-    }
-
     
-    function refreshMembersVideos(currentPage) {
+    function refreshMembersVideos(currentPageIndex) {
+        currentPage = currentPageIndex;
         var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
         if (userRole) {
             $.ajax({
                 type: "POST",
                 url: "/videos/list",
-                data: { draw: '1', start: (currentPage*recordsPage), length: recordsPage.toString() },
+                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString() },
                 dataType: "json",
                 success: function (videosReponse) {
                     var divHtml = "";
@@ -133,23 +123,14 @@
                     }
                     document.getElementById('members-videos-list').innerHTML = divHtml;
 
-
-
-                    const btn_prev = document.getElementById('btn-prev');
-                    const btn_next = document.getElementById('btn-next');
-                    let page_span = document.getElementById('page');
-
-                    if (page < 1) {
-                        page = 1;
-                    }
-                    if (page > numPages()) {
-                        page = numPages();
-                    }
-
-                    page_span.innerHTML = `${page}/${numPages()}`;
-
-                    btn_prev.style.display = (page === 1) ? 'none' : 'inline-block';
-                    btn_next.style.display = (page === numPages()) ? 'none' : 'inline-block';
+                    $('#pagination-demo').twbsPagination({
+                        totalPages: numPages(),
+                        visiblePages: 7,
+                        startPage: page,
+                        onPageClick: function (event, page) {
+                            refreshMembersVideos(page - 1);
+                        }
+                    });               
                 },
                 error: function (errMsg) {
                     alert(errMsg);
