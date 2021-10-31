@@ -17,8 +17,11 @@ namespace DevBetterWeb.UploaderApp
   // TODO: Refactor - this is way too big and has too many responsibilities and abstraction levels in it.
   public class UploaderService
   {
+    private const string ALL_FILES = "*.*";
     private const string MP4_FILES = "*.mp4";
     private const string MD_FILES = "*.md";
+    private const string SRT_FILES = ".srt";
+    private const string VTT_FILES = ".vtt";    
     private const string API_KEY_NAME = "API_KEY";
 
     private readonly UploadVideoService _uploadVideoService;
@@ -26,6 +29,7 @@ namespace DevBetterWeb.UploaderApp
     private readonly GetStatusAnimatedThumbnailService _getStatusAnimatedThumbnailService;
     private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
     private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
+    private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
     private readonly GetVideoService _getVideoService;
     private readonly ILogger<UploaderService> _logger;
     private readonly AddVideoInfo _addVideoInfo;
@@ -37,6 +41,7 @@ namespace DevBetterWeb.UploaderApp
       GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService,
       GetAnimatedThumbnailService getAnimatedThumbnailService,
       AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService,
+      UploadSubtitleToVideoService _uploadSubtitleToVideoService,
       GetVideoService getVideoService,
       ILogger<UploaderService> logger)
     {
@@ -45,6 +50,7 @@ namespace DevBetterWeb.UploaderApp
       _uploadVideoService = uploadVideoServicestring;
       _getAllVideosService = getAllVideosService;
       _addAnimatedThumbnailsToVideoService = addAnimatedThumbnailsToVideoService;
+      this._uploadSubtitleToVideoService = _uploadSubtitleToVideoService;
       _getAnimatedThumbnailService = getAnimatedThumbnailService;
       _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
       _getVideoService = getVideoService;
@@ -91,9 +97,9 @@ namespace DevBetterWeb.UploaderApp
         _logger.LogWarning($"{video.Name} has no associated MD file(s)...");
       }
       var request = new UploadVideoRequest(ServiceConstants.ME, video.Data, video, _configInfo.ApiLink
-        .Replace("https://", String.Empty)
-        .Replace("http://", String.Empty)
-        .Replace("/", String.Empty));
+        .Replace("https://", string.Empty)
+        .Replace("http://", string.Empty)
+        .Replace("/", string.Empty));
 
       request.FileData = video.Data;
 
@@ -101,6 +107,14 @@ namespace DevBetterWeb.UploaderApp
       var videoId = response.Data;
       if (videoId > 0)
       {
+        if (string.IsNullOrEmpty(video.Subtitle))
+        {
+          _logger.LogWarning($"{video.Name} has no associated Subtitle file(s)...");
+        }
+
+        var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(videoId.ToString(), video.Subtitle, "en");
+        _ = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+
         _logger.LogInformation($"{video.Name} Uploaded!");
 
         await UpdateVideoInfoAsync(video, videoId);
@@ -224,13 +238,24 @@ namespace DevBetterWeb.UploaderApp
       {
         return result;
       }
-      
+
+      string[] subtitlePaths = Directory.GetFiles(folderPath, ALL_FILES, SearchOption.AllDirectories)
+        .Where(s => s.EndsWith(SRT_FILES) || s.EndsWith(VTT_FILES))
+        .ToArray();
+      if (subtitlePaths == null)
+      {
+        return result;
+      }
+
       foreach (var videoPath in videosPaths)
       {
         var video = new Video();
 
-        var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
+        var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));        
         var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
+
+        var subtitlePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
+        var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
 
         var mediaInfo = new MediaInfoWrapper(videoPath);
         video
@@ -238,7 +263,8 @@ namespace DevBetterWeb.UploaderApp
           .SetDuration(mediaInfo.Duration)
           .SetDuration(mediaInfo.Duration)
           .SetName(Path.GetFileNameWithoutExtension(videoPath))
-          .SetDescription(description);
+          .SetDescription(description)
+          .SetSubtitle(subtitle);
 
         video.Data = File.ReadAllBytes(videoPath);
         if (video.Data == null || video.Data.Length <= 0)
