@@ -40,6 +40,11 @@ namespace DevBetterWeb.Vimeo.Extensions
       builder.RegisterType<GetVideoService>();
       builder.RegisterType<UpdateVideoDetailsService>();
       builder.RegisterType<UploadVideoService>();
+      builder.RegisterType<ActiveTextTrackService>();
+      builder.RegisterType<GetUploadLinkTextTrackService>();
+      builder.RegisterType<UploadTextTrackFileService>();
+      builder.RegisterType<UploadSubtitleToVideoService>();
+      builder.RegisterType<GetAllTextTracksService>();
     }
   }
 }
