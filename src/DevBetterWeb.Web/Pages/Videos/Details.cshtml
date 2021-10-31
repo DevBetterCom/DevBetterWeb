@@ -178,7 +178,7 @@ textarea {
             data: { videoId: videoId, subtitle: subtitleFile, language: language },
             dataType: "json",
             success: function () {
-
+                document.getElementById('videoIframe').contentWindow.location.reload();
             },
             error: function (errMsg) {
                 alert(errMsg);
