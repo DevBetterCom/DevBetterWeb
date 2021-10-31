@@ -233,24 +233,12 @@ namespace DevBetterWeb.UploaderApp
       }
 
       string[] videosPaths = Directory.GetFiles(folderPath, MP4_FILES, SearchOption.AllDirectories);
-      if (videosPaths == null)
-      {
-        return result;
-      }
 
       string[] mdsPaths = Directory.GetFiles(folderPath, MD_FILES, SearchOption.AllDirectories);
-      if (mdsPaths == null)
-      {
-        return result;
-      }
 
       string[] subtitlePaths = Directory.GetFiles(folderPath, ALL_FILES, SearchOption.AllDirectories)
         .Where(s => s.EndsWith(SRT_FILES) || s.EndsWith(VTT_FILES))
         .ToArray();
-      if (subtitlePaths == null)
-      {
-        return result;
-      }
 
       foreach (var videoPath in videosPaths)
       {
@@ -259,7 +247,7 @@ namespace DevBetterWeb.UploaderApp
         var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));        
         var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
 
-        var subtitlePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
+        var subtitlePath = subtitlePaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
         var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
 
         var mediaInfo = new MediaInfoWrapper(videoPath);
