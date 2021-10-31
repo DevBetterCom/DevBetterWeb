@@ -4,10 +4,13 @@ page = 1;
 recordsPage = 10;
 
 $(document).ready(function () {
+    
+
     var adminRole = '@(User.IsInRole("Administrators") ? "true" : "false")';    
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };    
     
     refreshMembersVideos(currentPage);
+
 
     $("#videosDatatable").DataTable({
         "processing": true,
