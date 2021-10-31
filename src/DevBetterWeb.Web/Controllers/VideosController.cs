@@ -26,6 +26,7 @@ namespace DevBetterWeb.Web.Controllers
     private readonly IMapper _mapper;
     private readonly GetOEmbedVideoService _getOEmbedVideoService;
     private readonly GetVideoService _getVideoService;
+    private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
     private readonly IRepository<ArchiveVideo> _repository;
     private readonly IMarkdownService _markdownService;
 
@@ -34,11 +35,13 @@ namespace DevBetterWeb.Web.Controllers
       IOptions<ApiSettings> apiSettings,
       GetOEmbedVideoService getOEmbedVideoService,
       GetVideoService getVideoService,
+      UploadSubtitleToVideoService uploadSubtitleToVideoService,
       IMarkdownService markdownService)
     {
       _mapper = mapper;
       _getOEmbedVideoService = getOEmbedVideoService;
       _getVideoService = getVideoService;
+      _uploadSubtitleToVideoService = uploadSubtitleToVideoService;
       _repository = repository;
       _expectedApiKey = apiSettings.Value.ApiKey;
       _markdownService = markdownService;
@@ -62,7 +65,7 @@ namespace DevBetterWeb.Web.Controllers
       return Ok(jsonData);
     }
 
-    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
     [HttpPost("update-description")]
     public async Task<IActionResult> UpdateDescriptionAsync([FromForm] UpdateDescription updateDescription)
     {
@@ -92,6 +95,18 @@ namespace DevBetterWeb.Web.Controllers
 
       return Ok(oEmbedViewModel);
     }
+
+    [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+    [HttpPost("upload-subtitle")]
+    public async Task<IActionResult> UploadSubtitleAsync([FromForm] UploadSubtitleRequest request)
+    {
+      var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(request.VideoId, request.Subtitle, request.Language);
+      var response = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+      if (!response.Data || response.Code != System.Net.HttpStatusCode.OK) return NotFound($"Subtitle Not Found {request.VideoId}");
+
+      return Ok();
+    }
+    
 
     [AllowAnonymous]
     [HttpPost("add-video-info")]

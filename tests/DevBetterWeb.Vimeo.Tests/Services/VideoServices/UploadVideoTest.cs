@@ -2,7 +2,7 @@
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Vimeo.Tests.Constants;
-using DevBetterWeb.Vimeo.Tests.Helpers;
+using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 
