@@ -1,8 +1,13 @@
-﻿$(document).ready(function () {
+﻿currentPage = 0;
+recordsTotal = 0;
+page = 1;
+recordsPage = 10;
+
+$(document).ready(function () {
     var adminRole = '@(User.IsInRole("Administrators") ? "true" : "false")';    
     var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };    
     
-    refreshMembersVideos();
+    refreshMembersVideos(currentPage);
 
     $("#videosDatatable").DataTable({
         "processing": true,
@@ -49,55 +54,4 @@
         ]
     });
 
-    function refreshMembersVideos() {
-        var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
-        if (userRole) {
-            $.ajax({
-                type: "POST",
-                url: "/videos/list",
-                data: { draw: '1', start: '0', length: '10' },
-                dataType: "json",
-                success: function (videosReponse) {
-                    var divHtml = "";
-                    if (videosReponse && videosReponse.data && videosReponse.data.length > 0) {
-                        videosReponse.data.forEach(video => {
-                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='Videos/Details/" + video?.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video?.animatedThumbnailUri + "'></a><h3>" + video?.title + "</h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span></div>";
-                        });
-                    }
-                    document.getElementById('members-videos-list').innerHTML = divHtml;
-                },
-                error: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
-        }
-    }
-
-    function timeSince(date) {
-
-        var seconds = Math.floor((new Date() - date) / 1000);
-
-        var interval = seconds / 31536000;
-
-        if (interval > 1) {
-            return Math.floor(interval) + " years";
-        }
-        interval = seconds / 2592000;
-        if (interval > 1) {
-            return Math.floor(interval) + " months";
-        }
-        interval = seconds / 86400;
-        if (interval > 1) {
-            return Math.floor(interval) + " days";
-        }
-        interval = seconds / 3600;
-        if (interval > 1) {
-            return Math.floor(interval) + " hours";
-        }
-        interval = seconds / 60;
-        if (interval > 1) {
-            return Math.floor(interval) + " minutes";
-        }
-        return Math.floor(seconds) + " seconds";
-    }
 });
