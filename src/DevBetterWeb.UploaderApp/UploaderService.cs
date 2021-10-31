@@ -81,6 +81,10 @@ namespace DevBetterWeb.UploaderApp
           _logger.LogWarning($"{video.Name} already exists on vimeo.");
           _logger.LogInformation($"{video.Name} updating video info.");
           await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id), false);
+
+          var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(vimeoVideo.Id, video.Subtitle, "en");
+          _ = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+
           continue;
         }
 
