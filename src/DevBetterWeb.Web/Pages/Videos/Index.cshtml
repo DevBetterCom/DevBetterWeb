@@ -121,7 +121,7 @@
             $.ajax({
                 type: "POST",
                 url: "/videos/list",
-                data: { draw: '1', start: currentPage, length: recordsPage.toString() },
+                data: { draw: '1', start: (currentPage*recordsPage), length: recordsPage.toString() },
                 dataType: "json",
                 success: function (videosReponse) {
                     var divHtml = "";
