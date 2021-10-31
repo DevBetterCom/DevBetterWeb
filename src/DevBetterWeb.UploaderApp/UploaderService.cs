@@ -214,14 +214,22 @@ namespace DevBetterWeb.UploaderApp
 
     private async Task<List<Video>> GetExistingVideosAsync()
     {      
-      var getAllVideosRequest = new GetAllVideosRequest(ServiceConstants.ME);
-      var allExistingVideos = await _getAllVideosService.ExecuteAsync(getAllVideosRequest);
+      HttpResponse<DataPaged<Video>> allVideosResponse;
+      var videos = new List<Video>();
 
-      if(allExistingVideos.Code != System.Net.HttpStatusCode.OK)
+      var pageNumber = 1;
+      do
       {
-        throw new Exception($"Non-successful status code: {allExistingVideos.Code}");
-      }
-      return allExistingVideos.Data.Data;
+        var getAllRequest = new GetAllVideosRequest(ServiceConstants.ME, pageNumber);
+        allVideosResponse = await _getAllVideosService.ExecuteAsync(getAllRequest);
+        if (allVideosResponse != null && allVideosResponse.Data != null)
+        {
+          videos.AddRange(allVideosResponse.Data.Data);
+        }
+        pageNumber++;
+      } while (allVideosResponse != null && allVideosResponse.Data != null);
+
+      return videos;
     }
 
     private List<Video> GetVideos(string folderPath)
