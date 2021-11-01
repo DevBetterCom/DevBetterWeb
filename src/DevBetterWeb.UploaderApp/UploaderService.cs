@@ -262,7 +262,7 @@ namespace DevBetterWeb.UploaderApp
           var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
 
           var name = Path.GetFileNameWithoutExtension(videoPath);
-          _logger.LogInformation($"Update {name} Video MD, Subtitle and Mp4 information");
+          _logger.LogDebug($"Update {name} Video MD, Subtitle and Mp4 information");
 
           var mediaInfo = new MediaInfoWrapper(videoPath);
           video
@@ -294,7 +294,7 @@ namespace DevBetterWeb.UploaderApp
             continue;
           }
 
-          _logger.LogInformation($"Update {name} Video MD");
+          _logger.LogDebug($"Update {name} Video MD");
 
           var video = existingVideos.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
           var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
@@ -316,7 +316,7 @@ namespace DevBetterWeb.UploaderApp
             continue;
           }
 
-          _logger.LogInformation($"Update {name} Video Subtitle");
+          _logger.LogDebug($"Update {name} Video Subtitle");
 
           var video = existingVideos.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
           var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
