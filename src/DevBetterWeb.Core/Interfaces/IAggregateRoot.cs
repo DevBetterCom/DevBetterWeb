@@ -1,6 +1,5 @@
-﻿namespace DevBetterWeb.Core.Interfaces
+﻿namespace DevBetterWeb.Core.Interfaces;
+
+public interface IAggregateRoot
 {
-  public interface IAggregateRoot
-  {
-  }
 }

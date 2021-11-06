@@ -1,13 +1,12 @@
 ﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Specs
+namespace DevBetterWeb.Core.Specs;
+
+public class ActiveInvitationsSpec : Specification<Invitation>
 {
-  public class ActiveInvitationsSpec : Specification<Invitation>
+  public ActiveInvitationsSpec()
   {
-    public ActiveInvitationsSpec()
-    {
-      Query.Where(invite => invite.Active);
-    }
+    Query.Where(invite => invite.Active);
   }
 }

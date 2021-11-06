@@ -5,46 +5,45 @@ using DevBetterWeb.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Infrastructure.Services;
+
+public class GoogleMapCoordinateService : IMapCoordinateService
 {
-  public class GoogleMapCoordinateService : IMapCoordinateService
+  private readonly ILogger<GoogleMapCoordinateService> _logger;
+
+  private IConfiguration _configuration { get; }
+  private IHttpClientFactory _factory { get; }
+
+  public GoogleMapCoordinateService(IConfiguration configuration,
+    IHttpClientFactory factory,
+    ILogger<GoogleMapCoordinateService> logger)
   {
-    private readonly ILogger<GoogleMapCoordinateService> _logger;
+    _configuration = configuration;
+    _factory = factory;
+    _logger = logger;
+  }
 
-    private IConfiguration _configuration { get; }
-    private IHttpClientFactory _factory { get; }
+  public async Task<string> GetMapCoordinates(string address)
+  {
+    _logger.LogInformation($"Getting map info for address {address}");
 
-    public GoogleMapCoordinateService(IConfiguration configuration,
-      IHttpClientFactory factory,
-      ILogger<GoogleMapCoordinateService> logger)
+    var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={_configuration["GoogleMapsAPIKey"]}";
+
+    var client = _factory.CreateClient();
+    client.BaseAddress = new Uri(url);
+
+    var response = await client.GetAsync(url);
+
+    if (response.IsSuccessStatusCode)
     {
-      _configuration = configuration;
-      _factory = factory;
-      _logger = logger;
+      var result = await response.Content.ReadAsStringAsync();
+      return result;
     }
-
-    public async Task<string> GetMapCoordinates(string address)
+    else
     {
-      _logger.LogInformation($"Getting map info for address {address}");
-
-      var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={_configuration["GoogleMapsAPIKey"]}";
-
-      var client = _factory.CreateClient();
-      client.BaseAddress = new Uri(url);
-
-      var response = await client.GetAsync(url);
-
-      if (response.IsSuccessStatusCode)
-      {
-        var result = await response.Content.ReadAsStringAsync();
-        return result;
-      }
-      else
-      {
-        _logger.LogError($"Error getting map info: HTTP Status: {response.StatusCode}");
-        _logger.LogError(await response.Content.ReadAsStringAsync());
-        return "";
-      }
+      _logger.LogError($"Error getting map info: HTTP Status: {response.StatusCode}");
+      _logger.LogError(await response.Content.ReadAsStringAsync());
+      return "";
     }
   }
 }

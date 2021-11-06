@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace DevBetterWeb.Core.Exceptions
+namespace DevBetterWeb.Core.Exceptions;
+
+public class BookNotFoundException : Exception
 {
-  public class BookNotFoundException : Exception
+  public BookNotFoundException(int bookId) : base($"No book found with id {bookId}.")
   {
-    public BookNotFoundException(int bookId) : base($"No book found with id {bookId}.")
-    {
-    }
   }
 }

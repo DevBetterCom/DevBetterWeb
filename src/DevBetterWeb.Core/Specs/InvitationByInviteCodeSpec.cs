@@ -1,13 +1,12 @@
 ﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Specs
+namespace DevBetterWeb.Core.Specs;
+
+public class InvitationByInviteCodeSpec : Specification<Invitation>, ISingleResultSpecification
 {
-  public class InvitationByInviteCodeSpec : Specification<Invitation>, ISingleResultSpecification
+  public InvitationByInviteCodeSpec(string inviteCode)
   {
-    public InvitationByInviteCodeSpec(string inviteCode)
-    {
-      Query.Where(invite => invite.InviteCode == inviteCode);
-    }
+    Query.Where(invite => invite.InviteCode == inviteCode);
   }
 }

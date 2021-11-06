@@ -4,34 +4,33 @@ using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 
-namespace DevBetterWeb.Vimeo.Tests
+namespace DevBetterWeb.Vimeo.Tests;
+
+public class GetOEmbedVideoTest
 {
-  public class GetOEmbedVideoTest
+  private readonly TestFileHelper _testFileHelper;
+  private readonly GetOEmbedVideoService _getOEmbedVideoService;
+
+  public GetOEmbedVideoTest()
   {
-    private readonly TestFileHelper _testFileHelper;
-    private readonly GetOEmbedVideoService _getOEmbedVideoService;
+    var httpService = HttpServiceBuilder.Build();
+    _getOEmbedVideoService = GetOEmbedVideoServiceBuilder.Build(httpService);
+    _testFileHelper = new TestFileHelper();
+  }
 
-    public GetOEmbedVideoTest()
-    {
-      var httpService = HttpServiceBuilder.Build();
-      _getOEmbedVideoService = GetOEmbedVideoServiceBuilder.Build(httpService);
-      _testFileHelper = new TestFileHelper();
-    }
+  [Fact]
+  public async Task ReturnsOEmbedVideoTest()
+  {
+    var videoId = await _testFileHelper.UploadTest();
 
-    [Fact]
-    public async Task ReturnsOEmbedVideoTest()
-    {
-      var videoId = await _testFileHelper.UploadTest();
+    videoId.ShouldNotBe(0);
+    var videoLink = $"https://vimeo.com/videos/{videoId}";
 
-      videoId.ShouldNotBe(0);
-      var videoLink = $"https://vimeo.com/videos/{videoId}";
+    var response = await _getOEmbedVideoService
+      .ExecuteAsync(videoLink);
 
-      var response = await _getOEmbedVideoService
-        .ExecuteAsync(videoLink);
+    await _testFileHelper.DeleteTestFile(videoId.ToString());
 
-      await _testFileHelper.DeleteTestFile(videoId.ToString());
-
-      response.Code.ShouldBe(System.Net.HttpStatusCode.NotFound);
-    }
+    response.Code.ShouldBe(System.Net.HttpStatusCode.NotFound);
   }
 }

@@ -15,77 +15,76 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
 
-namespace DevBetterWeb.Infrastructure
+namespace DevBetterWeb.Infrastructure;
+
+public class DefaultInfrastructureModule : Module
 {
-  public class DefaultInfrastructureModule : Module
+  private bool _isDevelopment = false;
+  private string _vimeoToken = string.Empty;
+  public DefaultInfrastructureModule(bool isDevelopment, string vimeoToken)
   {
-    private bool _isDevelopment = false;
-    private string _vimeoToken = string.Empty;
-    public DefaultInfrastructureModule(bool isDevelopment, string vimeoToken)
+    _isDevelopment = isDevelopment;
+    _vimeoToken = vimeoToken;
+  }
+
+  protected override void Load(ContainerBuilder builder)
+  {
+    if (_isDevelopment)
     {
-      _isDevelopment = isDevelopment;
-      _vimeoToken = vimeoToken;
+      RegisterDevelopmentOnlyDependencies(builder);
     }
-
-    protected override void Load(ContainerBuilder builder)
+    else
     {
-      if (_isDevelopment)
-      {
-        RegisterDevelopmentOnlyDependencies(builder);
-      }
-      else
-      {
-        RegisterProductionOnlyDependencies(builder);
-      }
-      RegisterCommonDependencies(builder);
-      RegisterPaymentHandlerDependencies(builder);
-      AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
+      RegisterProductionOnlyDependencies(builder);
     }
+    RegisterCommonDependencies(builder);
+    RegisterPaymentHandlerDependencies(builder);
+    AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
+  }
 
-    private void RegisterCommonDependencies(ContainerBuilder builder)
-    {
-      builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
-      builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
-      builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
-      builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
-      builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
-          .As<IUserRoleMembershipService>();
-      builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
-          .As<IUserEmailConfirmationService>();
-      builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
-      builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
-      builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
-      builder.RegisterGeneric(typeof(LoggerAdapter<>))
-        .As(typeof(IAppLogger<>))
-        .InstancePerDependency();
+  private void RegisterCommonDependencies(ContainerBuilder builder)
+  {
+    builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
+    builder.RegisterType<DomainEventDispatcher>().As<IDomainEventDispatcher>();
+    builder.RegisterType<MemberRegistrationService>().As<IMemberRegistrationService>();
+    builder.RegisterType<DefaultEmailSender>().As<IEmailSender>();
+    builder.RegisterType<AspNetCoreIdentityUserRoleMembershipService>()
+        .As<IUserRoleMembershipService>();
+    builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
+        .As<IUserEmailConfirmationService>();
+    builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
+    builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
+    builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
+    builder.RegisterGeneric(typeof(LoggerAdapter<>))
+      .As(typeof(IAppLogger<>))
+      .InstancePerDependency();
 
-      builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
-      builder.RegisterType<MarkdigService>()
-        .As<IMarkdownService>();
+    builder.RegisterDecorator<LoggerEmailServiceDecorator, IEmailService>();
+    builder.RegisterType<MarkdigService>()
+      .As<IMarkdownService>();
 
-      builder.RegisterAssemblyTypes(this.ThisAssembly)
-          .AsClosedTypesOf(typeof(IHandle<>));
-    }
+    builder.RegisterAssemblyTypes(this.ThisAssembly)
+        .AsClosedTypesOf(typeof(IHandle<>));
+  }
 
-    private void RegisterPaymentHandlerDependencies(ContainerBuilder builder)
-    {
-      builder.RegisterType<CustomerService>();
-      builder.RegisterType<PaymentMethodService>();
-      builder.RegisterType<SubscriptionService>();
-      builder.RegisterType<PriceService>();
-      builder.RegisterType<PaymentIntentService>();
-      builder.RegisterType<PaymentMethodService>();
-    }
+  private void RegisterPaymentHandlerDependencies(ContainerBuilder builder)
+  {
+    builder.RegisterType<CustomerService>();
+    builder.RegisterType<PaymentMethodService>();
+    builder.RegisterType<SubscriptionService>();
+    builder.RegisterType<PriceService>();
+    builder.RegisterType<PaymentIntentService>();
+    builder.RegisterType<PaymentMethodService>();
+  }
 
-    private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
-    {
-      builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
-    }
+  private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
+  {
+    builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
+  }
 
-    private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
-    {
-      builder.RegisterType<SendGridEmailService>().As<IEmailService>();
+  private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
+  {
+    builder.RegisterType<SendGridEmailService>().As<IEmailService>();
 
-    }
   }
 }

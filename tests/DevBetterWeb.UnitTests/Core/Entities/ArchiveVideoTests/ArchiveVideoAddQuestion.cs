@@ -1,29 +1,28 @@
-﻿using DevBetterWeb.Core.Entities;
-using System;
+﻿using System;
 using System.Linq;
+using DevBetterWeb.Core.Entities;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Core.ArchiveVideoTests
+namespace DevBetterWeb.UnitTests.Core.ArchiveVideoTests;
+
+public class ArchiveVideoAddQuestion
 {
-    public class ArchiveVideoAddQuestion
-    {
-        [Fact]
-        public void ThrowsArgumentNullExceptionGivenNullQuestion()
-        {
-            var video = new ArchiveVideo();
+  [Fact]
+  public void ThrowsArgumentNullExceptionGivenNullQuestion()
+  {
+    var video = new ArchiveVideo();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => video.AddQuestion(null!));
-        }
+    var exception = Assert.Throws<ArgumentNullException>(() => video.AddQuestion(null!));
+  }
 
-        [Fact]
-        public void AddsQuestionToQuestionsList()
-        {
-            var video = new ArchiveVideo();
-            var question = new Question();
+  [Fact]
+  public void AddsQuestionToQuestionsList()
+  {
+    var video = new ArchiveVideo();
+    var question = new Question();
 
-            video.AddQuestion(question);
+    video.AddQuestion(question);
 
-            Assert.Same(question, video.Questions.First());
-        }
-    }
+    Assert.Same(question, video.Questions.First());
+  }
 }

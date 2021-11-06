@@ -1,10 +1,8 @@
-using System.Text.Json.Serialization; 
-namespace DevBetterWeb.Vimeo.Models{ 
+using System.Text.Json.Serialization;
+namespace DevBetterWeb.Vimeo.Models;
 
-    public class EndScreen
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-    }
-
+public class EndScreen
+{
+  [JsonPropertyName("type")]
+  public string Type { get; set; }
 }

@@ -3,21 +3,20 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 
-namespace DevBetterWeb.Core.Handlers
+namespace DevBetterWeb.Core.Handlers;
+
+public class DiscordLogNewUserRegisteredHandler : IHandle<NewUserRegisteredEvent>
 {
-  public class DiscordLogNewUserRegisteredHandler : IHandle<NewUserRegisteredEvent>
+  private readonly AdminUpdatesWebhook _webhook;
+
+  public DiscordLogNewUserRegisteredHandler(AdminUpdatesWebhook webhook)
   {
-    private readonly AdminUpdatesWebhook _webhook;
+    _webhook = webhook;
+  }
 
-    public DiscordLogNewUserRegisteredHandler(AdminUpdatesWebhook webhook)
-    {
-      _webhook = webhook;
-    }
-
-    public Task Handle(NewUserRegisteredEvent domainEvent)
-    {
-      _webhook.Content = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
-      return _webhook.Send();
-    }
+  public Task Handle(NewUserRegisteredEvent domainEvent)
+  {
+    _webhook.Content = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
+    return _webhook.Send();
   }
 }

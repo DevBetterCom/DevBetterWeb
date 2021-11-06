@@ -4,33 +4,32 @@ using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 
-namespace DevBetterWeb.Vimeo.Tests
+namespace DevBetterWeb.Vimeo.Tests;
+
+public class GetVideoTest
 {
-  public class GetVideoTest
+  private readonly TestFileHelper _testFileHelper;
+  private readonly GetVideoService _getVideoService;
+
+  public GetVideoTest()
   {
-    private readonly TestFileHelper _testFileHelper;
-    private readonly GetVideoService _getVideoService;
+    var httpService = HttpServiceBuilder.Build();
+    _getVideoService = GetVideoServiceBuilder.Build(httpService);
+    _testFileHelper = new TestFileHelper();
+  }
 
-    public GetVideoTest()
-    {
-      var httpService = HttpServiceBuilder.Build();
-      _getVideoService = GetVideoServiceBuilder.Build(httpService);
-      _testFileHelper = new TestFileHelper();
-    }
+  [Fact]
+  public async Task ReturnsVideoTest()
+  {
+    var videoId = await _testFileHelper.UploadTest();
 
-    [Fact]
-    public async Task ReturnsVideoTest()
-    {
-      var videoId = await _testFileHelper.UploadTest();
+    videoId.ShouldNotBe(0);
 
-      videoId.ShouldNotBe(0);
+    var response = await _getVideoService
+      .ExecuteAsync(videoId.ToString());
 
-      var response = await _getVideoService
-        .ExecuteAsync(videoId.ToString());
+    await _testFileHelper.DeleteTestFile(response.Data.ToString());
 
-      await _testFileHelper.DeleteTestFile(response.Data.ToString());
-
-      response.Data.ShouldNotBe(null);
-    }
+    response.Data.ShouldNotBe(null);
   }
 }

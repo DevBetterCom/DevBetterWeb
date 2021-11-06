@@ -1,11 +1,10 @@
 ﻿using DevBetterWeb.Core.SharedKernel;
 
-namespace DevBetterWeb.Core.Entities
+namespace DevBetterWeb.Core.Entities;
+
+public class Question : BaseEntity
 {
-    public class Question : BaseEntity
-    {
-        public int ArchiveVideoId { get; set; }
-        public string? QuestionText { get; set; }
-        public int TimestampSeconds { get; set; }
-    }
+  public int ArchiveVideoId { get; set; }
+  public string? QuestionText { get; set; }
+  public int TimestampSeconds { get; set; }
 }

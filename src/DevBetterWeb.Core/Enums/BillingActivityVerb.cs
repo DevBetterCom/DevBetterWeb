@@ -1,11 +1,10 @@
-﻿namespace DevBetterWeb.Core.Enums
+﻿namespace DevBetterWeb.Core.Enums;
+
+public enum BillingActivityVerb
 {
-  public enum BillingActivityVerb
-  {
-    Subscribed,
-    Renewed,
-    Cancelled,
-    Ended,
-    None
-  }
+  Subscribed,
+  Renewed,
+  Cancelled,
+  Ended,
+  None
 }

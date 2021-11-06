@@ -7,31 +7,30 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Infrastructure.Services;
+
+public class AspNetCoreIdentityUserEmailConfirmationService : IUserEmailConfirmationService
 {
-  public class AspNetCoreIdentityUserEmailConfirmationService : IUserEmailConfirmationService
+  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly IDomainEventDispatcher _dispatcher;
+
+  public AspNetCoreIdentityUserEmailConfirmationService(UserManager<ApplicationUser> userManager,
+      IDomainEventDispatcher dispatcher)
   {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IDomainEventDispatcher _dispatcher;
+    _userManager = userManager;
+    _dispatcher = dispatcher;
+  }
 
-    public AspNetCoreIdentityUserEmailConfirmationService(UserManager<ApplicationUser> userManager,
-        IDomainEventDispatcher dispatcher)
-    {
-      _userManager = userManager;
-      _dispatcher = dispatcher;
-    }
+  public async Task UpdateUserEmailConfirmationAsync(string userId, bool isEmailConfirmed)
+  {
+    var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+    if (user == null) throw new UserNotFoundException(userId);
 
-    public async Task UpdateUserEmailConfirmationAsync(string userId, bool isEmailConfirmed)
-    {
-      var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-      if (user == null) throw new UserNotFoundException(userId);
+    user.EmailConfirmed = isEmailConfirmed;
 
-      user.EmailConfirmed = isEmailConfirmed;
+    await _userManager.UpdateAsync(user);
 
-      await _userManager.UpdateAsync(user);
-
-      var userEmailConfirmedChangedEvent = new UserEmailConfirmedChangedEvent(user.Email, isEmailConfirmed);
-      await _dispatcher.Dispatch(userEmailConfirmedChangedEvent);
-    }
+    var userEmailConfirmedChangedEvent = new UserEmailConfirmedChangedEvent(user.Email, isEmailConfirmed);
+    await _dispatcher.Dispatch(userEmailConfirmedChangedEvent);
   }
 }

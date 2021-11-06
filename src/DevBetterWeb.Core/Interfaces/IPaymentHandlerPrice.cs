@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IPaymentHandlerPrice
 {
-  public interface IPaymentHandlerPrice
-  {
-    int GetPriceAmount(string subscriptionPriceId);
-    Task<int> GetPriceCount();
-  }
+  int GetPriceAmount(string subscriptionPriceId);
+  Task<int> GetPriceCount();
 }

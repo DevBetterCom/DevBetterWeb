@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IDailyCheckPingService
 {
-  public interface IDailyCheckPingService
-  {
-    Task SendPingIfNeeded(AppendOnlyStringList messages);
-    Task PingAdminsAboutAlmostAlumsIfNeeded(AppendOnlyStringList messages);
-  }
+  Task SendPingIfNeeded(AppendOnlyStringList messages);
+  Task PingAdminsAboutAlmostAlumsIfNeeded(AppendOnlyStringList messages);
 }

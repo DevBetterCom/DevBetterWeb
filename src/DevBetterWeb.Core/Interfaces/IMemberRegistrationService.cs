@@ -1,10 +1,9 @@
-﻿using DevBetterWeb.Core.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IMemberRegistrationService
 {
-  public interface IMemberRegistrationService
-  {
-    Task<Member> RegisterMemberAsync(string userId);
-  }
+  Task<Member> RegisterMemberAsync(string userId);
 }
