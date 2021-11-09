@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages
+namespace DevBetterWeb.Web.Pages;
+
+public class FAQModel : PageModel
 {
-  public class FAQModel : PageModel
+  public void OnGet()
   {
-    public void OnGet()
-    {
-    }
   }
 }

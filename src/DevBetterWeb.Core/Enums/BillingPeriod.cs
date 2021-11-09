@@ -1,9 +1,8 @@
-﻿namespace DevBetterWeb.Core.Enums
+﻿namespace DevBetterWeb.Core.Enums;
+
+public enum BillingPeriod
 {
-  public enum BillingPeriod 
-  {
-    None,
-    Month,
-    Year
-  }
+  None,
+  Month,
+  Year
 }

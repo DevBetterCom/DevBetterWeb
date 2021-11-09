@@ -3,15 +3,14 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DevBetterWeb.Vimeo.Tests.Builders
-{
-  public class GetStreamingTicketServiceBuilder
-  {
-    public static GetStreamingTicketService Build(HttpService httpService)
-    {
-      var logger = new Mock<ILogger<GetStreamingTicketService>>().Object;
+namespace DevBetterWeb.Vimeo.Tests.Builders;
 
-      return new GetStreamingTicketService(httpService, logger);
-    }
+public class GetStreamingTicketServiceBuilder
+{
+  public static GetStreamingTicketService Build(HttpService httpService)
+  {
+    var logger = new Mock<ILogger<GetStreamingTicketService>>().Object;
+
+    return new GetStreamingTicketService(httpService, logger);
   }
 }

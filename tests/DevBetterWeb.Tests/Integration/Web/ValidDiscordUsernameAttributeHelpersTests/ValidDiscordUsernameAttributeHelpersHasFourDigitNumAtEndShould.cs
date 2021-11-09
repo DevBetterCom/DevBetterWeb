@@ -1,38 +1,37 @@
 ﻿using Xunit;
 
-namespace DevBetterWeb.Tests.Web.ValidDiscordUsernameAttributeHelpers
+namespace DevBetterWeb.Tests.Web.ValidDiscordUsernameAttributeHelpers;
+
+public class ValidDiscordUsernameAttributeHelpersHasFourDigitNumAtEndShould
 {
-  public class ValidDiscordUsernameAttributeHelpersHasFourDigitNumAtEndShould
+  [Fact]
+  public void GiveFalseIfNoNumInString()
   {
-    [Fact]
-    public void GiveFalseIfNoNumInString()
-    {
-      var input = "discord";
+    var input = "discord";
 
-      var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
+    var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
 
-      Assert.False(output);
-    }
+    Assert.False(output);
+  }
 
-    [Fact]
-    public void GiveFalseIf3DigitNumAtEnd()
-    {
-      var input = "discord123";
+  [Fact]
+  public void GiveFalseIf3DigitNumAtEnd()
+  {
+    var input = "discord123";
 
-      var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
+    var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
 
-      Assert.False(output);
-    }
+    Assert.False(output);
+  }
 
-    [Fact]
-    public void GiveTrueGiven4DigitNumAtEnd()
-    {
-      var input = "discord1234";
+  [Fact]
+  public void GiveTrueGiven4DigitNumAtEnd()
+  {
+    var input = "discord1234";
 
-      var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
+    var output = DevBetterWeb.Web.ValidDiscordUsernameAttributeHelpers.HasFourDigitNumAtEnd(input);
 
-      Assert.True(output);
+    Assert.True(output);
 
-    }
   }
 }

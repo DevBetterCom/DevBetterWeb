@@ -4,27 +4,26 @@ using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 
-namespace DevBetterWeb.Vimeo.Tests
+namespace DevBetterWeb.Vimeo.Tests;
+
+public class GetAllVideosTest
 {
-  public class GetAllVideosTest
+  private readonly GetAllVideosService _getAllVideosService;
+
+  public GetAllVideosTest()
   {
-    private readonly GetAllVideosService _getAllVideosService;
+    var httpService = HttpServiceBuilder.Build();
+    _getAllVideosService = GetAllVideosServiceBuilder.Build(httpService);
+  }
 
-    public GetAllVideosTest()
-    {
-      var httpService = HttpServiceBuilder.Build();
-      _getAllVideosService = GetAllVideosServiceBuilder.Build(httpService);
-    }
+  [Fact]
+  public async Task ReturnsAllVideosTest()
+  {
+    var request = new GetAllVideosRequest("me");
+    var response = await _getAllVideosService
+      .ExecuteAsync(request);
 
-    [Fact]
-    public async Task ReturnsAllVideosTest()
-    {
-      var request = new GetAllVideosRequest("me");
-      var response = await _getAllVideosService
-        .ExecuteAsync(request);
-
-      response.Code.ShouldBe(System.Net.HttpStatusCode.OK);
-      response.Data.Data.Count.ShouldBeGreaterThan(0);
-    }
+    response.Code.ShouldBe(System.Net.HttpStatusCode.OK);
+    response.Data.Data.Count.ShouldBeGreaterThan(0);
   }
 }

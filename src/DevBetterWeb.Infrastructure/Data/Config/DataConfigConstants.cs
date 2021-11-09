@@ -1,10 +1,9 @@
-﻿namespace DevBetterWeb.Infrastructure.Data.Config
+﻿namespace DevBetterWeb.Infrastructure.Data.Config;
+
+public class DataConfigConstants
 {
-    public class DataConfigConstants
-    {
-        public const int URL_COLUMN_WIDTH = 200;
+  public const int URL_COLUMN_WIDTH = 200;
 
-        public const int NAME_COLUMN_WIDTH = 100;
+  public const int NAME_COLUMN_WIDTH = 100;
 
-    }
 }

@@ -2,77 +2,76 @@
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 
-namespace DevBetterWeb.Core.Services
+namespace DevBetterWeb.Core.Services;
+
+public class MemberSubscriptionPeriodCalculationsService : IMemberSubscriptionPeriodCalculationsService
 {
-  public class MemberSubscriptionPeriodCalculationsService : IMemberSubscriptionPeriodCalculationsService
+  private const double DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
+
+  public bool GetHasCurrentSubscription(Member member)
   {
-    private const double DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS = 730;
+    bool hasCurrentSubscription = false;
 
-    public bool GetHasCurrentSubscription(Member member)
+    foreach (var subscription in member.MemberSubscriptions)
     {
-      bool hasCurrentSubscription = false;
-
-      foreach (var subscription in member.MemberSubscriptions)
+      if (subscription.Dates.Contains(DateTime.Today))
       {
-        if (subscription.Dates.Contains(DateTime.Today))
-        {
-          hasCurrentSubscription = true;
-        }
+        hasCurrentSubscription = true;
       }
-      return hasCurrentSubscription;
     }
+    return hasCurrentSubscription;
+  }
 
-    public DateTime GetGraduationDate(Member member)
+  public DateTime GetGraduationDate(Member member)
+  {
+    var totalSubscribedDays = member.TotalSubscribedDays();
+
+    var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - totalSubscribedDays;
+    var graduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
+
+    return graduationDate;
+  }
+
+  // none of these methods should ever be called if member does not have current subscription
+  public MemberSubscription GetCurrentSubscription(Member member)
+  {
+
+    foreach (var subscription in member.MemberSubscriptions)
     {
-      var totalSubscribedDays = member.TotalSubscribedDays();
-
-      var daysTillBecomingAlumnus = DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS - totalSubscribedDays;
-      var graduationDate = DateTime.Today.AddDays(daysTillBecomingAlumnus);
-
-      return graduationDate;
-    }
-
-    // none of these methods should ever be called if member does not have current subscription
-    public MemberSubscription GetCurrentSubscription(Member member)
-    {
-
-      foreach (var subscription in member.MemberSubscriptions)
+      if (subscription.Dates.Contains(DateTime.Today))
       {
-        if (subscription.Dates.Contains(DateTime.Today))
-        {
-          return subscription;
-        }
+        return subscription;
       }
-      throw new Exceptions.NoCurrentMemberSubscriptionFoundException();
     }
+    throw new Exceptions.NoCurrentMemberSubscriptionFoundException();
+  }
 
-    public DateTime GetCurrentSubscriptionEndDate(Member member)
+  public DateTime GetCurrentSubscriptionEndDate(Member member)
+  {
+    var currentSubscription = GetCurrentSubscription(member);
+
+    var endDate = currentSubscription.Dates.EndDate ?? DateTime.MinValue;
+
+    return endDate;
+  }
+
+  public int GetPercentageProgressToAlumniStatus(Member member)
+  {
+    var totalSubscribedDays = member.TotalSubscribedDays();
+
+    int percentage = GetPercentageProgressToAlumniStatus(totalSubscribedDays);
+    return percentage;
+  }
+
+  public int GetPercentageProgressToAlumniStatus(int memberSubscribedDays)
+  {
+    int percentage = (int)(100 * ((double)memberSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS));
+
+    if (percentage > 100)
     {
-      var currentSubscription = GetCurrentSubscription(member);
-
-      var endDate = currentSubscription.Dates.EndDate ?? DateTime.MinValue;
-
-      return endDate;
+      return 100;
     }
 
-    public int GetPercentageProgressToAlumniStatus(Member member)
-    {
-      var totalSubscribedDays = member.TotalSubscribedDays();
-
-      int percentage = GetPercentageProgressToAlumniStatus(totalSubscribedDays);
-      return percentage;
-    }
-
-    public int GetPercentageProgressToAlumniStatus(int memberSubscribedDays)
-    {
-      int percentage = (int)(100 * ((double)memberSubscribedDays / DAYS_SUBSCRIBED_TO_BECOME_ALUMNUS));
-
-      if (percentage > 100)
-      {
-        return 100;
-      }
-
-      return percentage;
-    }
+    return percentage;
   }
 }

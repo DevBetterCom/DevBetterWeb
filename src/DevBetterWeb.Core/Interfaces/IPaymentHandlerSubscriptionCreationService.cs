@@ -1,7 +1,6 @@
-﻿namespace DevBetterWeb.Core.Interfaces
+﻿namespace DevBetterWeb.Core.Interfaces;
+
+public interface IPaymentHandlerSubscriptionCreationService
 {
-  public interface IPaymentHandlerSubscriptionCreationService
-  {
-    IPaymentHandlerSubscriptionDTO SetUpSubscription(string customerId, string priceId, string paymentMethodId);
-  }
+  IPaymentHandlerSubscriptionDTO SetUpSubscription(string customerId, string priceId, string paymentMethodId);
 }

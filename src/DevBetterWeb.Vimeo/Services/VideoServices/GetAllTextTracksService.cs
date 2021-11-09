@@ -1,41 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
-using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
-using System.Collections.Generic;
 using DevBetterWeb.Vimeo.Models;
+using Microsoft.Extensions.Logging;
 
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+namespace DevBetterWeb.Vimeo.Services.VideoServices;
+
+public class GetAllTextTracksService : BaseAsyncApiCaller
+  .WithRequest<string>
+  .WithResponse<GetAllTextTracksResponse>
 {
-  public class GetAllTextTracksService : BaseAsyncApiCaller
-    .WithRequest<string>
-    .WithResponse<GetAllTextTracksResponse>
+  private readonly HttpService _httpService;
+  private readonly ILogger<GetAllTextTracksService> _logger;
+
+  public GetAllTextTracksService(HttpService httpService, ILogger<GetAllTextTracksService> logger)
   {
-    private readonly HttpService _httpService;
-    private readonly ILogger<GetAllTextTracksService> _logger;
+    _httpService = httpService;
+    _logger = logger;
+  }
 
-    public GetAllTextTracksService(HttpService httpService, ILogger<GetAllTextTracksService> logger)
+  public override async Task<HttpResponse<GetAllTextTracksResponse>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
+  {
+    var uri = $"videos/{videoId}/texttracks";
+    try
     {
-      _httpService = httpService;
-      _logger = logger;
+      var response = await _httpService.HttpGetAsync<GetAllTextTracksResponse>(uri);
+
+      return response;
     }
-
-    public override async Task<HttpResponse<GetAllTextTracksResponse>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
+    catch (Exception exception)
     {
-      var uri = $"videos/{videoId}/texttracks";
-      try
-      {
-        var response = await _httpService.HttpGetAsync<GetAllTextTracksResponse>(uri);
-
-        return response;
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<GetAllTextTracksResponse>.FromException(exception.Message);
-      }
+      _logger.LogError(exception);
+      return HttpResponse<GetAllTextTracksResponse>.FromException(exception.Message);
     }
   }
 }

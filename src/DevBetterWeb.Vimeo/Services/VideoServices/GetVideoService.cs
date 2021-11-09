@@ -2,43 +2,42 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
-using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
+using Microsoft.Extensions.Logging;
 
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+namespace DevBetterWeb.Vimeo.Services.VideoServices;
+
+public class GetVideoService : BaseAsyncApiCaller
+  .WithRequest<string>
+  .WithResponse<Video>
 {
-  public class GetVideoService : BaseAsyncApiCaller
-    .WithRequest<string>
-    .WithResponse<Video>
+  private readonly HttpService _httpService;
+  private readonly ILogger<GetVideoService> _logger;
+
+  public GetVideoService(HttpService httpService, ILogger<GetVideoService> logger)
   {
-    private readonly HttpService _httpService;
-    private readonly ILogger<GetVideoService> _logger;
+    _httpService = httpService;
+    _logger = logger;
+  }
 
-    public GetVideoService(HttpService httpService, ILogger<GetVideoService> logger)
+  public override async Task<HttpResponse<Video>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
+  {
+    var uri = $"videos";
+    try
     {
-      _httpService = httpService;
-      _logger = logger;
+      var response = await _httpService.HttpGetAsync<Video>($"{uri}/{videoId}");
+
+      if (response == null)
+      {
+        throw new Exception($"No video found for {uri}/{videoId}");
+      }
+      return response;
     }
-
-    public override async Task<HttpResponse<Video>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
+    catch (Exception exception)
     {
-      var uri = $"videos";
-      try
-      {
-        var response = await _httpService.HttpGetAsync<Video>($"{uri}/{videoId}");
-
-        if(response == null)
-        {
-          throw new Exception($"No video found for {uri}/{videoId}");
-        }
-        return response;
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<Video>.FromException(exception.Message);
-      }
+      _logger.LogError(exception);
+      return HttpResponse<Video>.FromException(exception.Message);
     }
   }
 }

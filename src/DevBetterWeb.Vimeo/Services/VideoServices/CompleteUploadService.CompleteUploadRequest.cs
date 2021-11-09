@@ -1,9 +1,8 @@
-﻿namespace DevBetterWeb.Vimeo.Services.VideoServices
+﻿namespace DevBetterWeb.Vimeo.Services.VideoServices;
+
+public class CompleteUploadRequest
 {
-  public class CompleteUploadRequest
-  {
-    public string UserId { get; set; } 
-    public string UploadId { get; set; }
-    public string CompleteUri { get; set; }
-  }
+  public string UserId { get; set; }
+  public string UploadId { get; set; }
+  public string CompleteUri { get; set; }
 }

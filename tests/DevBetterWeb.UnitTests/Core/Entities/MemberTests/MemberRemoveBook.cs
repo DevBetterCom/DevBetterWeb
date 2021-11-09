@@ -1,35 +1,34 @@
 ﻿using DevBetterWeb.Core.Entities;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests
+namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
+
+public class MemberRemoveBook
 {
-  public class MemberRemoveBook
+  [Fact]
+  public void ShouldDoNothingGivenBookNotInBooksRead()
   {
-    [Fact]
-    public void ShouldDoNothingGivenBookNotInBooksRead()
-    {
-      Member member = MemberHelpers.CreateWithDefaultConstructor();
-      Book book = BookHelpers.GetDefaultTestBook();
+    Member member = MemberHelpers.CreateWithDefaultConstructor();
+    Book book = BookHelpers.GetDefaultTestBook();
 
-      member.RemoveBookRead(book);
+    member.RemoveBookRead(book);
 
-      // if we get this far, no error was thrown
-      Assert.Empty(member.BooksRead);
-    }
+    // if we get this far, no error was thrown
+    Assert.Empty(member.BooksRead);
+  }
 
-    [Fact]
-    public void ShouldRemoveBookGivenBook()
-    {
-      Member member = MemberHelpers.CreateWithDefaultConstructor();
-      Book book = BookHelpers.GetDefaultTestBook();
+  [Fact]
+  public void ShouldRemoveBookGivenBook()
+  {
+    Member member = MemberHelpers.CreateWithDefaultConstructor();
+    Book book = BookHelpers.GetDefaultTestBook();
 
-      member.AddBookRead(book);
+    member.AddBookRead(book);
 
-      Assert.Contains(book, member.BooksRead);
+    Assert.Contains(book, member.BooksRead);
 
-      member.RemoveBookRead(book);
+    member.RemoveBookRead(book);
 
-      Assert.Empty(member.BooksRead);
-    }
+    Assert.Empty(member.BooksRead);
   }
 }

@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IUserLookupService
 {
-  public interface IUserLookupService
-  {
-    Task<string> FindUserIdByEmailAsync(string email);
-    Task<bool> FindUserIsMemberByEmailAsync(string email);
-    Task<bool> FindUserIsAlumniByUserIdAsync(string userId);
-  }
+  Task<string> FindUserIdByEmailAsync(string email);
+  Task<bool> FindUserIsMemberByEmailAsync(string email);
+  Task<bool> FindUserIsAlumniByUserIdAsync(string userId);
 }
