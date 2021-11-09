@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.11" />
         <!-- added to fix error when upgrading to .net 5.0 -->
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
@@ -51,6 +51,7 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
         <!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Sendgrid" Version="9.24.4" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
