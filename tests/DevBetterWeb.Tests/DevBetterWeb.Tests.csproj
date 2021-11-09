@@ -45,8 +45,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeCoverage" Version="17.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
@@ -61,7 +61,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="XunitXml.TestLogger" Version="3.0.66" />
+    <PackageReference Include="XunitXml.TestLogger" Version="3.0.70" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 
   </ItemGroup>
