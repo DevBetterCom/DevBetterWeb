@@ -1,16 +1,14 @@
-using System.Text.Json.Serialization; 
-namespace DevBetterWeb.Vimeo.Models{ 
+using System.Text.Json.Serialization;
+namespace DevBetterWeb.Vimeo.Models;
 
-    public class Subcategory
-    {
-        [JsonPropertyName("link")]
-        public string Link { get; set; }
+public class Subcategory
+{
+  [JsonPropertyName("link")]
+  public string Link { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+  [JsonPropertyName("name")]
+  public string Name { get; set; }
 
-        [JsonPropertyName("uri")]
-        public string Uri { get; set; }
-    }
-
+  [JsonPropertyName("uri")]
+  public string Uri { get; set; }
 }

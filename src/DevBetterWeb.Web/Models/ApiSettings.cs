@@ -1,7 +1,6 @@
-﻿namespace DevBetterWeb.Web.Models
+﻿namespace DevBetterWeb.Web.Models;
+
+public class ApiSettings
 {
-  public class ApiSettings
-  {
-    public string ApiKey { get; set; } = "";
-  }
+  public string ApiKey { get; set; } = "";
 }

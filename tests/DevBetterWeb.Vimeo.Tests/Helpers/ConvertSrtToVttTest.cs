@@ -5,20 +5,19 @@ using DevBetterWeb.Vimeo.Tests.Extensions;
 using Shouldly;
 using Xunit;
 
-namespace DevBetterWeb.Vimeo.Tests
+namespace DevBetterWeb.Vimeo.Tests;
+
+public class VttConvertTest
 {
-  public class VttConvertTest
+
+  [Fact]
+  public async Task ReturnsVttGivenSrtTest()
   {
+    var srt = await TestFileHelper.BuildSrtAsync();
+    var expectedVtt = await TestFileHelper.BuildVttAsync();
 
-    [Fact]
-    public async Task ReturnsVttGivenSrtTest()
-    {      
-      var srt = await TestFileHelper.BuildSrtAsync();
-      var expectedVtt = await TestFileHelper.BuildVttAsync();
+    var vtt = SubtitleConverter.ConvertSrtToVtt(srt);
 
-      var vtt = SubtitleConverter.ConvertSrtToVtt(srt);
-
-      vtt.RemoveSpecialCharacters().ShouldBe(expectedVtt.RemoveSpecialCharacters());
-    }
+    vtt.RemoveSpecialCharacters().ShouldBe(expectedVtt.RemoveSpecialCharacters());
   }
 }

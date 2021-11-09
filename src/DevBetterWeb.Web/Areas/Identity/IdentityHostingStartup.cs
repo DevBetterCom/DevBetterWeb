@@ -7,36 +7,35 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
-namespace DevBetterWeb.Web.Areas.Identity
+namespace DevBetterWeb.Web.Areas.Identity;
+
+public class IdentityHostingStartup : IHostingStartup
 {
-    public class IdentityHostingStartup : IHostingStartup
+  public void Configure(IWebHostBuilder builder)
+  {
+    builder.ConfigureServices((context, services) =>
     {
-        public void Configure(IWebHostBuilder builder)
-        {
-            builder.ConfigureServices((context, services) =>
-            {
-                services.AddDbContext<IdentityDbContext>(options =>
-                    options.UseSqlServer(
-                        context.Configuration.GetConnectionString("DefaultConnection")));
+      services.AddDbContext<IdentityDbContext>(options =>
+                  options.UseSqlServer(
+                      context.Configuration.GetConnectionString("DefaultConnection")));
 
-                services.AddIdentity<ApplicationUser, IdentityRole>(x => 
-                        { 
-                            x.SignIn.RequireConfirmedEmail = true; 
-                        })                    
-                    .AddEntityFrameworkStores<IdentityDbContext>()
-                    .AddDefaultTokenProviders();
+      services.AddIdentity<ApplicationUser, IdentityRole>(x =>
+                      {
+                  x.SignIn.RequireConfirmedEmail = true;
+                })
+                  .AddEntityFrameworkStores<IdentityDbContext>()
+                  .AddDefaultTokenProviders();
 
-                services.ConfigureApplicationCookie(options =>
-                {
-                    options.Cookie.Name = "DevBetterAuth";
-                    options.LoginPath = $"/Identity/Account/Login";
-                    options.LogoutPath = $"/Identity/Account/Logout";
-                    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-                });
+      services.ConfigureApplicationCookie(options =>
+              {
+          options.Cookie.Name = "DevBetterAuth";
+          options.LoginPath = $"/Identity/Account/Login";
+          options.LogoutPath = $"/Identity/Account/Logout";
+          options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+        });
 
-                services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
-                    UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>>();
-            });
-        }
-    }
+      services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
+                  UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>>();
+    });
+  }
 }

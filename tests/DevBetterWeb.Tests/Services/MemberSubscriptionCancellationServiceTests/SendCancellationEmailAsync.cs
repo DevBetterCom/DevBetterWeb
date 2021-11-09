@@ -1,23 +1,21 @@
-﻿using System.Threading.Tasks;
-using Xunit;
+﻿using System;
+using System.Threading.Tasks;
 using Moq;
-using System;
+using Xunit;
 
-namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests
+namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests;
+
+public class SendCancellationEmailAsync : MemberSubscriptionCancellationServiceTest
 {
-  public class SendCancellationEmailAsync : MemberSubscriptionCancellationServiceTest
+  private readonly string _email = "TestEmail";
+
+  [Fact]
+  public async Task SendsEmail()
   {
-    private readonly string _email = "TestEmail";
+    await _memberCancellationService.SendCancellationEmailAsync(_email);
 
-    [Fact]
-    public async Task SendsEmail()
-    {
-      await _memberCancellationService.SendCancellationEmailAsync(_email);
-
-      _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()));
-    }
+    _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()));
   }
-
 }
 
 

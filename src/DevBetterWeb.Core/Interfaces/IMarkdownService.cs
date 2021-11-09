@@ -1,7 +1,6 @@
-﻿namespace DevBetterWeb.Core.Interfaces
+﻿namespace DevBetterWeb.Core.Interfaces;
+
+public interface IMarkdownService
 {
-  public interface IMarkdownService
-  {
-    string RenderHTMLFromMD(string? mdContent);
-  }
+  string RenderHTMLFromMD(string? mdContent);
 }

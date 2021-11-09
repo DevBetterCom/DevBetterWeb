@@ -1,32 +1,31 @@
 ﻿using DevBetterWeb.Core.Entities;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests
+namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
+
+public class MemberTotalSubscribedDays
 {
-  public class MemberTotalSubscribedDays
+  [Fact]
+  public void ReturnsDaysSubscribedToDate()
   {
-    [Fact]
-    public void ReturnsDaysSubscribedToDate()
-    {
-      var member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(50);
+    var member = MemberHelpers.CreateWithDefaultConstructor();
+    MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(50);
 
-      member.AddSubscription(subscription.Dates, 1);
-      int days = member.TotalSubscribedDays();
+    member.AddSubscription(subscription.Dates, 1);
+    int days = member.TotalSubscribedDays();
 
-      Assert.Equal(50, days);
-    }
+    Assert.Equal(50, days);
+  }
 
-    [Fact]
-    public void ReturnsDaysSubscribedToDateWithoutDaysAfterToday()
-    {
-      var member = MemberHelpers.CreateWithDefaultConstructor();
-      MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(58, 12);
+  [Fact]
+  public void ReturnsDaysSubscribedToDateWithoutDaysAfterToday()
+  {
+    var member = MemberHelpers.CreateWithDefaultConstructor();
+    MemberSubscription subscription = SubscriptionHelpers.GetSubscriptionWithGivenSubscribedDaysToDateAndTotalSubscribedDays(58, 12);
 
-      member.AddSubscription(subscription.Dates, 1);
-      int days = member.TotalSubscribedDays();
+    member.AddSubscription(subscription.Dates, 1);
+    int days = member.TotalSubscribedDays();
 
-      Assert.Equal(58, days);
-    }
+    Assert.Equal(58, days);
   }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IUserEmailConfirmationService
 {
-  public interface IUserEmailConfirmationService
-  {
-    Task UpdateUserEmailConfirmationAsync(string userId, bool isEmailConfirmed);
-  }
+  Task UpdateUserEmailConfirmationAsync(string userId, bool isEmailConfirmed);
 }

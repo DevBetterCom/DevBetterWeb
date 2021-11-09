@@ -23,158 +23,157 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace DevBetterWeb.Web
+namespace DevBetterWeb.Web;
+
+public class Startup
 {
-  public class Startup
+  private bool _isDbContextAdded = false;
+  private readonly IWebHostEnvironment _env;
+
+  public Startup(IConfiguration config, IWebHostEnvironment env)
   {
-    private bool _isDbContextAdded = false;
-    private readonly IWebHostEnvironment _env;
+    Configuration = config;
+    _env = env;
+  }
 
-    public Startup(IConfiguration config, IWebHostEnvironment env)
+  public IConfiguration Configuration { get; }
+  public ILifetimeScope? AutofacContainer { get; private set; }
+
+  public void ConfigureProductionServices(IServiceCollection services)
+  {
+    if (!_isDbContextAdded)
     {
-      Configuration = config;
-      _env = env;
-    }
-
-    public IConfiguration Configuration { get; }
-    public ILifetimeScope? AutofacContainer { get; private set; }
-
-    public void ConfigureProductionServices(IServiceCollection services)
-    {
-      if (!_isDbContextAdded)
-      {
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration
-                .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
-        _isDbContextAdded = true;
-      }
-
-      // configure Stripe
-      string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
-      services.AddStripeServices(stripeApiKey);
-
-      services.AddDailyCheckServices();
-
-      ConfigureServices(services);
-    }
-
-    public void ConfigureTestingServices(IServiceCollection services)
-    {
-      string dbName = Guid.NewGuid().ToString();
-
       services.AddDbContext<AppDbContext>(options =>
-        options.UseInMemoryDatabase(dbName));
-
-      ConfigureServices(services);
+          options.UseSqlServer(Configuration
+              .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+      _isDbContextAdded = true;
     }
 
-    public void ConfigureServices(IServiceCollection services)
+    // configure Stripe
+    string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
+    services.AddStripeServices(stripeApiKey);
+
+    services.AddDailyCheckServices();
+
+    ConfigureServices(services);
+  }
+
+  public void ConfigureTestingServices(IServiceCollection services)
+  {
+    string dbName = Guid.NewGuid().ToString();
+
+    services.AddDbContext<AppDbContext>(options =>
+      options.UseInMemoryDatabase(dbName));
+
+    ConfigureServices(services);
+  }
+
+  public void ConfigureServices(IServiceCollection services)
+  {
+    services.Configure<CookiePolicyOptions>(options =>
     {
-      services.Configure<CookiePolicyOptions>(options =>
-      {
-        options.CheckConsentNeeded = context => true;
-        options.MinimumSameSitePolicy = SameSiteMode.None;
-      });
+      options.CheckConsentNeeded = context => true;
+      options.MinimumSameSitePolicy = SameSiteMode.None;
+    });
 
-      services.AddLogging();
+    services.AddLogging();
 
-      services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-      services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
-      services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
-      services.Configure<SubscriptionPlanOptions>(Configuration.GetSection("SubscriptionPlanOptions"));
-      services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+    services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
+    services.Configure<DiscordWebhookUrls>(Configuration.GetSection("DiscordWebhookUrls"));
+    services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
+    services.Configure<SubscriptionPlanOptions>(Configuration.GetSection("SubscriptionPlanOptions"));
+    services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
 
-      // TODO: Consider changing to check services collection for dbContext
-      // See: https://stackoverflow.com/a/49377724/13729
+    // TODO: Consider changing to check services collection for dbContext
+    // See: https://stackoverflow.com/a/49377724/13729
 
-      if (!services.Any(x => x.ServiceType == typeof(AppDbContext)))
-      {
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration
-                .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
-      }
-      services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-
-      services.AddAutoMapper(typeof(Startup).Assembly);
-      services.AddMediatR(typeof(Startup).Assembly);
-
-      services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
-
-      services.AddMemberSubscriptionServices();
-
-      services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
-      services.AddScoped<ICsvService, CsvService>();
-      services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
-      services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
-
-      services.AddScoped<IUserLookupService, UserLookupService>();
-      services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
-
-      // list services
-      services.Configure<ServiceConfig>(config =>
-      {
-        config.Services = new List<ServiceDescriptor>(services);
-        config.Path = "/allmyservices";
-      });
-
-      services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
-
-      services.AddMvc()
-        .AddControllersAsServices()
-        .AddRazorRuntimeCompilation();
-
-      services.AddSwaggerGen(c =>
-      {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-      });
-
-      services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
-    }
-
-    public void ConfigureContainer(ContainerBuilder builder)
+    if (!services.Any(x => x.ServiceType == typeof(AppDbContext)))
     {
-      string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
-      builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
+      services.AddDbContext<AppDbContext>(options =>
+          options.UseSqlServer(Configuration
+              .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+    }
+    services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+    services.AddAutoMapper(typeof(Startup).Assembly);
+    services.AddMediatR(typeof(Startup).Assembly);
+
+    services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+
+    services.AddMemberSubscriptionServices();
+
+    services.AddScoped<IWebhookHandlerService, WebhookHandlerService>();
+    services.AddScoped<ICsvService, CsvService>();
+    services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
+    services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
+
+    services.AddScoped<IUserLookupService, UserLookupService>();
+    services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
+
+    // list services
+    services.Configure<ServiceConfig>(config =>
+    {
+      config.Services = new List<ServiceDescriptor>(services);
+      config.Path = "/allmyservices";
+    });
+
+    services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
+
+    services.AddMvc()
+      .AddControllersAsServices()
+      .AddRazorRuntimeCompilation();
+
+    services.AddSwaggerGen(c =>
+    {
+      c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    });
+
+    services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+  }
+
+  public void ConfigureContainer(ContainerBuilder builder)
+  {
+    string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
+    builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
+  }
+
+  public void Configure(IApplicationBuilder app,
+      IWebHostEnvironment env,
+      AppDbContext migrationContext)
+  {
+    if (env.EnvironmentName == "Development")
+    {
+      app.UseDeveloperExceptionPage();
+      app.UseShowAllServicesMiddleware();
+    }
+    else
+    {
+      app.UseExceptionHandler("/Home/Error");
+      app.UseHsts();
     }
 
-    public void Configure(IApplicationBuilder app,
-        IWebHostEnvironment env,
-        AppDbContext migrationContext)
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+    //app.UseCookiePolicy();
+
+    app.UseRouting();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    if (env.EnvironmentName == "Development")
     {
-      if (env.EnvironmentName == "Development")
+      app.UseSwagger();
+      app.UseSwaggerUI(c =>
       {
-        app.UseDeveloperExceptionPage();
-        app.UseShowAllServicesMiddleware();
-      }
-      else
-      {
-        app.UseExceptionHandler("/Home/Error");
-        app.UseHsts();
-      }
-
-      app.UseHttpsRedirection();
-      app.UseStaticFiles();
-      //app.UseCookiePolicy();
-
-      app.UseRouting();
-
-      app.UseAuthentication();
-      app.UseAuthorization();
-
-      if (env.EnvironmentName == "Development")
-      {
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-          c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        });
-      }
-
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapRazorPages();
-        endpoints.MapDefaultControllerRoute();
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
       });
     }
+
+    app.UseEndpoints(endpoints =>
+    {
+      endpoints.MapRazorPages();
+      endpoints.MapDefaultControllerRoute();
+    });
   }
 }

@@ -1,9 +1,8 @@
-﻿namespace DevBetterWeb.Core.Interfaces
+﻿namespace DevBetterWeb.Core.Interfaces;
+
+public interface IPaymentHandlerPaymentIntent
 {
-  public interface IPaymentHandlerPaymentIntent
-  {
-    string CreatePaymentIntent(int orderAmount);
-    void UpdatePaymentIntent(string paymentIntentSecret, string customerId);
-    string GetClientSecret(string paymentIntentId);
-  }
+  string CreatePaymentIntent(int orderAmount);
+  void UpdatePaymentIntent(string paymentIntentSecret, string customerId);
+  string GetClientSecret(string paymentIntentId);
 }

@@ -1,13 +1,12 @@
-﻿using Ardalis.Specification;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Ardalis.Specification;
 
-namespace DevBetterWeb.Core.SharedKernel
+namespace DevBetterWeb.Core.SharedKernel;
+
+// This can be modified to BaseEntity<TId> to support multiple key types (e.g. Guid)
+public abstract class BaseEntity : IEntity<int>
 {
-    // This can be modified to BaseEntity<TId> to support multiple key types (e.g. Guid)
-    public abstract class BaseEntity : IEntity<int>
-    {
-        public int Id { get; set; }
+  public int Id { get; set; }
 
-        public List<BaseDomainEvent> Events = new List<BaseDomainEvent>();
-    }
+  public List<BaseDomainEvent> Events = new List<BaseDomainEvent>();
 }

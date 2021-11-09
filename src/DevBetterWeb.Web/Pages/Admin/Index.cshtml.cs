@@ -3,16 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages.Admin
-{
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
-  public class IndexModel : PageModel
-  {
-    public IndexModel(IWebHostEnvironment hostingEnvironment)
-    {
-      HostingEnvironment = hostingEnvironment;
-    }
+namespace DevBetterWeb.Web.Pages.Admin;
 
-    public IWebHostEnvironment HostingEnvironment { get; }
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+public class IndexModel : PageModel
+{
+  public IndexModel(IWebHostEnvironment hostingEnvironment)
+  {
+    HostingEnvironment = hostingEnvironment;
   }
+
+  public IWebHostEnvironment HostingEnvironment { get; }
 }

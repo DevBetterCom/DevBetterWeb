@@ -1,12 +1,11 @@
 ﻿using DevBetterWeb.Infrastructure.PaymentHandler;
 
-namespace DevBetterWeb.Infrastructure.Interfaces
+namespace DevBetterWeb.Infrastructure.Interfaces;
+
+public interface IPaymentHandlerEventService
 {
-  public interface IPaymentHandlerEventService
-  {
-    //string GetEventType(string json);
-    //string GetSubscriptionId(string json);
-    //string GetInvoiceId(string json);
-    PaymentHandlerEvent FromJson(string json);
-  }
+  //string GetEventType(string json);
+  //string GetSubscriptionId(string json);
+  //string GetInvoiceId(string json);
+  PaymentHandlerEvent FromJson(string json);
 }

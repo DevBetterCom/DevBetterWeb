@@ -1,15 +1,14 @@
 ﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Specs
+namespace DevBetterWeb.Core.Specs;
+
+public class BooksByMemberReadCountWithMembersWhoHaveReadSpec : Specification<Book>
 {
-  public class BooksByMemberReadCountWithMembersWhoHaveReadSpec : Specification<Book>
+  public BooksByMemberReadCountWithMembersWhoHaveReadSpec()
   {
-    public BooksByMemberReadCountWithMembersWhoHaveReadSpec()
-    {
-      Query.OrderByDescending(book => book.MembersWhoHaveRead!.Count)
-         .ThenBy(book => book.Title ?? "");
-      Query.Include(book => book.MembersWhoHaveRead);
-    }
+    Query.OrderByDescending(book => book.MembersWhoHaveRead!.Count)
+       .ThenBy(book => book.Title ?? "");
+    Query.Include(book => book.MembersWhoHaveRead);
   }
 }

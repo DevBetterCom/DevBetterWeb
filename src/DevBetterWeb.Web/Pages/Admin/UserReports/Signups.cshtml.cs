@@ -1,75 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using DevBetterWeb.Core.Specs;
-using Microsoft.AspNetCore.Authorization;
-using DevBetterWeb.Core;
 
-namespace DevBetterWeb.Web.Pages.Admin.UserReports
+namespace DevBetterWeb.Web.Pages.Admin.UserReports;
+
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+public class SignupsModel : PageModel
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
-  public class SignupsModel : PageModel
+  private static readonly DateTimeRange defaultRange = new DateTimeRange(DateTime.Today.AddDays(-29), DateTime.Today.AddDays(-1));
+
+  public List<BillingActivity> SubscribedBillingActivities { get; set; } = new List<BillingActivity>();
+
+  private readonly IRepository<BillingActivity> _repository;
+  private readonly ICsvService _csvService;
+
+  [BindProperty]
+  public ReportsDatesModel SignupReportsDatesModel { get; set; }
+
+  public SignupsModel(IRepository<BillingActivity> repository,
+    ICsvService csvService)
   {
-    private static readonly DateTimeRange defaultRange = new DateTimeRange(DateTime.Today.AddDays(-29), DateTime.Today.AddDays(-1));
+    _repository = repository;
+    _csvService = csvService;
+  }
 
-    public List<BillingActivity> SubscribedBillingActivities { get; set; } = new List<BillingActivity>();
+  public async Task<IActionResult> OnGetAsync()
+  {
+    SignupReportsDatesModel = new ReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
+    DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
 
-    private readonly IRepository<BillingActivity> _repository;
-    private readonly ICsvService _csvService;
+    var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
+    SubscribedBillingActivities = await _repository.ListAsync(spec);
 
-    [BindProperty]
-    public ReportsDatesModel SignupReportsDatesModel { get; set; }
+    return Page();
+  }
 
-    public SignupsModel(IRepository<BillingActivity> repository,
-      ICsvService csvService)
+  public async Task OnPostRefresh()
+  {
+    DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
+
+    var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
+    SubscribedBillingActivities = await _repository.ListAsync(spec);
+  }
+
+  public async Task<IActionResult> OnPostDownload()
+  {
+    byte[] array = new byte[] { 0 };
+
+    DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
+
+    var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
+    SubscribedBillingActivities = await _repository.ListAsync(spec);
+
+
+    if (SubscribedBillingActivities.Count != 0)
     {
-      _repository = repository;
-      _csvService = csvService;
+      array = _csvService.GetCsvByteArrayFromList(SubscribedBillingActivities);
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    return new FileContentResult(array, "text/csv")
     {
-      SignupReportsDatesModel = new ReportsDatesModel(defaultRange.StartDate, (DateTime)defaultRange.EndDate!);
-      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
-
-      var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
-      SubscribedBillingActivities = await _repository.ListAsync(spec);
-
-      return Page();
-    }
-
-    public async Task OnPostRefresh()
-    {
-      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
-
-      var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
-      SubscribedBillingActivities = await _repository.ListAsync(spec);
-    }
-
-    public async Task<IActionResult> OnPostDownload()
-    {
-      byte[] array = new byte[] { 0 };
-
-      DateTimeRange dates = new DateTimeRange((DateTime)SignupReportsDatesModel.StartDate!, SignupReportsDatesModel.EndDate);
-
-      var spec = new BillingActivitiesByDateTimeRangeAndSubscribedVerbSpec(dates);
-      SubscribedBillingActivities = await _repository.ListAsync(spec);
-
-
-      if (SubscribedBillingActivities.Count != 0)
-      {
-        array = _csvService.GetCsvByteArrayFromList(SubscribedBillingActivities);
-      }
-
-      return new FileContentResult(array, "text/csv")
-      {
-        FileDownloadName = "SignupsList-" + DateTime.Today.ToString("yyyy-MM-dd") + ".csv"
-      };
-    }
+      FileDownloadName = "SignupsList-" + DateTime.Today.ToString("yyyy-MM-dd") + ".csv"
+    };
   }
 }

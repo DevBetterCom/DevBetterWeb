@@ -1,87 +1,86 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.ValueObjects;
+using DevBetterWeb.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
-using DevBetterWeb.Core;
-using Microsoft.AspNetCore.Authorization;
-using DevBetterWeb.Core.ValueObjects;
 
-namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans
+namespace DevBetterWeb.Web.Pages.Admin.SubscriptionPlans;
+
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+
+public class EditModel : PageModel
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+  private readonly AppDbContext _context;
 
-  public class EditModel : PageModel
+  public EditModel(AppDbContext context)
   {
-    private readonly AppDbContext _context;
+    _context = context;
+  }
 
-    public EditModel(AppDbContext context)
+  [BindProperty]
+  public MemberSubscriptionPlanDetails? Details { get; set; }
+  public MemberSubscriptionPlan? MemberSubscriptionPlan { get; set; }
+
+  public async Task<IActionResult> OnGetAsync(int? id)
+  {
+    if (id == null)
     {
-      _context = context;
+      return NotFound();
     }
 
-    [BindProperty]
-    public MemberSubscriptionPlanDetails? Details { get; set; }
-    public MemberSubscriptionPlan? MemberSubscriptionPlan { get; set; }
+    MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    if (MemberSubscriptionPlan == null)
     {
-      if (id == null)
-      {
-        return NotFound();
-      }
+      return NotFound();
+    }
 
-      MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
+    Details = MemberSubscriptionPlan.Details;
 
-      if (MemberSubscriptionPlan == null)
-      {
-        return NotFound();
-      }
+    return Page();
+  }
 
-      Details = MemberSubscriptionPlan.Details;
-
+  // To protect from overposting attacks, enable the specific properties you want to bind to.
+  // For more details, see https://aka.ms/RazorPagesCRUD.
+  public async Task<IActionResult> OnPostAsync(int? id)
+  {
+    if (!ModelState.IsValid)
+    {
       return Page();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
-    public async Task<IActionResult> OnPostAsync(int? id)
+    MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
+
+    MemberSubscriptionPlan.Details = Details!;
+
+    _context.Attach(MemberSubscriptionPlan).State = EntityState.Modified;
+
+    try
     {
-      if (!ModelState.IsValid)
+      await _context.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+      if (!MemberSubscriptionPlanExists(MemberSubscriptionPlan!.Id))
       {
-        return Page();
+        return NotFound();
       }
-
-      MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
-
-      MemberSubscriptionPlan.Details = Details!;
-
-      _context.Attach(MemberSubscriptionPlan).State = EntityState.Modified;
-
-      try
+      else
       {
-        await _context.SaveChangesAsync();
+        throw;
       }
-      catch (DbUpdateConcurrencyException)
-      {
-        if (!MemberSubscriptionPlanExists(MemberSubscriptionPlan!.Id))
-        {
-          return NotFound();
-        }
-        else
-        {
-          throw;
-        }
-      }
-
-      return RedirectToPage("./Index");
     }
 
-    private bool MemberSubscriptionPlanExists(int id)
-    {
-      return _context.MemberSubscriptionPlan!.Any(e => e.Id == id);
-    }
+    return RedirectToPage("./Index");
+  }
+
+  private bool MemberSubscriptionPlanExists(int id)
+  {
+    return _context.MemberSubscriptionPlan!.Any(e => e.Id == id);
   }
 }
