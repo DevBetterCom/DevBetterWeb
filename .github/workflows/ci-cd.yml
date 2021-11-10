@@ -82,7 +82,7 @@ jobs:
         id: publish_webapp
         shell: pwsh
         run: |
-          dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --self-contained -r win-x32 --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
+          dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --self-contained -r win-x86 --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
 
       - name: Upload build artifacts
         id: upload_build_artifacts
