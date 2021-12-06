@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IMemberLookupService
 {
-  public interface IMemberLookupService
-  {
-    Task<Member> GetMemberByEmailAsync(string memberEmail);
-  }
+  Task<Member> GetMemberByEmailAsync(string memberEmail);
 }

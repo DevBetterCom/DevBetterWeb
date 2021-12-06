@@ -1,41 +1,40 @@
 ﻿using Xunit;
 using static DevBetterWeb.Web.Pages.User.IndexModel;
 
-namespace DevBetterWeb.Tests.Web
+namespace DevBetterWeb.Tests.Web;
+
+public class MemberLinksDtoFromMemberEntity
 {
-  public class MemberLinksDtoFromMemberEntity
+  [Fact]
+  public void ReturnsInputYouTubeUrlIfContainsQuestionMark()
   {
-    [Fact]
-    public void ReturnsInputYouTubeUrlIfContainsQuestionMark()
-    {
-      var member = MemberHelpers.CreateWithDefaultConstructor();
+    var member = MemberHelpers.CreateWithDefaultConstructor();
 
-      string youtubeInput = "https://www.youtube.com/ardalis?";
+    string youtubeInput = "https://www.youtube.com/ardalis?";
 
-      member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
+    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
 
-      MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
+    MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
-      var result = dto.YouTubeUrl;
+    var result = dto.YouTubeUrl;
 
-      Assert.Equal(youtubeInput, result);
-    }
-
-    [Fact]
-    public void ReturnsAlteredYouTubeUrlIfContainsNoQuestionMark()
-    {
-      var member = MemberHelpers.CreateWithDefaultConstructor();
-
-      string youtubeInput = "https://www.youtube.com/ardalis";
-
-      member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
-
-      MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
-
-      var result = dto.YouTubeUrl;
-
-      Assert.Equal(youtubeInput + "?sub_confirmation=1", result);
-    }
-
+    Assert.Equal(youtubeInput, result);
   }
+
+  [Fact]
+  public void ReturnsAlteredYouTubeUrlIfContainsNoQuestionMark()
+  {
+    var member = MemberHelpers.CreateWithDefaultConstructor();
+
+    string youtubeInput = "https://www.youtube.com/ardalis";
+
+    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
+
+    MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
+
+    var result = dto.YouTubeUrl;
+
+    Assert.Equal(youtubeInput + "?sub_confirmation=1", result);
+  }
+
 }

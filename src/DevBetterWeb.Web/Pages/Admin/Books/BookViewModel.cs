@@ -1,10 +1,9 @@
-﻿namespace DevBetterWeb.Web.Pages.Admin.Books
+﻿namespace DevBetterWeb.Web.Pages.Admin.Books;
+
+public class BookViewModel
 {
-  public class BookViewModel
-  {
-    public string? Title { get; set; }
-    public string? Author { get; set; }
-    public string? Details { get; set; }
-    public string? PurchaseUrl { get; set; }
-  }
+  public string? Title { get; set; }
+  public string? Author { get; set; }
+  public string? Details { get; set; }
+  public string? PurchaseUrl { get; set; }
 }

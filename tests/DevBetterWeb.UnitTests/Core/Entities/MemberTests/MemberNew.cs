@@ -1,43 +1,42 @@
-﻿using DevBetterWeb.Core.Events;
-using System.Linq;
+﻿using System.Linq;
+using DevBetterWeb.Core.Events;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests
+namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
+
+public class MemberNew
 {
-  public class MemberNew
-    {
-        [Fact]
-        public void IsPrivateForDefaultConstructor()
-        {
-            var member = MemberHelpers.CreateWithDefaultConstructor();
+  [Fact]
+  public void IsPrivateForDefaultConstructor()
+  {
+    var member = MemberHelpers.CreateWithDefaultConstructor();
 
-            Assert.NotNull(member);
-        }
+    Assert.NotNull(member);
+  }
 
-        [Fact]
-        public void CreatesNoEventsWithDefaultConstructor()
-        {
-            var member = MemberHelpers.CreateWithDefaultConstructor();
+  [Fact]
+  public void CreatesNoEventsWithDefaultConstructor()
+  {
+    var member = MemberHelpers.CreateWithDefaultConstructor();
 
-            Assert.Empty(member.Events);
-        }
+    Assert.Empty(member.Events);
+  }
 
-        [Fact]
-        public void RequiresUserIdForInternalUsage()
-        {
-            var member = MemberHelpers.CreateWithInternalConstructor();
+  [Fact]
+  public void RequiresUserIdForInternalUsage()
+  {
+    var member = MemberHelpers.CreateWithInternalConstructor();
 
-            Assert.Equal(MemberHelpers.TEST_USER_ID, member.UserId);
-        }
+    Assert.Equal(MemberHelpers.TEST_USER_ID, member.UserId);
+  }
 
-        [Fact]
-        public void WithUserIdRecordsNewMemberCreatedEvent()
-        {
-            var member = MemberHelpers.CreateWithInternalConstructor();
+  [Fact]
+  public void WithUserIdRecordsNewMemberCreatedEvent()
+  {
+    var member = MemberHelpers.CreateWithInternalConstructor();
 
-            var eventCreated = (NewMemberCreatedEvent)member.Events.First();
+    var eventCreated = (NewMemberCreatedEvent)member.Events.First();
 
-            Assert.Same(member, eventCreated.Member);
-        }
-    }
+    Assert.Same(member, eventCreated.Member);
+  }
 }

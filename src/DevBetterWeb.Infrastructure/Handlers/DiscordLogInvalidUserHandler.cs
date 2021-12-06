@@ -1,23 +1,22 @@
-﻿using DevBetterWeb.Core.Events;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
-using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Handlers
+namespace DevBetterWeb.Core.Handlers;
+
+public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
 {
-  public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
+  private readonly AdminUpdatesWebhook _webhook;
+
+  public DiscordLogInvalidUserHandler(AdminUpdatesWebhook webhook)
   {
-    private readonly AdminUpdatesWebhook _webhook;
+    _webhook = webhook;
+  }
 
-    public DiscordLogInvalidUserHandler(AdminUpdatesWebhook webhook)
-    {
-      _webhook = webhook;
-    }
-
-    public Task Handle(InvalidUserEvent domainEvent)
-    {
-      _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
-      return _webhook.Send();
-    }
+  public Task Handle(InvalidUserEvent domainEvent)
+  {
+    _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
+    return _webhook.Send();
   }
 }

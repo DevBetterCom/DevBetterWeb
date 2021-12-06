@@ -1,7 +1,6 @@
-﻿namespace DevBetterWeb.Core.Interfaces
+﻿namespace DevBetterWeb.Core.Interfaces;
+
+public interface IPaymentHandlerPaymentMethod
 {
-  public interface IPaymentHandlerPaymentMethod
-  {
-    void AttachPaymentMethodToCustomer(string paymentMethodId, string customerId);
-  }
+  void AttachPaymentMethodToCustomer(string paymentMethodId, string customerId);
 }

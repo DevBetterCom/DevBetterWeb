@@ -1,8 +1,7 @@
-﻿namespace DevBetterWeb.Web.Models
+﻿namespace DevBetterWeb.Web.Models;
+
+public class UpdateDescription
 {
-  public class UpdateDescription
-  {
-    public string VideoId { get; set; }
-    public string Description { get; set; }
-  }
+  public string? VideoId { get; set; }
+  public string? Description { get; set; }
 }

@@ -8,132 +8,131 @@ using DevBetterWeb.Infrastructure.Services;
 using Moq;
 using Xunit;
 
-namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests
+namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests;
+
+public class CheckIfAnyMemberGraduating
 {
-  public class CheckIfAnyMemberGraduating
+  private readonly Mock<IUserLookupService> userLookupService;
+  private readonly Mock<IRepository<Member>> repository;
+  private readonly Mock<IGraduationCommunicationsService> graduationCommunications;
+  private readonly Mock<IUserRoleManager> userManager;
+
+  private const int DAYS_IN_TWO_YEARS = 365 * 2;
+
+  private AlumniGraduationService service;
+
+  public CheckIfAnyMemberGraduating()
   {
-    private readonly Mock<IUserLookupService> userLookupService;
-    private readonly Mock<IRepository<Member>> repository;
-    private readonly Mock<IGraduationCommunicationsService> graduationCommunications;
-    private readonly Mock<IUserRoleManager> userManager;
+    userLookupService = new Mock<IUserLookupService>();
+    repository = new Mock<IRepository<Member>>();
+    graduationCommunications = new Mock<IGraduationCommunicationsService>();
+    userManager = new Mock<IUserRoleManager>();
+    service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
+  }
 
-    private const int DAYS_IN_TWO_YEARS = 365 * 2;
+  [Fact]
+  public async Task ReturnsEmptyListGivenEmptyList()
+  {
+    var testlist = new List<Member>();
 
-    private AlumniGraduationService service;
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-    public CheckIfAnyMemberGraduating()
-    {
-      userLookupService = new Mock<IUserLookupService>();
-      repository = new Mock<IRepository<Member>>();
-      graduationCommunications = new Mock<IGraduationCommunicationsService>();
-      userManager = new Mock<IUserRoleManager>();
-      service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
-    }
+    Assert.Empty(list);
+  }
 
-    [Fact]
-    public async Task ReturnsEmptyListGivenEmptyList()
-    {
-      var testlist = new List<Member>();
+  [Fact]
+  public async Task ReturnsSameListGivenListWithAllMembersGraduating()
+  {
+    var testlist = new List<Member>();
+    var graduatingMember = GetGraduatingMember();
+    testlist.Add(graduatingMember);
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
 
-      Assert.Empty(list);
-    }
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-    [Fact]
-    public async Task ReturnsSameListGivenListWithAllMembersGraduating()
-    {
-      var testlist = new List<Member>();
-      var graduatingMember = GetGraduatingMember();
-      testlist.Add(graduatingMember);
+    Assert.Contains(graduatingMember, list);
+  }
 
-      userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
+  [Fact]
+  public async Task ReturnsOnlyGraduatingMembersGivenListWithSomeMembersGraduating()
+  {
+    var testlist = new List<Member>();
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    var graduatingMember = GetGraduatingMember();
+    testlist.Add(graduatingMember);
 
-      Assert.Contains(graduatingMember, list);
-    }
+    var nonGraduatingMember = GetNonGraduatingMember();
+    testlist.Add(nonGraduatingMember);
 
-    [Fact]
-    public async Task ReturnsOnlyGraduatingMembersGivenListWithSomeMembersGraduating()
-    {
-      var testlist = new List<Member>();
+    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
 
-      var graduatingMember = GetGraduatingMember();
-      testlist.Add(graduatingMember);
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-      var nonGraduatingMember = GetNonGraduatingMember();
-      testlist.Add(nonGraduatingMember);
+    Assert.Contains(graduatingMember, list);
+    Assert.DoesNotContain(nonGraduatingMember, list);
+  }
 
-      userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
+  [Fact]
+  public async Task ReturnsEmptyListGivenListWithNoMembersGraduating()
+  {
+    var testlist = new List<Member>();
+    var nonGraduatingMember = GetNonGraduatingMember();
+    testlist.Add(nonGraduatingMember);
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-      Assert.Contains(graduatingMember, list);
-      Assert.DoesNotContain(nonGraduatingMember, list);
-    }
+    Assert.Empty(list);
+  }
 
-    [Fact]
-    public async Task ReturnsEmptyListGivenListWithNoMembersGraduating()
-    {
-      var testlist = new List<Member>();
-      var nonGraduatingMember = GetNonGraduatingMember();
-      testlist.Add(nonGraduatingMember);
+  [Fact]
+  public async Task ReturnsEmptyListGivenListOfAlumni()
+  {
+    var testlist = new List<Member>();
+    var alum = GetGraduatingMember();
+    testlist.Add(alum);
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(alum.UserId)).ReturnsAsync(true);
 
-      Assert.Empty(list);
-    }
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-    [Fact]
-    public async Task ReturnsEmptyListGivenListOfAlumni()
-    {
-      var testlist = new List<Member>();
-      var alum = GetGraduatingMember();
-      testlist.Add(alum);
+    Assert.Empty(list);
+  }
 
-      userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(alum.UserId)).ReturnsAsync(true);
+  [Fact]
+  public async Task ReturnsEmptyListGivenListWithMemberOneDayFromGraduation()
+  {
+    var testlist = new List<Member>();
+    var member = new Member();
+    var dates = new DateTimeRange(DateTime.Today.AddDays(DAYS_IN_TWO_YEARS * -1).AddDays(1), DateTime.Today.AddDays(1));
+    var nearGraduationSubscription = new MemberSubscription(member.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
+    member.MemberSubscriptions.Add(nearGraduationSubscription);
+    testlist.Add(member);
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(member.UserId)).ReturnsAsync(false);
 
-      Assert.Empty(list);
-    }
+    var list = await service.CheckIfAnyMemberGraduating(testlist);
 
-    [Fact]
-    public async Task ReturnsEmptyListGivenListWithMemberOneDayFromGraduation()
-    {
-      var testlist = new List<Member>();
-      var member = new Member();
-      var dates = new DateTimeRange(DateTime.Today.AddDays(DAYS_IN_TWO_YEARS * -1).AddDays(1), DateTime.Today.AddDays(1));
-      var nearGraduationSubscription = new MemberSubscription(member.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
-      member.MemberSubscriptions.Add(nearGraduationSubscription);
-      testlist.Add(member);
+    Assert.Empty(list);
+  }
 
-      userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(member.UserId)).ReturnsAsync(false);
+  private Member GetGraduatingMember()
+  {
+    var graduatingMember = new Member();
+    var dates = new DateTimeRange(DateTime.Now.AddYears(-2).AddDays(-1), DateTime.Now);
+    var graduationSubscription = new MemberSubscription(graduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
+    graduatingMember.MemberSubscriptions.Add(graduationSubscription);
 
-      var list = await service.CheckIfAnyMemberGraduating(testlist);
+    return graduatingMember;
+  }
 
-      Assert.Empty(list);
-    }
+  private Member GetNonGraduatingMember()
+  {
+    var nonGraduatingMember = new Member();
+    var dates = new DateTimeRange(DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1));
+    var nonGraduationSubscription = new MemberSubscription(nonGraduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
+    nonGraduatingMember.MemberSubscriptions.Add(nonGraduationSubscription);
 
-    private Member GetGraduatingMember()
-    {
-      var graduatingMember = new Member();
-      var dates = new DateTimeRange(DateTime.Now.AddYears(-2).AddDays(-1), DateTime.Now);
-      var graduationSubscription = new MemberSubscription(graduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
-      graduatingMember.MemberSubscriptions.Add(graduationSubscription);
-
-      return graduatingMember;
-    }
-
-    private Member GetNonGraduatingMember()
-    {
-      var nonGraduatingMember = new Member();
-      var dates = new DateTimeRange(DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1));
-      var nonGraduationSubscription = new MemberSubscription(nonGraduatingMember.Id, SubscriptionHelpers.TEST_MEMBER_PLAN_ID, dates);
-      nonGraduatingMember.MemberSubscriptions.Add(nonGraduationSubscription);
-
-      return nonGraduatingMember;
-    }
+    return nonGraduatingMember;
   }
 }

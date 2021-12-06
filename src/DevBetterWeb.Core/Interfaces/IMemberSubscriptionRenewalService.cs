@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IMemberSubscriptionRenewalService
 {
-  public interface IMemberSubscriptionRenewalService
-  {
-    Task ExtendMemberSubscription(string email, DateTime subscriptionEndDate);
-  }
+  Task ExtendMemberSubscription(string email, DateTime subscriptionEndDate);
 }

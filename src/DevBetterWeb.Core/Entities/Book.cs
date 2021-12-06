@@ -2,19 +2,18 @@
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
-namespace DevBetterWeb.Core.Entities
-{
-  public class Book : BaseEntity, IAggregateRoot
-  {
-    public string? Title { get; set; }
-    public string? Author { get; set; }
-    public string? Details { get; set; }
-    public string? PurchaseUrl { get; set; }
-    public List<Member>? MembersWhoHaveRead { get; set; } = new List<Member>();
+namespace DevBetterWeb.Core.Entities;
 
-    public override string ToString()
-    {
-      return Title + " by " + Author;
-    }
+public class Book : BaseEntity, IAggregateRoot
+{
+  public string? Title { get; set; }
+  public string? Author { get; set; }
+  public string? Details { get; set; }
+  public string? PurchaseUrl { get; set; }
+  public List<Member>? MembersWhoHaveRead { get; set; } = new List<Member>();
+
+  public override string ToString()
+  {
+    return Title + " by " + Author;
   }
 }

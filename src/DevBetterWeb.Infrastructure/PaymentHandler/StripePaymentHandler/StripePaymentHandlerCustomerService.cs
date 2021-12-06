@@ -2,69 +2,68 @@
 using DevBetterWeb.Infrastructure.Interfaces;
 using Stripe;
 
-namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler
+namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
+
+public class StripePaymentHandlerCustomerService : IPaymentHandlerCustomerService
 {
-  public class StripePaymentHandlerCustomerService : IPaymentHandlerCustomerService
+  private readonly CustomerService _customerService;
+
+  public StripePaymentHandlerCustomerService(CustomerService customerService)
   {
-    private readonly CustomerService _customerService;
+    _customerService = customerService;
+  }
 
-    public StripePaymentHandlerCustomerService(CustomerService customerService)
+  public PaymentHandlerCustomer CreateCustomer(string email)
+  {
+    var paymentHandlerCustomer = GetCustomerByEmail(email);
+    if (paymentHandlerCustomer != null)
     {
-      _customerService = customerService;
+      return paymentHandlerCustomer;
     }
 
-    public PaymentHandlerCustomer CreateCustomer(string email)
+    var customer = _customerService.Create(new CustomerCreateOptions
     {
-      var paymentHandlerCustomer = GetCustomerByEmail(email);
-      if (paymentHandlerCustomer != null)
-      {
-        return paymentHandlerCustomer;
-      }
+      Email = email.ToLower(),
+    });
 
-      var customer = _customerService.Create(new CustomerCreateOptions
-      {
-        Email = email.ToLower(),
-      });
+    return new PaymentHandlerCustomer(customer.Id, customer.Email);
+  }
 
-      return new PaymentHandlerCustomer(customer.Id, customer.Email);
+  public void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId)
+  {
+    var customerOptions = new CustomerUpdateOptions
+    {
+      InvoiceSettings = new CustomerInvoiceSettingsOptions
+      {
+        DefaultPaymentMethod = paymentMethodId,
+      },
+    };
+    _customerService.Update(customerId, customerOptions);
+  }
+
+  public PaymentHandlerCustomer GetCustomer(string customerId)
+  {
+    var customer = _customerService.Get(customerId);
+
+    return new PaymentHandlerCustomer(customer.Id, customer.Email);
+  }
+
+  public PaymentHandlerCustomer? GetCustomerByEmail(string email)
+  {
+    var options = new CustomerListOptions
+    {
+      Email = email.ToLower(),
+      Limit = 1,
+    };
+
+    StripeList<Customer> customers = _customerService.List(
+      options
+    );
+    if (customers.Data.Count > 0)
+    {
+      return new PaymentHandlerCustomer(customers.Data[0].Id, customers.Data[0].Email);
     }
 
-    public void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId)
-    {
-      var customerOptions = new CustomerUpdateOptions
-      {
-        InvoiceSettings = new CustomerInvoiceSettingsOptions
-        {
-          DefaultPaymentMethod = paymentMethodId,
-        },
-      };
-      _customerService.Update(customerId, customerOptions);
-    }
-
-    public PaymentHandlerCustomer GetCustomer(string customerId)
-    {
-      var customer = _customerService.Get(customerId);
-
-      return new PaymentHandlerCustomer(customer.Id, customer.Email);
-    }
-
-    public PaymentHandlerCustomer? GetCustomerByEmail(string email)
-    {
-      var options = new CustomerListOptions
-      {
-        Email = email.ToLower(),
-        Limit = 1,
-      };
-
-      StripeList<Customer> customers = _customerService.List(
-        options
-      );
-      if (customers.Data.Count > 0)
-      {
-        return new PaymentHandlerCustomer(customers.Data[0].Id, customers.Data[0].Email);
-      }
-
-      return null;
-    }
+    return null;
   }
 }

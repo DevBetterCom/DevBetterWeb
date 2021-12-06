@@ -1,11 +1,9 @@
-﻿using System.Text.Json.Serialization; 
-using System.Collections.Generic; 
-namespace DevBetterWeb.Vimeo.Models{ 
+﻿using System.Collections.Generic; 
+using System.Text.Json.Serialization;
+namespace DevBetterWeb.Vimeo.Models;
 
-    public class Uploader
-    {
-        [JsonPropertyName("pictures")]
-        public Pictures Pictures { get; set; }
-    }
-
+public class Uploader
+{
+  [JsonPropertyName("pictures")]
+  public Pictures Pictures { get; set; }
 }

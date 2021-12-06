@@ -1,28 +1,27 @@
-﻿using DevBetterWeb.Core.Entities;
-using System;
+﻿using System;
+using DevBetterWeb.Core.Entities;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Core.ArchiveVideoTests
+namespace DevBetterWeb.UnitTests.Core.ArchiveVideoTests;
+
+public class ArchiveVideoNew
 {
-  public class ArchiveVideoNew
-    {
-        [Fact]
-        public void InitializesListOfQuestions()
-        {
-            var video = new ArchiveVideo();
+  [Fact]
+  public void InitializesListOfQuestions()
+  {
+    var video = new ArchiveVideo();
 
-            Assert.NotNull(video.Questions);
-        }
+    Assert.NotNull(video.Questions);
+  }
 
-        [Theory]
-        [InlineData(2019,5,17, "2019-05-17")]
-        public void DateStringIsExpectedValue(int year, int month, int day, string output)
-        {
-            var inputDateTime = new DateTime(year, month, day);
+  [Theory]
+  [InlineData(2019, 5, 17, "2019-05-17")]
+  public void DateStringIsExpectedValue(int year, int month, int day, string output)
+  {
+    var inputDateTime = new DateTime(year, month, day);
 
-            string result = inputDateTime.ToString("yyyy-MM-dd");
+    string result = inputDateTime.ToString("yyyy-MM-dd");
 
-            Assert.Equal(output, result);
-        }
-    }
+    Assert.Equal(output, result);
+  }
 }

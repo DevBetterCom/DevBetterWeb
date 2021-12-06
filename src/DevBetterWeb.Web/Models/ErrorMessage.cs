@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace DevBetterWeb.Web.Models
+namespace DevBetterWeb.Web.Models;
+
+public class ErrorMessage
 {
-  public class ErrorMessage
-  {
-    [JsonProperty("message")]
-    public string? Message { get; set; }
-  }
+  [JsonProperty("message")]
+  public string? Message { get; set; }
 }

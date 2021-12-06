@@ -2,17 +2,16 @@
 using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
 
-namespace DevBetterWeb.Core.Events
-{
-  public class MemberAddressUpdatedEvent : BaseDomainEvent
-  {
-    public MemberAddressUpdatedEvent(Member member, Address? oldAddress)
-    {
-      Member = member;
-      OldAddress = oldAddress;
-    }
+namespace DevBetterWeb.Core.Events;
 
-    public Member Member { get; }
-    public Address? OldAddress { get; }
+public class MemberAddressUpdatedEvent : BaseDomainEvent
+{
+  public MemberAddressUpdatedEvent(Member member, Address? oldAddress)
+  {
+    Member = member;
+    OldAddress = oldAddress;
   }
+
+  public Member Member { get; }
+  public Address? OldAddress { get; }
 }

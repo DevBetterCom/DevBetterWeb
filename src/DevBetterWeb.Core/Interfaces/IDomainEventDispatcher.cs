@@ -1,10 +1,9 @@
-﻿using DevBetterWeb.Core.SharedKernel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.SharedKernel;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IDomainEventDispatcher
 {
-    public interface IDomainEventDispatcher
-    {
-        Task Dispatch(BaseDomainEvent domainEvent);
-    }
+  Task Dispatch(BaseDomainEvent domainEvent);
 }

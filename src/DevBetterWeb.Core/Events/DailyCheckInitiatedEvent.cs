@@ -1,9 +1,8 @@
 ﻿using DevBetterWeb.Core.SharedKernel;
 
-namespace DevBetterWeb.Core.Events
-{
-  public class DailyCheckInitiatedEvent : BaseDomainEvent
-  {
+namespace DevBetterWeb.Core.Events;
 
-  }
+public class DailyCheckInitiatedEvent : BaseDomainEvent
+{
+
 }
