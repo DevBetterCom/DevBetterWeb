@@ -1,15 +1,14 @@
-﻿using Ardalis.Specification;
+﻿using System;
+using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
-using System;
 
-namespace DevBetterWeb.Core.Specs
+namespace DevBetterWeb.Core.Specs;
+
+public class DailyCheckByDateSpec : Specification<DailyCheck>, ISingleResultSpecification
 {
-  public class DailyCheckByDateSpec : Specification<DailyCheck>, ISingleResultSpecification
+  public DailyCheckByDateSpec(DateTime date)
   {
-    public DailyCheckByDateSpec(DateTime date)
-    {
-      Query.Where(dc => dc.Date.Date.Equals(date.Date))
-        .Take(1);
-    }
+    Query.Where(dc => dc.Date.Date.Equals(date.Date))
+      .Take(1);
   }
 }

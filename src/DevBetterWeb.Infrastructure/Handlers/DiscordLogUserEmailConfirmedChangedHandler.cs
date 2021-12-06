@@ -3,21 +3,20 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 
-namespace DevBetterWeb.Infrastructure.Handlers
+namespace DevBetterWeb.Infrastructure.Handlers;
+
+public class DiscordLogUserEmailConfirmedChangedHandler : IHandle<UserEmailConfirmedChangedEvent>
 {
-  public class DiscordLogUserEmailConfirmedChangedHandler : IHandle<UserEmailConfirmedChangedEvent>
+  private readonly AdminUpdatesWebhook _webhook;
+
+  public DiscordLogUserEmailConfirmedChangedHandler(AdminUpdatesWebhook webhook)
   {
-    private readonly AdminUpdatesWebhook _webhook;
+    _webhook = webhook;
+  }
 
-    public DiscordLogUserEmailConfirmedChangedHandler(AdminUpdatesWebhook webhook)
-    {
-      _webhook = webhook;
-    }
-
-    public Task Handle(UserEmailConfirmedChangedEvent domainEvent)
-    {
-      _webhook.Content = $"For the user {domainEvent.EmailAddress} EmailConfirmed value has been changed to: {domainEvent.IsEmailConfirmed}";
-      return _webhook.Send();
-    }
+  public Task Handle(UserEmailConfirmedChangedEvent domainEvent)
+  {
+    _webhook.Content = $"For the user {domainEvent.EmailAddress} EmailConfirmed value has been changed to: {domainEvent.IsEmailConfirmed}";
+    return _webhook.Send();
   }
 }

@@ -1,29 +1,28 @@
 ﻿using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Tests
+namespace DevBetterWeb.Tests;
+
+public static class BookHelpers
 {
-  public static class BookHelpers
+  public static Book GetDefaultTestBook()
   {
-    public static Book GetDefaultTestBook()
+    return new Book
     {
-      return new Book
-      {
-        Title = "Book",
-        Author = "Ilyana Smith",
-        Details = "this is a book",
-        PurchaseUrl = "https://buyabook.com"
-      };
-    }
-    public static Book GetDefaultTestBookWithSpecifiedTitle(string title)
+      Title = "Book",
+      Author = "Ilyana Smith",
+      Details = "this is a book",
+      PurchaseUrl = "https://buyabook.com"
+    };
+  }
+  public static Book GetDefaultTestBookWithSpecifiedTitle(string title)
+  {
+    return new Book
     {
-      return new Book
-      {
-        Title = title,
-        Author = "Ilyana Smith",
-        Details = "this is a book",
-        PurchaseUrl = "https://buyabook.com"
-      };
-    }
+      Title = title,
+      Author = "Ilyana Smith",
+      Details = "this is a book",
+      PurchaseUrl = "https://buyabook.com"
+    };
   }
 }
 

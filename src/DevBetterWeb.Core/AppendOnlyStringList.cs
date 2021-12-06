@@ -1,25 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace DevBetterWeb.Core
+namespace DevBetterWeb.Core;
+
+public class AppendOnlyStringList : IEnumerable<string>
 {
-  public class AppendOnlyStringList : IEnumerable<string>
+  private List<string> _messages = new();
+
+  public IEnumerator<string> GetEnumerator()
   {
-    private List<string> _messages = new();
+    return _messages.GetEnumerator();
+  }
 
-    public IEnumerator<string> GetEnumerator()
-    {
-      return _messages.GetEnumerator();
-    }
+  public void Append(string message)
+  {
+    _messages.Add(message);
+  }
 
-    public void Append(string message)
-    {
-      _messages.Add(message);
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return _messages.GetEnumerator();
-    }
+  IEnumerator IEnumerable.GetEnumerator()
+  {
+    return _messages.GetEnumerator();
   }
 }

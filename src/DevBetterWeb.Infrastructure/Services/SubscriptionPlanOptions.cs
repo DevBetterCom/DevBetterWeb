@@ -1,7 +1,6 @@
-﻿namespace DevBetterWeb.Infrastructure.Services
+﻿namespace DevBetterWeb.Infrastructure.Services;
+
+public class SubscriptionPlanOptions
 {
-  public class SubscriptionPlanOptions
-  {
-    public int? expectedNumberOfSubscriptionPlansNotInPaymentProvider { get; set; }
-  }
+  public int? expectedNumberOfSubscriptionPlansNotInPaymentProvider { get; set; }
 }

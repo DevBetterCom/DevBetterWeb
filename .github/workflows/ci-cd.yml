@@ -56,7 +56,8 @@ jobs:
         id: setup_dotnet_core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.101
+          dotnet-version: '6.0.x'
+          include-prerelease: true
 
       - name: Checkout repository
         id: checkout_repo
@@ -81,7 +82,7 @@ jobs:
         id: publish_webapp
         shell: pwsh
         run: |
-          dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
+          dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --self-contained -r win-x86 --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
 
       - name: Upload build artifacts
         id: upload_build_artifacts

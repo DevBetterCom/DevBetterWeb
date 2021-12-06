@@ -1,18 +1,17 @@
 ﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Specs
+namespace DevBetterWeb.Core.Specs;
+
+public class ArchiveVideoWithQuestionsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
 {
-    public class ArchiveVideoWithQuestionsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
-    {
-        public ArchiveVideoWithQuestionsSpec(int archiveVideoId)
-        {
-            ArchiveVideoId = archiveVideoId;
+  public ArchiveVideoWithQuestionsSpec(int archiveVideoId)
+  {
+    ArchiveVideoId = archiveVideoId;
 
-            Query.Where(video => video.Id == archiveVideoId)
-                .Include(video => video.Questions);
-        }
+    Query.Where(video => video.Id == archiveVideoId)
+        .Include(video => video.Questions);
+  }
 
-        public int ArchiveVideoId { get; }
-    }
+  public int ArchiveVideoId { get; }
 }

@@ -1,14 +1,13 @@
-﻿using DevBetterWeb.Core.Interfaces;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
-using System.Threading.Tasks;
 
-namespace DevBetterWeb.Tests
+namespace DevBetterWeb.Tests;
+
+public class NoOpDomainEventDispatcher : IDomainEventDispatcher
 {
-    public class NoOpDomainEventDispatcher : IDomainEventDispatcher
-    {
-        public Task Dispatch(BaseDomainEvent domainEvent)
-        {
-            return Task.CompletedTask;
-        }
-    }
+  public Task Dispatch(BaseDomainEvent domainEvent)
+  {
+    return Task.CompletedTask;
+  }
 }

@@ -8,47 +8,46 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages.Admin.Books
+namespace DevBetterWeb.Web.Pages.Admin.Books;
+
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
+public class CreateModel : PageModel
 {
-  [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
-  public class CreateModel : PageModel
+  private readonly IRepository<Book> _bookRepository;
+
+  public CreateModel(IRepository<Book> bookRepository)
   {
-    private readonly IRepository<Book> _bookRepository;
+    _bookRepository = bookRepository;
+  }
 
-    public CreateModel(IRepository<Book> bookRepository)
-    {
-      _bookRepository = bookRepository;
-    }
+  public IActionResult OnGet()
+  {
+    return Page();
+  }
 
-    public IActionResult OnGet()
+  [BindProperty]
+  public BookViewModel? Book { get; set; }
+  public async Task<IActionResult> OnPostAsync()
+  {
+    if (!ModelState.IsValid)
     {
       return Page();
     }
+    if (Book == null) return Page();
 
-    [BindProperty]
-    public BookViewModel? Book { get; set; }
-    public async Task<IActionResult> OnPostAsync()
+    var bookEntity = new Book
     {
-      if (!ModelState.IsValid)
-      {
-        return Page();
-      }
-      if (Book == null) return Page();
+      Author = Book.Author,
+      Details = Book.Details,
+      PurchaseUrl = Book.PurchaseUrl,
+      Title = Book.Title
+    };
 
-      var bookEntity = new Book
-      {
-        Author = Book.Author,
-        Details = Book.Details,
-        PurchaseUrl = Book.PurchaseUrl,
-        Title = Book.Title
-      };
+    var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
+    bookEntity.Events.Add(bookAddedEvent);
 
-      var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
-      bookEntity.Events.Add(bookAddedEvent);
+    await _bookRepository.AddAsync(bookEntity);
 
-      await _bookRepository.AddAsync(bookEntity);
-
-      return RedirectToPage("./Index");
-    }
+    return RedirectToPage("./Index");
   }
 }

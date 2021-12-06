@@ -2,18 +2,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DevBetterWeb.Web.Pages.Checkout
+namespace DevBetterWeb.Web.Pages.Checkout;
+
+public class SuccessModel : PageModel
 {
-
-  public class SuccessModel : PageModel
+  public void OnGet()
   {
-    public void OnGet()
-    {
-      // membership flow starts!
+    // membership flow starts!
 
-      // create invite entity
+    // create invite entity
 
-      // send email via NewMemberEmailService
-    }
+    // send email via NewMemberEmailService
   }
 }

@@ -4,26 +4,25 @@ using DevBetterWeb.Vimeo.Tests.Builders;
 using Shouldly;
 using Xunit;
 
-namespace DevBetterWeb.Vimeo.Tests
+namespace DevBetterWeb.Vimeo.Tests;
+
+public class AccountDetailsTest
 {
-  public class AccountDetailsTest
+  private readonly AccountDetailsService _accountDetailsService;
+
+  public AccountDetailsTest()
   {
-    private readonly AccountDetailsService _accountDetailsService;
+    var httpService = HttpServiceBuilder.Build();
+    _accountDetailsService = AccountDetailsServiceBuilder.Build(httpService);
+  }
 
-    public AccountDetailsTest()
-    {
-      var httpService = HttpServiceBuilder.Build();
-      _accountDetailsService = AccountDetailsServiceBuilder.Build(httpService);
-    }
+  [Fact]
+  public async Task ReturnsAccountDetailsTest()
+  {
+    var user = await _accountDetailsService
+      .ExecuteAsync();
 
-    [Fact]
-    public async Task ReturnsAccountDetailsTest()
-    {
-      var user = await _accountDetailsService
-        .ExecuteAsync();
-
-      user.Data.ShouldNotBe(null);
-      user.Code.ShouldBe(System.Net.HttpStatusCode.OK);
-    }
+    user.Data.ShouldNotBe(null);
+    user.Code.ShouldBe(System.Net.HttpStatusCode.OK);
   }
 }

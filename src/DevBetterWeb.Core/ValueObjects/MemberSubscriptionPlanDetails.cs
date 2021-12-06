@@ -2,33 +2,32 @@
 using CSharpFunctionalExtensions;
 using DevBetterWeb.Core.Enums;
 
-namespace DevBetterWeb.Core.ValueObjects
+namespace DevBetterWeb.Core.ValueObjects;
+
+public class MemberSubscriptionPlanDetails : ValueObject
 {
-  public class MemberSubscriptionPlanDetails : ValueObject
+  public string Name { get; set; }
+  public decimal PricePerBillingPeriod { get; set; }
+  public BillingPeriod BillingPeriod { get; set; }
+
+  public MemberSubscriptionPlanDetails(string name, decimal pricePerBillingPeriod, BillingPeriod billingPeriod)
   {
-    public string Name { get; set; }
-    public decimal PricePerBillingPeriod { get; set; }
-    public BillingPeriod BillingPeriod { get; set; }
+    Name = name;
+    PricePerBillingPeriod = pricePerBillingPeriod;
+    BillingPeriod = billingPeriod;
+  }
 
-    public MemberSubscriptionPlanDetails(string name, decimal pricePerBillingPeriod, BillingPeriod billingPeriod)
-    {
-      Name = name;
-      PricePerBillingPeriod = pricePerBillingPeriod;
-      BillingPeriod = billingPeriod;
-    }
+  public MemberSubscriptionPlanDetails()
+  {
+    Name = "";
+    PricePerBillingPeriod = 0;
+    BillingPeriod = BillingPeriod.None;
+  }
 
-    public MemberSubscriptionPlanDetails()
-    {
-      Name = "";
-      PricePerBillingPeriod = 0;
-      BillingPeriod = BillingPeriod.None;
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-      yield return PricePerBillingPeriod;
-      yield return BillingPeriod;
-      yield return Name;
-    }
+  protected override IEnumerable<object> GetEqualityComponents()
+  {
+    yield return PricePerBillingPeriod;
+    yield return BillingPeriod;
+    yield return Name;
   }
 }

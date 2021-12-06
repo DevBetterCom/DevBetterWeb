@@ -14,7 +14,8 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.101
+        dotnet-version: '6.0.x'
+        include-prerelease: true
     - name: Build and Test with dotnet
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
     

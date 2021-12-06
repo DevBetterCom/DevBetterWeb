@@ -2,39 +2,38 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
-using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
+using Microsoft.Extensions.Logging;
 
-namespace DevBetterWeb.Vimeo.Services.VideoServices
+namespace DevBetterWeb.Vimeo.Services.VideoServices;
+
+public class ActiveTextTrackService : BaseAsyncApiCaller
+  .WithRequest<ActiveTextTrackRequest>
+  .WithResponse<bool>
 {
-  public class ActiveTextTrackService : BaseAsyncApiCaller
-    .WithRequest<ActiveTextTrackRequest>
-    .WithResponse<bool>
+  private readonly HttpService _httpService;
+  private readonly ILogger<ActiveTextTrackService> _logger;
+
+  public ActiveTextTrackService(HttpService httpService, ILogger<ActiveTextTrackService> logger)
   {
-    private readonly HttpService _httpService;
-    private readonly ILogger<ActiveTextTrackService> _logger;
+    _httpService = httpService;
+    _logger = logger;
+  }
 
-    public ActiveTextTrackService(HttpService httpService, ILogger<ActiveTextTrackService> logger)
+  public override async Task<HttpResponse<bool>> ExecuteAsync(ActiveTextTrackRequest request, CancellationToken cancellationToken = default)
+  {
+    try
     {
-      _httpService = httpService;
-      _logger = logger;
+      var activeTextTrack = new ActiveTextTrack(request.Active);
+      var response = await _httpService.HttpPatchWithoutResponseAsync(request.Uri, activeTextTrack);
+
+      return response;
     }
-
-    public override async Task<HttpResponse<bool>> ExecuteAsync(ActiveTextTrackRequest request, CancellationToken cancellationToken = default)
+    catch (Exception exception)
     {
-      try
-      {
-        var activeTextTrack = new ActiveTextTrack(request.Active);
-        var response = await _httpService.HttpPatchWithoutResponseAsync(request.Uri, activeTextTrack);
-
-        return response;
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<bool>.FromException(exception.Message);
-      }
+      _logger.LogError(exception);
+      return HttpResponse<bool>.FromException(exception.Message);
     }
   }
 }

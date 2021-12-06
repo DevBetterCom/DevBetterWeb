@@ -2,29 +2,28 @@
 using DevBetterWeb.Core.Interfaces;
 using Markdig;
 
-namespace DevBetterWeb.Infrastructure.Services
+namespace DevBetterWeb.Infrastructure.Services;
+
+public class MarkdigService : IMarkdownService
 {
-  public class MarkdigService : IMarkdownService
+  private readonly MarkdownPipeline _pipeline;
+
+  public MarkdigService()
   {
-    private readonly MarkdownPipeline _pipeline;
+    _pipeline = new MarkdownPipelineBuilder()
+      .UseAdvancedExtensions()
+      .UseBootstrap()
+      .Build();
+  }
 
-    public MarkdigService()
+  public string RenderHTMLFromMD(string? mdContent)
+  {
+    if (string.IsNullOrEmpty(mdContent))
     {
-      _pipeline = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions()
-        .UseBootstrap()
-        .Build();
+      return string.Empty;
     }
+    var result = Markdown.ToHtml(mdContent, _pipeline);
 
-    public string RenderHTMLFromMD(string? mdContent)
-    {
-      if (string.IsNullOrEmpty(mdContent))
-      {
-        return string.Empty;
-      }
-      var result = Markdown.ToHtml(mdContent, _pipeline);
-
-      return result;
-    }
+    return result;
   }
 }

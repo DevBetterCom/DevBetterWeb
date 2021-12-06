@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IMemberSubscriptionEndedAdminEmailService
 {
-  public interface IMemberSubscriptionEndedAdminEmailService
-  {
-    Task SendMemberSubscriptionEndedEmailAsync(string customerEmail);
-  }
+  Task SendMemberSubscriptionEndedEmailAsync(string customerEmail);
 }

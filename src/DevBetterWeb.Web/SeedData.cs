@@ -1,23 +1,23 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using System;
+using System.Linq;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Linq;
 
-namespace DevBetterWeb.Web
+namespace DevBetterWeb.Web;
+
+public static class SeedData
 {
-  public static class SeedData
+  public static void PopulateTestData(AppDbContext dbContext,
+    UserManager<ApplicationUser> userManager)
   {
-    public static void PopulateTestData(AppDbContext dbContext,
-      UserManager<ApplicationUser> userManager)
-    {
-      if (dbContext.ArchiveVideos!.Any()) return;
+    if (dbContext.ArchiveVideos!.Any()) return;
 
-      var vid1 = new ArchiveVideo()
-      {
-        Title = "Video One",
-        ShowNotes = @"
+    var vid1 = new ArchiveVideo()
+    {
+      Title = "Video One",
+      ShowNotes = @"
 # Video about using markdown in ASP.NET Core
 
 In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. 
@@ -33,52 +33,51 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 - [Steve's Blog](https://ardalis.com)
 - [Google](https://google.com)
 ",
-        DateCreated = new DateTime(2019, 3, 8),
-        VideoUrl = "2019-05-17-3.mp4"
-      };
-      var vid2 = new ArchiveVideo()
-      {
-        Title = "Video Two",
-        DateCreated = new DateTime(2019, 3, 15)
-      };
-      var questionA = new Question()
-      {
-        QuestionText = "How do I A?",
-        TimestampSeconds = 30
-      };
-      var questionB = new Question()
-      {
-        QuestionText = "How do I B?",
-        TimestampSeconds = 245
-      };
-      vid1.Questions.Add(questionA);
-      vid1.Questions.Add(questionB);
-
-      dbContext.ArchiveVideos!.Add(vid1);
-      dbContext.ArchiveVideos.Add(vid2);
-
-      dbContext.Books!.Add(new Book
-      {
-        Author = "Steve Smith",
-        Title = "ASP.NET By Example",
-        PurchaseUrl = "https://ardalis.com",
-        Details = "A classic."
-      });
-      dbContext.SaveChanges();
-
-      AddMembers(dbContext, userManager);
-
-    }
-
-    private static void AddMembers(AppDbContext dbContext,
-      UserManager<ApplicationUser> userManager)
+      DateCreated = new DateTime(2019, 3, 8),
+      VideoUrl = "2019-05-17-3.mp4"
+    };
+    var vid2 = new ArchiveVideo()
     {
-      var regularUser = userManager.FindByNameAsync("demouser@microsoft.com").GetAwaiter().GetResult();
+      Title = "Video Two",
+      DateCreated = new DateTime(2019, 3, 15)
+    };
+    var questionA = new Question()
+    {
+      QuestionText = "How do I A?",
+      TimestampSeconds = 30
+    };
+    var questionB = new Question()
+    {
+      QuestionText = "How do I B?",
+      TimestampSeconds = 245
+    };
+    vid1.Questions.Add(questionA);
+    vid1.Questions.Add(questionB);
 
-      var member = Member.SeedData(regularUser.Id, "Demo", "User");
-      dbContext.Members.Add(member);
-      dbContext.SaveChanges();
+    dbContext.ArchiveVideos!.Add(vid1);
+    dbContext.ArchiveVideos.Add(vid2);
 
-    }
+    dbContext.Books!.Add(new Book
+    {
+      Author = "Steve Smith",
+      Title = "ASP.NET By Example",
+      PurchaseUrl = "https://ardalis.com",
+      Details = "A classic."
+    });
+    dbContext.SaveChanges();
+
+    AddMembers(dbContext, userManager);
+
+  }
+
+  private static void AddMembers(AppDbContext dbContext,
+    UserManager<ApplicationUser> userManager)
+  {
+    var regularUser = userManager.FindByNameAsync("demouser@microsoft.com").GetAwaiter().GetResult();
+
+    var member = Member.SeedData(regularUser.Id, "Demo", "User");
+    dbContext.Members.Add(member);
+    dbContext.SaveChanges();
+
   }
 }

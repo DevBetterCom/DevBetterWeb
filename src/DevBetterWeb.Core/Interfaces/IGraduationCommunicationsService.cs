@@ -1,10 +1,9 @@
-﻿using DevBetterWeb.Core.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IGraduationCommunicationsService
 {
-  public interface IGraduationCommunicationsService
-  {
-    Task SendGraduationCommunications(Member member);
-  }
+  Task SendGraduationCommunications(Member member);
 }

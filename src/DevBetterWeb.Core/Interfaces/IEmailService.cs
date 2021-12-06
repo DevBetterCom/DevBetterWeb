@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevBetterWeb.Core.Interfaces
+namespace DevBetterWeb.Core.Interfaces;
+
+public interface IEmailService
 {
-  public interface IEmailService
-  {
-    Task SendEmailAsync(string email, string subject, string message);
-  }
+  Task SendEmailAsync(string email, string subject, string message);
 }

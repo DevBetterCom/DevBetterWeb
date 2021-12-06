@@ -1,18 +1,15 @@
-﻿using System.Text.Json.Serialization;
-using System.Collections.Generic;
-namespace DevBetterWeb.Vimeo.Models
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+namespace DevBetterWeb.Vimeo.Models;
+
+public class AvailableChannels
 {
+  [JsonPropertyName("options")]
+  public List<string> Options { get; set; }
 
-  public class AvailableChannels
-  {
-    [JsonPropertyName("options")]
-    public List<string> Options { get; set; }
+  [JsonPropertyName("total")]
+  public int Total { get; set; }
 
-    [JsonPropertyName("total")]
-    public int Total { get; set; }
-
-    [JsonPropertyName("uri")]
-    public string Uri { get; set; }
-  }
-
+  [JsonPropertyName("uri")]
+  public string Uri { get; set; }
 }

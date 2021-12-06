@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Net;
 using Ardalis.ApiClient;
-using Microsoft.Extensions.Logging;
 using DevBetterWeb.Vimeo.Extensions;
+using Microsoft.Extensions.Logging;
 
-namespace DevBetterWeb.Vimeo.Services.UserServices
+namespace DevBetterWeb.Vimeo.Services.UserServices;
+
+public class LoginService : BaseApiCaller
+  .WithRequest<string>
+  .WithResponse<bool>
 {
-  public class LoginService : BaseApiCaller
-    .WithRequest<string>
-    .WithResponse<bool>
+  private readonly HttpService _httpService;
+  private readonly ILogger<LoginService> _logger;
+
+  public LoginService(HttpService httpService, ILogger<LoginService> logger)
   {
-    private readonly HttpService _httpService;
-    private readonly ILogger<LoginService> _logger;
+    _httpService = httpService;
+    _logger = logger;
+  }
 
-    public LoginService(HttpService httpService, ILogger<LoginService> logger)
+  public override HttpResponse<bool> Execute(string token)
+  {
+    try
     {
-      _httpService = httpService;
-      _logger = logger;
+      _httpService.SetAuthorization($"bearer {token}");
+
+      return HttpResponse<bool>.FromHttpResponseMessage(true, HttpStatusCode.OK);
     }
-
-    public override HttpResponse<bool> Execute(string token)
-    { 
-      try
-      {
-        _httpService.SetAuthorization($"bearer {token}");
-
-        return HttpResponse<bool>.FromHttpResponseMessage(true, HttpStatusCode.OK);
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<bool>.FromException(exception.Message);
-      }
+    catch (Exception exception)
+    {
+      _logger.LogError(exception);
+      return HttpResponse<bool>.FromException(exception.Message);
     }
   }
 }

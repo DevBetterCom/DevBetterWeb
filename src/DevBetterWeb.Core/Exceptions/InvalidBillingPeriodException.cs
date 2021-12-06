@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace DevBetterWeb.Core.Exceptions
+namespace DevBetterWeb.Core.Exceptions;
+
+[Serializable]
+public class InvalidBillingPeriodException : Exception
 {
-  [Serializable]
-  public class InvalidBillingPeriodException : Exception
+  public InvalidBillingPeriodException()
   {
-    public InvalidBillingPeriodException()
-    {
-    }
+  }
 
-    public InvalidBillingPeriodException(string? message) : base(message)
-    {
-    }
+  public InvalidBillingPeriodException(string? message) : base(message)
+  {
+  }
 
-    public InvalidBillingPeriodException(string? message, Exception? innerException) : base(message, innerException)
-    {
-    }
+  public InvalidBillingPeriodException(string? message, Exception? innerException) : base(message, innerException)
+  {
+  }
 
-    protected InvalidBillingPeriodException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
+  protected InvalidBillingPeriodException(SerializationInfo info, StreamingContext context) : base(info, context)
+  {
   }
 }
