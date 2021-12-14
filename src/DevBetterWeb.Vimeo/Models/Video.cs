@@ -58,8 +58,8 @@ public class Video
   [JsonPropertyName("embed")]
   public Embed Embed { get; set; }
 
-  [JsonPropertyName("files")]
-  public Files Files { get; set; }
+  //[JsonPropertyName("files")]
+  //public Files Files { get; set; }
 
   [JsonPropertyName("has_audio")]
   public bool HasAudio { get; set; }
