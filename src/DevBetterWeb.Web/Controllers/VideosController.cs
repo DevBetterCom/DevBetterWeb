@@ -52,12 +52,14 @@ public class VideosController : Controller
   {
     var draw = dataTableParameterModel.Draw;
     var length = dataTableParameterModel.Length;
-    int pageSize = length != null ? Convert.ToInt32(length) : 0;
+    int pageSize = length != null ? Convert.ToInt32(length) : 20;
     var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
 
-    var spec = new ArchiveVideoByPageSpec(startIndex, pageSize);
-    var totalRecords = await _repository.CountAsync();
-    var archiveVideos = await _repository.ListAsync(spec);
+    var filterSpec = new ArchiveVideoFilteredSpec(dataTableParameterModel.Search);
+    var totalRecords = await _repository.CountAsync(filterSpec);
+
+    var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search);
+    var archiveVideos = await _repository.ListAsync(pagedSpec);
     var archiveVideosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);
 
     var jsonData = new { draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
