@@ -10,7 +10,7 @@ namespace DevBetterWeb.Web.Services;
 
 public class StartupNotificationService : IHostedService
 {
-  private static bool _notificationSent = false;
+  //private static bool _notificationSent = false;
   private readonly IDomainEventDispatcher _dispatcher;
   private readonly ILogger<StartupNotificationService> _logger;
 
@@ -24,11 +24,11 @@ public class StartupNotificationService : IHostedService
   public async Task StartAsync(CancellationToken cancellationToken)
   {
     _logger.LogInformation("StartupNotificationService.StartAsync called");
-    if (!_notificationSent || true)
-    {
-      await _dispatcher.Dispatch(new AppStartedEvent(DateTime.Now));
-      _notificationSent = true;
-    }
+    //if (!_notificationSent)
+    //{
+    await _dispatcher.Dispatch(new AppStartedEvent(DateTime.Now));
+    //  _notificationSent = true;
+    //}
   }
 
   public Task StopAsync(CancellationToken cancellationToken)
