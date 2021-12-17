@@ -10,7 +10,6 @@ using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Web.Controllers;
 using DevBetterWeb.Web.Models;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
@@ -50,10 +49,13 @@ public class Startup
     }
 
     // configure Stripe
-    string stripeApiKey = Configuration.GetSection("StripeOptions").GetSection("stripeSecretKey").Value;
+    string stripeApiKey = Configuration
+      .GetSection("StripeOptions")
+      .GetSection("stripeSecretKey").Value;
     services.AddStripeServices(stripeApiKey);
 
     services.AddDailyCheckServices();
+    services.AddStartupNotificationService();
 
     ConfigureServices(services);
   }
@@ -95,8 +97,9 @@ public class Startup
     }
     services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-    services.AddAutoMapper(typeof(Startup).Assembly);
-    services.AddMediatR(typeof(Startup).Assembly);
+    var webProjectAssembly = typeof(Startup).Assembly;
+    services.AddAutoMapper(webProjectAssembly);
+    services.AddMediatR(webProjectAssembly);
 
     services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
 
@@ -138,8 +141,7 @@ public class Startup
   }
 
   public void Configure(IApplicationBuilder app,
-      IWebHostEnvironment env,
-      AppDbContext migrationContext)
+      IWebHostEnvironment env)
   {
     if (env.EnvironmentName == "Development")
     {

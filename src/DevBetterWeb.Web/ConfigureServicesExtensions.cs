@@ -32,6 +32,11 @@ public static class ConfigureServicesExtensions
     services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
   }
 
+  public static void AddStartupNotificationService(this IServiceCollection services)
+  {
+    services.AddHostedService<StartupNotificationService>();
+  }
+
   public static void AddMemberSubscriptionServices(this IServiceCollection services)
   {
     services.AddScoped<INewMemberService, NewMemberService>();
