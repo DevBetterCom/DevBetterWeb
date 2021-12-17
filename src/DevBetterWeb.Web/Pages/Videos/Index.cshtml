@@ -85,6 +85,11 @@
 
 <h3>Recorded Coaching Sessions</h3>
 
+<p>
+    Search: <input type="text" name="SearchString" id="SearchString" />
+    <button type="button" onclick="return refreshMembersVideos(0);">Search</button>
+</p>
+
 <div asp-authorize asp-roles="Administrators,Members,Alumni">
 	<div id="members-videos-list" class="row">
 	</div>		
@@ -110,7 +115,7 @@
         if (userRole) {
             $.ajax({
                 type: "POST",
-                url: "/videos/list",
+                url: "/videos/list?search=" + $("#SearchString").val(),
                 data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString() },
                 dataType: "json",
                 success: function (videosReponse) {

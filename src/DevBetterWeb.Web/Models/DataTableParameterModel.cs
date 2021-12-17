@@ -23,4 +23,5 @@ public class DataTableParameterModel
   /// </summary>
   public string? Length { get; set; }
 
+  public string? Search { get; set; }
 }
