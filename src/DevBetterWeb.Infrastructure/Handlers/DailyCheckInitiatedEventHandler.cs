@@ -8,23 +8,6 @@ using DevBetterWeb.Infrastructure.DiscordWebooks;
 
 namespace DevBetterWeb.Core.Handlers;
 
-public class AppStartedEventHandler : IHandle<AppStartedEvent>
-{
-  private readonly AdminUpdatesWebhook _webhook;
-
-  public AppStartedEventHandler(AdminUpdatesWebhook webhook)
-  {
-    _webhook = webhook;
-  }
-  
-  public async Task Handle(AppStartedEvent domainEvent)
-  {
-    var message = $"DevBetter.com web app started at {domainEvent.StartDateTime}.";
-    _webhook.Content = message;
-    await _webhook.Send();
-  }
-}
-
 public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
 {
   private const string DAILY_CHECK_COMPLETED_MESSAGE = "Daily Check Event Completed";
