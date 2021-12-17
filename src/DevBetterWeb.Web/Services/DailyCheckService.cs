@@ -9,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Web.Services;
-
 public class DailyCheckService : BackgroundService
 {
   // for debugging purposes so the delay can be changed without making mathematical errors when changing the delay back to one hour
