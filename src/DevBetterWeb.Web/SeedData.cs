@@ -17,7 +17,7 @@ public static class SeedData
     var vid1 = new ArchiveVideo()
     {
       Title = "Video One",
-      ShowNotes = @"
+      Description = @"
 # Video about using markdown in ASP.NET Core
 
 In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. In this video we talk about some stuff. 
