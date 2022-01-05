@@ -29,7 +29,7 @@ public class MemberSubscriptionEndedAdminEmailService : IMemberSubscriptionEnded
     var member = await _memberLookupService.GetMemberByEmailAsync(customerEmail);
     var memberName = member.UserFullName();
 
-    var message = $"{memberName}'s DevBetter subscription has ended. Please remove {memberName} from the Discord and StackOverflow groups.";
+    var message = $"{memberName}'s DevBetter subscription has ended. Please remove {memberName} from the GitHub, Discord and StackOverflow groups.";
 
     var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
