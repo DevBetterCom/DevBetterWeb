@@ -7,7 +7,7 @@ public class ArchiveVideoFilteredSpec : Specification<ArchiveVideo>
 {
   public ArchiveVideoFilteredSpec(string? search)
   {
-    if (search is null)
+    if (string.IsNullOrEmpty(search))
     {
       Query.OrderByDescending(x => x.DateCreated);
     }
