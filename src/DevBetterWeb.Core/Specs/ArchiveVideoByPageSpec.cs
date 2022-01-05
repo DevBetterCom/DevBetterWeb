@@ -9,7 +9,6 @@ public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
     if (string.IsNullOrEmpty(search))
     {
       Query
-        .Where(s => s.ShowNotes != null && !string.IsNullOrEmpty(search) && s.ShowNotes.Contains(search))
         .OrderByDescending(x => x.DateCreated)
         .Skip(skip)
         .Take(size);
@@ -17,6 +16,7 @@ public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
     else
     {
       Query
+        .Where(s => s.ShowNotes != null && !string.IsNullOrEmpty(search) && s.ShowNotes.Contains(search))
         .OrderByDescending(x => x.DateCreated)
         .Skip(skip)
         .Take(size);
