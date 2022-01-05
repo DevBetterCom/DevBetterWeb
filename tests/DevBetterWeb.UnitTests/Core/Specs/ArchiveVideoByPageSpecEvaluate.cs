@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Specs;
 using FluentAssertions;
 using Xunit;
 
@@ -15,14 +16,14 @@ public class ArchiveVideoByPageSpecEvaluate
   {
     _archiveVideos = new ArchiveVideo[]
     {
-      new ArchiveVideo()
+      new()
       {
         Id = 1,
         Title = "Video One",
         ShowNotes = "# Video about using markdown in ASP.NET Core",
         DateCreated = new DateTime(2019, 3, 8),
       },
-      new ArchiveVideo()
+      new()
       {
         Id = 2,
         Title = "Video Two",
@@ -31,14 +32,13 @@ public class ArchiveVideoByPageSpecEvaluate
     };
   }
 
-
   [Fact]
-  public void ReturnUnfilteredListGivenNullSearchExpression()
+  public void ReturnsUnfilteredListGivenNullSearchExpression()
   {
-    var sut = new DevBetterWeb.Core.Specs.ArchiveVideoByPageSpec(
+    var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: 12,
-      search: null);
+      search: default);
 
     var result = sut.Evaluate(_archiveVideos);
 
@@ -48,9 +48,9 @@ public class ArchiveVideoByPageSpecEvaluate
   [Theory]
   [InlineData("markdown", 1)]
   [InlineData("some other value", 0)]
-  public void ReturnFilteredListGivenSearchExpression(string search, int expectedCount)
+  public void ReturnsFilteredListGivenSearchExpression(string search, int expectedCount)
   {
-    var sut = new DevBetterWeb.Core.Specs.ArchiveVideoByPageSpec(
+    var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: 12,
       search: search);
@@ -60,14 +60,14 @@ public class ArchiveVideoByPageSpecEvaluate
     result.Should().HaveCount(expectedCount);
   }
 
-
   [Theory]
   [InlineData(0, 2)]
   [InlineData(1, 1)]
   [InlineData(2, 0)]
-  public void ReturnFilteredListGivenSkipExpression(int skip, int expectedCount)
+  [InlineData(3, 0)]
+  public void ReturnsFilteredListGivenSkipExpression(int skip, int expectedCount)
   {
-    var sut = new DevBetterWeb.Core.Specs.ArchiveVideoByPageSpec(
+    var sut = new ArchiveVideoByPageSpec(
       skip: skip,
       size: 12,
       search: default);
@@ -82,9 +82,9 @@ public class ArchiveVideoByPageSpecEvaluate
   [InlineData(1, 1)]
   [InlineData(2, 2)]
   [InlineData(3, 2)]
-  public void ReturnFilteredListGivenSizeExpression(int size, int expectedCount)
+  public void ReturnsFilteredListGivenSizeExpression(int size, int expectedCount)
   {
-    var sut = new DevBetterWeb.Core.Specs.ArchiveVideoByPageSpec(
+    var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: size,
       search: default);
