@@ -113,10 +113,11 @@
         currentPage = currentPageIndex;
         var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
         if (userRole) {
+            const search = $("#SearchString").val();
             $.ajax({
                 type: "POST",
-                url: "/videos/list?search=" + $("#SearchString").val(),
-                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString() },
+                url: "/videos/list",
+                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search },
                 dataType: "json",
                 success: function (videosReponse) {
                     var divHtml = "";
