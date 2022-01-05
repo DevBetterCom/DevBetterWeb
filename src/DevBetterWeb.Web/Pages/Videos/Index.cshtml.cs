@@ -1,11 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using DevBetterWeb.Core;
-using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Web.Models.Vimeo;
+﻿using DevBetterWeb.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DevBetterWeb.Web.Pages.Videos;
