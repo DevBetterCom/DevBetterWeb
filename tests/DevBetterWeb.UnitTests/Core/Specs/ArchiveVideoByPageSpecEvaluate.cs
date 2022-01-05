@@ -20,7 +20,7 @@ public class ArchiveVideoByPageSpecEvaluate
       {
         Id = 1,
         Title = "Video One",
-        ShowNotes = "# Video about using markdown in ASP.NET Core",
+        Description = "# Video about using markdown in ASP.NET Core",
         DateCreated = new DateTime(2019, 3, 8),
       },
       new()
@@ -47,7 +47,7 @@ public class ArchiveVideoByPageSpecEvaluate
 
   [Theory]
   [InlineData("markdown", 1)]
-  [InlineData("some other value", 0)]
+  [InlineData("some nonpresent value", 0)]
   public void ReturnsFilteredListGivenSearchExpression(string search, int expectedCount)
   {
     var sut = new ArchiveVideoByPageSpec(
