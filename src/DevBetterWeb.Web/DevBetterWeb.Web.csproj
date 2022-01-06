@@ -62,7 +62,7 @@
         <PackageReference Include="TagHelperSamples.Authorization" Version="3.0.56" />
         <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.7.0" />
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
-        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper" Version="11.0.0" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 
     </ItemGroup>
