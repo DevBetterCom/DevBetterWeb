@@ -11,7 +11,6 @@
     "DevBetterWeb.Web - DEV": {
       "commandName": "Project",
       "launchBrowser": true,
-      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -20,11 +19,9 @@
     "DevBetterWeb.Web - PROD": {
       "commandName": "Project",
       "launchBrowser": true,
-      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
-      },
-      "applicationUrl": "https://localhost:5020/"
+      }
     }
   }
 }
