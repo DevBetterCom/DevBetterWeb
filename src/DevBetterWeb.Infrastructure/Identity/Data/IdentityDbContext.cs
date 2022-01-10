@@ -1,13 +1,16 @@
 ﻿using DevBetterWeb.Infrastructure.Identity.Data;
+using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.Models;
 
-public class IdentityDbContext : IdentityDbContext<ApplicationUser>
+public class IdentityDbContext : ApiAuthorizationDbContext<ApplicationUser>
 {
-  public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
-      : base(options)
+  public IdentityDbContext(DbContextOptions<IdentityDbContext> options, IOptions<OperationalStoreOptions> operationalStoreOptions)
+      : base(options, operationalStoreOptions)
   {
   }
 

@@ -34,6 +34,8 @@
         <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+        <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
@@ -42,7 +44,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
             <PrivateAssets>all</PrivateAssets>
@@ -68,6 +70,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DevBetterWeb.Client\DevBetterWeb.Client.csproj" />
         <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
         <ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
         <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />

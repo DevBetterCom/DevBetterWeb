@@ -1,5 +1,6 @@
 ﻿using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,11 @@ public class IdentityHostingStartup : IHostingStartup
                 })
                   .AddEntityFrameworkStores<IdentityDbContext>()
                   .AddDefaultTokenProviders();
+
+      services.AddIdentityServer()
+        .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
+
+      services.AddAuthentication().AddIdentityServerJwt();
 
       services.ConfigureApplicationCookie(options =>
               {

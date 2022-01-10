@@ -147,6 +147,9 @@ public class Startup
     {
       app.UseDeveloperExceptionPage();
       app.UseShowAllServicesMiddleware();
+
+      app.UseMigrationsEndPoint();
+      app.UseWebAssemblyDebugging();
     }
     else
     {
@@ -155,11 +158,14 @@ public class Startup
     }
 
     app.UseHttpsRedirection();
+
+    app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
     //app.UseCookiePolicy();
 
     app.UseRouting();
 
+    app.UseIdentityServer();
     app.UseAuthentication();
     app.UseAuthorization();
 
@@ -176,6 +182,7 @@ public class Startup
     {
       endpoints.MapRazorPages();
       endpoints.MapDefaultControllerRoute();
+      endpoints.MapFallbackToFile("index.html");
     });
   }
 }
