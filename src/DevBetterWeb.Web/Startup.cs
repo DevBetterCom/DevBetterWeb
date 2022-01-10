@@ -13,7 +13,6 @@ using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Models;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -99,7 +98,6 @@ public class Startup
 
     var webProjectAssembly = typeof(Startup).Assembly;
     services.AddAutoMapper(webProjectAssembly);
-    services.AddMediatR(webProjectAssembly);
 
     services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
 
