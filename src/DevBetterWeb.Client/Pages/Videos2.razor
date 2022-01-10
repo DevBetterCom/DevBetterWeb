@@ -1,0 +1,52 @@
+﻿@page "/Videos2"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DevBetterWeb.Client.Models
+
+@attribute [Authorize]
+@inject HttpClient Http
+
+<h3>Recorded Coaching Sessions</h3>
+
+<p>
+    Search: <input type="text" @bind="searchText" />
+    <button type="button" @onclick="Search" >Search</button>
+</p>
+
+@if (results?.data?.Any() == true)
+{
+    foreach (var item in results.data)
+    {
+        <p>
+            @item.Title
+        </p>
+        <p>
+            @item.Description
+        </p>
+    }
+}
+
+
+@code {
+    private string searchText = "";
+
+    private VideoResult? results = null;
+
+    public async Task Search()
+    {
+        try
+        {
+            results = await Http.GetFromJsonAsync<VideoResult>($"/videos/list?search={searchText}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Search();
+    }
+}
