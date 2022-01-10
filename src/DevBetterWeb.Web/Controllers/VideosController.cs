@@ -53,16 +53,28 @@ public class VideosController : Controller
     int pageSize = length != null ? Convert.ToInt32(length) : 20;
     var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
 
-    var filterSpec = new ArchiveVideoFilteredSpec(dataTableParameterModel.Search);
+    return await GetListResult(dataTableParameterModel.Search, pageSize, startIndex);
+  }
+ 
+  [HttpGet("list")]
+  public async Task<IActionResult> ListAsync(string? search, int page = 1, int pageSize = 12)
+  {
+    var startIndex = page - 1;
+    return await GetListResult(search, pageSize, startIndex);
+  }
+
+  private async Task<OkObjectResult> GetListResult(string? search, int pageSize, int startIndex)
+  {
+    var filterSpec = new ArchiveVideoFilteredSpec(search);
     var totalRecords = await _repository.CountAsync(filterSpec);
 
-    var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search);
+    var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, search);
     var archiveVideos = await _repository.ListAsync(pagedSpec);
     var archiveVideosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);
 
-    var jsonData = new { draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
-
-    return Ok(jsonData);
+    var jsonData = new { recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
+    var result = Ok(jsonData);
+    return result;
   }
 
   [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
