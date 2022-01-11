@@ -10,7 +10,7 @@
 
 <p>
     Search: <input type="text" @bind="searchText" />
-    <button type="button" @onclick="Search" >Search</button>
+    <button type="button" @onclick="Search(1)" >Search</button>
 </p>
 
 @if (results == null)
@@ -30,8 +30,8 @@ else if (results?.data?.Any() == true)
                 <h3>
                     <a href="Videos/Details/@item.VideoId">@item.Title</a>
                 </h3>
-                <span class="style-scope ytd-video-meta-block">@item.Views views</span>
-                <span class="style-scope ytd-video-meta-block"> @item.DateCreated</span>
+                <span class="style-scope ytd-video-meta-block">@item.Views views •</span>
+                <span class="style-scope ytd-video-meta-block">  @TimeSince(item.DateCreated)</span>
             </div>
         }
     </div>
@@ -70,8 +70,9 @@ else
 
     private VideoResult? results = null;
 
-    public async Task Search()
+    public async Task Search(int startPage)
     {
+        page = startPage;
         try
         {
             results = await Http.GetFromJsonAsync<VideoResult>($"/videos/list?search={searchText}&page={page}");
@@ -85,19 +86,46 @@ else
 
     private async Task Next()
     {
-        page += 1;
-        await Search();
+        await Search(page++);
     }
 
     private async Task Previous()
     {
         if (page == 1) return;
-        page -= 1;
-        await Search();
+        await Search(page--);
+    }
+
+    private string TimeSince(DateTimeOffset date)
+    {
+        var span = DateTimeOffset.Now - date;
+        var seconds = Math.Floor(span.TotalSeconds);
+
+        var interval = seconds / 31536000;
+
+        if (interval > 1) {
+            return Math.Floor(interval) + " years";
+        }
+        interval = seconds / 2592000;
+        if (interval > 1) {
+            return Math.Floor(interval) + " months";
+        }
+        interval = seconds / 86400;
+        if (interval > 1) {
+            return Math.Floor(interval) + " days";
+        }
+        interval = seconds / 3600;
+        if (interval > 1) {
+            return Math.Floor(interval) + " hours";
+        }
+        interval = seconds / 60;
+        if (interval > 1) {
+            return Math.Floor(interval) + " minutes";
+        }
+        return Math.Floor(seconds) + " seconds";
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await Search();
+        await Search(1);
     }
 }
