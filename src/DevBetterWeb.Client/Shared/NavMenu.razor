@@ -1,31 +1,88 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">DevBetterWeb.Client</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DevBetterWeb.Core
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<nav class="navbar navbar-light static-top navbar-expand-md">
+    <div class="navbar-brand d-flex">
+        <div>
+
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
+
+
+        <div>
+            <a class="" href="/">
+                <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
+                <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
+            </a>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#devBetterNavBar" aria-controls="devBetterNavBar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="devBetterNavBar">
+        <div class="navbar-nav">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="nav-item nav-link text-primary" href="/Videos/Index">Videos</a>
+                    <a class="nav-item nav-link text-primary" href="/Questions">Recent Questions/Topics</a>
+                    <a class="nav-item nav-link text-primary" href="/User/Index">Members</a>
+                    <a class="nav-item nav-link text-primary" href="/Leaderboard/Index">Leaderboard</a>
+                    <a class="nav-item nav-link text-primary" href="/Resources/Index">Resources</a>
+
+                    @if (@context.User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
+                    {
+                        <a class="nav-item nav-link text-primary" href="/Admin/Index">Admin</a>
+                    }
+                    
+                </Authorized>
+                <NotAuthorized>
+                    <a href="authentication/register">Register</a>
+                    <a href="authentication/login">Log in</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
+
+        <div class="navbar-nav ml-auto">
+            <a class="nav-item nav-link text-primary" href="/FAQ">FAQ</a>
+            <a class="nav-item nav-link text-primary" id="githubNavLink" href="https://github.com/ardalis/devbetterweb"><i class="fab fa-github"></i></a>
+            <partial name="_LoginPartial" />
+
+            <LoginDisplay />
+
+
+
+
+             <AuthorizeView>
+                 <Authorized>
+                     @if (!@context.User!.IsInRole(AuthConstants.Roles.MEMBERS))
+                    {
+                        <a class="btn btn-primary nav-item" href="/checkout" target="_blank">Join Now</a>
+                    }
+                 </Authorized>
+            </AuthorizeView>
+            
+        </div>
+        <div class="navbar-nav">
+
+        </div>
+    </div>
     </nav>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @code {
     private bool collapseNavMenu = true;
