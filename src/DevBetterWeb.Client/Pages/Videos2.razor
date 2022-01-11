@@ -13,22 +13,60 @@
     <button type="button" @onclick="Search" >Search</button>
 </p>
 
-@if (results?.data?.Any() == true)
+@if (results == null)
+{   
+    <p>Loading...</p>
+}
+else if (results?.data?.Any() == true)
 {
-    foreach (var item in results.data)
-    {
-        <p>
-            @item.Title
-        </p>
-        <p>
-            @item.Description
-        </p>
-    }
+
+    <div id="members-videos-list" class="row">
+        @foreach (var item in results.data)
+        {
+            <div class="col col-sm-12 col-md-3 col-lg-3 padding-10">
+                <a href="Videos/Details/@item.VideoId">
+                    <img class="img-fluid" style="height: 160px" src="@item.AnimatedThumbnailUri">
+                </a>
+                <h3>
+                    <a href="Videos/Details/@item.VideoId">@item.Title</a>
+                </h3>
+                <span class="style-scope ytd-video-meta-block">@item.Views views</span>
+                <span class="style-scope ytd-video-meta-block"> @item.DateCreated</span>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <ul id="pagination-demo" class="pagination-md paging pagination">
+            @*<li class="page-item first disabled"><a href="#" class="page-link">First</a></li>*@
+    
+            <li class="page-item prev @previousDisabledClass">
+                <a @onclick="Previous" class="page-link">Previous</a>
+            </li>
+            @*<li class="page-item active"><a href="#" class="page-link">1</a></li>
+            <li class="page-item"><a href="#" class="page-link">2</a></li>*@
+            
+            <li class="page-item next">
+                <a @onclick="Next" class="page-link">Next</a>
+            </li>
+            
+        </ul>
+    </div>
+    
+}
+else
+{
+    <p>No results found.</p>
 }
 
 
 @code {
     private string searchText = "";
+    private int page = 1;
+    private int pageSize = 12;
+
+    private string previousDisabledClass => page > 1 ? "" : "disabled";
+    //private string nextDisabledClass => page > 1 ? "" : "disabled";
 
     private VideoResult? results = null;
 
@@ -36,13 +74,26 @@
     {
         try
         {
-            results = await Http.GetFromJsonAsync<VideoResult>($"/videos/list?search={searchText}");
+            results = await Http.GetFromJsonAsync<VideoResult>($"/videos/list?search={searchText}&page={page}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
 
+    }
+
+    private async Task Next()
+    {
+        page += 1;
+        await Search();
+    }
+
+    private async Task Previous()
+    {
+        if (page == 1) return;
+        page -= 1;
+        await Search();
     }
 
     protected override async Task OnInitializedAsync()
