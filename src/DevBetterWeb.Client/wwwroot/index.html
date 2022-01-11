@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
     <title>devBetter</title>
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
@@ -24,18 +25,20 @@
 
     <!-- Google Analytics -->
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-470225-35', 'auto');
-    ga('send', 'pageview');
+        ga('create', 'UA-470225-35', 'auto');
+        ga('send', 'pageview');
     </script>
     <!-- End Google Analytics -->
 
     <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css" />
-    
+
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
     <!-- Custom fonts for this template -->
@@ -46,6 +49,8 @@
     <!-- Custom styles for this template -->
     <link href="/css/site.css" rel="stylesheet" />
     <link href="/css/landing-page.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="DevBetterWeb.Client.styles.css" rel="stylesheet" />
 
     <!-- Facebook -->
     <meta property="og:title" content="Developer Career Coaching | devBetter with Steve Smith">
@@ -66,18 +71,13 @@
 <body>
     <div id="app">Loading...</div>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
     <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
-    <script src="~/js/site.min.js"></script>
-    <script src="~/js/jquery.twbsPagination.min.js" asp-append-version="true"></script>
+    <script src="/js/site.min.js"></script>
+    <script src="/js/jquery.twbsPagination.min.js" asp-append-version="true"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <script src="https://player.vimeo.com/api/player.js"></script>
     <script src="https://launchpass.com/p/devbetter/embed.js"></script>

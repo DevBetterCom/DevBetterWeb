@@ -38,18 +38,12 @@
                     }
                     
                 </Authorized>
-                <NotAuthorized>
-                    <a href="authentication/register">Register</a>
-                    <a href="authentication/login">Log in</a>
-                </NotAuthorized>
             </AuthorizeView>
         </div>
 
         <div class="navbar-nav ml-auto">
             <a class="nav-item nav-link text-primary" href="/FAQ">FAQ</a>
             <a class="nav-item nav-link text-primary" id="githubNavLink" href="https://github.com/ardalis/devbetterweb"><i class="fab fa-github"></i></a>
-            <partial name="_LoginPartial" />
-
             <LoginDisplay />
 
 
@@ -62,6 +56,9 @@
                         <a class="btn btn-primary nav-item" href="/checkout" target="_blank">Join Now</a>
                     }
                  </Authorized>
+                 <NotAuthorized>
+                     <a class="btn btn-primary nav-item" href="/checkout" target="_blank">Join Now</a>
+                 </NotAuthorized>
             </AuthorizeView>
             
         </div>
