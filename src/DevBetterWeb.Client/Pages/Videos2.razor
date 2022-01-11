@@ -10,18 +10,18 @@
 
 <p>
     Search: <input type="text" @bind="searchText" />
-    <button type="button" @onclick="Search(1)" >Search</button>
+    <button type="button" @onclick="() => Search(1)" >Search</button>
 </p>
 
 @if (results == null)
 {   
     <p>Loading...</p>
 }
-else if (results?.data?.Any() == true)
+else if (results?.Data?.Any() == true)
 {
 
     <div id="members-videos-list" class="row">
-        @foreach (var item in results.data)
+        @foreach (var item in results.Data)
         {
             <div class="col col-sm-12 col-md-3 col-lg-3 padding-10">
                 <a href="Videos/Details/@item.VideoId">
@@ -41,13 +41,13 @@ else if (results?.data?.Any() == true)
             @*<li class="page-item first disabled"><a href="#" class="page-link">First</a></li>*@
     
             <li class="page-item prev @previousDisabledClass">
-                <a @onclick="Previous" class="page-link">Previous</a>
+                <button @onclick="Previous" class="page-link">Previous</button>
             </li>
             @*<li class="page-item active"><a href="#" class="page-link">1</a></li>
             <li class="page-item"><a href="#" class="page-link">2</a></li>*@
             
-            <li class="page-item next">
-                <a @onclick="Next" class="page-link">Next</a>
+            <li class="page-item next @nextDisabledClass">
+                <button @onclick="Next" class="page-link">Next</button>
             </li>
             
         </ul>
@@ -65,17 +65,17 @@ else
     private int page = 1;
     private int pageSize = 12;
 
-    private string previousDisabledClass => page > 1 ? "" : "disabled";
-    //private string nextDisabledClass => page > 1 ? "" : "disabled";
+    private string previousDisabledClass => results?.HasPrevious == true ? "" : "disabled";
+    private string nextDisabledClass => results?.HasNext == true ? "" : "disabled";
 
-    private VideoResult? results = null;
+    private PagedList<ArchiveVideoDto>? results = null;
 
     public async Task Search(int startPage)
     {
         page = startPage;
         try
         {
-            results = await Http.GetFromJsonAsync<VideoResult>($"/videos/list?search={searchText}&page={page}");
+            results = await Http.GetFromJsonAsync<PagedList<ArchiveVideoDto>>($"/videos/list?pageSize={pageSize}&search={searchText}&page={page}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -86,13 +86,14 @@ else
 
     private async Task Next()
     {
-        await Search(page++);
+        if (results?.HasNext != true) return;
+        await Search(page + 1);
     }
 
     private async Task Previous()
     {
-        if (page == 1) return;
-        await Search(page--);
+        if (results?.HasPrevious != true) return;
+        await Search(page - 1);
     }
 
     private string TimeSince(DateTimeOffset date)

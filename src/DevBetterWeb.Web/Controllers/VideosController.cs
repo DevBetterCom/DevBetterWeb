@@ -72,8 +72,9 @@ public class VideosController : Controller
     var archiveVideos = await _repository.ListAsync(pagedSpec);
     var archiveVideosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);
 
-    var jsonData = new { recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
-    var result = Ok(jsonData);
+    var list = archiveVideosDto.ToPagedList(totalRecords, startIndex + 1, pageSize);
+
+    var result = Ok(list);
     return result;
   }
 

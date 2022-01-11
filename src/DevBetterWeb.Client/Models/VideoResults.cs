@@ -13,10 +13,3 @@ public class ArchiveVideoDto
   public DateTimeOffset DateUploaded { get; set; }
   public string? VideoUrl { get; set; }
 }
-
-public class VideoResult
-{
-  public int recordsFiltered { get; set; }
-  public int recordsTotal { get; set; }
-  public List<ArchiveVideoDto> data { get; set; }
-}
