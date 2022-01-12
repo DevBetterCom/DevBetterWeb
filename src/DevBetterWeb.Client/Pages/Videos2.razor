@@ -10,11 +10,11 @@
 
 <p>
     Search: <input type="text" @bind="searchText" />
-    <button type="button" @onclick="() => Search(1)" >Search</button>
+    <button type="button" @onclick="() => Search(1)">Search</button>
 </p>
 
 @if (results == null)
-{   
+{
     <p>Loading...</p>
 }
 else if (results?.Data?.Any() == true)
@@ -38,21 +38,30 @@ else if (results?.Data?.Any() == true)
 
     <div class="row">
         <ul id="pagination-demo" class="pagination-md paging pagination">
-            @*<li class="page-item first disabled"><a href="#" class="page-link">First</a></li>*@
-    
+            <li class="page-item first @firstDisabledClass">
+                <button @onclick="First" class="page-link">First</button>
+            </li>
+
             <li class="page-item prev @previousDisabledClass">
                 <button @onclick="Previous" class="page-link">Previous</button>
             </li>
             @*<li class="page-item active"><a href="#" class="page-link">1</a></li>
-            <li class="page-item"><a href="#" class="page-link">2</a></li>*@
-            
+                <li class="page-item"><a href="#" class="page-link">2</a></li>*@
+            <li class="page-item">
+                <a class="page-link">@results?.CurrentPage of @results?.TotalPages</a>
+            </li>
+
             <li class="page-item next @nextDisabledClass">
                 <button @onclick="Next" class="page-link">Next</button>
             </li>
-            
+
+            <li class="page-item last @lastDisabledClass">
+                <button @onclick="Last" class="page-link">Last</button>
+            </li>
+
         </ul>
     </div>
-    
+
 }
 else
 {
@@ -65,8 +74,10 @@ else
     private int page = 1;
     private int pageSize = 12;
 
-    private string previousDisabledClass => results?.HasPrevious == true ? "" : "disabled";
-    private string nextDisabledClass => results?.HasNext == true ? "" : "disabled";
+    private string firstDisabledClass => results?.IsFirstPage == true ? "disabled" : "";
+    private string lastDisabledClass => results?.IsLastPage == true ? "disabled" : "";
+    private string previousDisabledClass => results?.HasPrevious != true ? "disabled" : "";
+    private string nextDisabledClass => results?.HasNext != true ? "disabled" : "";
 
     private PagedList<ArchiveVideoDto>? results = null;
 
@@ -87,14 +98,27 @@ else
     private async Task Next()
     {
         if (results?.HasNext != true) return;
-        await Search(page + 1);
+        await Search(results.CurrentPage + 1);
     }
 
     private async Task Previous()
     {
         if (results?.HasPrevious != true) return;
-        await Search(page - 1);
+        await Search(results.CurrentPage - 1);
     }
+
+    private async Task First()
+    {
+        if (results?.IsFirstPage == true) return;
+        await Search(1);
+    }
+
+    private async Task Last()
+    {
+        if (results?.IsLastPage == true) return;
+        await Search(results!.TotalPages);
+    }
+
 
     private string TimeSince(DateTimeOffset date)
     {
@@ -103,23 +127,28 @@ else
 
         var interval = seconds / 31536000;
 
-        if (interval > 1) {
+        if (interval > 1)
+        {
             return Math.Floor(interval) + " years";
         }
         interval = seconds / 2592000;
-        if (interval > 1) {
+        if (interval > 1)
+        {
             return Math.Floor(interval) + " months";
         }
         interval = seconds / 86400;
-        if (interval > 1) {
+        if (interval > 1)
+        {
             return Math.Floor(interval) + " days";
         }
         interval = seconds / 3600;
-        if (interval > 1) {
+        if (interval > 1)
+        {
             return Math.Floor(interval) + " hours";
         }
         interval = seconds / 60;
-        if (interval > 1) {
+        if (interval > 1)
+        {
             return Math.Floor(interval) + " minutes";
         }
         return Math.Floor(seconds) + " seconds";

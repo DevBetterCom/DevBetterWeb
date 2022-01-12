@@ -10,13 +10,19 @@ namespace DevBetterWeb.Core;
 /// <typeparam name="T"></typeparam>
 public class PagedList<T>
 {
-  public int CurrentPage { get; set; }
-  public int TotalPages { get; set; }
   public int PageSize { get; set; }
   public int TotalCount { get; set; }
+  public List<T> Data { get; set; } = new List<T>();
+  public int CurrentPage { get; set; }
+
+
+  public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
   public bool HasPrevious => CurrentPage > 1;
   public bool HasNext => CurrentPage < TotalPages;
-  public List<T> Data { get; set; } = new List<T>();
+
+  public bool IsFirstPage => CurrentPage == 1;
+  public bool IsLastPage => CurrentPage == TotalPages;
+  
 
   /// <summary>
   /// For deserialization
@@ -29,7 +35,6 @@ public class PagedList<T>
     TotalCount = count;
     PageSize = pageSize;
     CurrentPage = pageNumber;
-    TotalPages = (int)Math.Ceiling(count / (double)pageSize);
     Data = items;
   }
 }
