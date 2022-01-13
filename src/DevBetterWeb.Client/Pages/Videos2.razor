@@ -4,7 +4,7 @@
 @using DevBetterWeb.Client.Models
 
 @attribute [Authorize]
-@inject HttpClient Http
+@inject BlazorWebService Http
 
 <h3>Recorded Coaching Sessions</h3>
 
@@ -86,11 +86,15 @@ else
         page = startPage;
         try
         {
-            results = await Http.GetFromJsonAsync<PagedList<ArchiveVideoDto>>($"/videos/list?pageSize={pageSize}&search={searchText}&page={page}");
+            results = await Http.Client.GetFromJsonAsync<PagedList<ArchiveVideoDto>>($"/videos/list?pageSize={pageSize}&search={searchText}&page={page}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
 
     }

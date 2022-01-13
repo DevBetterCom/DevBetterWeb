@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Ardalis.ListStartupServices;
 using Autofac;
 using DevBetterWeb.Core;
@@ -16,11 +17,15 @@ using GoogleReCaptcha.V3.Interface;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using DevBetterWeb.Client.Services;
 
 namespace DevBetterWeb.Web;
 
@@ -113,6 +118,22 @@ public class Startup
     services.AddScoped<IUserLookupService, UserLookupService>();
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
+    Client.ConfigureCommonServices.Configure(services);
+
+    services.AddHttpClient<BlazorWebService>("DevBetterWeb.ServerAPI", (sp, client) =>
+    {
+      var server = sp.GetRequiredService<IServer>();
+      var addressFeature = server.Features.Get<IServerAddressesFeature>();
+      string baseAddress = addressFeature.Addresses.Last();
+      client.BaseAddress = new Uri(baseAddress);
+    })
+      //.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
+      ;
+
+    // Supply HttpClient instances that include access tokens when making requests to the server project
+    //services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DevBetterWeb.ServerAPI"));
+
+
     // list services
     services.Configure<ServiceConfig>(config =>
     {
@@ -182,7 +203,7 @@ public class Startup
     {
       endpoints.MapRazorPages();
       endpoints.MapDefaultControllerRoute();
-      endpoints.MapFallbackToFile("index.html");
+      endpoints.MapFallbackToPage("/_Host");
     });
   }
 }

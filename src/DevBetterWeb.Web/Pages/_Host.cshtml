@@ -1,0 +1,17 @@
+﻿@page "/blazor"
+@namespace DevBetterWeb.Client
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<div id="app">
+    @if (HttpContext.Request.Path.StartsWithSegments("/authentication"))
+    {
+        <text>Loading...</text>
+    }
+    else
+    {
+        <component type="typeof(App)" render-mode="WebAssemblyPrerendered" />
+    }
+</div>
