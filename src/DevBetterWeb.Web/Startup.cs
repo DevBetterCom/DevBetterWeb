@@ -26,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using DevBetterWeb.Client.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 
 namespace DevBetterWeb.Web;
 
@@ -119,6 +121,10 @@ public class Startup
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
     Client.ConfigureCommonServices.Configure(services);
+
+    services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+    services.AddScoped<SignOutSessionStateManager>();
+
 
     services.AddHttpClient<BlazorWebService>("DevBetterWeb.ServerAPI", (sp, client) =>
     {
