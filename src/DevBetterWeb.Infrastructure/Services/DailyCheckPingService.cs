@@ -157,12 +157,14 @@ public class DailyCheckPingService : IDailyCheckPingService
       var url = $"https://devbetter.com/Identity/Account/NewMemberRegister/{invitation.InviteCode}/{invitation.Email}";
 
       await _emailService.SendEmailAsync(invitation.Email, emailSubject, $"{emailBody}{url}");
-      messagesToAdd.Add($"User at email {invitation.Email} has been reminded to finish setting up their account.");
+      messagesToAdd.Add($"User at email {invitation.Email} has been reminded to finish setting up their account by clicking the link to register with their active invitation code.");
       invitation.UpdateUserPingDate();
+      await _inviteRepository.UpdateAsync(invitation);
     }
 
     return messagesToAdd;
   }
+
   private async Task<string> SendAdminPing(List<Invitation> invitations)
   {
     var emailSubject = "Remind user(s) to finish setting up their DevBetter account(s)";
@@ -173,7 +175,7 @@ public class DailyCheckPingService : IDailyCheckPingService
       listOfEmailsToRemindAdminsAbout += $"{invitation.Email}\n";
     }
 
-    var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}";
+    var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}\n\nThey have outstanding Invitations that are still marked as Active.";
 
     var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
@@ -190,6 +192,7 @@ public class DailyCheckPingService : IDailyCheckPingService
     foreach (var invitation in invitations)
     {
       invitation.UpdateAdminPingDate();
+      await _inviteRepository.UpdateAsync(invitation);
     }
 
     return message;
