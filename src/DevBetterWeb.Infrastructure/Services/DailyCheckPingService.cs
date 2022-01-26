@@ -34,6 +34,25 @@ public class DailyCheckPingService : IDailyCheckPingService
     _userManager = userManager;
   }
 
+  public async Task DeactiveInvitesForExistingMembers(AppendOnlyStringList messages)
+  {
+    var spec = new ActiveInvitationsSpec();
+    var activeInvitations = await _inviteRepository.ListAsync(spec);
+
+    foreach (var invitation in activeInvitations)
+    {
+      var user = await _userManager.FindByEmailAsync(invitation.Email);
+      if (user == null) continue;
+      var member = await _memberRepository.GetBySpecAsync(new MemberByUserIdSpec(user.Id));
+      if (member == null) continue;
+
+      invitation.Deactivate();
+      await _inviteRepository.UpdateAsync(invitation);
+      messages.Append($"Disabled invitation for email {invitation.Email}");
+    }
+  }
+
+
   public async Task SendPingIfNeeded(AppendOnlyStringList messages)
   {
     var spec = new ActiveInvitationsSpec();

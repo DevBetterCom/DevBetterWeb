@@ -142,7 +142,7 @@ public class NewMemberService : INewMemberService
     {
       extraInvite.Deactivate();
     }
-    await _invitationRepository.UpdateAsync(invite);
+    await _invitationRepository.SaveChangesAsync();
   }
 
   private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName)

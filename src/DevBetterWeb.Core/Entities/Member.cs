@@ -21,6 +21,8 @@ public class Member : BaseEntity, IAggregateRoot
   /// <summary>
   /// Members should only be created via the IMemberRegistrationService.
   /// This will fire off a NewMemberCreatedEvent
+  /// TODO: It doesn't appear to fire off any event (see MemberRegistrationService.cs)
+  /// TODO: Looks like new way is through NewMemberService.cs
   /// </summary>
   /// <param name="userId"></param>
   internal Member(string userId)

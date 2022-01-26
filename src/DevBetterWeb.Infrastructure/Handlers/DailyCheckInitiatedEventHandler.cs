@@ -35,15 +35,12 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
     AppendOnlyStringList messages = new();
 
-    // real stuff
-
-    // check if admins need to be reminded to avoid renewing near-alumnus's subscription
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
-    // check if people need upgraded to alumni
     await _alumniGraduationService.GraduateMembersIfNeeded(messages);
 
-    // check if people need to be pinged about new member link
+    await _dailyCheckPingService.DeactiveInvitesForExistingMembers(messages);
+
     await _dailyCheckPingService.SendPingIfNeeded(messages);
 
     // check if number of MemberSubscriptionPlans == expected number
