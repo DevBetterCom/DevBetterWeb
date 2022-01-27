@@ -141,4 +141,32 @@ public class VideosController : Controller
 
     return Ok(archiveVideo);
   }
+
+  [AllowAnonymous]
+  [HttpPost("update-video-thumbnails")]
+  public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo == null)
+    {
+      return BadRequest();
+    }
+    else
+    {
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+      await _repository.UpdateAsync(existVideo);
+    }
+
+    return Ok(archiveVideo);
+  }
 }
