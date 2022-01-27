@@ -46,11 +46,11 @@ public class AsyncProgram
   [Option("-k|--key", Description = "devBetter API Key")]
   public string ApiKey { get; }
 
-  [Option("-u|--update-thumbnails", "Update Animated Thumbnails (The Video ID is Required)", CommandOptionType.NoValue)]
+  [Option("-u|--update-thumbnails", "Update Animated Thumbnails (The Vimeo ID is Required)", CommandOptionType.NoValue)]
   public bool IsUpdateThumbnails { get; }
 
-  [Option("-i|--id", Description = "Video ID")]
-  public string VideoId { get; }
+  [Option("-i|--id", Description = "Vimeo ID")]
+  public string VimeoId { get; }
 
   [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, info, warning, error")]
   public string Verbose { get; } = "error";
@@ -69,13 +69,13 @@ public class AsyncProgram
     var uploaderService = GetUploaderService();
     if (IsUpdateThumbnails)
     {
-      if (string.IsNullOrEmpty(VideoId))
+      if (string.IsNullOrEmpty(VimeoId))
       {
-        logger.Information("The Video ID is Required");
+        logger.Information("The Vimeo ID is Required");
       }
       else
       {
-        await uploaderService.UpdateAnimatedThumbnailsAsync(VideoId);
+        await uploaderService.UpdateAnimatedThumbnailsAsync(VimeoId);
       }
     }
     else

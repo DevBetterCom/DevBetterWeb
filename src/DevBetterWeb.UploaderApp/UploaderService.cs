@@ -66,25 +66,25 @@ public class UploaderService
     _updateVideoThumbnails = new UpdateVideoThumbnails(videoInfoHttpService);
   }
 
-  public async Task UpdateAnimatedThumbnailsAsync(string videoId)
+  public async Task UpdateAnimatedThumbnailsAsync(string vimeoId)
   {
     _logger.LogInformation("UpdateAnimatedThumbnailsAsync Started");
 
-    var response = await _getVideoService.ExecuteAsync(videoId);
+    var response = await _getVideoService.ExecuteAsync(vimeoId);
     if (response.Code != HttpStatusCode.OK)
     {
       _logger.LogInformation("Video Does Not Exist on Vimeo!");
-      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
+      _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
       _logger.LogError($"Error: {response.Text}");
       return;
     }
 
     var archiveVideo = new ArchiveVideo
     {
-      VideoId = videoId
+      VideoId = vimeoId
     };
 
-    var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(long.Parse(videoId));
+    var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(long.Parse(vimeoId));
     _logger.LogDebug($"AnimatedThumbnailUri: {getAnimatedThumbnailResult.AnimatedThumbnailUri}");
 
     archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
@@ -92,12 +92,12 @@ public class UploaderService
     var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
     if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
     {
-      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
+      _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
       _logger.LogError($"Error: {updateVideoThumbnailsResponse.Text}");
       return;
     }
 
-    _logger.LogInformation($"{videoId} Is Updated.");
+    _logger.LogInformation($"{vimeoId} Is Updated.");
   }
 
   public async Task SyncAsync(string folderToUpload)
