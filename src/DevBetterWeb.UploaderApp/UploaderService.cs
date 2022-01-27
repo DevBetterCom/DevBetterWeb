@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
@@ -33,6 +34,7 @@ public class UploaderService
   private readonly GetVideoService _getVideoService;
   private readonly ILogger<UploaderService> _logger;
   private readonly AddVideoInfo _addVideoInfo;
+  private readonly UpdateVideoThumbnails _updateVideoThumbnails;
   private readonly ConfigInfo _configInfo;
 
   public UploaderService(ConfigInfo configInfo, HttpService httpService,
@@ -61,6 +63,41 @@ public class UploaderService
 
     var videoInfoHttpService = new HttpService(clientHttp);
     _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
+    _updateVideoThumbnails = new UpdateVideoThumbnails(videoInfoHttpService);
+  }
+
+  public async Task UpdateAnimatedThumbnailsAsync(string videoId)
+  {
+    _logger.LogInformation("UpdateAnimatedThumbnailsAsync Started");
+
+    var response = await _getVideoService.ExecuteAsync(videoId);
+    if (response.Code != HttpStatusCode.OK)
+    {
+      _logger.LogInformation("Video Does Not Exist on Vimeo!");
+      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
+      _logger.LogError($"Error: {response.Text}");
+      return;
+    }
+
+    var archiveVideo = new ArchiveVideo
+    {
+      VideoId = videoId
+    };
+
+    var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(long.Parse(videoId));
+    _logger.LogDebug($"AnimatedThumbnailUri: {getAnimatedThumbnailResult.AnimatedThumbnailUri}");
+
+    archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+
+    var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
+    if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
+    {
+      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
+      _logger.LogError($"Error: {updateVideoThumbnailsResponse.Text}");
+      return;
+    }
+
+    _logger.LogInformation($"{videoId} Is Updated.");
   }
 
   public async Task SyncAsync(string folderToUpload)
@@ -123,7 +160,7 @@ public class UploaderService
 
       _logger.LogInformation($"{video.Name} Uploaded!");
 
-      await UpdateVideoInfoAsync(video, videoId);
+      await UpdateVideoInfoAsync(video, videoId, false);
     }
     else
     {

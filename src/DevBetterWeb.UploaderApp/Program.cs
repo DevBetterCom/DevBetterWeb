@@ -39,12 +39,18 @@ public class AsyncProgram
   public string Token { get; }
 
   [Required]
-  [Option("-l|--link", Description = "devBetter API Link (ex. devbetter.com/)")]
+  [Option("-l|--link", Description = "devBetter API Link (ex. https://devbetter.com/)")]
   public string ApiLink { get; }
 
   [Required]
   [Option("-k|--key", Description = "devBetter API Key")]
   public string ApiKey { get; }
+
+  [Option("-u|--update-thumbnails", "Update Animated Thumbnails (The Video ID is Required)", CommandOptionType.NoValue)]
+  public bool IsUpdateThumbnails { get; }
+
+  [Option("-i|--id", Description = "Video ID")]
+  public string VideoId { get; }
 
   [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, info, warning, error")]
   public string Verbose { get; } = "error";
@@ -61,7 +67,21 @@ public class AsyncProgram
 
     // I'd like this to be the first line of OnExecuteAsync
     var uploaderService = GetUploaderService();
-    await uploaderService.SyncAsync(FolderPath);
+    if (IsUpdateThumbnails)
+    {
+      if (string.IsNullOrEmpty(VideoId))
+      {
+        logger.Information("The Video ID is Required");
+      }
+      else
+      {
+        await uploaderService.UpdateAnimatedThumbnailsAsync(VideoId);
+      }
+    }
+    else
+    {
+      await uploaderService.SyncAsync(FolderPath);
+    }
 
     Console.WriteLine("Done, press any key to close");
     Console.ReadKey();
