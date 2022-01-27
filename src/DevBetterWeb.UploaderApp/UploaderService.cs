@@ -74,7 +74,7 @@ public class UploaderService
     if (response.Code != HttpStatusCode.OK)
     {
       _logger.LogInformation("Video Does Not Exist on Vimeo!");
-      _logger.LogError($"{videoId} Add/Update info Error!");
+      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
       _logger.LogError($"Error: {response.Text}");
       return;
     }
@@ -90,7 +90,7 @@ public class UploaderService
     var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
     if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
     {
-      _logger.LogError($"{archiveVideo.Title} - {videoId} Update info Error!");
+      _logger.LogError($"{videoId} Update Animated Thumbnails Error!");
       _logger.LogError($"Error: {updateVideoThumbnailsResponse.Text}");
       return;
     }
