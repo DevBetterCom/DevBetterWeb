@@ -85,6 +85,8 @@ public class UploaderService
     };
 
     var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(long.Parse(videoId));
+    _logger.LogDebug($"AnimatedThumbnailUri: {getAnimatedThumbnailResult.AnimatedThumbnailUri}");
+
     archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
 
     var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
@@ -95,7 +97,7 @@ public class UploaderService
       return;
     }
 
-    _logger.LogInformation($"{archiveVideo.Title} - {videoId} Is Updated.");
+    _logger.LogInformation($"{videoId} Is Updated.");
   }
 
   public async Task SyncAsync(string folderToUpload)
