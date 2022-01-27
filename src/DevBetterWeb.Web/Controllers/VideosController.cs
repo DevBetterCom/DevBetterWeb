@@ -136,6 +136,7 @@ public class VideosController : Controller
       existVideo.Description = archiveVideo.Description;
       existVideo.Title = archiveVideo.Title;
       existVideo.Duration = archiveVideo.Duration;
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
       await _repository.UpdateAsync(existVideo);
     }
 
