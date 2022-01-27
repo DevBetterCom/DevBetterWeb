@@ -80,8 +80,8 @@ public class AsyncProgram
       {
         await uploaderService.UpdateAnimatedThumbnailsAsync(VimeoId);
       }
-    }
-    if (IsDeleteVimeo)
+    } 
+    else if (IsDeleteVimeo)
     {
       if (string.IsNullOrEmpty(VimeoId))
       {
