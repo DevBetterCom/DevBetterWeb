@@ -32,30 +32,34 @@ public class UploaderService
   private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
   private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
   private readonly GetVideoService _getVideoService;
+  private readonly DeleteVideoService _deleteVideoService;
   private readonly ILogger<UploaderService> _logger;
   private readonly AddVideoInfo _addVideoInfo;
   private readonly UpdateVideoThumbnails _updateVideoThumbnails;
+  private readonly DeleteVideo _deleteVideo;
   private readonly ConfigInfo _configInfo;
 
   public UploaderService(ConfigInfo configInfo, HttpService httpService,
-    UploadVideoService uploadVideoServicestring,
+    UploadVideoService uploadVideoService,
     GetAllVideosService getAllVideosService,
     GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService,
     GetAnimatedThumbnailService getAnimatedThumbnailService,
     AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService,
-    UploadSubtitleToVideoService _uploadSubtitleToVideoService,
+    UploadSubtitleToVideoService uploadSubtitleToVideoService,
+    DeleteVideoService deleteVideoService,
     GetVideoService getVideoService,
     ILogger<UploaderService> logger)
   {
     _configInfo = configInfo;
     httpService.SetAuthorization(_configInfo.Token);
-    _uploadVideoService = uploadVideoServicestring;
+    _uploadVideoService = uploadVideoService;
     _getAllVideosService = getAllVideosService;
     _addAnimatedThumbnailsToVideoService = addAnimatedThumbnailsToVideoService;
-    this._uploadSubtitleToVideoService = _uploadSubtitleToVideoService;
+    _uploadSubtitleToVideoService = uploadSubtitleToVideoService;
     _getAnimatedThumbnailService = getAnimatedThumbnailService;
     _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
     _getVideoService = getVideoService;
+    _deleteVideoService = deleteVideoService;
     _logger = logger;
     var clientHttp = new System.Net.Http.HttpClient();
     clientHttp.BaseAddress = new Uri(_configInfo.ApiLink);
@@ -64,7 +68,18 @@ public class UploaderService
     var videoInfoHttpService = new HttpService(clientHttp);
     _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
     _updateVideoThumbnails = new UpdateVideoThumbnails(videoInfoHttpService);
+    _deleteVideo = new DeleteVideo(videoInfoHttpService);
   }
+
+  public async Task DeleteVimeoVideoAsync(string vimeoId)
+  {
+    _logger.LogInformation("DeleteVimeoVideoAsync Started");
+
+    await _deleteVideo.ExecuteAsync(vimeoId);
+
+    _logger.LogInformation($"{vimeoId} Is Deleted.");
+  }
+
 
   public async Task UpdateAnimatedThumbnailsAsync(string vimeoId)
   {

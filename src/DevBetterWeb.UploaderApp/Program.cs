@@ -49,6 +49,9 @@ public class AsyncProgram
   [Option("-u|--update-thumbnails", "Update Animated Thumbnails (The Vimeo ID is Required)", CommandOptionType.NoValue)]
   public bool IsUpdateThumbnails { get; }
 
+  [Option("-d|--delete-vimeo-video", "Delete the Vimeo Video (The Vimeo ID is Required)", CommandOptionType.NoValue)]
+  public bool IsDeleteVimeo { get; }
+
   [Option("-i|--id", Description = "Vimeo ID")]
   public string VimeoId { get; }
 
@@ -76,6 +79,17 @@ public class AsyncProgram
       else
       {
         await uploaderService.UpdateAnimatedThumbnailsAsync(VimeoId);
+      }
+    }
+    if (IsDeleteVimeo)
+    {
+      if (string.IsNullOrEmpty(VimeoId))
+      {
+        logger.Information("The Vimeo ID is Required");
+      }
+      else
+      {
+        await uploaderService.DeleteVimeoVideoAsync(VimeoId);
       }
     }
     else
@@ -121,6 +135,7 @@ public class AsyncProgram
           .AddScoped<GetStreamingTicketService>()
           .AddScoped<UpdateVideoDetailsService>()
           .AddScoped<UploadVideoService>()
+          .AddScoped<DeleteVideoService>()
           .AddScoped<GetVideoService>()
           .AddScoped<UploaderService>()
           .AddScoped<ActiveTextTrackService>()
