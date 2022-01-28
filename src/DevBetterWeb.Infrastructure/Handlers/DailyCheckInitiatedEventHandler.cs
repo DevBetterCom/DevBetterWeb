@@ -5,6 +5,7 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
+using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Core.Handlers;
 
@@ -17,18 +18,24 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   private readonly IDailyCheckPingService _dailyCheckPingService;
   private readonly IDailyCheckSubscriptionPlanCountService _dailyCheckSubscriptionPlanCountService;
   private readonly IRepository<DailyCheck> _repository;
+  private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
+  private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
 
   public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook,
     IAlumniGraduationService alumniGraduationService,
     IDailyCheckPingService dailyCheckPingService,
     IDailyCheckSubscriptionPlanCountService dailyCheckSubscriptionPlanCountService,
-    IRepository<DailyCheck> repository)
+    IRepository<DailyCheck> repository,
+    IRepository<ArchiveVideo> repositoryArchiveVideo,
+    CreateAnimatedThumbnailsService createAnimatedThumbnailsService)
   {
     _webhook = webhook;
     _alumniGraduationService = alumniGraduationService;
     _dailyCheckPingService = dailyCheckPingService;
     _dailyCheckSubscriptionPlanCountService = dailyCheckSubscriptionPlanCountService;
     _repository = repository;
+    _repositoryArchiveVideo = repositoryArchiveVideo;
+    _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
   }
 
   public async Task Handle(DailyCheckInitiatedEvent domainEvent)
@@ -46,10 +53,29 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
     // check if number of MemberSubscriptionPlans == expected number
     await _dailyCheckSubscriptionPlanCountService.WarnIfNumberOfMemberSubscriptionPlansDifferentThanExpected(messages);
 
+    await UpdateVideosThumbnail();
+
     messages.Append(DAILY_CHECK_COMPLETED_MESSAGE);
 
     await SendMessagesToDiscord(messages);
     await StoreMessagesInTasksCompleted(messages);
+  }
+
+  private async Task UpdateVideosThumbnail()
+  {
+    var spec = new ArchiveVideoWithoutThumbnailSpec();
+    var videos = await _repositoryArchiveVideo.ListAsync(spec);
+    foreach (var video in videos)
+    {
+      if (video?.VideoId == null)
+      {
+        continue;
+      }
+      var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+
+      video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+      await _repositoryArchiveVideo.UpdateAsync(video);
+    }
   }
 
   private async Task SendMessagesToDiscord(AppendOnlyStringList messages)
