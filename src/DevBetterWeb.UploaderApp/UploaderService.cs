@@ -75,7 +75,8 @@ public class UploaderService
   {
     _logger.LogInformation("DeleteVimeoVideoAsync Started");
 
-    await _deleteVideo.ExecuteAsync(vimeoId);
+    var deleteResponse = await _deleteVideo.ExecuteAsync(vimeoId);
+    _logger.LogDebug($"Delete Response Code: {deleteResponse?.Code}");
 
     _logger.LogInformation($"{vimeoId} Is Deleted.");
   }
