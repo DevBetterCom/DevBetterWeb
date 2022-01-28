@@ -79,10 +79,11 @@ public class UploaderService
     var responseCode = deleteResponse?.Code;
     _logger.LogDebug($"Delete Response Code: {responseCode}");
 
-    if (responseCode == HttpStatusCode.NotFound)
+    if (responseCode != HttpStatusCode.OK)
     {
       _logger.LogInformation($"{vimeoId} Is Not Delete!");
       _logger.LogError($"Delete Response Code: {responseCode}");
+      _logger.LogError($"Delete Response Text: {deleteResponse.Text}");
       return;
     }
 
