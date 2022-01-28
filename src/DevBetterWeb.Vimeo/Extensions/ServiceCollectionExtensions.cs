@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
     services.AddScoped<UploadTextTrackFileService>();
     services.AddScoped<UploadSubtitleToVideoService>();
     services.AddScoped<GetAllTextTracksService>();
+    services.AddScoped<CreateAnimatedThumbnailsService>();
 
     return services;
   }
