@@ -18,10 +18,10 @@ public class DeleteVideo : BaseAsyncApiCaller
 
   public override async Task<HttpResponse> ExecuteAsync(string vimeoVideoId, CancellationToken cancellationToken = default)
   {
-    var uri = $"videos/uploader/delete-video";
+    var uri = $"videos/uploader/delete-video/{vimeoVideoId}";
     try
     {
-      var response = await _httpService.HttpDeleteAsync<string>(uri, vimeoVideoId);
+      var response = await _httpService.HttpDeleteAsync(uri);
 
       return HttpResponse.FromHttpResponseMessage(response.Code);
     }
