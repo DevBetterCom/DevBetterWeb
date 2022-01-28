@@ -175,8 +175,8 @@ public class VideosController : Controller
   }
 
   [AllowAnonymous]
-  [HttpDelete("uploader/delete-video")]
-  public async Task<IActionResult> DeleteVideoThAsync([FromQuery] string vimeoVideoId)
+  [HttpDelete("uploader/delete-video/{vimeoVideoId}")]
+  public async Task<IActionResult> DeleteVideoThAsync([FromRoute] string vimeoVideoId)
   {
     var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
 
