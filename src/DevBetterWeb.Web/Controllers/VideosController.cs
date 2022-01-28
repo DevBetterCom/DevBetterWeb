@@ -175,7 +175,7 @@ public class VideosController : Controller
   }
 
   [AllowAnonymous]
-  [HttpDelete("delete-video")]
+  [HttpDelete("uploader/delete-video")]
   public async Task<IActionResult> DeleteVideoThAsync([FromQuery] string vimeoVideoId)
   {
     var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
@@ -185,16 +185,14 @@ public class VideosController : Controller
       return Unauthorized();
     }
 
-    await _deleteVideoService.ExecuteAsync(vimeoVideoId);
-
     var spec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
     var existVideo = await _repository.GetBySpecAsync(spec);
-    if (existVideo == null)
+    if (existVideo != null)
     {
-      return BadRequest();
+      await _repository.DeleteAsync(existVideo);
     }
 
-    await _repository.DeleteAsync(existVideo);
+    await _deleteVideoService.ExecuteAsync(vimeoVideoId);
 
     return Ok();
   }
