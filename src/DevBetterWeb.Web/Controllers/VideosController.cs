@@ -24,6 +24,7 @@ public class VideosController : Controller
   private readonly IMapper _mapper;
   private readonly GetOEmbedVideoService _getOEmbedVideoService;
   private readonly GetVideoService _getVideoService;
+  private readonly DeleteVideoService _deleteVideoService;
   private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
   private readonly IMarkdownService _markdownService;
@@ -33,12 +34,14 @@ public class VideosController : Controller
     IOptions<ApiSettings> apiSettings,
     GetOEmbedVideoService getOEmbedVideoService,
     GetVideoService getVideoService,
+    DeleteVideoService deleteVideoService,
     UploadSubtitleToVideoService uploadSubtitleToVideoService,
     IMarkdownService markdownService)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
     _getVideoService = getVideoService;
+    _deleteVideoService = deleteVideoService;
     _uploadSubtitleToVideoService = uploadSubtitleToVideoService;
     _repository = repository;
     _expectedApiKey = apiSettings.Value.ApiKey;
@@ -136,9 +139,61 @@ public class VideosController : Controller
       existVideo.Description = archiveVideo.Description;
       existVideo.Title = archiveVideo.Title;
       existVideo.Duration = archiveVideo.Duration;
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
       await _repository.UpdateAsync(existVideo);
     }
 
     return Ok(archiveVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpPost("update-video-thumbnails")]
+  public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo == null)
+    {
+      return BadRequest();
+    }
+    else
+    {
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+      await _repository.UpdateAsync(existVideo);
+    }
+
+    return Ok(archiveVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpDelete("uploader/delete-video/{vimeoVideoId}")]
+  public async Task<IActionResult> DeleteVideoThAsync([FromRoute] string vimeoVideoId)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var spec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo != null)
+    {
+      await _repository.DeleteAsync(existVideo);
+    }
+
+    await _deleteVideoService.ExecuteAsync(vimeoVideoId);
+
+    return Ok();
   }
 }

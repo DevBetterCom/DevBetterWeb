@@ -34,6 +34,25 @@ public class DailyCheckPingService : IDailyCheckPingService
     _userManager = userManager;
   }
 
+  public async Task DeactiveInvitesForExistingMembers(AppendOnlyStringList messages)
+  {
+    var spec = new ActiveInvitationsSpec();
+    var activeInvitations = await _inviteRepository.ListAsync(spec);
+
+    foreach (var invitation in activeInvitations)
+    {
+      var user = await _userManager.FindByEmailAsync(invitation.Email);
+      if (user == null) continue;
+      var member = await _memberRepository.GetBySpecAsync(new MemberByUserIdSpec(user.Id));
+      if (member == null) continue;
+
+      invitation.Deactivate();
+      await _inviteRepository.UpdateAsync(invitation);
+      messages.Append($"Disabled invitation for email {invitation.Email}");
+    }
+  }
+
+
   public async Task SendPingIfNeeded(AppendOnlyStringList messages)
   {
     var spec = new ActiveInvitationsSpec();
@@ -157,12 +176,14 @@ public class DailyCheckPingService : IDailyCheckPingService
       var url = $"https://devbetter.com/Identity/Account/NewMemberRegister/{invitation.InviteCode}/{invitation.Email}";
 
       await _emailService.SendEmailAsync(invitation.Email, emailSubject, $"{emailBody}{url}");
-      messagesToAdd.Add($"User at email {invitation.Email} has been reminded to finish setting up their account.");
+      messagesToAdd.Add($"User at email {invitation.Email} has been reminded to finish setting up their account by clicking the link to register with their active invitation code.");
       invitation.UpdateUserPingDate();
+      await _inviteRepository.UpdateAsync(invitation);
     }
 
     return messagesToAdd;
   }
+
   private async Task<string> SendAdminPing(List<Invitation> invitations)
   {
     var emailSubject = "Remind user(s) to finish setting up their DevBetter account(s)";
@@ -173,7 +194,7 @@ public class DailyCheckPingService : IDailyCheckPingService
       listOfEmailsToRemindAdminsAbout += $"{invitation.Email}\n";
     }
 
-    var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}";
+    var emailBody = $"Please remind these users to finish setting up their DevBetter accounts: {listOfEmailsToRemindAdminsAbout}\n\nThey have outstanding Invitations that are still marked as Active.";
 
     var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
@@ -190,6 +211,7 @@ public class DailyCheckPingService : IDailyCheckPingService
     foreach (var invitation in invitations)
     {
       invitation.UpdateAdminPingDate();
+      await _inviteRepository.UpdateAsync(invitation);
     }
 
     return message;

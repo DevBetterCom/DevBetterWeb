@@ -39,12 +39,21 @@ public class AsyncProgram
   public string Token { get; }
 
   [Required]
-  [Option("-l|--link", Description = "devBetter API Link (ex. devbetter.com/)")]
+  [Option("-l|--link", Description = "devBetter API Link (ex. https://devbetter.com/)")]
   public string ApiLink { get; }
 
   [Required]
   [Option("-k|--key", Description = "devBetter API Key")]
   public string ApiKey { get; }
+
+  [Option("-u|--update-thumbnails", "Update Animated Thumbnails (The Vimeo ID is Required)", CommandOptionType.NoValue)]
+  public bool IsUpdateThumbnails { get; }
+
+  [Option("-d|--delete-video", "Delete the Video (The Vimeo ID is Required)", CommandOptionType.NoValue)]
+  public bool IsDeleteVideo { get; }
+
+  [Option("-i|--id", Description = "Vimeo ID")]
+  public string VimeoId { get; }
 
   [Option("-v|--verbose", Description = "Toggle logger verbosity: debug, trace, info, warning, error")]
   public string Verbose { get; } = "error";
@@ -61,7 +70,32 @@ public class AsyncProgram
 
     // I'd like this to be the first line of OnExecuteAsync
     var uploaderService = GetUploaderService();
-    await uploaderService.SyncAsync(FolderPath);
+    if (IsUpdateThumbnails)
+    {
+      if (string.IsNullOrEmpty(VimeoId))
+      {
+        logger.Information("The Vimeo ID is Required");
+      }
+      else
+      {
+        await uploaderService.UpdateAnimatedThumbnailsAsync(VimeoId);
+      }
+    } 
+    else if (IsDeleteVideo)
+    {
+      if (string.IsNullOrEmpty(VimeoId))
+      {
+        logger.Information("The Vimeo ID is Required");
+      }
+      else
+      {
+        await uploaderService.DeleteVimeoVideoAsync(VimeoId);
+      }
+    }
+    else
+    {
+      await uploaderService.SyncAsync(FolderPath);
+    }
 
     Console.WriteLine("Done, press any key to close");
     Console.ReadKey();
@@ -101,6 +135,7 @@ public class AsyncProgram
           .AddScoped<GetStreamingTicketService>()
           .AddScoped<UpdateVideoDetailsService>()
           .AddScoped<UploadVideoService>()
+          .AddScoped<DeleteVideoService>()
           .AddScoped<GetVideoService>()
           .AddScoped<UploaderService>()
           .AddScoped<ActiveTextTrackService>()
