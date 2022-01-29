@@ -7,9 +7,9 @@ namespace DevBetterWeb.Core.Handlers;
 
 public class DiscordLogVideoAddedHandler : IHandle<VideoAddedEvent>
 {
-  private readonly BookDiscussionWebhook _webhook;
+  private readonly CoachingSessionsWebhook _webhook;
 
-  public DiscordLogVideoAddedHandler(BookDiscussionWebhook webhook)
+  public DiscordLogVideoAddedHandler(CoachingSessionsWebhook webhook)
   {
     _webhook = webhook;
   }
