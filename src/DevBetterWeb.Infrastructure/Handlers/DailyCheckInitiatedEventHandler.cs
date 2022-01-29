@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
+using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Core.Handlers;
 
@@ -16,18 +18,21 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   private readonly IAlumniGraduationService _alumniGraduationService;
   private readonly IDailyCheckPingService _dailyCheckPingService;
   private readonly IDailyCheckSubscriptionPlanCountService _dailyCheckSubscriptionPlanCountService;
+  private readonly IVideosThumbnailService _videosThumbnailService;
   private readonly IRepository<DailyCheck> _repository;
 
   public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook,
     IAlumniGraduationService alumniGraduationService,
     IDailyCheckPingService dailyCheckPingService,
     IDailyCheckSubscriptionPlanCountService dailyCheckSubscriptionPlanCountService,
+    IVideosThumbnailService videosThumbnailService,
     IRepository<DailyCheck> repository)
   {
     _webhook = webhook;
     _alumniGraduationService = alumniGraduationService;
     _dailyCheckPingService = dailyCheckPingService;
     _dailyCheckSubscriptionPlanCountService = dailyCheckSubscriptionPlanCountService;
+    _videosThumbnailService = videosThumbnailService;
     _repository = repository;
   }
 
@@ -45,6 +50,8 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
 
     // check if number of MemberSubscriptionPlans == expected number
     await _dailyCheckSubscriptionPlanCountService.WarnIfNumberOfMemberSubscriptionPlansDifferentThanExpected(messages);
+
+    await _videosThumbnailService.UpdateVideosThumbnail(messages);
 
     messages.Append(DAILY_CHECK_COMPLETED_MESSAGE);
 
