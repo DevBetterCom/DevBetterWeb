@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
@@ -71,10 +72,17 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
       {
         continue;
       }
-      var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+      try
+      {
+        var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
 
-      video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-      await _repositoryArchiveVideo.UpdateAsync(video);
+        video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+        await _repositoryArchiveVideo.UpdateAsync(video);
+      }
+      catch (Exception)
+      {
+        // ignored
+      }
     }
   }
 
