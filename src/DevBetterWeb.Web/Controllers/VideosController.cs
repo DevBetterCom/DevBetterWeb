@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
@@ -12,6 +13,7 @@ using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Stripe;
 
 namespace DevBetterWeb.Web.Controllers;
 
@@ -132,6 +134,9 @@ public class VideosController : Controller
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
+      var videoAddedEvent = new VideoAddedEvent(archiveVideo);
+      archiveVideo.Events.Add(videoAddedEvent);
+        
       archiveVideo = await _repository.AddAsync(archiveVideo);
     }
     else
