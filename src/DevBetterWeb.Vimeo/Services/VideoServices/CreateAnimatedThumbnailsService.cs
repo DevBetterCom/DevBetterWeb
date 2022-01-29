@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBetterWeb.Vimeo.Interfaces;
 using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 
@@ -13,19 +14,22 @@ public class CreateAnimatedThumbnailsService
   private readonly AddAnimatedThumbnailsToVideoService _addAnimatedThumbnailsToVideoService;
   private readonly GetVideoService _getVideoService;
   private readonly ILogger<CreateAnimatedThumbnailsService> _logger;
+  private readonly ISleepService _sleepService;
 
   public CreateAnimatedThumbnailsService(
     GetAnimatedThumbnailService getAnimatedThumbnailService, 
     GetStatusAnimatedThumbnailService getStatusAnimatedThumbnailService, 
     AddAnimatedThumbnailsToVideoService addAnimatedThumbnailsToVideoService, 
     GetVideoService getVideoService, 
-    ILogger<CreateAnimatedThumbnailsService> logger)
+    ILogger<CreateAnimatedThumbnailsService> logger,
+    ISleepService sleepService)
   {
     _getAnimatedThumbnailService = getAnimatedThumbnailService;
     _getStatusAnimatedThumbnailService = getStatusAnimatedThumbnailService;
     _addAnimatedThumbnailsToVideoService = addAnimatedThumbnailsToVideoService;
     _getVideoService = getVideoService;
     _logger = logger;
+    _sleepService = sleepService;
   }
 
   public async Task<AnimatedThumbnailsResponse> ExecuteAsync(long videoId, CancellationToken cancellationToken = default)
@@ -38,7 +42,7 @@ public class CreateAnimatedThumbnailsService
     Video video = new Video();
     while (video == null || video.Status != "available")
     {
-      Thread.Sleep(20 * 1000);
+      _sleepService.Sleep(20 * 1000);
       var response = await _getVideoService.ExecuteAsync(videoId.ToString());
       video = response.Data;
     }
@@ -67,7 +71,7 @@ public class CreateAnimatedThumbnailsService
         statusAnimatedThumbnails = statusResult.Data.Status;
       }
 
-      Thread.Sleep(5 * 1000);
+      _sleepService.Sleep(5 * 1000);
     }
     var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
 

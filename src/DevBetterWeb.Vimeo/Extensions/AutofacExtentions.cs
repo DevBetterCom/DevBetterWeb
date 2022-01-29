@@ -3,7 +3,9 @@ using System.Net.Http;
 using Ardalis.ApiClient;
 using Autofac;
 using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Interfaces;
 using DevBetterWeb.Vimeo.Services.UserServices;
+using DevBetterWeb.Vimeo.Services.UtilityServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Vimeo.Extensions;
@@ -46,5 +48,6 @@ public class AutofacExtensions
     builder.RegisterType<UploadSubtitleToVideoService>();
     builder.RegisterType<GetAllTextTracksService>();
     builder.RegisterType<CreateAnimatedThumbnailsService>();
+    builder.RegisterType<SleepService>().As<ISleepService>();
   }
 }
