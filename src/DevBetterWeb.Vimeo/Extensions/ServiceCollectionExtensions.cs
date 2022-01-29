@@ -2,7 +2,9 @@
 using System.Net.Http;
 using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
+using DevBetterWeb.Vimeo.Interfaces;
 using DevBetterWeb.Vimeo.Services.UserServices;
+using DevBetterWeb.Vimeo.Services.UtilityServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,6 +45,8 @@ public static class ServiceCollectionExtensions
     services.AddScoped<UploadTextTrackFileService>();
     services.AddScoped<UploadSubtitleToVideoService>();
     services.AddScoped<GetAllTextTracksService>();
+    services.AddScoped<CreateAnimatedThumbnailsService>();
+    services.AddScoped<ISleepService, SleepService>();
 
     return services;
   }
