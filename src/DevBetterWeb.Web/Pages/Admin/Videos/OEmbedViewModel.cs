@@ -64,7 +64,7 @@ public class OEmbedViewModel
     return this;
   }
 
-  public OEmbedViewModel BuildHtml(string link)
+  public OEmbedViewModel BuildHtml(string? link)
   {
     Html = Html?.Replace("iframe", "iframe id='videoIframe'");
 

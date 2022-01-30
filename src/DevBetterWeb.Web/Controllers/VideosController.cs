@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
@@ -13,7 +12,6 @@ using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Stripe;
 
 namespace DevBetterWeb.Web.Controllers;
 
@@ -80,7 +78,7 @@ public class VideosController : Controller
     var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
     if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
 
-    var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId);
+    var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId!);
     var archiveVideo = await _repository.GetBySpecAsync(spec);
     if (archiveVideo == null)
     {
@@ -92,7 +90,7 @@ public class VideosController : Controller
     await _repository.SaveChangesAsync();
 
     var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
-    oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
+    oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
     oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
     oEmbedViewModel.Description = archiveVideo.Description;
     oEmbedViewModel
@@ -123,14 +121,10 @@ public class VideosController : Controller
     {
       return Unauthorized();
     }
-    if (archiveVideoDto == null)
-    {
-      return BadRequest();
-    }
 
     var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
-    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
@@ -165,7 +159,7 @@ public class VideosController : Controller
 
     var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
-    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
