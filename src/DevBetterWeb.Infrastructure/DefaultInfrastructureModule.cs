@@ -85,6 +85,5 @@ public class DefaultInfrastructureModule : Module
   private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
   {
     builder.RegisterType<SendGridEmailService>().As<IEmailService>();
-
   }
 }
