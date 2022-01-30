@@ -4,13 +4,7 @@ page = 1;
 recordsPage = 12;
 
 $(document).ready(function () {
-    
-
-    var adminRole = '@(User.IsInRole("Administrators") ? "true" : "false")';    
-    var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };    
-    
-    refreshMembersVideos(currentPage);
-
+    var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
     $("#videosDatatable").DataTable({
         "processing": true,
@@ -44,14 +38,8 @@ $(document).ready(function () {
             },
             { "data": "status", "name": "Status", "autoWidth": true },
             {
-                "render": function (data, type, full, meta) {                    
-                    if (adminRole) {
-                        return "<a href='Videos/Details/" + full.videoId + "'><i class='fas fa-info-circle'></i></a> |  <a href='Videos/Edit/" + full.videoId + "'><i class='fas fa-edit'></i></a> |<a href='Videos/Delete/" + full.videoId + "'><i class='far fa-trash-alt'></i></a>";
-                    } else {
-                        return "";
-                    }
-                        
-                   
+                "render": function (data, type, full, meta) {
+                    return "<a href='Videos/Details/" + full.videoId + "'><i class='fas fa-info-circle'></i></a> |  <a href='Videos/Edit/" + full.videoId + "'><i class='fas fa-edit'></i></a> |<a href='Videos/Delete/" + full.videoId + "'><i class='far fa-trash-alt'></i></a>";
                 }
             },
         ]
