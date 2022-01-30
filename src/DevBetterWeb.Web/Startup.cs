@@ -107,7 +107,6 @@ public class Startup
     services.AddScoped<ICsvService, CsvService>();
     services.AddScoped<IAlumniGraduationService, AlumniGraduationService>();
     services.AddScoped<IGraduationCommunicationsService, GraduationCommunicationsService>();
-    services.AddScoped<IVideosThumbnailService, VideosThumbnailService>();
 
     services.AddScoped<IUserLookupService, UserLookupService>();
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
