@@ -48,6 +48,9 @@ public class AutofacExtensions
     builder.RegisterType<UploadSubtitleToVideoService>();
     builder.RegisterType<GetAllTextTracksService>();
     builder.RegisterType<CreateAnimatedThumbnailsService>();
+    builder.RegisterType<GetAnimatedThumbnailService>();
+    builder.RegisterType<GetStatusAnimatedThumbnailService>();
+    builder.RegisterType<AddAnimatedThumbnailsToVideoService>();
     builder.RegisterType<SleepService>().As<ISleepService>();
   }
 }
