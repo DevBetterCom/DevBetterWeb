@@ -6,7 +6,7 @@ using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices;
-
+ 
 public class CreateAnimatedThumbnailsService
 {
   private readonly GetAnimatedThumbnailService _getAnimatedThumbnailService;
@@ -32,7 +32,8 @@ public class CreateAnimatedThumbnailsService
     _sleepService = sleepService;
   }
 
-  public async Task<AnimatedThumbnailsResponse> ExecuteAsync(long videoId, CancellationToken cancellationToken = default)
+  public async Task<AnimatedThumbnailsResponse> ExecuteAsync(long videoId, 
+    CancellationToken cancellationToken = default)
   {
     return await CreateAnimatedThumbnails(videoId);
   }
