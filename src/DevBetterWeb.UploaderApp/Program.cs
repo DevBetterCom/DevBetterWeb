@@ -6,13 +6,9 @@ using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using McMaster.Extensions.CommandLineUtils;
-using McMaster.Extensions.Hosting.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
-using Serilog.Extensions.Hosting;
 using Serilog.Extensions.Logging;
 
 namespace DevBetterWeb.UploaderApp;
