@@ -23,7 +23,7 @@
     <PackageReference Include="Sendgrid" Version="9.25.2" />
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.1" />
