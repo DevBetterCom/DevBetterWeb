@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
@@ -12,6 +13,7 @@ using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Stripe;
 
 namespace DevBetterWeb.Web.Controllers;
 
@@ -24,6 +26,7 @@ public class VideosController : Controller
   private readonly IMapper _mapper;
   private readonly GetOEmbedVideoService _getOEmbedVideoService;
   private readonly GetVideoService _getVideoService;
+  private readonly DeleteVideoService _deleteVideoService;
   private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
   private readonly IMarkdownService _markdownService;
@@ -33,12 +36,14 @@ public class VideosController : Controller
     IOptions<ApiSettings> apiSettings,
     GetOEmbedVideoService getOEmbedVideoService,
     GetVideoService getVideoService,
+    DeleteVideoService deleteVideoService,
     UploadSubtitleToVideoService uploadSubtitleToVideoService,
     IMarkdownService markdownService)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
     _getVideoService = getVideoService;
+    _deleteVideoService = deleteVideoService;
     _uploadSubtitleToVideoService = uploadSubtitleToVideoService;
     _repository = repository;
     _expectedApiKey = apiSettings.Value.ApiKey;
@@ -75,7 +80,7 @@ public class VideosController : Controller
     var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
     if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
 
-    var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId);
+    var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId!);
     var archiveVideo = await _repository.GetBySpecAsync(spec);
     if (archiveVideo == null)
     {
@@ -87,7 +92,7 @@ public class VideosController : Controller
     await _repository.SaveChangesAsync();
 
     var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
-    oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
+    oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
     oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
     oEmbedViewModel.Description = archiveVideo.Description;
     oEmbedViewModel
@@ -118,17 +123,17 @@ public class VideosController : Controller
     {
       return Unauthorized();
     }
-    if (archiveVideoDto == null)
-    {
-      return BadRequest();
-    }
 
     var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
-    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId);
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
+      // TODO: enable after upload all videos.
+      //var videoAddedEvent = new VideoAddedEvent(archiveVideo);
+      //archiveVideo.Events.Add(videoAddedEvent);
+        
       archiveVideo = await _repository.AddAsync(archiveVideo);
     }
     else
@@ -136,9 +141,61 @@ public class VideosController : Controller
       existVideo.Description = archiveVideo.Description;
       existVideo.Title = archiveVideo.Title;
       existVideo.Duration = archiveVideo.Duration;
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
       await _repository.UpdateAsync(existVideo);
     }
 
     return Ok(archiveVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpPost("update-video-thumbnails")]
+  public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+
+    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo == null)
+    {
+      return BadRequest();
+    }
+    else
+    {
+      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+      await _repository.UpdateAsync(existVideo);
+    }
+
+    return Ok(archiveVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpDelete("uploader/delete-video/{vimeoVideoId}")]
+  public async Task<IActionResult> DeleteVideoThAsync([FromRoute] string vimeoVideoId)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var spec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo != null)
+    {
+      await _repository.DeleteAsync(existVideo);
+    }
+
+    await _deleteVideoService.ExecuteAsync(vimeoVideoId);
+
+    return Ok();
   }
 }
