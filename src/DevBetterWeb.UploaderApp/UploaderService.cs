@@ -204,7 +204,7 @@ public class UploaderService
     var archiveVideo = new ArchiveVideo
     {
       Title = video.Name,
-      DateCreated = video.CreatedTime,
+      DateCreated = new DateTimeOffset(video.CreatedTime.ToUniversalTime()),
       DateUploaded = DateTimeOffset.UtcNow,
       Duration = video.Duration,
       VideoId = videoId.ToString(),
