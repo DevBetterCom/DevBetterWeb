@@ -27,10 +27,10 @@ public static class ConfigureServicesExtensions
 
   public static void AddDailyCheckServices(this IServiceCollection services)
   {
-    services.AddHostedService<DailyCheckService>();
     services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
     services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
     services.AddScoped<IVideosThumbnailService, VideosThumbnailService>();
+    services.AddHostedService<DailyCheckService>();
   }
 
   public static void AddStartupNotificationService(this IServiceCollection services)
