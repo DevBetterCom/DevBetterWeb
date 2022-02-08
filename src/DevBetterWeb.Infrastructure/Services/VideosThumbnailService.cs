@@ -32,7 +32,10 @@ public class VideosThumbnailService : IVideosThumbnailService
       try
       {
         var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
-
+        if (getAnimatedThumbnailResult == null)
+        {
+          continue;
+        }
         video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
         await _repositoryArchiveVideo.UpdateAsync(video);
         messages.Append($"Video {video.VideoId} updated with Thumbnails.");
