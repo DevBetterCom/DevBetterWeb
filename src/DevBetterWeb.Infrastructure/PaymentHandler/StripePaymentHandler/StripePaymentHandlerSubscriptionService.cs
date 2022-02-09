@@ -172,6 +172,7 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
     if (String.IsNullOrEmpty(productNickname))
     {
       _logger.LogWarning($"Product Nickname from Stripe for subscription Id {subscriptionId} was null or empty!");
+      productNickname = "Default";
     }
 
     return productNickname;
