@@ -40,6 +40,8 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
     AppendOnlyStringList messages = new();
 
+    await _videosThumbnailService.UpdateVideosThumbnail(messages);
+
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
     await _alumniGraduationService.GraduateMembersIfNeeded(messages);
@@ -50,8 +52,6 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
 
     // check if number of MemberSubscriptionPlans == expected number
     await _dailyCheckSubscriptionPlanCountService.WarnIfNumberOfMemberSubscriptionPlansDifferentThanExpected(messages);
-
-    await _videosThumbnailService.UpdateVideosThumbnail(messages);
 
     messages.Append(DAILY_CHECK_COMPLETED_MESSAGE);
 
