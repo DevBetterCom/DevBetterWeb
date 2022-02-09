@@ -10,11 +10,13 @@ namespace DevBetterWeb.Infrastructure.Services;
 
 public class VideosThumbnailService : IVideosThumbnailService
 {
+  private readonly IAppLogger<VideosThumbnailService> _logger;
   private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
 
-  public VideosThumbnailService(IRepository<ArchiveVideo> repositoryArchiveVideo, CreateAnimatedThumbnailsService createAnimatedThumbnailsService)
+  public VideosThumbnailService(IAppLogger<VideosThumbnailService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo, CreateAnimatedThumbnailsService createAnimatedThumbnailsService)
   {
+    _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
   }
@@ -40,9 +42,9 @@ public class VideosThumbnailService : IVideosThumbnailService
         await _repositoryArchiveVideo.UpdateAsync(video);
         messages.Append($"Video {video.VideoId} updated with Thumbnails.");
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        // ignored
+        _logger.LogError(ex, $"Error on Thumbnails for Video {video.VideoId}: {ex.Message}");
       }
     }
   }
