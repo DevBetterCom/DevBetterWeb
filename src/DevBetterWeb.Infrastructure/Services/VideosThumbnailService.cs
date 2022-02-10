@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
@@ -13,12 +14,14 @@ public class VideosThumbnailService : IVideosThumbnailService
   private readonly IAppLogger<VideosThumbnailService> _logger;
   private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
+  private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
 
-  public VideosThumbnailService(IAppLogger<VideosThumbnailService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo, CreateAnimatedThumbnailsService createAnimatedThumbnailsService)
+  public VideosThumbnailService(IAppLogger<VideosThumbnailService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo, CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
+    _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
   }
 
   public async Task UpdateVideosThumbnail(AppendOnlyStringList messages)
@@ -33,12 +36,21 @@ public class VideosThumbnailService : IVideosThumbnailService
       }
       try
       {
-        var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
-        if (getAnimatedThumbnailResult == null)
+        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
+        if (existThumbsResponse.Data.Total <= 0)
         {
-          continue;
+          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+          if (getAnimatedThumbnailResult == null)
+          {
+            continue;
+          }
+          video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
         }
-        video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+        else
+        {
+          video.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
+        }
+
         await _repositoryArchiveVideo.UpdateAsync(video);
         messages?.Append($"Video {video.VideoId} updated with Thumbnails.");
       }
@@ -61,12 +73,20 @@ public class VideosThumbnailService : IVideosThumbnailService
       }
       try
       {
-        var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
-        if (getAnimatedThumbnailResult == null)
+        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
+        if (existThumbsResponse.Data.Total <= 0)
         {
-          continue;
+          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+          if (getAnimatedThumbnailResult == null)
+          {
+            continue;
+          }
+          video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
         }
-        video.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+        else
+        {
+          video.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
+        }
         await _repositoryArchiveVideo.UpdateAsync(video);
       }
       catch (Exception ex)
