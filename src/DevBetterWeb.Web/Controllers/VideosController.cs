@@ -33,6 +33,7 @@ public class VideosController : Controller
   private readonly IMarkdownService _markdownService;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
+
   private readonly IVideosThumbnailService _videosThumbnailService;
 
   public VideosController(IMapper mapper,
@@ -175,7 +176,7 @@ public class VideosController : Controller
     {
       return BadRequest();
     }
-
+    
     var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
     if (existThumbsResponse.Data.Total <= 0)
     {
@@ -190,6 +191,7 @@ public class VideosController : Controller
     {
       existVideo.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
     }
+
 
     await _repository.UpdateAsync(existVideo);
 
