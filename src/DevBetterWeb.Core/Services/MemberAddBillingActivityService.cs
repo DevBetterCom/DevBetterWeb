@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Interfaces;
@@ -35,6 +36,8 @@ public class MemberAddBillingActivityService : IMemberAddBillingActivityService
 
   public async Task AddMemberSubscriptionRenewalBillingActivity(string email, decimal amount, string subscriptionPlanName, BillingPeriod billingPeriod)
   {
+    if (string.IsNullOrEmpty(subscriptionPlanName)) throw new ArgumentNullException(nameof(subscriptionPlanName));
+
     var member = await _memberLookupService.GetMemberByEmailAsync(email);
 
     member.AddBillingActivity(subscriptionPlanName, BillingActivityVerb.Renewed, billingPeriod, amount);
