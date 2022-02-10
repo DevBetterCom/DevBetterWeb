@@ -50,6 +50,7 @@ public class CreateAnimatedThumbnailsService
 
     var startAnimation = GetRandomStart(video.Duration > 6 ? video.Duration : 0);
     var addAnimatedThumbnailsToVideoRequest = new AddAnimatedThumbnailsToVideoRequest(videoId, startAnimation, video.Duration >= 6 ? 6 : video.Duration);
+    addAnimatedThumbnailsToVideoRequest.VideoId = null;
     var addAnimatedThumbnailsToVideoResult = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(addAnimatedThumbnailsToVideoRequest);
     var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
     if (string.IsNullOrEmpty(pictureId))
