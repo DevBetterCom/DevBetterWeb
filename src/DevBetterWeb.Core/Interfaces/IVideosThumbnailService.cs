@@ -5,4 +5,5 @@ namespace DevBetterWeb.Core.Interfaces;
 public interface IVideosThumbnailService
 { 
   Task UpdateVideosThumbnail(AppendOnlyStringList messages);
+  Task UpdateVideosThumbnailWithoutMessages();
 }
