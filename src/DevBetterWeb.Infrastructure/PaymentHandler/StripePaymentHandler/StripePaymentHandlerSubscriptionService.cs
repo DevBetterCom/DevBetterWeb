@@ -16,14 +16,17 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
   private readonly SubscriptionService _subscriptionService;
   private readonly IPaymentHandlerSubscriptionCreationService _paymentHandlerSubscriptionCreationService;
   private readonly IRepository<Invitation> _invitationRepository;
+  private readonly IAppLogger<StripePaymentHandlerSubscriptionService> _logger;
 
   public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService,
     IPaymentHandlerSubscriptionCreationService paymentHandlerSubscriptionCreationService,
-    IRepository<Invitation> invitationRepository)
+    IRepository<Invitation> invitationRepository,
+    IAppLogger<StripePaymentHandlerSubscriptionService> logger)
   {
     _subscriptionService = subscriptionService;
     _paymentHandlerSubscriptionCreationService = paymentHandlerSubscriptionCreationService;
     _invitationRepository = invitationRepository;
+    _logger = logger;
   }
 
   public async Task CancelSubscriptionAtPeriodEnd(string customerEmail)
@@ -161,10 +164,16 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
 
   public string GetAssociatedProductName(string subscriptionId)
   {
-    var subscription = _subscriptionService.Get(subscriptionId);
+    var subscription = _subscriptionService.Get(subscriptionId); // direct call to Stripe
 
     var item = subscription.Items.Data[0];
-    var productNickname = item.Price.Nickname;
+    var productNickname = item.Price.Nickname; // what if this is null?
+
+    if (String.IsNullOrEmpty(productNickname))
+    {
+      _logger.LogWarning($"Product Nickname from Stripe for subscription Id {subscriptionId} was null or empty!");
+      productNickname = "Default";
+    }
 
     return productNickname;
   }
