@@ -55,6 +55,7 @@ public class CreateAnimatedThumbnailsService
     if (string.IsNullOrEmpty(pictureId))
     {
       _logger.LogError($"Creating Animated Thumbnails Error!");
+      _logger.LogError($"Error: ${addAnimatedThumbnailsToVideoResult?.Text}");
       return null;
     }
 
