@@ -124,6 +124,7 @@ public class AsyncProgram
           .AddScoped<HttpService>()
           .AddScoped<GetAllVideosService>()
           .AddScoped<GetAnimatedThumbnailService>()
+          .AddScoped<GetAllAnimatedThumbnailService>()
           .AddScoped<GetStatusAnimatedThumbnailService>()
           .AddScoped<AddAnimatedThumbnailsToVideoService>()
           .AddScoped<AddDomainToVideoService>()

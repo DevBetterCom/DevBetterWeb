@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
@@ -31,6 +32,7 @@ public class VideosController : Controller
   private readonly IRepository<ArchiveVideo> _repository;
   private readonly IMarkdownService _markdownService;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
+  private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
   private readonly IVideosThumbnailService _videosThumbnailService;
 
   public VideosController(IMapper mapper,
@@ -42,6 +44,7 @@ public class VideosController : Controller
     UploadSubtitleToVideoService uploadSubtitleToVideoService,
     IMarkdownService markdownService,
     CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
+    GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
     IVideosThumbnailService videosThumbnailService)
   {
     _mapper = mapper;
@@ -53,6 +56,7 @@ public class VideosController : Controller
     _expectedApiKey = apiSettings.Value.ApiKey;
     _markdownService = markdownService;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
+    _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
     _videosThumbnailService = videosThumbnailService;
   }
 
@@ -172,12 +176,21 @@ public class VideosController : Controller
       return BadRequest();
     }
 
-    var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId);
-    if (getAnimatedThumbnailResult == null)
+    var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
+    if (existThumbsResponse.Data.Total <= 0)
     {
-      return BadRequest();
+      var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId);
+      if (getAnimatedThumbnailResult == null)
+      {
+        return BadRequest();
+      }
+      existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
     }
-    existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+    else
+    {
+      existVideo.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
+    }
+
     await _repository.UpdateAsync(existVideo);
 
     return Ok(existVideo);
