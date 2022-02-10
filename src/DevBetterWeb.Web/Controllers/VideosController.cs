@@ -30,6 +30,8 @@ public class VideosController : Controller
   private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
   private readonly IMarkdownService _markdownService;
+  private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
+  private readonly IVideosThumbnailService _videosThumbnailService;
 
   public VideosController(IMapper mapper,
     IRepository<ArchiveVideo> repository,
@@ -38,7 +40,9 @@ public class VideosController : Controller
     GetVideoService getVideoService,
     DeleteVideoService deleteVideoService,
     UploadSubtitleToVideoService uploadSubtitleToVideoService,
-    IMarkdownService markdownService)
+    IMarkdownService markdownService,
+    CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
+    IVideosThumbnailService videosThumbnailService)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
@@ -48,6 +52,8 @@ public class VideosController : Controller
     _repository = repository;
     _expectedApiKey = apiSettings.Value.ApiKey;
     _markdownService = markdownService;
+    _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
+    _videosThumbnailService = videosThumbnailService;
   }
 
   [HttpPost("list")]
@@ -149,6 +155,51 @@ public class VideosController : Controller
   }
 
   [AllowAnonymous]
+  [HttpGet("update-video-thumbnails/{videoId}")]
+  public async Task<IActionResult> UpdateVideoThumbnailsAsync(long videoId)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo == null)
+    {
+      return BadRequest();
+    }
+
+    var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId);
+    if (getAnimatedThumbnailResult == null)
+    {
+      return BadRequest();
+    }
+    existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+    await _repository.UpdateAsync(existVideo);
+
+    return Ok(existVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpGet("update-all-videos-thumbnails")]
+  public async Task<IActionResult> UpdateAllVideosThumbnailsAsync()
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    await _videosThumbnailService.UpdateVideosThumbnailWithoutMessages();
+    
+    return Ok();
+  }
+
+  [AllowAnonymous]
   [HttpPost("update-video-thumbnails")]
   public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
   {
@@ -167,11 +218,9 @@ public class VideosController : Controller
     {
       return BadRequest();
     }
-    else
-    {
-      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
-      await _repository.UpdateAsync(existVideo);
-    }
+
+    existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+    await _repository.UpdateAsync(existVideo);
 
     return Ok(archiveVideo);
   }
