@@ -33,10 +33,6 @@ public class VideosService : IVideosService
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
-      if (video?.VideoId == null)
-      {
-        continue;
-      }
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
@@ -44,10 +40,10 @@ public class VideosService : IVideosService
         {
           continue;
         }
-        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
+        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId!), null));
         if (existThumbsResponse.Data.Total <= 0)
         {
-          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId!));
           if (getAnimatedThumbnailResult == null)
           {
             continue;
@@ -75,10 +71,6 @@ public class VideosService : IVideosService
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
-      if (video?.VideoId == null)
-      {
-        continue;
-      }
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
@@ -102,10 +94,6 @@ public class VideosService : IVideosService
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
-      if (video?.VideoId == null)
-      {
-        continue;
-      }
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
@@ -113,10 +101,10 @@ public class VideosService : IVideosService
         {
           continue;
         }
-        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
+        var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId!), null));
         if (existThumbsResponse.Data.Total <= 0)
         {
-          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId));
+          var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId!));
           if (getAnimatedThumbnailResult == null)
           {
             continue;
