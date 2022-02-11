@@ -15,13 +15,16 @@ public class VideosThumbnailService : IVideosThumbnailService
   private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
+  private readonly GetVideoService _getVideoService;
 
-  public VideosThumbnailService(IAppLogger<VideosThumbnailService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo, CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService)
+  public VideosThumbnailService(IAppLogger<VideosThumbnailService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo,
+    CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService, GetVideoService getVideoService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
+    _getVideoService = getVideoService;
   }
 
   public async Task UpdateVideosThumbnail(AppendOnlyStringList messages)
@@ -36,6 +39,11 @@ public class VideosThumbnailService : IVideosThumbnailService
       }
       try
       {
+        var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response.Data == null)
+        {
+          continue;
+        }
         var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
         if (existThumbsResponse.Data.Total <= 0)
         {
@@ -73,6 +81,11 @@ public class VideosThumbnailService : IVideosThumbnailService
       }
       try
       {
+        var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response.Data == null)
+        {
+          continue;
+        }
         var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(long.Parse(video.VideoId), null));
         if (existThumbsResponse.Data.Total <= 0)
         {
