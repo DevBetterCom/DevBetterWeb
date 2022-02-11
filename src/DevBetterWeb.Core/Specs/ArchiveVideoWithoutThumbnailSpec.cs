@@ -8,6 +8,6 @@ public class ArchiveVideoWithoutThumbnailSpec : Specification<ArchiveVideo>
   public ArchiveVideoWithoutThumbnailSpec()
   {
     Query
-      .Where(s => string.IsNullOrEmpty(s.AnimatedThumbnailUri));
+      .Where(s => string.IsNullOrEmpty(s.AnimatedThumbnailUri) && !string.IsNullOrEmpty(s.VideoId));
   }
 }

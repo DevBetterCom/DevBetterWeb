@@ -39,7 +39,7 @@ public class DeleteModel : PageModel
     }
 
     var video = await _getVideoService.ExecuteAsync(id);
-    if (video == null || video.Data == null)
+    if (video?.Data == null)
     {
       await _deleteVideoService.ExecuteAsync(id);
 
@@ -58,7 +58,7 @@ public class DeleteModel : PageModel
     }
 
     var video = await _getVideoService.ExecuteAsync(id);
-    if (video == null || video.Data == null)
+    if (video?.Data == null)
     {
       return NotFound();
     }
