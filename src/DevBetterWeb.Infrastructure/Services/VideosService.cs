@@ -91,7 +91,7 @@ public class VideosService : IVideosService
       }
       catch (Exception ex)
       {
-        _logger.LogError(ex, $"Error on Thumbnails for Video {video.VideoId}: {ex.Message}");
+        _logger.LogError(ex, $"Error on Delete Video {video.VideoId}: {ex.Message}");
       }
     }
   }
