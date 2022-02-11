@@ -176,7 +176,13 @@ public class VideosController : Controller
     {
       return BadRequest();
     }
-    
+
+    var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+    if (response.Data == null)
+    {
+      return BadRequest();
+    }
+
     var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
     if (existThumbsResponse.Data.Total <= 0)
     {
