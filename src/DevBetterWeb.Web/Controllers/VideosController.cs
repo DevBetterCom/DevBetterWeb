@@ -34,7 +34,7 @@ public class VideosController : Controller
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
 
-  private readonly IVideosThumbnailService _videosThumbnailService;
+  private readonly IVideosService _videosService;
 
   public VideosController(IMapper mapper,
     IRepository<ArchiveVideo> repository,
@@ -46,7 +46,7 @@ public class VideosController : Controller
     IMarkdownService markdownService,
     CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
     GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
-    IVideosThumbnailService videosThumbnailService)
+    IVideosService videosService)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
@@ -58,7 +58,7 @@ public class VideosController : Controller
     _markdownService = markdownService;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
-    _videosThumbnailService = videosThumbnailService;
+    _videosService = videosService;
   }
 
   [HttpPost("list")]
@@ -178,9 +178,9 @@ public class VideosController : Controller
     }
 
     var response = await _getVideoService.ExecuteAsync(videoId.ToString());
-    if (response.Data == null)
+    if (response?.Data == null)
     {
-      return BadRequest();
+      return BadRequest("Video Not Found!");
     }
 
     var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
@@ -215,7 +215,7 @@ public class VideosController : Controller
       return Unauthorized();
     }
 
-    await _videosThumbnailService.UpdateVideosThumbnailWithoutMessages();
+    await _videosService.UpdateVideosThumbnailWithoutMessages();
     
     return Ok();
   }

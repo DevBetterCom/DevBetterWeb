@@ -28,10 +28,6 @@ public class GetVideoService : BaseAsyncApiCaller
     {
       var response = await _httpService.HttpGetAsync<Video>($"{uri}/{videoId}");
 
-      if (response == null)
-      {
-        throw new Exception($"No video found for {uri}/{videoId}");
-      }
       return response;
     }
     catch (Exception exception)
