@@ -79,7 +79,7 @@ public class VideosService : IVideosService
           await _repositoryArchiveVideo.DeleteAsync(video);
         }
 
-        messages?.Append($"Video {video.VideoId} deleted as it does not exist no vimeo.");
+        messages?.Append($"Video {video.VideoId} deleted as it does not exist on vimeo.");
       }
       catch (Exception ex)
       {
