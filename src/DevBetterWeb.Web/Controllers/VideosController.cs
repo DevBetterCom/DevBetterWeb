@@ -215,7 +215,7 @@ public class VideosController : Controller
       return Unauthorized();
     }
 
-    await _videosService.UpdateVideosThumbnailWithoutMessages();
+    await _videosService.UpdateVideosThumbnail(null);
     
     return Ok();
   }
@@ -231,7 +231,8 @@ public class VideosController : Controller
       return Unauthorized();
     }
 
-    await _videosService.DeleteVideosNotExistOnVimeoWithoutMessages();
+    await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(null);
+    await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(null);
 
     return Ok();
   }
