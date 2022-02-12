@@ -79,6 +79,10 @@ public class VideosService : IVideosService
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response?.Data != null && response.Data.IsPlayable == false)
+        {
+          await _deleteVideoService.ExecuteAsync(video.VideoId);
+        }
         if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
