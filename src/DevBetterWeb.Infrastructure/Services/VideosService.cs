@@ -15,15 +15,18 @@ public class VideosService : IVideosService
   private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
+  private readonly DeleteVideoService _deleteVideoService;
   private readonly GetVideoService _getVideoService;
 
   public VideosService(IAppLogger<VideosService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo,
-    CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService, GetVideoService getVideoService)
+    CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
+    DeleteVideoService deleteVideoService, GetVideoService getVideoService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
+    _deleteVideoService = deleteVideoService;
     _getVideoService = getVideoService;
   }
 
@@ -74,6 +77,10 @@ public class VideosService : IVideosService
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response?.Data != null && response.Data.IsPlayable == false)
+        {
+          await _deleteVideoService.ExecuteAsync(video.VideoId);
+        }
         if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
@@ -97,6 +104,10 @@ public class VideosService : IVideosService
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response?.Data != null && response.Data.IsPlayable == false)
+        {
+          await _deleteVideoService.ExecuteAsync(video.VideoId);
+        }
         if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
