@@ -67,14 +67,14 @@ public class VideosService : IVideosService
 
   public async Task DeleteVideosNotExistOnVimeo(AppendOnlyStringList messages)
   {
-    var spec = new ArchiveVideoWithVideoIdSpec();
+    var spec = new ArchiveVideoWithoutThumbnailSpec();
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
-        if (response?.Data == null)
+        if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
         }
@@ -90,14 +90,14 @@ public class VideosService : IVideosService
 
   public async Task DeleteVideosNotExistOnVimeoWithoutMessages()
   {
-    var spec = new ArchiveVideoWithVideoIdSpec();
+    var spec = new ArchiveVideoWithoutThumbnailSpec();
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
-        if (response?.Data == null)
+        if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
         }
