@@ -88,6 +88,27 @@ public class VideosService : IVideosService
     }
   }
 
+  public async Task DeleteVideosNotExistOnVimeoWithoutMessages()
+  {
+    var spec = new ArchiveVideoWithoutThumbnailSpec();
+    var videos = await _repositoryArchiveVideo.ListAsync(spec);
+    foreach (var video in videos)
+    {
+      try
+      {
+        var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        if (response?.Data == null)
+        {
+          await _repositoryArchiveVideo.DeleteAsync(video);
+        }
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, $"Error on Delete Video {video.VideoId}: {ex.Message}");
+      }
+    }
+  }
+
   public async Task UpdateVideosThumbnailWithoutMessages()
   {
     var spec = new ArchiveVideoWithoutThumbnailSpec();
