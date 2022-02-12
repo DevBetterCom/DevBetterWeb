@@ -3,9 +3,9 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class ArchiveVideoVideoIdSpec : Specification<ArchiveVideo>
+public class ArchiveVideoWithVideoIdSpec : Specification<ArchiveVideo>
 {
-  public ArchiveVideoVideoIdSpec()
+  public ArchiveVideoWithVideoIdSpec()
   {
     Query
       .Where(s => !string.IsNullOrEmpty(s.VideoId));
