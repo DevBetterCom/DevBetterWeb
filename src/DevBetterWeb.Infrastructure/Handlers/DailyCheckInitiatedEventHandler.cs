@@ -40,7 +40,8 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
     AppendOnlyStringList messages = new();
 
-    await _videosService.DeleteVideosNotExistOnVimeo(messages);
+    await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(messages);
+    await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(messages);
     await _videosService.UpdateVideosThumbnail(messages);
 
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
