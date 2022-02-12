@@ -47,7 +47,7 @@ public class VideosService : IVideosService
         if (existThumbsResponse.Data.Total <= 0)
         {
           var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(long.Parse(video.VideoId!));
-          if (getAnimatedThumbnailResult == null)
+          if (getAnimatedThumbnailResult == null || response?.Data.IsPlayable == false)
           {
             continue;
           }
@@ -129,7 +129,7 @@ public class VideosService : IVideosService
       try
       {
         var response = await _getVideoService.ExecuteAsync(video.VideoId);
-        if (response?.Data == null)
+        if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           continue;
         }
