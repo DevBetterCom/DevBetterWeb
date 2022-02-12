@@ -221,6 +221,22 @@ public class VideosController : Controller
   }
 
   [AllowAnonymous]
+  [HttpGet("update-all-videos-no-vimeo")]
+  public async Task<IActionResult> UpdateAllVideosNoVimeoAsync()
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    await _videosService.DeleteVideosNotExistOnVimeoWithoutMessages();
+
+    return Ok();
+  }
+
+  [AllowAnonymous]
   [HttpPost("update-video-thumbnails")]
   public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
   {
