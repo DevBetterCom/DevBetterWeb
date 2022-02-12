@@ -221,8 +221,8 @@ public class VideosController : Controller
   }
 
   [AllowAnonymous]
-  [HttpGet("update-all-videos-no-vimeo")]
-  public async Task<IActionResult> UpdateAllVideosNoVimeoAsync()
+  [HttpGet("delete-all-videos-no-vimeo")]
+  public async Task<IActionResult> DeleteAllVideosNoVimeoAsync()
   {
     var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
 
