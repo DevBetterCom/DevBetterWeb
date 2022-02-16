@@ -141,11 +141,9 @@ public class VideosController : Controller
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
-      // TODO: enable after upload all videos.
-      //var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-      //archiveVideo.Events.Add(videoAddedEvent);
-        
       archiveVideo = await _repository.AddAsync(archiveVideo);
+      var videoAddedEvent = new VideoAddedEvent(archiveVideo);
+      archiveVideo.Events.Add(videoAddedEvent);
     }
     else
     {
