@@ -82,13 +82,13 @@ public class VideosService : IVideosService
         if (response?.Data != null && response.Data.IsPlayable == false)
         {
           await _deleteVideoService.ExecuteAsync(video.VideoId);
+          messages?.Append($"Video {video.Id} deleted from vimeo as it does not exist on vimeo.");
         }
         if (response?.Data == null || response?.Data.IsPlayable == false)
         {
           await _repositoryArchiveVideo.DeleteAsync(video);
+          messages?.Append($"Video {video.VideoId} deleted as it does not exist on vimeo.");
         }
-
-        messages?.Append($"Video {video.VideoId} deleted as it does not exist on vimeo.");
       }
       catch (Exception ex)
       {
@@ -114,9 +114,8 @@ public class VideosService : IVideosService
         if (video is { IsPlayable: false })
         {
           await _deleteVideoService.ExecuteAsync(video.Id);
+          messages?.Append($"Video {video.Id} deleted from vimeo as it does not exist on vimeo.");
         }
-
-        messages?.Append($"Video {video.Id} deleted from vimeo as it does not exist on vimeo.");
       }
       catch (Exception ex)
       {
