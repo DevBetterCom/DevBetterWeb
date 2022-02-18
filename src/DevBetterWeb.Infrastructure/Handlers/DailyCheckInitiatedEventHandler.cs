@@ -18,27 +18,31 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   private readonly IAlumniGraduationService _alumniGraduationService;
   private readonly IDailyCheckPingService _dailyCheckPingService;
   private readonly IDailyCheckSubscriptionPlanCountService _dailyCheckSubscriptionPlanCountService;
-  private readonly IVideosThumbnailService _videosThumbnailService;
+  private readonly IVideosService _videosService;
   private readonly IRepository<DailyCheck> _repository;
 
   public DailyCheckInitiatedEventHandler(AdminUpdatesWebhook webhook,
     IAlumniGraduationService alumniGraduationService,
     IDailyCheckPingService dailyCheckPingService,
     IDailyCheckSubscriptionPlanCountService dailyCheckSubscriptionPlanCountService,
-    IVideosThumbnailService videosThumbnailService,
+    IVideosService videosService,
     IRepository<DailyCheck> repository)
   {
     _webhook = webhook;
     _alumniGraduationService = alumniGraduationService;
     _dailyCheckPingService = dailyCheckPingService;
     _dailyCheckSubscriptionPlanCountService = dailyCheckSubscriptionPlanCountService;
-    _videosThumbnailService = videosThumbnailService;
+    _videosService = videosService;
     _repository = repository;
   }
 
   public async Task Handle(DailyCheckInitiatedEvent domainEvent)
   {
     AppendOnlyStringList messages = new();
+
+    await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(messages);
+    await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(messages);
+    await _videosService.UpdateVideosThumbnail(messages);
 
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
@@ -50,8 +54,6 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
 
     // check if number of MemberSubscriptionPlans == expected number
     await _dailyCheckSubscriptionPlanCountService.WarnIfNumberOfMemberSubscriptionPlansDifferentThanExpected(messages);
-
-    await _videosThumbnailService.UpdateVideosThumbnail(messages);
 
     messages.Append(DAILY_CHECK_COMPLETED_MESSAGE);
 

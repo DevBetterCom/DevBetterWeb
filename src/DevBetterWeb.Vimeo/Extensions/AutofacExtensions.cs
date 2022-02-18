@@ -49,6 +49,7 @@ public class AutofacExtensions
     builder.RegisterType<GetAllTextTracksService>();
     builder.RegisterType<CreateAnimatedThumbnailsService>();
     builder.RegisterType<GetAnimatedThumbnailService>();
+    builder.RegisterType<GetAllAnimatedThumbnailService>();
     builder.RegisterType<GetStatusAnimatedThumbnailService>();
     builder.RegisterType<AddAnimatedThumbnailsToVideoService>();
     builder.RegisterType<SleepService>().As<ISleepService>();

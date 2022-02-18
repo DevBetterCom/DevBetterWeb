@@ -41,10 +41,17 @@ public class CreateAnimatedThumbnailsService
   private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
   {
     Video video = new Video();
-    while (video == null || video.Status != "available")
+    while (video.Status != "available")
     {
       _sleepService.Sleep(20 * 1000);
       var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+      if (response?.Data == null)
+      {
+        _logger.LogError($"Video does not exist on vimeo!");
+
+        return null;
+      }
+
       video = response.Data;
     }
 
@@ -55,6 +62,9 @@ public class CreateAnimatedThumbnailsService
     if (string.IsNullOrEmpty(pictureId))
     {
       _logger.LogError($"Creating Animated Thumbnails Error!");
+      _logger.LogError($"StatusCode: {addAnimatedThumbnailsToVideoResult?.Code}");
+      _logger.LogError($"Error: {addAnimatedThumbnailsToVideoResult?.Text}");
+
       return null;
     }
 

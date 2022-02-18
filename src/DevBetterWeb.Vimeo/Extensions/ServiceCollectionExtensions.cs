@@ -47,6 +47,7 @@ public static class ServiceCollectionExtensions
     services.AddScoped<GetAllTextTracksService>();
     services.AddScoped<CreateAnimatedThumbnailsService>();
     services.AddScoped<GetAnimatedThumbnailService>();
+    services.AddScoped<GetAllAnimatedThumbnailService>();
     services.AddScoped<GetStatusAnimatedThumbnailService>();
     services.AddScoped<AddAnimatedThumbnailsToVideoService>();
     services.AddScoped<ISleepService, SleepService>();
