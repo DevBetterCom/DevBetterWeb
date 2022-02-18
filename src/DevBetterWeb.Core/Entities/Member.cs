@@ -66,19 +66,19 @@ public class Member : BaseEntity, IAggregateRoot
   public decimal? CityLatitude { get; set; }
   public decimal? CityLongitude { get; set; }
   public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
-  public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  //public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
 
-  public void AddVideoProgress(MemberVideoProgress videoProgress)
-  {
-    Guard.Against.Null(videoProgress, nameof(videoProgress));
-    Videos.Add(videoProgress);
-  }
+  //public void AddVideoProgress(MemberVideoProgress videoProgress)
+  //{
+  //  Guard.Against.Null(videoProgress, nameof(videoProgress));
+  //  Videos.Add(videoProgress);
+  //}
 
-  public void AddVideoProgress(ArchiveVideo archiveVideo, int secondWatch)
-  {
-    var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
-    Videos.Add(video);
-  }
+  //public void AddVideoProgress(ArchiveVideo archiveVideo, int secondWatch)
+  //{
+  //  var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
+  //  Videos.Add(video);
+  //}
 
   public string UserFullName()
   {
