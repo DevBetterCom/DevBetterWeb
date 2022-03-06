@@ -4430,10 +4430,27 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <Style TargetType="{x:Type StatusBar}">
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}"/>
         <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}"/>
     </Style>
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}"/>
+        <Setter Property="RowBackground" Value="{StaticResource ControlDarkerBackground}"/>
+        <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}"/>
+    </Style>
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}"/>
+        <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}"/>
+    </Style>
+    <Style TargetType="DataGridRow">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Gray"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
     <!-- -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_- -->
 </ResourceDictionary>
