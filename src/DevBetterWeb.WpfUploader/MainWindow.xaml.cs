@@ -20,12 +20,21 @@ namespace DevBetterWeb.WpfUploader;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
-    {
-        InitializeComponent();
+  public MainWindow()
+  {
+    InitializeComponent();
 
-        var iconUri = new Uri("pack://application:,,,/Resources/db-icon.png", UriKind.RelativeOrAbsolute);
-        Icon = BitmapFrame.Create(iconUri);
+    var iconUri = new Uri("pack://application:,,,/Resources/db-icon.png", UriKind.RelativeOrAbsolute);
+    Icon = BitmapFrame.Create(iconUri);
+  }
+
+  private void BtnSelectFolder_OnClick(object sender, RoutedEventArgs e)
+  {
+    var dialog = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog();
+    if (dialog.ShowDialog(this).GetValueOrDefault())
+    {
+      TxtFolderPath.Text = dialog.SelectedPath;
     }
+  }
 }
 

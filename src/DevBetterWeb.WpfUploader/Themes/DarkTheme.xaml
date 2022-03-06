@@ -4431,5 +4431,9 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="{x:Type StatusBar}">
+        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}"/>
+        <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}"/>
+    </Style>
     <!-- -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_- -->
 </ResourceDictionary>
