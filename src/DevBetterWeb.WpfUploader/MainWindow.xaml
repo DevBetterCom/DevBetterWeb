@@ -24,11 +24,11 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem>
-                <TextBox Name="StatusCursorPosition" />
+                <TextBox Name="StatusCursorPosition" IsReadOnly="True" />
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem Grid.Column="2">
-                <TextBox Name="TxtFolderPath" />
+                <TextBox Name="TxtFolderPath" IsReadOnly="True" />
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4">
@@ -38,24 +38,24 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <GroupBox Header="Actions">
                 <StackPanel>
-                    <Button Name="BtnSelectFolder" Content="Select Folder" Height="40" Margin="5" Click="BtnSelectFolder_OnClick"></Button>
+                    <Button Name="BtnSelectFolder" Content="Select Folder" Height="40" Margin="5" Click="BtnSelectFolder_Click"></Button>
                     <Button Content="Upload Selected Videos" Height="40" Margin="5"></Button>
                     <Button Content="Update Thumbs" Height="40" Margin="5"></Button>
                     <Button Content="Delete Videos" Height="40" Margin="5"></Button>
                     <Button Content="Update Video Thumb" Height="40" Margin="5"></Button>
-                    <Button Content="Delete Video" Height="40" Margin="5"></Button>
+                    <Button Name="BtnDeleteSelectedVideos" Content="Delete Video" Height="40" Margin="5" Click="BtnDeleteSelectedVideos_Click"></Button>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Videos" Grid.Column="1">
-                <StackPanel HorizontalAlignment="Stretch">
-                    <DataGrid x:Name="Videos" d:ItemsSource="{d:SampleData ItemCount=5}" CanUserAddRows="False">
+              
+                <DataGrid Name="DataGridVideos" d:ItemsSource="{d:SampleData ItemCount=5}" CanUserAddRows="False" SelectionMode="Extended" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 
-                    </DataGrid>
-                </StackPanel>
+                </DataGrid>
+                 
             </GroupBox>
         </Grid>
     </DockPanel>
