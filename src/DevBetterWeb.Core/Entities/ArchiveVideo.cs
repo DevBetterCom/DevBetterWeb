@@ -5,7 +5,6 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities;
-
 public class ArchiveVideo : BaseEntity, IAggregateRoot
 {
   public string? Title { get; set; }

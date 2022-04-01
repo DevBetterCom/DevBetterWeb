@@ -24,15 +24,17 @@ public class GetVideoService : BaseAsyncApiCaller
   public override async Task<HttpResponse<Video>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
   {
     var uri = $"videos";
-    try
+		var fullPath = $"{uri}/{videoId}";
+
+		try
     {
-      var response = await _httpService.HttpGetAsync<Video>($"{uri}/{videoId}");
+      var response = await _httpService.HttpGetAsync<Video>(fullPath);
 
       return response;
     }
     catch (Exception exception)
     {
-      _logger.LogError(exception);
+      _logger.LogError(exception, $"Error with URL: {0} ", fullPath);
       return HttpResponse<Video>.FromException(exception.Message);
     }
   }

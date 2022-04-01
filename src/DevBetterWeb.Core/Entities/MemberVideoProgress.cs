@@ -7,23 +7,33 @@ public class MemberVideoProgress : BaseEntity, IAggregateRoot
 {
   public int MemberId { get; set; }
   public int ArchiveVideoId { get; set; }
-  public int SecondWatched { get; set; }
-  public bool IsCompleted { get; set; }
-  public ArchiveVideo ArchiveVideo { get; set; } = new ArchiveVideo();
+  /// <summary>
+  /// The last moment watched by this member in milliseconds
+  /// Duration max is stored on ArchiveVideo
+  /// </summary>
+  public int CurrentDuration { get; private set; } = 0;
 
+  // consider an enum with Not Watched / In Progress / Watched
+  //public enum InProgress { get; set; }
   public MemberVideoProgress(int memberId, int archiveVideoId)
   {
     MemberId = memberId;
     ArchiveVideoId = archiveVideoId;
   }
+}
 
-  public MemberVideoProgress(int memberId, ArchiveVideo archiveVideo, int secondWatched)
+public class MemberVideoService
+{
+  public MemberVideoService()
   {
-    MemberId = memberId;
 
-    ArchiveVideo = archiveVideo;
-    ArchiveVideoId = ArchiveVideo.Id;
+  }
 
-    SecondWatched = secondWatched;
+  public void GetMemberProgress(int memberId, int videoId)
+  {
+    // get the video
+    // get the membervideoprogress
+
+    //var result = 
   }
 }
