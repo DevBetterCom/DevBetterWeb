@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
@@ -39,6 +40,10 @@ public class UploadSubtitleToVideoService : BaseAsyncApiCaller
     try
     {
       var videoResponse = await _getVideoService.ExecuteAsync(request.VideoId, cancellationToken);
+      if (videoResponse == null)
+      {
+        return new HttpResponse<bool>(false, HttpStatusCode.InternalServerError);
+      }
       if (videoResponse.Code != System.Net.HttpStatusCode.OK)
       {
         return new HttpResponse<bool>(false, videoResponse.Code);

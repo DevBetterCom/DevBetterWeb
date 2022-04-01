@@ -96,7 +96,7 @@ public class UploaderService
     _logger.LogInformation("UpdateAnimatedThumbnailsAsync Started");
 
     var response = await _getVideoService.ExecuteAsync(vimeoId);
-    if (response.Code != HttpStatusCode.OK)
+    if (response?.Code != HttpStatusCode.OK)
     {
       _logger.LogInformation("Video Does Not Exist on Vimeo!");
       _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
@@ -236,10 +236,17 @@ public class UploaderService
     _logger.LogInformation($"Creating Animated Thumbnails");
 
     Video video = new Video();
-    while (video == null || video.Status != "available")
+    while (video.Status != "available")
     {
       Thread.Sleep(20 * 1000);
       var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+      if (response?.Data == null)
+      {
+        _logger.LogError($"Video does not exist on vimeo!");
+
+        return null;
+      }
+
       video = response.Data;
     }
 

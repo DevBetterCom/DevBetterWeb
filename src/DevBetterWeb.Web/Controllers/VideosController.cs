@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
@@ -30,6 +31,10 @@ public class VideosController : Controller
   private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
   private readonly IMarkdownService _markdownService;
+  private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
+  private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
+
+  private readonly IVideosService _videosService;
 
   public VideosController(IMapper mapper,
     IRepository<ArchiveVideo> repository,
@@ -38,7 +43,10 @@ public class VideosController : Controller
     GetVideoService getVideoService,
     DeleteVideoService deleteVideoService,
     UploadSubtitleToVideoService uploadSubtitleToVideoService,
-    IMarkdownService markdownService)
+    IMarkdownService markdownService,
+    CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
+    GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
+    IVideosService videosService)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
@@ -48,6 +56,9 @@ public class VideosController : Controller
     _repository = repository;
     _expectedApiKey = apiSettings.Value.ApiKey;
     _markdownService = markdownService;
+    _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
+    _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
+    _videosService = videosService;
   }
 
   [HttpPost("list")]
@@ -130,22 +141,102 @@ public class VideosController : Controller
     var existVideo = await _repository.GetBySpecAsync(spec);
     if (existVideo == null)
     {
-      // TODO: enable after upload all videos.
-      //var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-      //archiveVideo.Events.Add(videoAddedEvent);
-        
       archiveVideo = await _repository.AddAsync(archiveVideo);
+      var videoAddedEvent = new VideoAddedEvent(archiveVideo);
+      archiveVideo.Events.Add(videoAddedEvent);
     }
     else
     {
       existVideo.Description = archiveVideo.Description;
       existVideo.Title = archiveVideo.Title;
       existVideo.Duration = archiveVideo.Duration;
-      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+      if (!string.IsNullOrEmpty(archiveVideo.AnimatedThumbnailUri))
+      {
+        existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+      }
+      
       await _repository.UpdateAsync(existVideo);
     }
 
     return Ok(archiveVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpGet("update-video-thumbnails/{videoId}")]
+  public async Task<IActionResult> UpdateVideoThumbnailsAsync(long videoId)
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
+    var existVideo = await _repository.GetBySpecAsync(spec);
+    if (existVideo == null)
+    {
+      return BadRequest();
+    }
+
+    var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+    if (response?.Data == null)
+    {
+      return BadRequest("Video Not Found!");
+    }
+
+    var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
+    if (existThumbsResponse.Data.Total <= 0)
+    {
+      var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId);
+      if (getAnimatedThumbnailResult == null)
+      {
+        return BadRequest();
+      }
+      existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+    }
+    else
+    {
+      existVideo.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
+    }
+
+
+    await _repository.UpdateAsync(existVideo);
+
+    return Ok(existVideo);
+  }
+
+  [AllowAnonymous]
+  [HttpGet("update-all-videos-thumbnails")]
+  public async Task<IActionResult> UpdateAllVideosThumbnailsAsync()
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    await _videosService.UpdateVideosThumbnail(null);
+    
+    return Ok();
+  }
+
+  [AllowAnonymous]
+  [HttpGet("delete-all-videos-no-vimeo")]
+  public async Task<IActionResult> DeleteAllVideosNoVimeoAsync()
+  {
+    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
+
+    if (apiKey != _expectedApiKey)
+    {
+      return Unauthorized();
+    }
+
+    await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(null);
+    await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(null);
+
+    return Ok();
   }
 
   [AllowAnonymous]
@@ -167,11 +258,9 @@ public class VideosController : Controller
     {
       return BadRequest();
     }
-    else
-    {
-      existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
-      await _repository.UpdateAsync(existVideo);
-    }
+
+    existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
+    await _repository.UpdateAsync(existVideo);
 
     return Ok(archiveVideo);
   }
