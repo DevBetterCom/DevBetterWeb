@@ -106,7 +106,7 @@ jobs:
     steps:
       - name: Download publish artifacts
         id: dl_publish_artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: Publish artifacts
           path: WebApp/
