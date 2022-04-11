@@ -86,14 +86,14 @@ jobs:
 
       - name: Upload build artifacts
         id: upload_build_artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Build artifacts
           path: Artifacts/
 
       - name: Upload publish artifacts
         id: upload_publish_artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Publish artifacts
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp/
