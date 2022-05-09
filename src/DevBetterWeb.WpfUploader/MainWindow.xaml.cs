@@ -32,6 +32,8 @@ public partial class MainWindow : Window
 
     var iconUri = new Uri("pack://application:,,,/Resources/db-icon.png", UriKind.RelativeOrAbsolute);
     Icon = BitmapFrame.Create(iconUri);
+
+
   }
 
   private void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
@@ -41,7 +43,7 @@ public partial class MainWindow : Window
     {
       TxtFolderPath.Text = dialog.SelectedPath;
       var videos = GetVideosService.GetVideosFromFolder(dialog.SelectedPath);
-      
+
       DataGridVideos.ItemsSource = GridDataVideoCollection.FromVimeoVideo(videos);
     }
   }

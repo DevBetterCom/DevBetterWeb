@@ -15,4 +15,6 @@ public class GridDataVideo
   public DateTimeOffset DateUploaded { get; set; }
   public string? VideoUrl { get; set; }
   public string? Status { get; set; }
+  public bool IsUploaded { get; set; }
+  public bool IsSelected { get; set; }
 }
