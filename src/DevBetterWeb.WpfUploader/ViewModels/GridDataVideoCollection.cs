@@ -20,7 +20,7 @@ public class GridDataVideoCollection
       
       result.Add(new GridDataVideo
       {
-        Id = (++cnt).ToString(),
+        RowNumber = (++cnt).ToString(),
         Title = archiveVideo.Name,
         VideoId = archiveVideo.Id,
         Description = archiveVideo.Description,

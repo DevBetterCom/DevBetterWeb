@@ -4,7 +4,7 @@ namespace DevBetterWeb.WpfUploader.ViewModels;
 
 public class GridDataVideo
 {
-  public string? Id { get; set; }
+  public string? RowNumber { get; set; }
   public string? Title { get; set; }
   public string? VideoId { get; set; }
   public string? ShowNotes { get; set; }
