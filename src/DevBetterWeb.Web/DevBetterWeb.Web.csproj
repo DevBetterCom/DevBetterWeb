@@ -36,7 +36,7 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.5" />
         <!-- added to fix error when upgrading to .net 5.0 -->
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.4" />
