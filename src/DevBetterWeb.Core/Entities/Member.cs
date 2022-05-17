@@ -241,8 +241,6 @@ public class Member : BaseEntity, IAggregateRoot
     var subscription = new MemberSubscription(this.Id, subscriptionPlanId, subscriptionDateTimeRange);
 
     MemberSubscriptions.Add(subscription);
-
-    CreateOrUpdateUpdateEvent("Subscription Added");
   }
 
   public void ExtendCurrentSubscription(DateTime newEndDate)
@@ -253,7 +251,6 @@ public class Member : BaseEntity, IAggregateRoot
       if (s.Dates.Contains(DateTime.Today))
       {
         s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
-        CreateOrUpdateUpdateEvent("Subscription Updated");
       }
     }
   }
@@ -263,7 +260,6 @@ public class Member : BaseEntity, IAggregateRoot
     var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
     var activity = new BillingActivity(Id, details);
     BillingActivities.Add(activity);
-    CreateOrUpdateUpdateEvent("BillingActivities");
   }
 
   public void UpdateDiscord(string? discordUsername)
