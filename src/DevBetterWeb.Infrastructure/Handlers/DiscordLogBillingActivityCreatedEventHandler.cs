@@ -16,7 +16,7 @@ public class DiscordLogBillingActivityCreatedEventHandler : IHandle<BillingActiv
   
   public Task Handle(BillingActivityCreatedEvent domainEvent)
   {
-  	_webhook.Content = $"BillingActivity created for member {domainEvent.BillingActivity.Details.MemberName} with action {domainEvent.BillingActivity.Details.ActionVerbPastTense}";
+  	_webhook.Content = $"BillingActivity with action {domainEvent.BillingActivity.Details.ActionVerbPastTense} created for member {domainEvent.BillingActivity.Details.MemberName}";
   	return _webhook.Send();
   }
 }
