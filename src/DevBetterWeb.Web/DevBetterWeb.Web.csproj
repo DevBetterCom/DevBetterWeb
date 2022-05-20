@@ -51,7 +51,7 @@
         <!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="Sendgrid" Version="9.27.0" />
+        <PackageReference Include="Sendgrid" Version="9.28.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
         <PackageReference Include="Stripe.net" Version="39.111.0" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
