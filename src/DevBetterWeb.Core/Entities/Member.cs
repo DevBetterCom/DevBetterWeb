@@ -263,9 +263,7 @@ public class Member : BaseEntity, IAggregateRoot
     var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
     var activity = new BillingActivity(Id, details);
     BillingActivities.Add(activity);
-		
-    var createEvent = new BillingActivityCreatedEvent(activity, this);
-    Events.Add(createEvent);
+    Events.Add(new BillingActivityCreatedEvent(activity, this));
   }
 
   public void UpdateDiscord(string? discordUsername)
