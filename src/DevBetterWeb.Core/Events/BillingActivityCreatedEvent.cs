@@ -8,10 +8,10 @@ public class BillingActivityCreatedEvent : BaseDomainEvent
 {
   public BillingActivity BillingActivity { get; }
   public Member Member { get; }
-	
+    
   public BillingActivityCreatedEvent(BillingActivity billingActivity, Member member)
   {
-	BillingActivity = Guard.Against.Null(billingActivity, nameof(billingActivity));
-	Member = Guard.Against.Null(member, nameof(member));
+    BillingActivity = Guard.Against.Null(billingActivity, nameof(billingActivity));
+    Member = Guard.Against.Null(member, nameof(member));
   }
 }

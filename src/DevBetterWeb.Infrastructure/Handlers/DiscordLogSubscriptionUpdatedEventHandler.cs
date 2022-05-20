@@ -11,12 +11,12 @@ public class DiscordLogSubscriptionUpdatedEventHandler : IHandle<SubscriptionUpd
   
   public DiscordLogSubscriptionUpdatedEventHandler(AdminUpdatesWebhook webhook)
   {
-  	_webhook = webhook;
+    _webhook = webhook;
   }
   
   public Task Handle(SubscriptionUpdatedEvent domainEvent)
   {
-  	_webhook.Content = $"Member {domainEvent.Member.UserFullName()} updated subscription {domainEvent.MemberSubscription.Id}";
-  	return _webhook.Send();
+    _webhook.Content = $"Member {domainEvent.Member.UserFullName()} updated subscription {domainEvent.MemberSubscription.Id}";
+    return _webhook.Send();
   }
 }

@@ -17,8 +17,8 @@ public class SubscriptionAddedEventConstructor
   {
     var sut = new SubscriptionAddedEvent(_member, _memberSubscription);
 
-	sut.Member.Should().Be(_member);
-	sut.MemberSubscription.Should().Be(_memberSubscription);
+    sut.Member.Should().Be(_member);
+    sut.MemberSubscription.Should().Be(_memberSubscription);
   }
 
   [Fact]
@@ -26,14 +26,14 @@ public class SubscriptionAddedEventConstructor
   {
     var action = () => new SubscriptionAddedEvent(null, _memberSubscription);
 
-	action.Should().Throw<ArgumentNullException>();
+    action.Should().Throw<ArgumentNullException>();
   }
-	
+    
   [Fact]
   public void ShouldThrowExceptionWhenMemberSubscriptionIsNull()
   {
     var action = () => new SubscriptionAddedEvent(_member, null);
 
-	action.Should().Throw<ArgumentNullException>();
+    action.Should().Throw<ArgumentNullException>();
   }
 }

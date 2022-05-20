@@ -16,11 +16,11 @@ public class BillingActivityCreatedEventConstructor
 
   public BillingActivityCreatedEventConstructor()
   {
-  	var subscriptionPlanName = Guid.NewGuid().ToString();
-  	var actionVerb = BillingActivityVerb.None;
-  	var billingPeriod = BillingPeriod.Month;
+    var subscriptionPlanName = Guid.NewGuid().ToString();
+    var actionVerb = BillingActivityVerb.None;
+    var billingPeriod = BillingPeriod.Month;
   
-  	_billingActivity = new BillingActivity(_member.Id, new BillingDetails(_member.UserFullName(), subscriptionPlanName, actionVerb, billingPeriod, DateTime.UtcNow));
+    _billingActivity = new BillingActivity(_member.Id, new BillingDetails(_member.UserFullName(), subscriptionPlanName, actionVerb, billingPeriod, DateTime.UtcNow));
   }
 
   [Fact]
@@ -28,17 +28,17 @@ public class BillingActivityCreatedEventConstructor
   {
     var sut = new BillingActivityCreatedEvent(_billingActivity, _member);
 
-	sut.DateOccurred.Should().NotBe(default);
-	sut.Member.Should().Be(_member);
-	sut.BillingActivity.Should().Be(_billingActivity);
+    sut.DateOccurred.Should().NotBe(default);
+    sut.Member.Should().Be(_member);
+    sut.BillingActivity.Should().Be(_billingActivity);
   }
-	
+    
   [Fact]
   public void ShouldThrowExceptionWhenBillingActivityIsNull()
   {
     var action = () => new BillingActivityCreatedEvent(null, _member);
 
-	action.Should().Throw<ArgumentNullException>();
+    action.Should().Throw<ArgumentNullException>();
   }
 
   [Fact]
@@ -46,6 +46,6 @@ public class BillingActivityCreatedEventConstructor
   {
     var action = () => new BillingActivityCreatedEvent(_billingActivity, null);
 
-	action.Should().Throw<ArgumentNullException>();
+    action.Should().Throw<ArgumentNullException>();
   }
 }

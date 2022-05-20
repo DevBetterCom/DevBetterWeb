@@ -11,7 +11,7 @@ public class SubscriptionAddedEvent : BaseDomainEvent
   
   public SubscriptionAddedEvent(Member member, MemberSubscription memberSubscription)
   {
-	Member = Guard.Against.Null(member, nameof(member));
-  	MemberSubscription = Guard.Against.Null(memberSubscription, nameof(memberSubscription));
+    Member = Guard.Against.Null(member, nameof(member));
+    MemberSubscription = Guard.Against.Null(memberSubscription, nameof(memberSubscription));
   }
 }

@@ -242,7 +242,7 @@ public class Member : BaseEntity, IAggregateRoot
 
     MemberSubscriptions.Add(subscription);
 
-	Events.Add(new SubscriptionAddedEvent(this, subscription));
+    Events.Add(new SubscriptionAddedEvent(this, subscription));
   }
 
   public void ExtendCurrentSubscription(DateTime newEndDate)
