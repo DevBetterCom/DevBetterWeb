@@ -254,7 +254,6 @@ public class Member : BaseEntity, IAggregateRoot
       {
         s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
         Events.Add(new SubscriptionUpdatedEvent(this, s));
-        return;
       }
     }
   }
