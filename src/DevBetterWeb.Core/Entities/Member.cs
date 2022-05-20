@@ -105,7 +105,7 @@ public class Member : BaseEntity, IAggregateRoot
       LastName = lastName;
       valueChanged = true;
     }
-    if (valueChanged)
+	if (valueChanged)
     {
       CreateOrUpdateUpdateEvent("Name");
     }
@@ -242,7 +242,7 @@ public class Member : BaseEntity, IAggregateRoot
 
     MemberSubscriptions.Add(subscription);
 
-	Events.Add(new SubscriptionAddedEvent(subscription));
+	Events.Add(new SubscriptionAddedEvent(this, subscription));
   }
 
   public void ExtendCurrentSubscription(DateTime newEndDate)
@@ -253,7 +253,7 @@ public class Member : BaseEntity, IAggregateRoot
       if (s.Dates.Contains(DateTime.Today))
       {
         s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
-		Events.Add(new SubscriptionUpdatedEvent(s));
+		Events.Add(new SubscriptionUpdatedEvent(this, s));
 		return;
       }
     }
