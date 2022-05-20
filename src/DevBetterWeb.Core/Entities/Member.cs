@@ -105,7 +105,7 @@ public class Member : BaseEntity, IAggregateRoot
       LastName = lastName;
       valueChanged = true;
     }
-	if (valueChanged)
+    if (valueChanged)
     {
       CreateOrUpdateUpdateEvent("Name");
     }
@@ -253,8 +253,8 @@ public class Member : BaseEntity, IAggregateRoot
       if (s.Dates.Contains(DateTime.Today))
       {
         s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
-		Events.Add(new SubscriptionUpdatedEvent(this, s));
-		return;
+        Events.Add(new SubscriptionUpdatedEvent(this, s));
+        return;
       }
     }
   }
@@ -265,8 +265,8 @@ public class Member : BaseEntity, IAggregateRoot
     var activity = new BillingActivity(Id, details);
     BillingActivities.Add(activity);
 		
-	var createEvent = new BillingActivityCreatedEvent(activity, this);
-	Events.Add(createEvent);
+    var createEvent = new BillingActivityCreatedEvent(activity, this);
+    Events.Add(createEvent);
   }
 
   public void UpdateDiscord(string? discordUsername)
