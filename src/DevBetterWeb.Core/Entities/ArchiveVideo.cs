@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
+using DevBetterWeb.Core.ValueObjects;
 
 namespace DevBetterWeb.Core.Entities;
 public class ArchiveVideo : BaseEntity, IAggregateRoot
@@ -20,6 +21,7 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
   public int Views { get; set; } = 0;
 
   public List<Question> Questions { get; private set; } = new List<Question>();
+  public List<MemberFavoriteArchiveVideo> MemberFavorites { get; private set; } = new List<MemberFavoriteArchiveVideo>();
 
   public void AddQuestion(Question question)
   {

@@ -66,7 +66,8 @@ public class Member : BaseEntity, IAggregateRoot
   public decimal? CityLatitude { get; set; }
   public decimal? CityLongitude { get; set; }
   public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
-  //public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  public List<MemberFavoriteArchiveVideo> FavoriteArchiveVideos { get; set; } = new List<MemberFavoriteArchiveVideo>();
+  public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
 
   //public void AddVideoProgress(MemberVideoProgress videoProgress)
   //{
@@ -117,6 +118,11 @@ public class Member : BaseEntity, IAggregateRoot
 
     Address = address;
     CreateOrUpdateUpdateEvent(nameof(Address));
+  }
+
+  public void AddFavoriteVideo(ArchiveVideo archiveVideo)
+  {
+  	FavoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
   }
 
   public void UpdateShippingAddress(Address newAddress)

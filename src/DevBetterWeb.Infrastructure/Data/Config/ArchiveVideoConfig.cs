@@ -10,5 +10,7 @@ public class ArchiveVideoConfig : IEntityTypeConfiguration<ArchiveVideo>
   {
     builder.Property(x => x.Title).HasMaxLength(200);
     builder.Property(x => x.VideoUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+
+    builder.HasMany(x => x.MemberFavorites);
   }
 }

@@ -8,10 +8,12 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
@@ -35,6 +37,8 @@ public class VideosController : Controller
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
 
   private readonly IVideosService _videosService;
+  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly IRepository<Member> _memberRepository;
 
   public VideosController(IMapper mapper,
     IRepository<ArchiveVideo> repository,
@@ -46,7 +50,9 @@ public class VideosController : Controller
     IMarkdownService markdownService,
     CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
     GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
-    IVideosService videosService)
+    IVideosService videosService,
+    UserManager<ApplicationUser> userManager,
+    IRepository<Member> memberRepository)
   {
     _mapper = mapper;
     _getOEmbedVideoService = getOEmbedVideoService;
@@ -59,6 +65,8 @@ public class VideosController : Controller
     _createAnimatedThumbnailsService = createAnimatedThumbnailsService;
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
     _videosService = videosService;
+    _userManager = userManager;
+		_memberRepository = memberRepository;
   }
 
   [HttpPost("list")]
@@ -286,5 +294,23 @@ public class VideosController : Controller
     await _deleteVideoService.ExecuteAsync(vimeoVideoId);
 
     return Ok();
+  }
+
+  [HttpGet("favorite-video/{vimeoVideoId}")]
+  public async Task<IActionResult> PutFavoriteVideo([FromRoute] string vimeoVideoId)
+  {
+	var currentUserName = User.Identity!.Name;
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+    var memberSpec = new MemberByUserIdSpec(applicationUser.Id);
+    var member = await _memberRepository.GetBySpecAsync(memberSpec);
+
+	var videoSpec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
+    var archiveVideo = await _repository.GetBySpecAsync(videoSpec);
+    if (archiveVideo == null) return NotFound($"Video Not Found {vimeoVideoId}");
+
+    member.AddFavoriteVideo(archiveVideo);
+    await _memberRepository.UpdateAsync(member);
+	return new OkResult();
   }
 }
