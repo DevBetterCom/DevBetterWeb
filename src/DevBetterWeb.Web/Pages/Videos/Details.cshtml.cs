@@ -55,7 +55,7 @@ public class DetailsModel : PageModel
     var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-    var memberSpec = new MemberByUserIdSpec(applicationUser.Id);
+    var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
     var member = await _memberRepository.GetBySpecAsync(memberSpec);
 
     OEmbedViewModel = new OEmbedViewModel(oEmbed?.Data);
