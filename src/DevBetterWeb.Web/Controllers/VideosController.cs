@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -16,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Stripe;
 
 namespace DevBetterWeb.Web.Controllers;
 
@@ -66,7 +64,7 @@ public class VideosController : Controller
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
     _videosService = videosService;
     _userManager = userManager;
-		_memberRepository = memberRepository;
+    _memberRepository = memberRepository;
   }
 
   [HttpPost("list")]
@@ -82,7 +80,33 @@ public class VideosController : Controller
 
     var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search);
     var archiveVideos = await _repository.ListAsync(pagedSpec);
-    var archiveVideosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);
+
+	var currentUserName = User.Identity!.Name;
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+    var memberSpec = new  MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
+    var member = await _memberRepository.GetBySpecAsync(memberSpec);
+
+    if (member is null)
+    {
+      return Unauthorized();
+    }
+
+    var archiveVideosDto = archiveVideos.Select(av => new ArchiveVideoDto
+	{
+		AnimatedThumbnailUri = av.AnimatedThumbnailUri,
+		DateCreated = av.DateCreated,
+		DateUploaded = av.DateUploaded,
+		Description = av.Description,
+		Duration = av.Duration,
+		IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == av.Id),
+		ShowNotes = av.ShowNotes,
+		Status = av.Status,
+		Title = av.Title,
+		VideoId = av.VideoId,
+		VideoUrl = av.VideoUrl,
+		Views = av.Views
+	});
 
     var jsonData = new { draw = draw, recordsFiltered = totalRecords, recordsTotal = totalRecords, data = archiveVideosDto };
 
@@ -296,21 +320,35 @@ public class VideosController : Controller
     return Ok();
   }
 
-  [HttpGet("favorite-video/{vimeoVideoId}")]
-  public async Task<IActionResult> PutFavoriteVideo([FromRoute] string vimeoVideoId)
+  [HttpPut("favorite-video/{vimeoVideoId}")]
+  public async Task<IActionResult> PutToggleFavoriteVideo([FromRoute] string vimeoVideoId)
   {
-	var currentUserName = User.Identity!.Name;
+    var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-    var memberSpec = new MemberByUserIdSpec(applicationUser.Id);
+    var memberSpec = new  MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
     var member = await _memberRepository.GetBySpecAsync(memberSpec);
 
-	var videoSpec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
+    if (member is null)
+    {
+      return Unauthorized();
+    }
+
+    var videoSpec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
     var archiveVideo = await _repository.GetBySpecAsync(videoSpec);
     if (archiveVideo == null) return NotFound($"Video Not Found {vimeoVideoId}");
 
-    member.AddFavoriteVideo(archiveVideo);
+    if (member.FavoriteArchiveVideos.Any(v => v.ArchiveVideoId == archiveVideo.Id))
+    {
+      member.RemoveFavoriteArchiveVideo(archiveVideo);
+    }
+    else
+    {
+      member.AddFavoriteArchiveVideo(archiveVideo);
+    }
+
     await _memberRepository.UpdateAsync(member);
-	return new OkResult();
+
+	return Ok(new { archiveVideo.VideoId });
   }
 }

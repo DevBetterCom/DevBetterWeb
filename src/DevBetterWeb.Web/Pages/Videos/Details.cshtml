@@ -14,7 +14,7 @@ textarea {
 <div class="row">
     <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
     <h3>@Model!.OEmbedViewModel?.Name</h3>
-    <span class="px-2 pt-2"><button onClick=toggleFavorite()><i class="@(Model!.OEmbedViewModel.IsMemberFavorite ? "fas fa-star" : "far fa-star") id="btn-@(Model.OEmbedViewModel.VideoId)"></button></i></span>
+    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model.OEmbedViewModel.VideoId"></i></button></span>
 </div>
     @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
@@ -189,21 +189,23 @@ textarea {
             });
         }
 
-    function toggleFavorite() {
-        var videoId = document.getElementById("videoId").innerHTML;
+        function toggleFavorite() {
+            const videoId = document.getElementById("videoId").innerHTML;
+            const isMemberFavorite = @Model!.OEmbedViewModel.IsMemberFavorite.ToString().ToLower();
 
-        $.ajax({
-            type: "GET",
-            url: "/videos/favorite-video/"+ videoId,
-            data: { videoId: videoId },
-            dataType: "json",
-            success: function () {
-                document.getElementById(`btn-${videoId}`).contentWindow.location.reload();
-            },
-            error: function (errMsg) {
-                alert(errMsg);
-            }
-        });
-    }
+            $.ajax({
+                type: "PUT",
+                url: "/videos/favorite-video/"+ videoId,
+                data: {},
+                dataType: "json",
+                success: function () {
+                    const classes = document.getElementById("icn-" + videoId).classList;
+                    isMemberFavorite ?  classes.replace("fas", "far") : classes.replace("far", "fas");
+                },
+                error: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        }
     </script>
 }

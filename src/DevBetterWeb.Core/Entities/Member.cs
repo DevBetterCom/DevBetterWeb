@@ -120,9 +120,16 @@ public class Member : BaseEntity, IAggregateRoot
     CreateOrUpdateUpdateEvent(nameof(Address));
   }
 
-  public void AddFavoriteVideo(ArchiveVideo archiveVideo)
+  public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
   {
   	FavoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
+  }
+
+  public void RemoveFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  {
+	var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+
+  	FavoriteArchiveVideos.Remove(removal);
   }
 
   public void UpdateShippingAddress(Address newAddress)
