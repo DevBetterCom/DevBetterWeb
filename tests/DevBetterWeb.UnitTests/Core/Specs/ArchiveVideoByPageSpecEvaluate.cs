@@ -38,7 +38,9 @@ public class ArchiveVideoByPageSpecEvaluate
     var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: 12,
-      search: default);
+      search: default,
+	  filterFavorites: false,
+	  memberId: 0);
 
     var result = sut.Evaluate(_archiveVideos);
 
@@ -53,7 +55,9 @@ public class ArchiveVideoByPageSpecEvaluate
     var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: 12,
-      search: search);
+      search: search,
+      filterFavorites: false,
+	  memberId: 0);
 
     var result = sut.Evaluate(_archiveVideos);
 
@@ -70,7 +74,9 @@ public class ArchiveVideoByPageSpecEvaluate
     var sut = new ArchiveVideoByPageSpec(
       skip: skip,
       size: 12,
-      search: default);
+      search: default,
+	  filterFavorites: false,
+	  memberId: 0);
 
     var result = sut.Evaluate(_archiveVideos);
 
@@ -87,7 +93,9 @@ public class ArchiveVideoByPageSpecEvaluate
     var sut = new ArchiveVideoByPageSpec(
       skip: 0,
       size: size,
-      search: default);
+      search: default,
+	  filterFavorites: false,
+	  memberId: 0);
 
     var result = sut.Evaluate(_archiveVideos);
 

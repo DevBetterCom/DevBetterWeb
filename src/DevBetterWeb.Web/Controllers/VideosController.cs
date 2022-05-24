@@ -78,9 +78,6 @@ public class VideosController : Controller
     var filterSpec = new ArchiveVideoFilteredSpec(dataTableParameterModel.Search);
     var totalRecords = await _repository.CountAsync(filterSpec);
 
-    var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search);
-    var archiveVideos = await _repository.ListAsync(pagedSpec);
-
 	var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
@@ -91,6 +88,9 @@ public class VideosController : Controller
     {
       return Unauthorized();
     }
+
+    var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search, dataTableParameterModel.FilterFavorites, member.Id);
+    var archiveVideos = await _repository.ListAsync(pagedSpec);
 
     var archiveVideosDto = archiveVideos.Select(av => new ArchiveVideoDto
 	{

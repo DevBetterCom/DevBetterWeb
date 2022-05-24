@@ -88,6 +88,7 @@
 <p>
     Search: <input type="text" name="SearchString" id="SearchString" />
     <button type="button" onclick="return refreshMembersVideos(0);">Search</button>
+    <span class="px-2"><input type="checkbox" name="Favorites" id="FavoritesCheckbox" onclick="return refreshMembersVideos(0);"/><label class="px-1">Favorites</label></span>
 </p>
 
 <div asp-authorize asp-roles="Administrators,Members,Alumni">
@@ -114,10 +115,12 @@
         var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
         if (userRole) {
             const search = $("#SearchString").val();
+            const filterFavorites = $("#FavoritesCheckbox").is(":checked");
+
             $.ajax({
                 type: "POST",
                 url: "/videos/list",
-                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search },
+                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search, filterFavorites: filterFavorites },
                 dataType: "json",
                 success: function (videosReponse) {
                     var divHtml = "";
