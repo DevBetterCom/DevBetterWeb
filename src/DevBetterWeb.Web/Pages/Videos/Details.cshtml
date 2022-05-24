@@ -191,7 +191,7 @@ textarea {
 
         function toggleFavorite() {
             const videoId = document.getElementById("videoId").innerHTML;
-            const isMemberFavorite = @Model!.OEmbedViewModel.IsMemberFavorite.ToString().ToLower();
+            const isMemberFavorite = window['is-member-favorite'];
 
             $.ajax({
                 type: "PUT",
@@ -201,11 +201,15 @@ textarea {
                 success: function () {
                     const classes = document.getElementById("icn-" + videoId).classList;
                     isMemberFavorite ?  classes.replace("fas", "far") : classes.replace("far", "fas");
+                    window['is-member-favorite'] = !isMemberFavorite;
                 },
                 error: function (errMsg) {
                     alert(errMsg);
                 }
             });
         }
+    </script>
+    <script type="module">
+      window['is-member-favorite'] = @Json.Serialize(Model.OEmbedViewModel?.IsMemberFavorite);
     </script>
 }
