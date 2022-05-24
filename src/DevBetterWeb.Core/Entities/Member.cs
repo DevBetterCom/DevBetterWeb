@@ -122,14 +122,22 @@ public class Member : BaseEntity, IAggregateRoot
 
   public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
   {
-  	FavoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+      return;
+    }
+
+    FavoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
   }
 
   public void RemoveFavoriteArchiveVideo(ArchiveVideo archiveVideo)
   {
-	var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+	  var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
-  	FavoriteArchiveVideos.Remove(removal);
+  	  FavoriteArchiveVideos.Remove(removal);
+    }
   }
 
   public void UpdateShippingAddress(Address newAddress)
