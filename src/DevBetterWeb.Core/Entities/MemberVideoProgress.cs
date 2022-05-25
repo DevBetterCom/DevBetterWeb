@@ -26,7 +26,7 @@ public class MemberVideoService
 {
   public MemberVideoService()
   {
-
+    
   }
 
   public void GetMemberProgress(int memberId, int videoId)

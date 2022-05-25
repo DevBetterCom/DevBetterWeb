@@ -67,17 +67,23 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
     dbContext.SaveChanges();
 
     AddMembers(dbContext, userManager);
-
   }
 
   private static void AddMembers(AppDbContext dbContext,
     UserManager<ApplicationUser> userManager)
   {
     var regularUser = userManager.FindByNameAsync("demouser@microsoft.com").GetAwaiter().GetResult();
+    var regularMember = Member.SeedData(regularUser.Id, "Demo", "User");
+    dbContext.Members.Add(regularMember);
 
-    var member = Member.SeedData(regularUser.Id, "Demo", "User");
-    dbContext.Members.Add(member);
+	var adminUser = userManager.FindByNameAsync("admin@test.com").GetAwaiter().GetResult();
+    var adminMember = Member.SeedData(adminUser.Id, "Admin", "User");
+    dbContext.Members.Add(adminMember);
+
+	var alumniUser = userManager.FindByNameAsync("alumni@test.com").GetAwaiter().GetResult();
+    var alumniMember = Member.SeedData(alumniUser.Id, "Alumni", "User");
+    dbContext.Members.Add(adminMember);
+
     dbContext.SaveChanges();
-
   }
 }
