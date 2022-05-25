@@ -111,6 +111,7 @@ public class Startup
     services.AddScoped<IUserLookupService, UserLookupService>();
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
+    services.AddScoped<IVideosService, VideosService>();
     // list services
     services.Configure<ServiceConfig>(config =>
     {

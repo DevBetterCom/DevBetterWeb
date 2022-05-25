@@ -39,5 +39,7 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
       cl.Property(p => p!.Latitude).HasDefaultValue(null);
       cl.Property(p => p!.Longitude).HasDefaultValue(null);
     });
+
+    builder.HasMany(x => x.FavoriteArchiveVideos);
   }
 }

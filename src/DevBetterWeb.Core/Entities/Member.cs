@@ -67,6 +67,9 @@ public class Member : BaseEntity, IAggregateRoot
   public decimal? CityLongitude { get; set; }
   public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
   //public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  private readonly List<MemberFavoriteArchiveVideo> _favoriteArchiveVideos = new();
+  public IEnumerable<MemberFavoriteArchiveVideo> FavoriteArchiveVideos => _favoriteArchiveVideos.AsReadOnly();
+
 
   //public void AddVideoProgress(MemberVideoProgress videoProgress)
   //{
@@ -117,6 +120,26 @@ public class Member : BaseEntity, IAggregateRoot
 
     Address = address;
     CreateOrUpdateUpdateEvent(nameof(Address));
+  }
+
+  public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  {
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+      return;
+    }
+
+    _favoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
+  }
+
+  public void RemoveFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  {
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+	  var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+
+  	  _favoriteArchiveVideos.Remove(removal);
+    }
   }
 
   public void UpdateShippingAddress(Address newAddress)
