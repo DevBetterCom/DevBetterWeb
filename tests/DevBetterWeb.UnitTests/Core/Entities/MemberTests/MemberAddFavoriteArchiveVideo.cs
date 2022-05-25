@@ -42,6 +42,6 @@ public class MemberAddFavoriteArchiveVideo
     member.AddFavoriteArchiveVideo(archiveVideo);
     member.AddFavoriteArchiveVideo(archiveVideo);
 
-    member.FavoriteArchiveVideos.Count.Should().Be(1);
+    member.FavoriteArchiveVideos.Count().Should().Be(1);
   }
 }

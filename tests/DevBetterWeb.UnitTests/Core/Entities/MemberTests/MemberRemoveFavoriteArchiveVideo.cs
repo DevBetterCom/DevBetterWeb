@@ -1,4 +1,5 @@
-﻿using DevBetterWeb.Core.Entities;
+﻿using System.Linq;
+using DevBetterWeb.Core.Entities;
 using FluentAssertions;
 using Xunit;
 
@@ -17,7 +18,7 @@ public class MemberRemoveFavoriteArchiveVideo
       Id = _validArchiveVideoId,
     };
     member.AddFavoriteArchiveVideo(existingArchiveVideo);
-    int expectedCount = member.FavoriteArchiveVideos.Count;
+    int expectedCount = member.FavoriteArchiveVideos.Count();
 
     var nonexistingArchiveVideo = new ArchiveVideo
     {
@@ -25,7 +26,7 @@ public class MemberRemoveFavoriteArchiveVideo
     };
     member.RemoveFavoriteArchiveVideo(nonexistingArchiveVideo);
 
-    member.FavoriteArchiveVideos.Count.Should().Be(expectedCount);
+    member.FavoriteArchiveVideos.Count().Should().Be(expectedCount);
   }
 
   [Fact]

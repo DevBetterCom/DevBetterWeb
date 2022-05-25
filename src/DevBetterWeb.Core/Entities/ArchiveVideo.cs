@@ -21,7 +21,9 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
   public int Views { get; set; } = 0;
 
   public List<Question> Questions { get; private set; } = new List<Question>();
-  public List<MemberFavoriteArchiveVideo> MemberFavorites { get; private set; } = new List<MemberFavoriteArchiveVideo>();
+
+  private readonly List<MemberFavoriteArchiveVideo> _memberFavorites = new();
+  public IEnumerable<MemberFavoriteArchiveVideo> MemberFavorites => _memberFavorites.AsReadOnly();
 
   public void AddQuestion(Question question)
   {

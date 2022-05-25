@@ -33,7 +33,6 @@ public class VideosController : Controller
   private readonly IMarkdownService _markdownService;
   private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
-
   private readonly IVideosService _videosService;
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;

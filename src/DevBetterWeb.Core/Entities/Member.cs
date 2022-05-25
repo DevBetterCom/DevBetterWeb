@@ -66,8 +66,10 @@ public class Member : BaseEntity, IAggregateRoot
   public decimal? CityLatitude { get; set; }
   public decimal? CityLongitude { get; set; }
   public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
-  public List<MemberFavoriteArchiveVideo> FavoriteArchiveVideos { get; set; } = new List<MemberFavoriteArchiveVideo>();
-  public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  //public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  private readonly List<MemberFavoriteArchiveVideo> _favoriteArchiveVideos = new();
+  public IEnumerable<MemberFavoriteArchiveVideo> FavoriteArchiveVideos => _favoriteArchiveVideos.AsReadOnly();
+
 
   //public void AddVideoProgress(MemberVideoProgress videoProgress)
   //{
@@ -127,7 +129,7 @@ public class Member : BaseEntity, IAggregateRoot
       return;
     }
 
-    FavoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
+    _favoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
   }
 
   public void RemoveFavoriteArchiveVideo(ArchiveVideo archiveVideo)
@@ -136,7 +138,7 @@ public class Member : BaseEntity, IAggregateRoot
     {
 	  var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
-  	  FavoriteArchiveVideos.Remove(removal);
+  	  _favoriteArchiveVideos.Remove(removal);
     }
   }
 
