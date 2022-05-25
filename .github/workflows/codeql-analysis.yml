@@ -1,10 +1,10 @@
 name: CodeQL Analysis
 
 on:
-  push:
+  #push:
   pull_request:
-  schedule:
-    - cron: '0 8 1 * *'
+  #schedule:
+  #  - cron: '0 8 1 * *'
 
 jobs:
   analyze:
