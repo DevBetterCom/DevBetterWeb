@@ -30,7 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.5" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="Autofac" Version="6.3.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 
     <PackageReference Include="Stripe.net" Version="39.114.0" />
   </ItemGroup>
