@@ -99,6 +99,7 @@ public class VideosController : Controller
 		Description = av.Description,
 		Duration = av.Duration,
 		IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == av.Id),
+		MemberFavoritesCount = av.MemberFavorites.Count(),
 		ShowNotes = av.ShowNotes,
 		Status = av.Status,
 		Title = av.Title,
