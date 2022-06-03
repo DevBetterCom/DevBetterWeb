@@ -16,4 +16,16 @@ public class GridDataVideo
   public string? VideoUrl { get; set; }
   public string? Status { get; set; }
   public bool IsUploaded { get; set; }
+
+  public Vimeo.Models.Video ToVimeoVideo()
+  {
+    return new Vimeo.Models.Video
+    {
+      Name = Title,
+      Description = Description,
+      Duration = Duration,
+      Link = VideoUrl,
+      Status = Status,
+    };
+  }
 }
