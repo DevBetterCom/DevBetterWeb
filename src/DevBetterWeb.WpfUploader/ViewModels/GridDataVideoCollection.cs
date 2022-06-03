@@ -33,4 +33,24 @@ public class GridDataVideoCollection
 
     return result;
   }
+
+  public static List<Vimeo.Models.Video> ToVimeoVideo(List<GridDataVideo> gridDataVideos)
+  {
+    var result = new List<Vimeo.Models.Video>();
+
+    var cnt = 0;
+    foreach (var video in gridDataVideos)
+    {
+      result.Add(new Vimeo.Models.Video
+      {
+        Name =  video.Title,
+        Description = video.Description,
+        Duration = video.Duration,
+        Link = video.VideoUrl,
+        Status = video.Status,
+      });
+    }
+
+    return result;
+  }
 }

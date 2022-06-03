@@ -87,9 +87,7 @@ public partial class MainWindow : Window
     IList items = DataGridVideos.SelectedItems;
     foreach (object item in items)
     {
-      if (item is not Video selectedVideo) 
-        continue;
-      videos.Add(selectedVideo);
+      videos.Add(((GridDataVideo)item).ToVimeoVideo());
     }
 
     return videos;
