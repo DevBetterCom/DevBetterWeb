@@ -90,6 +90,7 @@ public class AsyncProgram
     }
     else
     {
+			logger.Information("Beginning Sync...");
       await uploaderService.SyncAsync(FolderPath);
     }
 
