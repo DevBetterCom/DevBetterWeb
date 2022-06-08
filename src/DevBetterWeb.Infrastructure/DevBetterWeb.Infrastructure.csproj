@@ -32,7 +32,7 @@
     <PackageReference Include="Autofac" Version="6.4.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 
-    <PackageReference Include="Stripe.net" Version="39.116.0" />
+    <PackageReference Include="Stripe.net" Version="39.117.0" />
   </ItemGroup>
 
   <ItemGroup>
