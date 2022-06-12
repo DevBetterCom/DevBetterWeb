@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using DevBetterWeb.WpfUploader.ApiClients;
@@ -18,17 +19,15 @@ public partial class MainWindow : Window
 {
   private readonly GetVideosService _getVideosService;
   private readonly DeleteVideo _deleteVideo;
+  private readonly UploaderService _uploaderService;
 
-  public MainWindow()
-  {
-  }
-
-  public MainWindow(GetVideosService getVideosService, DeleteVideo deleteVideo)
+  public MainWindow(UploaderService uploaderService, GetVideosService getVideosService, DeleteVideo deleteVideo)
   {
     InitializeComponent();
 
     _getVideosService = getVideosService;
     _deleteVideo = deleteVideo;
+    _uploaderService = uploaderService;
 
     var iconUri = new Uri("pack://application:,,,/Resources/db-icon.png", UriKind.RelativeOrAbsolute);
     Icon = BitmapFrame.Create(iconUri);
@@ -78,6 +77,16 @@ public partial class MainWindow : Window
     {
       ShowInfoMessage("Video Delete", $"Success: {string.Join(",", successVideos.ToArray())}");
     }
+  }
+  private void BtnShowSettings_Click(object sender, RoutedEventArgs e)
+  {
+    var settingWindow = new SettingWindow();
+    settingWindow.Show();
+  }
+  
+  private async void BtnSync_Click(object sender, RoutedEventArgs e)
+  {
+    await _uploaderService.SyncAsync(TxtFolderPath.Text);
   }
 
   private List<Video> GetSelectedVideos()
