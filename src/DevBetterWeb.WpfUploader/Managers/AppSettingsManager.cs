@@ -40,6 +40,7 @@ public class AppSettingsManager
     var settings = GetSettings();
     if (settings[name] == null)
     {
+      AddUpdateAppSettings(name, string.Empty);
       return string.Empty;
     }
 
