@@ -35,13 +35,13 @@ public class AppSettingsManager
     }
   }
 
-  public string GetAppSetting(string name)
+  public string GetAppSetting(string name, string defaultValue="")
   {
     var settings = GetSettings();
     if (settings[name] == null)
     {
-      AddUpdateAppSettings(name, string.Empty);
-      return string.Empty;
+      AddUpdateAppSettings(name, defaultValue);
+      return defaultValue;
     }
 
     return settings[name].Value;

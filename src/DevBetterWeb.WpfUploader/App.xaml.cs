@@ -46,7 +46,7 @@ public partial class App : Application
     services.AddLogging();
     services.AddSingleton<ILoggerFactory>(services => new SerilogLoggerFactory(logger, false));
 
-    var configInfo = new ConfigInfo(_appSettingsManager.GetAppSetting(AppConstants.TOKEN), _appSettingsManager.GetAppSetting(AppConstants.API_LINK), _appSettingsManager.GetAppSetting(AppConstants.API_KEY));
+    var configInfo = new ConfigInfo(_appSettingsManager.GetAppSetting(AppConstants.TOKEN), _appSettingsManager.GetAppSetting(AppConstants.API_LINK, "https://devbetter.com/"), _appSettingsManager.GetAppSetting(AppConstants.API_KEY));
     services.AddSingleton(configInfo);
     
     services.AddScoped<UploaderService>();
