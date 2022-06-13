@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.ValueObjects;
@@ -55,7 +56,8 @@ public class EditModel : PageModel
     }
 
     MemberSubscriptionPlan = await _context.MemberSubscriptionPlan!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
-
+	
+    Guard.Against.Null(MemberSubscriptionPlan, nameof(MemberSubscriptionPlan));
     MemberSubscriptionPlan.Details = Details!;
 
     _context.Attach(MemberSubscriptionPlan).State = EntityState.Modified;

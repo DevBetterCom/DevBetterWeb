@@ -33,7 +33,7 @@ public class SendRegistrationEmail
       _emailService.Object,
       _memberRegistrationService.Object,
       _logger.Object,
-              null); // TODO: Add dependency
+              null!); // TODO: Add dependency
 
     _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
   }

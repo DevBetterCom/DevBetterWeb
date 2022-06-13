@@ -14,7 +14,7 @@ textarea {
 <div class="row">
     <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
     <h3>@Model!.OEmbedViewModel?.Name</h3>
-    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model.OEmbedViewModel.VideoId"></i></button></span>
+    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model.OEmbedViewModel.VideoId"></i></button></span>
 </div>
     @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
