@@ -53,7 +53,7 @@ public class EditModel : PageModel
 
     var spec = new ArchiveVideoByVideoIdSpec(VideoToEdit.VideoId!);
     var archiveVideo = await _repository.GetBySpecAsync(spec);
-    if (archiveVideo == null) return NotFound(VideoToEdit.VideoId);
+    if (archiveVideo == null) return NotFound(VideoToEdit.VideoId!);
 
     var videoToSave = _mapper.Map<ArchiveVideo>(VideoToEdit);
     if (videoToSave == null)

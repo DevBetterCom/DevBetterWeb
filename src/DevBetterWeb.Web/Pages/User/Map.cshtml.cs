@@ -36,7 +36,7 @@ public class MapModel : PageModel
     {
       if (member.Address is not null && (member.CityLatitude is null || member.CityLongitude is null))
       {
-        _logger.LogInformation("Updating lat/long for {member.FirstName} {member.LastName}");
+        _logger.LogInformation($"Updating lat/long for {member.FirstName} {member.LastName}");
         // TODO: figure out if we need to update location data here
       }
     };

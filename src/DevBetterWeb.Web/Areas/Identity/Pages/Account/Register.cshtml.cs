@@ -93,6 +93,7 @@ public class RegisterModel : PageModel
             pageHandler: null,
             values: new { userId = user.Id, code = code },
             protocol: Request.Scheme);
+        if (string.IsNullOrEmpty(callbackUrl)) throw new Exception("Callback URL is null or empty.");
 
         if (string.IsNullOrEmpty(Input.Email)) throw new Exception("Email is required.");
         await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
