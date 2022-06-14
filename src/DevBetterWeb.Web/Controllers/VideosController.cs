@@ -139,7 +139,7 @@ public class VideosController : Controller
     oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
     oEmbedViewModel.Description = archiveVideo.Description;
     oEmbedViewModel
-      .BuildHtml(video?.Data?.Link);
+      .BuildHtml(video.Data.Link);
 
     return Ok(oEmbedViewModel);
   }

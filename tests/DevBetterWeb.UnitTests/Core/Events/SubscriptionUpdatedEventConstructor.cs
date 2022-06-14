@@ -24,7 +24,7 @@ public class SubscriptionUpdatedEventConstructor
   [Fact]
   public void ShouldThrowExceptionWhenMemberIsNull()
   {
-    var action = () => new SubscriptionUpdatedEvent(null, _memberSubscription);
+    var action = () => new SubscriptionUpdatedEvent(null!, _memberSubscription);
 
     action.Should().Throw<ArgumentNullException>();
   }
@@ -32,7 +32,7 @@ public class SubscriptionUpdatedEventConstructor
   [Fact]
   public void ShouldThrowExceptionWhenMemberSubscriptionIsNull()
   {
-    var action = () => new SubscriptionUpdatedEvent(_member, null);
+    var action = () => new SubscriptionUpdatedEvent(_member, null!);
 
     action.Should().Throw<ArgumentNullException>();
   }

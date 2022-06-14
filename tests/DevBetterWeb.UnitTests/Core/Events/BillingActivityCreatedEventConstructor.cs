@@ -36,7 +36,7 @@ public class BillingActivityCreatedEventConstructor
   [Fact]
   public void ShouldThrowExceptionWhenBillingActivityIsNull()
   {
-    var action = () => new BillingActivityCreatedEvent(null, _member);
+    var action = () => new BillingActivityCreatedEvent(null!, _member);
 
     action.Should().Throw<ArgumentNullException>();
   }
@@ -44,7 +44,7 @@ public class BillingActivityCreatedEventConstructor
   [Fact]
   public void ShouldThrowExceptionWhenMemberIsNull()
   {
-    var action = () => new BillingActivityCreatedEvent(_billingActivity, null);
+    var action = () => new BillingActivityCreatedEvent(_billingActivity, null!);
 
     action.Should().Throw<ArgumentNullException>();
   }
