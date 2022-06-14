@@ -7,10 +7,11 @@ public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
 {
   public ArchiveVideoByPageSpec(int skip, int size, string? search, bool filterFavorites, int memberId)
   {
+    Query.Include(x => x.MemberFavorites);
+
 	if (filterFavorites)
     {
 			Query
-			  .Include(x => x.MemberFavorites)
 			  .Where(x => x.MemberFavorites.Any(m => m.MemberId == memberId));
     }
 

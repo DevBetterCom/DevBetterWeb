@@ -70,7 +70,7 @@ public class DetailsModel : PageModel
       .AddStartTime(startTime)
       .BuildHtml(video.Data.Link);
     OEmbedViewModel.IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id);
-
+	OEmbedViewModel.MemberFavoritesCount = archiveVideo.MemberFavorites.Count();
     return Page();
   }
 }

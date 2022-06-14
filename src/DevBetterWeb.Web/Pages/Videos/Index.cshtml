@@ -127,7 +127,7 @@
                     if (videosReponse && videosReponse.data && videosReponse.data.length > 0) {
                         recordsTotal = videosReponse.recordsTotal;
                         videosReponse.data.forEach(video => {
-                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='/Videos/Details/" + video?.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video?.animatedThumbnailUri + "'></a><h3><a href='/Videos/Details/" + video?.videoId + "'>" + video?.title + "</a></h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span><span><i class='" + (video.isMemberFavorite ? "fas fa-star" : "far fa-star") + "'></i></span></div>";
+                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='/Videos/Details/" + video?.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video?.animatedThumbnailUri + "'></a><h3><a href='/Videos/Details/" + video?.videoId + "'>" + video?.title + "</a></h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span><span><i class='" + (video.isMemberFavorite ? "fas fa-star" : "far fa-star") + "'></i>(" + video.memberFavoritesCount + ")</span></div>";
                         });
                     }
                     document.getElementById('members-videos-list').innerHTML = divHtml;
