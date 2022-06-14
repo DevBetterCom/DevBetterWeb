@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
@@ -57,16 +58,17 @@ public class DetailsModel : PageModel
 
     var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
     var member = await _memberRepository.GetBySpecAsync(memberSpec);
+    if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
 
-    OEmbedViewModel = new OEmbedViewModel(oEmbed?.Data);
-    OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId);
+    OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
+    OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
     OEmbedViewModel.Name = archiveVideo.Title;
-    OEmbedViewModel.Password = video?.Data?.Password;
+    OEmbedViewModel.Password = video.Data.Password;
     OEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
     OEmbedViewModel.Description = archiveVideo.Description;
     OEmbedViewModel
       .AddStartTime(startTime)
-      .BuildHtml(video?.Data?.Link);
+      .BuildHtml(video.Data.Link);
     OEmbedViewModel.IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id);
 
     return Page();

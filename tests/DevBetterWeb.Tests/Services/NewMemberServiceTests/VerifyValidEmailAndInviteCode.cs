@@ -38,7 +38,7 @@ public class VerifyValidEmailAndInviteCode
       _emailService.Object,
       _memberRegistrationService.Object,
       _logger.Object,
-              null); // TODO: Add dependency
+              null!); // TODO: Add dependency
 
   }
 
