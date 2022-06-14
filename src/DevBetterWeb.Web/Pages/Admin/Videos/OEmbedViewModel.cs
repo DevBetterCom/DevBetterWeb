@@ -30,6 +30,7 @@ public class OEmbedViewModel
   public string? Uri { get; set; }
   public string? CustomEmbedLink { get; set; } = string.Empty;
   public bool IsMemberFavorite { get; set; }
+  public int MemberFavoritesCount { get; set; }
 
   public OEmbedViewModel(OEmbed oEmbed)
   {

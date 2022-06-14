@@ -14,7 +14,7 @@ textarea {
 <div class="row">
     <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
     <h3>@Model!.OEmbedViewModel?.Name</h3>
-    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model.OEmbedViewModel.VideoId"></i></button></span>
+    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model!.OEmbedViewModel!.VideoId"></i></button><span id="memberFavoritesCount" class="pt-1">(@Model.OEmbedViewModel.MemberFavoritesCount)</span></span>
 </div>
     @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
@@ -192,6 +192,7 @@ textarea {
         function toggleFavorite() {
             const videoId = document.getElementById("videoId").innerHTML;
             const isMemberFavorite = window['is-member-favorite'];
+            const memberFavoritesCount = window['member-favorites-count'];
 
             $.ajax({
                 type: "PUT",
@@ -202,6 +203,9 @@ textarea {
                     const classes = document.getElementById("icn-" + videoId).classList;
                     isMemberFavorite ?  classes.replace("fas", "far") : classes.replace("far", "fas");
                     window['is-member-favorite'] = !isMemberFavorite;
+                    const newMemberFavoriteCount = isMemberFavorite ? memberFavoritesCount - 1 : memberFavoritesCount + 1;
+                    $("#memberFavoritesCount").text(`(${newMemberFavoriteCount})`);
+                    window['member-favorites-count'] = newMemberFavoriteCount;
                 },
                 error: function (errMsg) {
                     alert(errMsg);
@@ -211,5 +215,6 @@ textarea {
     </script>
     <script type="module">
       window['is-member-favorite'] = @Json.Serialize(Model.OEmbedViewModel?.IsMemberFavorite);
+      window['member-favorites-count'] = @Json.Serialize(Model.OEmbedViewModel?.MemberFavoritesCount);
     </script>
 }
