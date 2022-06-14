@@ -82,7 +82,7 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 
 	var alumniUser = userManager.FindByNameAsync("alumni@test.com").GetAwaiter().GetResult();
     var alumniMember = Member.SeedData(alumniUser.Id, "Alumni", "User");
-    dbContext.Members?.Add(adminMember);
+    dbContext.Members?.Add(alumniMember);
 
     dbContext.SaveChanges();
   }
