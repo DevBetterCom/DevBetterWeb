@@ -84,7 +84,7 @@ public class UploaderService
     {
       _logger.LogInformation($"{vimeoId} Is Not Delete!");
       _logger.LogError($"Delete Response Code: {responseCode}");
-      _logger.LogError($"Delete Response Text: {deleteResponse.Text}");
+      _logger.LogError($"Delete Response Text: {deleteResponse?.Text}");
       return;
     }
 
@@ -101,7 +101,7 @@ public class UploaderService
     {
       _logger.LogInformation("Video Does Not Exist on Vimeo!");
       _logger.LogError($"Vimeo ID: {vimeoId} Update Animated Thumbnails getVideoService Error!");
-      _logger.LogError($"Error: HTTP {response.Code} {response.Text}");
+      _logger.LogError($"Error: HTTP {response?.Code} {response?.Text}");
       return;
     }
 
@@ -119,7 +119,7 @@ public class UploaderService
     if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != HttpStatusCode.OK)
     {
       _logger.LogError($"{vimeoId} Update Animated Thumbnails _updateVideoThumbnails Error!");
-      _logger.LogError($"Error: HTTP {updateVideoThumbnailsResponse.Code} {updateVideoThumbnailsResponse.Text}");
+      _logger.LogError($"Error: HTTP {updateVideoThumbnailsResponse?.Code} {updateVideoThumbnailsResponse?.Text}");
       return;
     }
 
@@ -226,7 +226,7 @@ public class UploaderService
     if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
     {
       _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
-      _logger.LogError($"Error: {videoInfoResponse.Text}");
+      _logger.LogError($"Error: {videoInfoResponse?.Text}");
       return false;
     }
 
@@ -247,7 +247,7 @@ public class UploaderService
       {
         _logger.LogError($"Video does not exist on vimeo!");
 
-        return null;
+        return null!;
       }
 
       video = response.Data;
@@ -260,7 +260,7 @@ public class UploaderService
     if (string.IsNullOrEmpty(pictureId))
     {
       _logger.LogError($"Creating Animated Thumbnails Error!");
-      return null;
+      return null!;
     }
 
     var statusAnimatedThumbnails = string.Empty;

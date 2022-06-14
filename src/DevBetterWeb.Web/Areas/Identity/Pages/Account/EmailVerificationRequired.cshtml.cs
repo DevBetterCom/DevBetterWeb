@@ -1,4 +1,5 @@
-﻿using System.Text.Encodings.Web;
+﻿using System;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -43,6 +44,7 @@ public class EmailVerificationRequiredModel : PageModel
         pageHandler: null,
         values: new { userId = user.Id, code },
         protocol: Request.Scheme);
+    if (string.IsNullOrEmpty(callbackUrl)) throw new Exception("Callback URL is null or empty.");
 
     _logger.LogInformation($"Sending email to {email} with verification link.");
     await _emailService.SendEmailAsync(email, "Confirm your email",
