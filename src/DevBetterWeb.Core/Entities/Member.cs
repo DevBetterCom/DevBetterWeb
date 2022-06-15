@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
@@ -362,9 +361,9 @@ public class Member : BaseEntity, IAggregateRoot
 
       if (string.IsNullOrEmpty(responseString)) return;
 
-	  var doc = this._jsonParserService.Parse(responseString);
+      var doc = this._jsonParserService.Parse(responseString);
 
-	  try
+      try
       {
         var rootElement = doc.RootElement;
 
