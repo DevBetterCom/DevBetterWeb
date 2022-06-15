@@ -135,9 +135,9 @@ public class Member : BaseEntity, IAggregateRoot
   {
     if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
     {
-	  var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+      var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
-  	  _favoriteArchiveVideos.Remove(removal);
+      _favoriteArchiveVideos.Remove(removal);
     }
   }
 
@@ -323,19 +323,19 @@ public class Member : BaseEntity, IAggregateRoot
   {
     private readonly IRepository<Member> _memberRepository;
     private readonly IAppLogger<MemberAddressUpdatedHandler> _logger;
-	private readonly IJsonParserService _jsonParserService;
+    private readonly IJsonParserService _jsonParserService;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
       IRepository<Member> memberRepository,
       IAppLogger<MemberAddressUpdatedHandler> logger,
-	  IJsonParserService jsonParserService)
+      IJsonParserService jsonParserService)
     {
       _mapCoordinateService = mapCoordinateService;
       _memberRepository = memberRepository;
       _logger = logger;
-	  _jsonParserService = jsonParserService;
+      _jsonParserService = jsonParserService;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)

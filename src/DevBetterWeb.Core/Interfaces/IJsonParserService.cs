@@ -4,5 +4,5 @@ namespace DevBetterWeb.Core.Interfaces;
 
 public interface IJsonParserService
 {
-	JsonDocument Parse(string json);
+    JsonDocument Parse(string json);
 }
