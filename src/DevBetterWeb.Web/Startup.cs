@@ -100,6 +100,7 @@ public class Startup
     services.AddAutoMapper(webProjectAssembly);
 
     services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+	services.AddScoped<IJsonParserService, JsonParserService>();
 
     services.AddMemberSubscriptionServices();
 

@@ -324,16 +324,19 @@ public class Member : BaseEntity, IAggregateRoot
   {
     private readonly IRepository<Member> _memberRepository;
     private readonly IAppLogger<MemberAddressUpdatedHandler> _logger;
+	private readonly IJsonParserService _jsonParserService;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
       IRepository<Member> memberRepository,
-      IAppLogger<MemberAddressUpdatedHandler> logger)
+      IAppLogger<MemberAddressUpdatedHandler> logger,
+	  IJsonParserService jsonParserService)
     {
       _mapCoordinateService = mapCoordinateService;
       _memberRepository = memberRepository;
       _logger = logger;
+	  _jsonParserService = jsonParserService;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
@@ -359,10 +362,9 @@ public class Member : BaseEntity, IAggregateRoot
 
       if (string.IsNullOrEmpty(responseString)) return;
 
-      // TODO: Refactor Json Parsing to get Geolocation to separate service
-      var doc = JsonDocument.Parse(responseString);
+	  var doc = this._jsonParserService.Parse(responseString);
 
-      try
+	  try
       {
         var rootElement = doc.RootElement;
 
