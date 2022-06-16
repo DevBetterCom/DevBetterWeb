@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
@@ -136,9 +135,9 @@ public class Member : BaseEntity, IAggregateRoot
   {
     if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
     {
-	  var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+      var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
-  	  _favoriteArchiveVideos.Remove(removal);
+      _favoriteArchiveVideos.Remove(removal);
     }
   }
 
@@ -324,16 +323,19 @@ public class Member : BaseEntity, IAggregateRoot
   {
     private readonly IRepository<Member> _memberRepository;
     private readonly IAppLogger<MemberAddressUpdatedHandler> _logger;
+    private readonly IJsonParserService _jsonParserService;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
       IRepository<Member> memberRepository,
-      IAppLogger<MemberAddressUpdatedHandler> logger)
+      IAppLogger<MemberAddressUpdatedHandler> logger,
+      IJsonParserService jsonParserService)
     {
       _mapCoordinateService = mapCoordinateService;
       _memberRepository = memberRepository;
       _logger = logger;
+      _jsonParserService = jsonParserService;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
@@ -359,8 +361,7 @@ public class Member : BaseEntity, IAggregateRoot
 
       if (string.IsNullOrEmpty(responseString)) return;
 
-      // TODO: Refactor Json Parsing to get Geolocation to separate service
-      var doc = JsonDocument.Parse(responseString);
+      var doc = this._jsonParserService.Parse(responseString);
 
       try
       {
