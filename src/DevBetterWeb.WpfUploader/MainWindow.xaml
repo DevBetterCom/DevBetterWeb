@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevBetterWeb.WpfUploader"
         mc:Ignorable="d"
-        Title="DevBetter Uploader" Height="500" Width="861">
+        Title="DevBetter Uploader" Height="592" Width="863">
 
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
@@ -28,7 +28,7 @@
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem Grid.Column="2">
-                <TextBox Name="TxtFolderPath" IsReadOnly="True" />
+                <TextBox Name="TxtFolderPath" IsReadOnly="True" TextChanged="TxtFolderPath_TextChanged" />
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4">
@@ -42,19 +42,32 @@
             </Grid.ColumnDefinitions>
             <GroupBox Header="Actions">
                 <StackPanel>
+                    <DockPanel Height="25">
+                        <Label DockPanel.Dock="Left" Content="Grid Functions"/>
+                        <Separator/>
+                    </DockPanel>
                     <Button Name="BtnSelectFolder" Content="Select Folder" Height="40" Margin="5" Click="BtnSelectFolder_Click"></Button>
-                    <Button Content="Sync Videos" Height="40" Margin="5" Click="BtnSync_Click"></Button>
-                    <Button Content="Upload Selected Videos" Height="40" Margin="5"></Button>
-                    <Button Content="Update Thumbs" Height="40" Margin="5"></Button>
-                    <Button Content="Delete Selected Videos" Height="40" Margin="5" Click="BtnDeleteSelectedVideos_Click"></Button>
-                    <Button Content="Update Video Thumb" Height="40" Margin="5"></Button>
-                    <Button Name="BtnDeleteVideo" Content="Delete Video" Height="40" Margin="5" Click="BtnDeleteVideo_Click"></Button>
+                    <Button Name="BtnUploadSelectedVideos" Content="Upload Selected Videos" Height="40" Margin="5" IsEnabled="false"></Button>
+                    <Button Name="BtnUpdateThumbs" Content="Update Thumbs" Height="40" Margin="5" IsEnabled="false"></Button>
+                    <Button Name="BtnDeleteVideos" Content="Delete Videos" Height="40" Margin="5" IsEnabled="false" Click="BtnDeleteSelectedVideos_Click"></Button>
+                    <DockPanel Height="25">
+                        <Label DockPanel.Dock="Left" Content="Other Functions"/>
+                        <Separator/>
+                    </DockPanel>
+                    <Button Name="BtnSyncVideos" Content="Sync Videos" Height="40" Margin="5" Click="BtnSync_Click" IsEnabled="false"></Button>
+                    <TextBox Name="TxtVideoId" TextChanged="TxtVideoId_TextChanged"></TextBox>
+                    <Button Name="BtnUpdateVideoThumb" Content="Update Video Thumb" IsEnabled="false" Height="40" Margin="5"></Button>
+                    <Button Name="BtnDeleteVideo" Content="Delete Video" IsEnabled="false" Height="40" Margin="5" Click="BtnDeleteVideo_Click"></Button>
+                    <DockPanel Height="25">
+                        <Label DockPanel.Dock="Left" Content="Options"/>
+                        <Separator/>
+                    </DockPanel>
                     <Button Content="Settings" Height="40" Margin="5" Click="BtnShowSettings_Click"></Button>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Videos" Grid.Column="1">
 
-                <DataGrid Name="DataGridVideos" d:ItemsSource="{d:SampleData ItemCount=5}" CanUserAddRows="False" SelectionMode="Extended" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <DataGrid Name="DataGridVideos" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="DataGridVideos_SelectionChanged" CanUserAddRows="False" SelectionMode="Extended" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 
                 </DataGrid>
 
