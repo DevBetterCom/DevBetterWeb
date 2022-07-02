@@ -128,6 +128,15 @@ public class UploaderService
     _logger.LogInformation($"{vimeoId} Is Updated.");
   }
 
+  public async Task UpdateVideosAnimatedThumbnailsAsync(List<Video> videos)
+  {
+    _logger.LogInformation("UpdateVideosAnimatedThumbnailsAsync Started");
+
+    foreach (var video in videos)
+    {
+      await UpdateAnimatedThumbnailsAsync(video.Id);
+    }
+  }
   public async Task<List<Video>> LoadVideosAsync(string folderToUpload)
   {
     _logger.LogInformation("LoadVideosAsync Started");
@@ -197,6 +206,30 @@ public class UploaderService
       // TODO: Would be good to have some progress indicator here...
       await UploadVideoAsync(video);
       video.Data = null;
+    }
+  }
+  
+  public async Task UploadSelectedVideosAsync(string folderToUpload, List<Video> selectedVideos)
+  {
+    _logger.LogInformation("UploadSelectedVideosAsync Started");
+
+    _logger.LogDebug($"Getting existing videos from devBetter API");
+    var allExistingVideos = await GetExistingVideosAsync();
+    _logger.LogDebug($"Found {allExistingVideos.Count} videos in devBetter API.");
+
+    _logger.LogInformation($"Found {selectedVideos.Count} videos in {folderToUpload}.");
+    foreach (var video in selectedVideos)
+    {
+      var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+      if (vimeoVideo != null)
+      {
+        _logger.LogWarning($"{video.Name} already exists on vimeo.");
+        _logger.LogInformation($"{video.Name} updating video info.");
+        await UpdateVideoInfoAsync(video, long.Parse(vimeoVideo.Id), false);
+
+        var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(vimeoVideo.Id, video.Subtitle, "en");
+        _ = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
+      }
     }
   }
 

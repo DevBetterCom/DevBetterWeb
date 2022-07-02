@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using DevBetterWeb.WpfUploader.ApiClients;
 using DevBetterWeb.WpfUploader.Services;
 using DevBetterWeb.WpfUploader.ViewModels;
 using Video = DevBetterWeb.Vimeo.Models.Video;
@@ -29,6 +26,94 @@ public partial class MainWindow : Window
     Icon = BitmapFrame.Create(iconUri);
 
 
+  }
+
+  private List<Video> GetSelectedVideos()
+  {
+    List<Video> videos = new List<Video>();
+
+    IList items = DataGridVideos.SelectedItems;
+    foreach (object item in items)
+    {
+      videos.Add(((GridDataVideo)item).ToVimeoVideo());
+    }
+
+    return videos;
+  }
+
+  private void ShowInfoMessage(string caption, string messageBoxText)
+  {
+    const MessageBoxButton button = MessageBoxButton.OK;
+    const MessageBoxImage icon = MessageBoxImage.Information;
+
+    var result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+  }
+
+  private void ShowErrorMessage(string caption, string messageBoxText)
+  {
+    const MessageBoxButton button = MessageBoxButton.OK;
+    const MessageBoxImage icon = MessageBoxImage.Error;
+
+    var result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+  }
+
+  private void TxtFolderPath_TextChanged(object sender, TextChangedEventArgs e)
+  {
+    TextBox? box = sender as TextBox;
+
+    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
+    {
+      BtnSyncVideos.IsEnabled = false;
+    }
+    else
+    {
+      BtnSyncVideos.IsEnabled = true;
+    }
+  }
+
+  private void TxtVideoId_TextChanged(object sender, TextChangedEventArgs e)
+  {
+    TextBox? box = sender as TextBox;
+
+    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
+    {
+      BtnUpdateVideoThumb.IsEnabled = false;
+      BtnDeleteVideo.IsEnabled = false;
+    }
+    else
+    {
+      BtnUpdateVideoThumb.IsEnabled = true;
+      BtnDeleteVideo.IsEnabled = true;
+    }
+  }
+
+  private void DataGridVideos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+  {
+    var selectedVideos = GetSelectedVideos();
+    if (selectedVideos.Count >= 0)
+    {
+      BtnUploadSelectedVideos.IsEnabled = true;
+      BtnUpdateThumbs.IsEnabled = true;
+      BtnDeleteVideos.IsEnabled = true;
+    }
+    else
+    {
+      BtnUploadSelectedVideos.IsEnabled = false;
+      BtnUpdateThumbs.IsEnabled = false;
+      BtnDeleteVideos.IsEnabled = false;
+    }
+  }
+
+  private async void BtnUploadSelectedVideos_Click(object sender, RoutedEventArgs e)
+  {
+    var selectedVideos = GetSelectedVideos();
+    await _uploaderService.UploadSelectedVideosAsync(TxtFolderPath.Text, selectedVideos);
+  }
+
+  private async void BtnUpdateThumbs_Click(object sender, RoutedEventArgs e)
+  {
+    var selectedVideos = GetSelectedVideos();
+    await _uploaderService.UpdateVideosAnimatedThumbnailsAsync(selectedVideos);
   }
 
   private async void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
@@ -89,92 +174,22 @@ public partial class MainWindow : Window
       ShowErrorMessage("Video Delete", $"Error: {videoId}");
     }
   }
+
   private void BtnShowSettings_Click(object sender, RoutedEventArgs e)
   {
     var settingWindow = new SettingWindow();
     settingWindow.Show();
   }
-  
+
   private async void BtnSync_Click(object sender, RoutedEventArgs e)
   {
     await _uploaderService.SyncAsync(TxtFolderPath.Text);
   }
 
-  private void TxtFolderPath_TextChanged(object sender, TextChangedEventArgs e)
+  private async void BtnUpdateVideoThumb_Click(object sender, RoutedEventArgs e)
   {
-    TextBox? box = sender as TextBox;
-
-    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
-    {
-      BtnSyncVideos.IsEnabled = false;
-    }
-    else
-    {
-      BtnSyncVideos.IsEnabled = true;
-    }
-  }
-  
-  private void TxtVideoId_TextChanged(object sender, TextChangedEventArgs e)
-  {
-    TextBox? box = sender as TextBox;
-
-    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
-    {
-      BtnUpdateVideoThumb.IsEnabled = false;
-      BtnDeleteVideo.IsEnabled = false;
-    }
-    else
-    {
-      BtnUpdateVideoThumb.IsEnabled = true;
-      BtnDeleteVideo.IsEnabled = true;
-    }
-  }
-  
-  private List<Video> GetSelectedVideos()
-  {
-    List<Video> videos = new List<Video>();
-
-    IList items = DataGridVideos.SelectedItems;
-    foreach (object item in items)
-    {
-      videos.Add(((GridDataVideo)item).ToVimeoVideo());
-    }
-
-    return videos;
-  }
-
-  private void DataGridVideos_SelectionChanged(object sender, SelectionChangedEventArgs e)
-  {
-    var selectedVideos = GetSelectedVideos();
-    if (selectedVideos.Count >= 0)
-    {
-      BtnUploadSelectedVideos.IsEnabled = true;
-      BtnUpdateThumbs.IsEnabled = true;
-      BtnDeleteVideos.IsEnabled = true;
-    }
-    else
-    {
-      BtnUploadSelectedVideos.IsEnabled = false;
-      BtnUpdateThumbs.IsEnabled = false;
-      BtnDeleteVideos.IsEnabled = false;
-    }
-  }
-  
-
-  private void ShowInfoMessage(string caption, string messageBoxText)
-  {
-    const MessageBoxButton button = MessageBoxButton.OK;
-    const MessageBoxImage icon = MessageBoxImage.Information;
-
-    var result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
-  }
-
-  private void ShowErrorMessage(string caption, string messageBoxText)
-  {
-    const MessageBoxButton button = MessageBoxButton.OK;
-    const MessageBoxImage icon = MessageBoxImage.Error;
-
-    var result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+    var videoId = TxtVideoId.Text;
+    await _uploaderService.UpdateAnimatedThumbnailsAsync(videoId);
   }
 }
 
