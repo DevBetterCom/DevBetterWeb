@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DevBetterWeb.WpfUploader.ApiClients;
 using DevBetterWeb.WpfUploader.Services;
@@ -75,32 +76,17 @@ public partial class MainWindow : Window
 
   private async void BtnDeleteVideo_Click(object sender, RoutedEventArgs e)
   {
-    var videos = GetSelectedVideos();
-    var errorVideos = new List<string>();
-    var successVideos = new List<string>();
+    var videoId = TxtVideoId.Text;
 
-    foreach (var video in videos)
+    var deleteResponse = await _uploaderService.DeleteVimeoVideoAsync(videoId);
+
+    if (deleteResponse)
     {
-      var deleteResponse = await _uploaderService.DeleteVimeoVideoAsync(video.Id);
-
-      if (deleteResponse)
-      {
-        successVideos.Add(video.Id);
-      }
-      else
-      {
-        errorVideos.Add(video.Id);
-      }
+      ShowInfoMessage("Video Delete", $"Success: {videoId}");
     }
-
-    if (errorVideos.Count > 0)
+    else
     {
-      ShowErrorMessage("Video Delete", $"Error: {string.Join(",", errorVideos.ToArray())}");
-    }
-
-    if (successVideos.Count > 0)
-    {
-      ShowInfoMessage("Video Delete", $"Success: {string.Join(",", successVideos.ToArray())}");
+      ShowErrorMessage("Video Delete", $"Error: {videoId}");
     }
   }
   private void BtnShowSettings_Click(object sender, RoutedEventArgs e)
@@ -114,6 +100,36 @@ public partial class MainWindow : Window
     await _uploaderService.SyncAsync(TxtFolderPath.Text);
   }
 
+  private void TxtFolderPath_TextChanged(object sender, TextChangedEventArgs e)
+  {
+    TextBox? box = sender as TextBox;
+
+    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
+    {
+      BtnSyncVideos.IsEnabled = false;
+    }
+    else
+    {
+      BtnSyncVideos.IsEnabled = true;
+    }
+  }
+  
+  private void TxtVideoId_TextChanged(object sender, TextChangedEventArgs e)
+  {
+    TextBox? box = sender as TextBox;
+
+    if (string.IsNullOrEmpty(box?.Text) || box.Text.Length == 0)
+    {
+      BtnUpdateVideoThumb.IsEnabled = false;
+      BtnDeleteVideo.IsEnabled = false;
+    }
+    else
+    {
+      BtnUpdateVideoThumb.IsEnabled = true;
+      BtnDeleteVideo.IsEnabled = true;
+    }
+  }
+  
   private List<Video> GetSelectedVideos()
   {
     List<Video> videos = new List<Video>();
@@ -126,6 +142,24 @@ public partial class MainWindow : Window
 
     return videos;
   }
+
+  private void DataGridVideos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+  {
+    var selectedVideos = GetSelectedVideos();
+    if (selectedVideos.Count >= 0)
+    {
+      BtnUploadSelectedVideos.IsEnabled = true;
+      BtnUpdateThumbs.IsEnabled = true;
+      BtnDeleteVideos.IsEnabled = true;
+    }
+    else
+    {
+      BtnUploadSelectedVideos.IsEnabled = false;
+      BtnUpdateThumbs.IsEnabled = false;
+      BtnDeleteVideos.IsEnabled = false;
+    }
+  }
+  
 
   private void ShowInfoMessage(string caption, string messageBoxText)
   {
