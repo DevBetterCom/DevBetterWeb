@@ -34,6 +34,9 @@ public class Video
   [JsonIgnore]
   public string Subtitle { get; set; }
 
+  [JsonIgnore]
+  public string LocalFullPath { get; set; }
+
   [JsonPropertyName("categories")]
   public List<Category> Categories { get; set; }
 

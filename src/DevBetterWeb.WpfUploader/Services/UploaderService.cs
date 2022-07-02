@@ -73,7 +73,7 @@ public class UploaderService
     _deleteVideo = new DeleteVideo(videoInfoHttpService);
   }
 
-  public async Task DeleteVimeoVideoAsync(string vimeoId)
+  public async Task<bool> DeleteVimeoVideoAsync(string vimeoId)
   {
     _logger.LogInformation("DeleteVimeoVideoAsync Started");
 
@@ -86,10 +86,11 @@ public class UploaderService
       _logger.LogInformation($"{vimeoId} Is Not Delete!");
       _logger.LogError($"Delete Response Code: {responseCode}");
       _logger.LogError($"Delete Response Text: {deleteResponse.Text}");
-      return;
+      return false;
     }
 
     _logger.LogInformation($"{vimeoId} Is Deleted.");
+    return true;
   }
 
 
@@ -127,6 +128,43 @@ public class UploaderService
     _logger.LogInformation($"{vimeoId} Is Updated.");
   }
 
+  public async Task<List<Video>> LoadVideosAsync(string folderToUpload)
+  {
+    _logger.LogInformation("LoadVideosAsync Started");
+
+    _logger.LogDebug($"Getting existing videos from devBetter API");
+    var allExistingVideos = await GetExistingVideosAsync();
+    _logger.LogDebug($"Found {allExistingVideos.Count} videos in devBetter API.");
+
+    var localVideos = GetVideos(folderToUpload, allExistingVideos);
+    _logger.LogInformation($"Found {localVideos.Count} videos in {folderToUpload}.");
+
+    var resultVideos = new List<Video>();
+    foreach (var video in localVideos)
+    {
+      var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+      if (vimeoVideo != null)
+      {
+        _logger.LogWarning($"{video.Name} already exists on vimeo.");
+
+        video.Link = vimeoVideo.Link;
+      }
+
+      resultVideos.Add(video);
+    }
+
+    foreach (var video in allExistingVideos)
+    {
+      var isExist = localVideos.Any(x => x.Name.ToLower() == video.Name.ToLower());
+      if (!isExist)
+      {
+        resultVideos.Add(video);
+      }
+    }
+
+    return resultVideos;
+  }
+
   public async Task SyncAsync(string folderToUpload)
   {
     _logger.LogInformation("SyncAsync Started");
@@ -153,8 +191,12 @@ public class UploaderService
       }
 
       _logger.LogInformation($"Starting Uploading {video.Name}");
+
+      video.Data = await File.ReadAllBytesAsync(video.LocalFullPath);
+
       // TODO: Would be good to have some progress indicator here...
       await UploadVideoAsync(video);
+      video.Data = null;
     }
   }
 
@@ -327,6 +369,7 @@ public class UploaderService
       {
 
         var video = new Video();
+        video.LocalFullPath = videoPath;
 
         var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
         var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
@@ -338,6 +381,11 @@ public class UploaderService
         _logger.LogDebug($"Update {name} Video MD, Subtitle and Mp4 information");
 
         var mediaInfo = new MediaInfoWrapper(videoPath);
+        if (mediaInfo.Size <= 0)
+        {
+          continue;
+        }
+        
         video
           .SetCreatedTime(mediaInfo.Tags.EncodedDate)
           .SetDuration(mediaInfo.Duration)
@@ -345,11 +393,6 @@ public class UploaderService
           .SetDescription(description)
           .SetSubtitle(subtitle);
 
-        video.Data = File.ReadAllBytes(videoPath);
-        if (video.Data == null || video.Data.Length <= 0)
-        {
-          continue;
-        }
         video
           .SetEmbedProtecedPrivacy()
           .SetEmbed();

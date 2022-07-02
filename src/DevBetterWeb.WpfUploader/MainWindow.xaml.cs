@@ -17,16 +17,11 @@ namespace DevBetterWeb.WpfUploader;
 /// </summary>
 public partial class MainWindow : Window
 {
-  private readonly GetVideosService _getVideosService;
-  private readonly DeleteVideo _deleteVideo;
   private readonly UploaderService _uploaderService;
 
-  public MainWindow(UploaderService uploaderService, GetVideosService getVideosService, DeleteVideo deleteVideo)
+  public MainWindow(UploaderService uploaderService)
   {
     InitializeComponent();
-
-    _getVideosService = getVideosService;
-    _deleteVideo = deleteVideo;
     _uploaderService = uploaderService;
 
     var iconUri = new Uri("pack://application:,,,/Resources/db-icon.png", UriKind.RelativeOrAbsolute);
@@ -35,19 +30,19 @@ public partial class MainWindow : Window
 
   }
 
-  private void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
+  private async void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
   {
     var dialog = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog();
     if (dialog.ShowDialog(this).GetValueOrDefault())
     {
       TxtFolderPath.Text = dialog.SelectedPath;
-      var videos = GetVideosService.GetVideosFromFolder(dialog.SelectedPath);
+      var videos = await _uploaderService.LoadVideosAsync(TxtFolderPath.Text);
 
       DataGridVideos.ItemsSource = GridDataVideoCollection.FromVimeoVideo(videos);
     }
   }
 
-  private void BtnDeleteSelectedVideos_Click(object sender, RoutedEventArgs e)
+  private async void BtnDeleteSelectedVideos_Click(object sender, RoutedEventArgs e)
   {
     var videos = GetSelectedVideos();
     var errorVideos = new List<string>();
@@ -55,16 +50,46 @@ public partial class MainWindow : Window
 
     foreach (var video in videos)
     {
-      var deleteResponse = _deleteVideo.ExecuteAsync(video.Id).Result;
-      var responseCode = deleteResponse?.Code;
+      var deleteResponse = await _uploaderService.DeleteVimeoVideoAsync(video.Id);
 
-      if (responseCode != HttpStatusCode.OK)
+      if (deleteResponse)
       {
-        errorVideos.Add(video.Id);
+        successVideos.Add(video.Id);
       }
       else
       {
+        errorVideos.Add(video.Id);
+      }
+    }
+
+    if (errorVideos.Count > 0)
+    {
+      ShowErrorMessage("Video Delete", $"Error: {string.Join(",", errorVideos.ToArray())}");
+    }
+
+    if (successVideos.Count > 0)
+    {
+      ShowInfoMessage("Video Delete", $"Success: {string.Join(",", successVideos.ToArray())}");
+    }
+  }
+
+  private async void BtnDeleteVideo_Click(object sender, RoutedEventArgs e)
+  {
+    var videos = GetSelectedVideos();
+    var errorVideos = new List<string>();
+    var successVideos = new List<string>();
+
+    foreach (var video in videos)
+    {
+      var deleteResponse = await _uploaderService.DeleteVimeoVideoAsync(video.Id);
+
+      if (deleteResponse)
+      {
         successVideos.Add(video.Id);
+      }
+      else
+      {
+        errorVideos.Add(video.Id);
       }
     }
 
