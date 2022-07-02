@@ -46,9 +46,9 @@
                     <Button Content="Sync Videos" Height="40" Margin="5" Click="BtnSync_Click"></Button>
                     <Button Content="Upload Selected Videos" Height="40" Margin="5"></Button>
                     <Button Content="Update Thumbs" Height="40" Margin="5"></Button>
-                    <Button Content="Delete Videos" Height="40" Margin="5" Click="BtnDeleteSelectedVideos_Click"></Button>
+                    <Button Content="Delete Selected Videos" Height="40" Margin="5" Click="BtnDeleteSelectedVideos_Click"></Button>
                     <Button Content="Update Video Thumb" Height="40" Margin="5"></Button>
-                    <Button Name="BtnDeleteSelectedVideos" Content="Delete Video" Height="40" Margin="5" Click="BtnDeleteSelectedVideos_Click"></Button>
+                    <Button Name="BtnDeleteVideo" Content="Delete Video" Height="40" Margin="5" Click="BtnDeleteVideo_Click"></Button>
                     <Button Content="Settings" Height="40" Margin="5" Click="BtnShowSettings_Click"></Button>
                 </StackPanel>
             </GroupBox>
