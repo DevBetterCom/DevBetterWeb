@@ -47,7 +47,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.161" />
+        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
         <!-- Added to fix this: https://github.com/aspnet/Scaffolding/issues/834 -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
