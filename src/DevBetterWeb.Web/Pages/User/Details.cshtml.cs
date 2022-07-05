@@ -33,7 +33,7 @@ public class DetailsModel : PageModel
   {
 
     var spec = new MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec(userId);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
     {

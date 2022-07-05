@@ -48,7 +48,7 @@ public class DailyCheckService : BackgroundService
   {
     var spec = new DailyCheckByDateSpec(DateTime.Today);
 
-    var todaysDailyCheck = await _repository.GetBySpecAsync(spec);
+    var todaysDailyCheck = await _repository.FirstOrDefaultAsync(spec);
 
     if (todaysDailyCheck == null)
     {
