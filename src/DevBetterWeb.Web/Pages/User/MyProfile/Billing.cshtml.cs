@@ -44,7 +44,7 @@ public class BillingModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBillingActivitiesSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
     {

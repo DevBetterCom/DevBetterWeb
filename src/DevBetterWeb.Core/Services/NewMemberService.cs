@@ -70,7 +70,7 @@ public class NewMemberService : INewMemberService
 
     try
     {
-      var storedInviteCode = await _invitationRepository.GetBySpecAsync(spec);
+      var storedInviteCode = await _invitationRepository.FirstOrDefaultAsync(spec);
       if (storedInviteCode == null)
       {
         throw new InvitationNotFoundException(inviteCode);
@@ -100,7 +100,7 @@ public class NewMemberService : INewMemberService
     await AddUserToMemberRoleAsync(userId);
 
     var spec = new InvitationByInviteCodeSpec(inviteCode);
-    var invite = await _invitationRepository.GetBySpecAsync(spec);
+    var invite = await _invitationRepository.FirstOrDefaultAsync(spec);
 
     _logger.LogInformation($"Looking up invitation with code {inviteCode}");
     if (invite is null) throw new InvitationNotFoundException($"Could not find invitation with code {inviteCode}.");

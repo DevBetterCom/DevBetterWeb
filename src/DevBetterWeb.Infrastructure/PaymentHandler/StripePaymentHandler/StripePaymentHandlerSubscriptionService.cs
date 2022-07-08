@@ -32,7 +32,7 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
   public async Task CancelSubscriptionAtPeriodEnd(string customerEmail)
   {
     var spec = new InactiveInvitationByEmailSpec(customerEmail);
-    var invite = await _invitationRepository.GetBySpecAsync(spec);
+    var invite = await _invitationRepository.FirstOrDefaultAsync(spec);
     if (invite is null) throw new InvitationNotFoundException(customerEmail);
     var subscriptionId = invite.PaymentHandlerSubscriptionId;
 

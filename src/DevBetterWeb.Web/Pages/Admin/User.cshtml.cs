@@ -96,7 +96,7 @@ public class UserModel : PageModel
     Roles = assignedRoles.ToList();
 
     var memberByUserSpec = new MemberByUserIdSpec(userId);
-    var member = await _memberRepository.GetBySpecAsync(memberByUserSpec);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
     var subscriptions = new List<MemberSubscription>();
     if (member != null)
     {
@@ -148,7 +148,7 @@ public class UserModel : PageModel
   public async Task<IActionResult> OnPostAddSubscriptionAsync(string userId, SubscriptionDTO subscription)
   {
     var memberByUserSpec = new MemberByUserIdSpec(userId);
-    var member = await _memberRepository.GetBySpecAsync(memberByUserSpec);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
 
     if (member == null)
     {

@@ -23,7 +23,7 @@ public class MemberSubscriptionRenewalService : IMemberSubscriptionRenewalServic
     var userId = await _userLookup.FindUserIdByEmailAsync(email);
 
     var spec = new MemberByUserIdSpec(userId);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberWithEmailNotFoundException(email);
     member.ExtendCurrentSubscription(subscriptionEndDate);
   }

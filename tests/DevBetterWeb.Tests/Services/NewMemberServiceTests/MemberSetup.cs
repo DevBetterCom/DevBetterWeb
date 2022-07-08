@@ -52,7 +52,7 @@ public class MemberSetup
     var memberResult = new Member();
     var memberId = memberResult.Id;
 
-    _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
+    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
     _invitationRepository.Setup(r => r.ListAsync(It.IsAny<ActiveInvitationByEmailSpec>(), CancellationToken.None)).ReturnsAsync(new List<Invitation>());
     _memberRepository.Setup(r => r.GetByIdAsync(memberId, CancellationToken.None)).ReturnsAsync(memberResult);
     _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
@@ -64,7 +64,5 @@ public class MemberSetup
 
     _userRoleMembershipService.Verify(u => u.AddUserToRoleByRoleNameAsync(_userId, _roleName), Times.Once);
     Assert.False(_invitation.Active);
-
   }
-
 }

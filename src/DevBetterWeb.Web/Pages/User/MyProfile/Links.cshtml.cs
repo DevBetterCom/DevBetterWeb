@@ -41,7 +41,7 @@ public class MyProfileLinksModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
     {
@@ -61,7 +61,7 @@ public class MyProfileLinksModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,

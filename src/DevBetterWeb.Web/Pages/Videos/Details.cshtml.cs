@@ -47,7 +47,7 @@ public class DetailsModel : PageModel
     if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
 
     var videoSpec = new ArchiveVideoByVideoIdWithMemberFavoritesSpec(videoId);
-    var archiveVideo = await _repository.GetBySpecAsync(videoSpec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(videoSpec);
     if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
 
     archiveVideo.Views++;
@@ -57,7 +57,7 @@ public class DetailsModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(memberSpec);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
     if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
 
     OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);

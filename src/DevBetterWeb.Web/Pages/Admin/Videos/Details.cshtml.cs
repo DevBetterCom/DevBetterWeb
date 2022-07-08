@@ -38,7 +38,7 @@ public class DetailsModel : PageModel
     if (oEmbed?.Data == null) return NotFound(videoId);
 
     var spec = new ArchiveVideoByVideoIdSpec(videoId);
-    var archiveVideo = await _repository.GetBySpecAsync(spec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo == null) return NotFound(videoId);
 
     OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);

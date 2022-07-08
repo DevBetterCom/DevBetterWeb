@@ -81,7 +81,7 @@ public class VideosController : Controller
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var memberSpec = new  MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(memberSpec);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
 
     if (member is null)
     {
@@ -124,7 +124,7 @@ public class VideosController : Controller
     if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
 
     var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId!);
-    var archiveVideo = await _repository.GetBySpecAsync(spec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo == null)
     {
       return NotFound($"Video Not Found {updateDescription.VideoId}");
@@ -170,7 +170,7 @@ public class VideosController : Controller
     var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
     var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
-    var existVideo = await _repository.GetBySpecAsync(spec);
+    var existVideo = await _repository.FirstOrDefaultAsync(spec);
     if (existVideo == null)
     {
       archiveVideo = await _repository.AddAsync(archiveVideo);
@@ -205,7 +205,7 @@ public class VideosController : Controller
     }
 
     var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
-    var existVideo = await _repository.GetBySpecAsync(spec);
+    var existVideo = await _repository.FirstOrDefaultAsync(spec);
     if (existVideo == null)
     {
       return BadRequest();
@@ -285,7 +285,7 @@ public class VideosController : Controller
     var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
 
     var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
-    var existVideo = await _repository.GetBySpecAsync(spec);
+    var existVideo = await _repository.FirstOrDefaultAsync(spec);
     if (existVideo == null)
     {
       return BadRequest();
@@ -309,7 +309,7 @@ public class VideosController : Controller
     }
 
     var spec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
-    var existVideo = await _repository.GetBySpecAsync(spec);
+    var existVideo = await _repository.FirstOrDefaultAsync(spec);
     if (existVideo != null)
     {
       await _repository.DeleteAsync(existVideo);
@@ -327,7 +327,7 @@ public class VideosController : Controller
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var memberSpec = new  MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(memberSpec);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
 
     if (member is null)
     {
@@ -335,7 +335,7 @@ public class VideosController : Controller
     }
 
     var videoSpec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
-    var archiveVideo = await _repository.GetBySpecAsync(videoSpec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(videoSpec);
     if (archiveVideo == null) return NotFound($"Video Not Found {vimeoVideoId}");
 
     if (member.FavoriteArchiveVideos.Any(v => v.ArchiveVideoId == archiveVideo.Id))
