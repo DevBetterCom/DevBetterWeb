@@ -43,7 +43,7 @@ public class DailyCheckPingService : IDailyCheckPingService
     {
       var user = await _userManager.FindByEmailAsync(invitation.Email);
       if (user == null) continue;
-      var member = await _memberRepository.GetBySpecAsync(new MemberByUserIdSpec(user.Id));
+      var member = await _memberRepository.FirstOrDefaultAsync(new MemberByUserIdSpec(user.Id));
       if (member == null) continue;
 
       invitation.Deactivate();

@@ -33,7 +33,7 @@ public class CancelModel : PageModel
   public async Task OnGetAsync(string userId)
   {
     var spec = new MemberByUserIdSpec(userId);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     var EmailToUnsubscribe = await GetEmail(userId);
 

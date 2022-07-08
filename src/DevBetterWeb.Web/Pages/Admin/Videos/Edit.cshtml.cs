@@ -36,7 +36,7 @@ public class EditModel : PageModel
     }
 
     var spec = new ArchiveVideoByVideoIdSpec(id);
-    var archiveVideo = await _repository.GetBySpecAsync(spec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo == null) return NotFound(id);
 
     VideoToEdit = _mapper.Map<ArchiveVideoDto>(archiveVideo);
@@ -52,7 +52,7 @@ public class EditModel : PageModel
     }
 
     var spec = new ArchiveVideoByVideoIdSpec(VideoToEdit.VideoId!);
-    var archiveVideo = await _repository.GetBySpecAsync(spec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo == null) return NotFound(VideoToEdit.VideoId!);
 
     var videoToSave = _mapper.Map<ArchiveVideo>(VideoToEdit);
