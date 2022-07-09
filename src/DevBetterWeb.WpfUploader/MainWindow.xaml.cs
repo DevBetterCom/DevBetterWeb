@@ -191,5 +191,10 @@ public partial class MainWindow : Window
     var videoId = TxtVideoId.Text;
     await _uploaderService.UpdateAnimatedThumbnailsAsync(videoId);
   }
+
+  private async void BtnUpdateAllVideoThumbs_Click(object sender, RoutedEventArgs e)
+  {
+    await _uploaderService.UpdateAllVideosAnimatedThumbnailsAsync();
+  }
 }
 
