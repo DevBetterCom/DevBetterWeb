@@ -98,26 +98,7 @@ public class UploaderService
   {
     _logger.LogInformation("UpdateAnimatedThumbnailsAsync Started");
 
-    var response = await _getVideoService.ExecuteAsync(vimeoId);
-    if (response?.Code != HttpStatusCode.OK)
-    {
-      _logger.LogInformation("Video Does Not Exist on Vimeo!");
-      _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
-      _logger.LogError($"Error: {response.Text}");
-      return;
-    }
-
-    var archiveVideo = new ArchiveVideo
-    {
-      VideoId = vimeoId
-    };
-
-    var getAnimatedThumbnailResult = await CreateAnimatedThumbnails(long.Parse(vimeoId));
-    _logger.LogDebug($"AnimatedThumbnailUri: {getAnimatedThumbnailResult.AnimatedThumbnailUri}");
-
-    archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-
-    var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
+    var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(vimeoId);
     if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
     {
       _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");

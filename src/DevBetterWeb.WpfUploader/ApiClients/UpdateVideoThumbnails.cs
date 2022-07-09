@@ -7,7 +7,7 @@ using DevBetterWeb.WpfUploader.Models;
 namespace DevBetterWeb.WpfUploader.ApiClients;
 
 public class UpdateVideoThumbnails : BaseAsyncApiCaller
-  .WithRequest<ArchiveVideo>
+  .WithRequest<string>
   .WithoutResponse
 {
   private readonly HttpService _httpService;
@@ -17,12 +17,12 @@ public class UpdateVideoThumbnails : BaseAsyncApiCaller
     _httpService = httpService;
   }
 
-  public override async Task<HttpResponse> ExecuteAsync(ArchiveVideo archiveVideo, CancellationToken cancellationToken = default)
+  public override async Task<HttpResponse> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
   {
-    var uri = $"videos/update-video-thumbnails";
+    var uri = $"videos/update-video-thumbnails/{videoId}";
     try
     {
-      var response = await _httpService.HttpPostAsync<ArchiveVideo>(uri, archiveVideo);
+      var response = await _httpService.HttpGetAsync<ArchiveVideo>(uri);
 
       return HttpResponse.FromHttpResponseMessage(response.Code);
     }
