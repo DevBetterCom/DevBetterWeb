@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevBetterWeb.WpfUploader"
         mc:Ignorable="d"
-        Title="DevBetter Uploader" Height="592" Width="863">
+        Title="DevBetter Uploader" Height="643" Width="872">
 
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
@@ -54,6 +54,7 @@
                         <Label DockPanel.Dock="Left" Content="Other Functions"/>
                         <Separator/>
                     </DockPanel>
+                    <Button Name="BtnUpdateAllThumbs" Content="Update All Videos Thumbs" Height="40" Margin="5" Click="BtnUpdateAllVideoThumbs_Click"></Button>
                     <Button Name="BtnSyncVideos" Content="Sync Videos" Height="40" Margin="5" Click="BtnSync_Click" IsEnabled="false"></Button>
                     <TextBox Name="TxtVideoId" TextChanged="TxtVideoId_TextChanged"></TextBox>
                     <Button Name="BtnUpdateVideoThumb" Content="Update Video Thumb" IsEnabled="false" Height="40" Margin="5" Click="BtnUpdateVideoThumb_Click"></Button>

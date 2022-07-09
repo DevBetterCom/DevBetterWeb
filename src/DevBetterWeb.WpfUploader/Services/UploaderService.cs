@@ -38,6 +38,7 @@ public class UploaderService
   private readonly ILogger<UploaderService> _logger;
   private readonly AddVideoInfo _addVideoInfo;
   private readonly UpdateVideoThumbnails _updateVideoThumbnails;
+  private readonly UpdateAllVideosThumbnails _updateAllVideosThumbnails;
   private readonly DeleteVideo _deleteVideo;
   private readonly ConfigInfo _configInfo;
 
@@ -70,6 +71,7 @@ public class UploaderService
     var videoInfoHttpService = new HttpService(clientHttp);
     _addVideoInfo = new AddVideoInfo(videoInfoHttpService);
     _updateVideoThumbnails = new UpdateVideoThumbnails(videoInfoHttpService);
+    _updateAllVideosThumbnails = new UpdateAllVideosThumbnails(videoInfoHttpService);
     _deleteVideo = new DeleteVideo(videoInfoHttpService);
   }
 
@@ -107,6 +109,21 @@ public class UploaderService
     }
 
     _logger.LogInformation($"{vimeoId} Is Updated.");
+  }
+
+  public async Task UpdateAllVideosAnimatedThumbnailsAsync()
+  {
+    _logger.LogInformation("UpdateAllVideosAnimatedThumbnailsAsync Started");
+
+    var updateVideoThumbnailsResponse = await _updateAllVideosThumbnails.ExecuteAsync();
+    if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
+    {
+      _logger.LogError($"Update All Videos Animated Thumbnails Error!");
+      _logger.LogError($"Error: {updateVideoThumbnailsResponse.Text}");
+      return;
+    }
+
+    _logger.LogInformation($"All Videos are Updated.");
   }
 
   public async Task UpdateVideosAnimatedThumbnailsAsync(List<Video> videos)
