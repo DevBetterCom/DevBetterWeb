@@ -106,18 +106,28 @@ public partial class MainWindow : Window
 
   private async void BtnUploadSelectedVideos_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var selectedVideos = GetSelectedVideos();
     await _uploaderService.UploadSelectedVideosAsync(TxtFolderPath.Text, selectedVideos);
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnUpdateThumbs_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var selectedVideos = GetSelectedVideos();
     await _uploaderService.UpdateVideosAnimatedThumbnailsAsync(selectedVideos);
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var dialog = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog();
     if (dialog.ShowDialog(this).GetValueOrDefault())
     {
@@ -126,10 +136,14 @@ public partial class MainWindow : Window
 
       DataGridVideos.ItemsSource = GridDataVideoCollection.FromVimeoVideo(videos);
     }
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnDeleteSelectedVideos_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var videos = GetSelectedVideos();
     var errorVideos = new List<string>();
     var successVideos = new List<string>();
@@ -157,10 +171,14 @@ public partial class MainWindow : Window
     {
       ShowInfoMessage("Video Delete", $"Success: {string.Join(",", successVideos.ToArray())}");
     }
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnDeleteVideo_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var videoId = TxtVideoId.Text;
 
     var deleteResponse = await _uploaderService.DeleteVimeoVideoAsync(videoId);
@@ -173,28 +191,46 @@ public partial class MainWindow : Window
     {
       ShowErrorMessage("Video Delete", $"Error: {videoId}");
     }
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private void BtnShowSettings_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var settingWindow = new SettingWindow();
     settingWindow.Show();
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnSync_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     await _uploaderService.SyncAsync(TxtFolderPath.Text);
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnUpdateVideoThumb_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     var videoId = TxtVideoId.Text;
     await _uploaderService.UpdateAnimatedThumbnailsAsync(videoId);
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 
   private async void BtnUpdateAllVideoThumbs_Click(object sender, RoutedEventArgs e)
   {
+    ProgressBarLoading.IsIndeterminate = true;
+
     await _uploaderService.UpdateAllVideosAnimatedThumbnailsAsync();
+
+    ProgressBarLoading.IsIndeterminate = false;
   }
 }
 
