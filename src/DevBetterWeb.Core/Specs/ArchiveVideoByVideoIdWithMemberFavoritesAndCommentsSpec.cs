@@ -11,6 +11,9 @@ public class ArchiveVideoByVideoIdWithMemberFavoritesAndCommentsSpec : Specifica
       .Where(x => x.VideoId == videoId)
       .Include(X => X.MemberFavorites)
       .Include(x => x.Comments)
-      .ThenInclude(x => x.MemberWhoCreate);
-  }
+        .ThenInclude(x => x.MemberWhoCreate)
+	  .Include(x => x.Comments)
+        .ThenInclude(x => x.Replies);
+
+	}
 }
