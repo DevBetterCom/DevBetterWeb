@@ -33,7 +33,9 @@ public class DetailsModel : PageModel
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
 
-  public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService, GetVideoService getVideoService, IRepository<ArchiveVideo> repository, UserManager<ApplicationUser> userManager, IRepository<Member> memberRepository)
+  public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService, 
+	  GetVideoService getVideoService, IRepository<ArchiveVideo> repository, UserManager<ApplicationUser> userManager, 
+	  IRepository<Member> memberRepository)
   {
 	  _mapper = mapper;
 	  _markdownService = markdownService;
@@ -69,7 +71,10 @@ public class DetailsModel : PageModel
     OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
     OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
     OEmbedViewModel.Name = archiveVideo.Title;
-    OEmbedViewModel.Comments = _mapper.Map<List<VideoCommentDto>>(archiveVideo.Comments);
+
+    archiveVideo.CreateMdComments(_markdownService);
+	OEmbedViewModel.Comments = _mapper.Map<List<VideoCommentDto>>(archiveVideo.Comments);
+
     OEmbedViewModel.Password = video.Data.Password;
     OEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
     OEmbedViewModel.Description = archiveVideo.Description;

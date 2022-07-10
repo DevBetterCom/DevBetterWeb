@@ -37,4 +37,13 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
 	  Guard.Against.Null(comment, nameof(comment));
 	  Comments.Add(comment);
   }
+
+  public void CreateMdComments(IMarkdownService markdownService)
+  {
+	  foreach (var comment in Comments)
+	  {
+		  comment.CreateMdBody(markdownService);
+
+	  }
+  }
 }

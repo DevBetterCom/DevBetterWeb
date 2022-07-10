@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
@@ -10,6 +11,10 @@ public class VideoComment : BaseEntity, IAggregateRoot
 {
   public int VideoId { get; set; }
   public int? ParentCommentId { get; set; }
+
+  [NotMapped]
+  public string? MdBody { get; set; }
+
   public string? Body { get; set; }
   public int MemberId { get; set; }
   public TimeSpan CreatedAt { get; set; }
@@ -34,6 +39,11 @@ public class VideoComment : BaseEntity, IAggregateRoot
   {
 	  Guard.Against.Null(member, nameof(member));
 	  MemberWhoCreate = member;
+  }
+
+  public void CreateMdBody(IMarkdownService markdownService)
+  {
+	  MdBody = markdownService.RenderHTMLFromMD(Body);
   }
 
   public override string ToString()
