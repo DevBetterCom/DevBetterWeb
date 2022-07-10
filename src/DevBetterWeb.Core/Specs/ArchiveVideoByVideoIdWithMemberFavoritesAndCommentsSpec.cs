@@ -12,7 +12,7 @@ public class ArchiveVideoByVideoIdWithMemberFavoritesAndCommentsSpec : Specifica
       .Include(X => X.MemberFavorites)
       .Include(x => x.Comments)
         .ThenInclude(x => x.MemberWhoCreate)
-	  .Include(x => x.Comments)
+      .Include(x => x.Comments)
         .ThenInclude(x => x.Replies);
 
 	}
