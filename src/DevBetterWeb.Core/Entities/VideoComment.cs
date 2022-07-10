@@ -7,7 +7,7 @@ namespace DevBetterWeb.Core.Entities;
 
 public class VideoComment : BaseEntity, IAggregateRoot
 {
-  public string? VideoId { get; set; }
+  public int VideoId { get; set; }
   public int? ParentCommentId { get; set; }
   public string? Body { get; set; }
   public int MemberId { get; set; }
