@@ -67,7 +67,7 @@ textarea {
     <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
     
 	<br />
-	@foreach (var comment in Model!.OEmbedViewModel.Comments)
+	@foreach (var comment in Model!.OEmbedViewModel!.Comments)
 	{
 		<div>@comment.Body</div>
 		<br />
