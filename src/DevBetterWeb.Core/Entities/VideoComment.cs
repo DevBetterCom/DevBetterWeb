@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
@@ -11,6 +12,7 @@ public class VideoComment : BaseEntity, IAggregateRoot
   public int? ParentCommentId { get; set; }
   public string? Body { get; set; }
   public int MemberId { get; set; }
+  public TimeSpan CreatedAt { get; set; }
   public Member MemberWhoCreate { get; private set; } = new Member();
   public VideoComment ParentComment { get; private set; } = new VideoComment();
   public List<VideoComment> Replies { get; private set; } = new List<VideoComment>();
