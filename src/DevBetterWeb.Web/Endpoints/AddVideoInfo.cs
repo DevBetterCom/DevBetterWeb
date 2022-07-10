@@ -12,7 +12,7 @@ using DevBetterWeb.Web.CustomAttributes;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-[IntegrationApiAuthorization]
+[UploaderApiAuthorization]
 public class AddVideoInfo : EndpointBaseAsync
 	.WithRequest<ArchiveVideoDto>
 	.WithResult<ActionResult<ArchiveVideoDto>>
