@@ -14,7 +14,7 @@ public class VideoComment : BaseEntity, IAggregateRoot
   public Member MemberWhoCreate { get; private set; } = new Member();
   public VideoComment ParentComment { get; private set; } = new VideoComment();
   public List<VideoComment> Replies { get; private set; } = new List<VideoComment>();
-  public List<ArchiveVideo> Videos { get; set; } = new List<ArchiveVideo>();
+  public ArchiveVideo Video { get; set; } = new ArchiveVideo();
 
   public void AddReplay(VideoComment comment)
   {
