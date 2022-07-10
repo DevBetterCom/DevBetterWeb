@@ -65,8 +65,15 @@ textarea {
 
     <br />
     <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
+    
+	<br />
+	@foreach (var comment in Model!.OEmbedViewModel.Comments)
+	{
+		<div>@comment.Body</div>
+		<br />
+	}
 
-    @section Scripts {
+	@section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         var isTimestamp = false;
