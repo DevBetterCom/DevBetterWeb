@@ -8,7 +8,9 @@ public class VideoCommentProfile : Profile
 {
   public VideoCommentProfile()
   {
-	CreateMap<VideoComment, VideoCommentDto>();
-    CreateMap<VideoCommentDto, VideoComment>();
+	CreateMap<VideoComment, VideoCommentDto>()
+		.ForPath(dest => dest.MemberName,
+			opt => opt.MapFrom(source => source.MemberWhoCreate!.FirstName));
+		CreateMap<VideoCommentDto, VideoComment>();
   }
 }
