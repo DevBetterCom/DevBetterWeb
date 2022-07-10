@@ -8,7 +8,7 @@ public class VideoCommentProfile : Profile
 {
   public VideoCommentProfile()
   {
-	  CreateMap<VideoComment, VideoCommentDto>();
-		CreateMap<VideoCommentDto, VideoComment>();
-	}
+	CreateMap<VideoComment, VideoCommentDto>();
+    CreateMap<VideoCommentDto, VideoComment>();
+  }
 }
