@@ -7,11 +7,11 @@ using Microsoft.Extensions.Options;
 
 namespace DevBetterWeb.Web.CustomAttributes;
 
-public class IntegrationApiAuthorizationFilter : IAuthorizationFilter
+public class UploaderApiAuthorizationFilter : IAuthorizationFilter
 {
 	private readonly string _expectedApiKey;
 
-	public IntegrationApiAuthorizationFilter(IOptions<ApiSettings> apiSettings)
+	public UploaderApiAuthorizationFilter(IOptions<ApiSettings> apiSettings)
 	{
 		_expectedApiKey = apiSettings.Value.ApiKey;
 	}

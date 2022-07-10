@@ -14,7 +14,7 @@ using DevBetterWeb.Web.CustomAttributes;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-[IntegrationApiAuthorization]
+[UploaderApiAuthorization]
 public class UpdateVideoThumbnails : EndpointBaseAsync
 	.WithRequest<long>
 	.WithResult<ActionResult<ArchiveVideoDto>>
