@@ -1,4 +1,6 @@
-﻿using DevBetterWeb.Vimeo.Models;
+﻿using System.Collections.Generic;
+using DevBetterWeb.Vimeo.Models;
+using DevBetterWeb.Web.Models;
 
 namespace DevBetterWeb.Web.Pages.Admin.Videos;
 
@@ -31,6 +33,7 @@ public class OEmbedViewModel
   public string? CustomEmbedLink { get; set; } = string.Empty;
   public bool IsMemberFavorite { get; set; }
   public int MemberFavoritesCount { get; set; }
+  public List<VideoCommentDto> Comments { get; set; }
 
   public OEmbedViewModel(OEmbed oEmbed)
   {
