@@ -1,13 +1,29 @@
 ﻿@page "{videoId}/{startTime?}"
 @model DevBetterWeb.Web.Pages.Videos.DetailsModel
+
 @{
 	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
 <style>
 textarea {
-    width:90%;
-    max-width:90%;
+    width:100%;
+    max-width:100%;
+}
+.post-signature {
+	text-align: left;
+	vertical-align: top;
+	width: 100%;
+}
+.user-info {
+	box-sizing: border-box;
+	padding: 5px 6px 7px 7px;
+	font-size: 14px;
+	background-color: lightgray;
+	display: block ruby;
+}
+.comment-reply {
+	padding: 20px 6px 7px 7px;
 }
 </style>
 
@@ -65,6 +81,26 @@ textarea {
 
     <br />
     <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
+    
+	<br />
+	@foreach (var comment in Model!.OEmbedViewModel!.Comments)
+	{
+		<p>@Html.Raw(@comment!.MdBody)</p>
+		<div class="post-signature">
+			<div class="user-info">
+				<span style="float: left;">@comment!.MemberName</span>
+				<span style="float: right;">@comment!.CreatedAt</span>
+			</div>
+		</div>
+		<br />
+	}
+	<div class="comment-reply">
+		<textarea id="commentReplyToSubmit" rows="5" cols="100"></textarea>	
+		<button  type="button" onclick="submitReply()">
+			<i class="fas fa-reply"></i>
+		</button>
+	</div>
+
 
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -222,6 +258,24 @@ textarea {
                     alert(errMsg);
                 }
             });
+        }
+
+        function submitReply() {
+	        var videoId = document.getElementById("videoId").innerHTML;
+	        var commentReplyToSubmit = document.getElementById("commentReplyToSubmit").value;
+
+	        $.ajax({
+		        type: "POST",
+		        url: "/videos/submit-comment-reply",
+		        data: { videoId: videoId, commentReplyToSubmit: commentReplyToSubmit },
+		        dataType: "json",
+		        success: function (response) {
+			        location.reload(true);
+		        },
+		        error: function (errMsg) {
+			        alert(errMsg);
+		        }
+	        });
         }
 
         function toggleFavorite() {

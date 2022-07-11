@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
@@ -22,6 +22,8 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
 
   public List<Question> Questions { get; private set; } = new List<Question>();
   public List<MemberVideoProgress> MembersVideoProgress { get; set; } = new List<MemberVideoProgress>();
+  public List<VideoComment> Comments { get; private set; } = new List<VideoComment>();
+
 
   private readonly List<MemberFavoriteArchiveVideo> _memberFavorites = new();
   public IEnumerable<MemberFavoriteArchiveVideo> MemberFavorites => _memberFavorites.AsReadOnly();
@@ -32,9 +34,24 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
     Questions.Add(question);
   }
 
+
   public void AddVideoProgress(MemberVideoProgress memberVideoProgress)
   {
 	  Guard.Against.Null(memberVideoProgress, nameof(memberVideoProgress));
 	  MembersVideoProgress.Add(memberVideoProgress);
+  }
+  public void AddComment(VideoComment comment)
+  {
+	  Guard.Against.Null(comment, nameof(comment));
+	  Comments.Add(comment);
+  }
+
+  public void CreateMdComments(IMarkdownService markdownService)
+  {
+	  foreach (var comment in Comments)
+	  {
+		  comment.CreateMdBody(markdownService);
+
+	  }
   }
 }

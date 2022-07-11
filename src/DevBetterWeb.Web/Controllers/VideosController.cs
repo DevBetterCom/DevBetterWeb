@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -225,169 +225,27 @@ public class VideosController : Controller
     return Ok();
   }
 
-
-  [AllowAnonymous]
-  [HttpPost("add-video-info")]
-  public async Task<IActionResult> AddVideoInfoAsync([FromBody] ArchiveVideoDto archiveVideoDto)
+  [HttpPost("submit-comment-reply")]
+  public async Task<IActionResult> SubmitCommentReply([FromForm] CommentReplyRequest request)
   {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
+	var userId = _userManager.GetUserId(User);
+	var memberByUserSpec = new MemberByUserIdSpec(userId);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
+    if (member == null)
     {
-      return Unauthorized();
+	  return Unauthorized();
     }
 
-    var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
+	var spec = new ArchiveVideoByVideoIdSpec(request.VideoId!);
+	var existVideo = await _repository.FirstOrDefaultAsync(spec);
+	if (existVideo == null)
+	{
+		return NotFound("Video not found!");
+	}
+	existVideo.AddComment(new VideoComment(member.Id, existVideo.Id, request.CommentReplyToSubmit));
+	await _repository.UpdateAsync(existVideo);
 
-    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
-    var existVideo = await _repository.FirstOrDefaultAsync(spec);
-    if (existVideo == null)
-    {
-      archiveVideo = await _repository.AddAsync(archiveVideo);
-      var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-      archiveVideo.Events.Add(videoAddedEvent);
-    }
-    else
-    {
-      existVideo.Description = archiveVideo.Description;
-      existVideo.Title = archiveVideo.Title;
-      existVideo.Duration = archiveVideo.Duration;
-      if (!string.IsNullOrEmpty(archiveVideo.AnimatedThumbnailUri))
-      {
-        existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
-      }
-      
-      await _repository.UpdateAsync(existVideo);
-    }
-
-    return Ok(archiveVideo);
-  }
-
-  [AllowAnonymous]
-  [HttpGet("update-video-thumbnails/{videoId}")]
-  public async Task<IActionResult> UpdateVideoThumbnailsAsync(long videoId)
-  {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
-    {
-      return Unauthorized();
-    }
-
-    var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
-    var existVideo = await _repository.FirstOrDefaultAsync(spec);
-    if (existVideo == null)
-    {
-      return BadRequest();
-    }
-
-    var response = await _getVideoService.ExecuteAsync(videoId.ToString());
-    if (response?.Data == null)
-    {
-      return BadRequest("Video Not Found!");
-    }
-
-    var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null));
-    if (existThumbsResponse.Data.Total <= 0)
-    {
-      var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId);
-      if (getAnimatedThumbnailResult == null)
-      {
-        return BadRequest();
-      }
-      existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-    }
-    else
-    {
-      existVideo.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
-    }
-
-
-    await _repository.UpdateAsync(existVideo);
-
-    return Ok(existVideo);
-  }
-
-  [AllowAnonymous]
-  [HttpGet("update-all-videos-thumbnails")]
-  public async Task<IActionResult> UpdateAllVideosThumbnailsAsync()
-  {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
-    {
-      return Unauthorized();
-    }
-
-    await _videosService.UpdateVideosThumbnail(null);
-    
-    return Ok();
-  }
-
-  [AllowAnonymous]
-  [HttpGet("delete-all-videos-no-vimeo")]
-  public async Task<IActionResult> DeleteAllVideosNoVimeoAsync()
-  {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
-    {
-      return Unauthorized();
-    }
-
-    await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(null);
-    await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(null);
-
-    return Ok();
-  }
-
-  [AllowAnonymous]
-  [HttpPost("update-video-thumbnails")]
-  public async Task<IActionResult> UpdateVideoThumbnailsAsync([FromBody] ArchiveVideoDto archiveVideoDto)
-  {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
-    {
-      return Unauthorized();
-    }
-
-    var archiveVideo = _mapper.Map<ArchiveVideo>(archiveVideoDto);
-
-    var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
-    var existVideo = await _repository.FirstOrDefaultAsync(spec);
-    if (existVideo == null)
-    {
-      return BadRequest();
-    }
-
-    existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
-    await _repository.UpdateAsync(existVideo);
-
-    return Ok(archiveVideo);
-  }
-
-  [AllowAnonymous]
-  [HttpDelete("uploader/delete-video/{vimeoVideoId}")]
-  public async Task<IActionResult> DeleteVideoThAsync([FromRoute] string vimeoVideoId)
-  {
-    var apiKey = Request.Headers[Constants.ConfigKeys.ApiKey];
-
-    if (apiKey != _expectedApiKey)
-    {
-      return Unauthorized();
-    }
-
-    var spec = new ArchiveVideoByVideoIdSpec(vimeoVideoId);
-    var existVideo = await _repository.FirstOrDefaultAsync(spec);
-    if (existVideo != null)
-    {
-      await _repository.DeleteAsync(existVideo);
-    }
-
-    await _deleteVideoService.ExecuteAsync(vimeoVideoId);
-
-    return Ok();
+	return Json(new { success = true, responseText = "Your message successfuly sent!" });
   }
 
   [HttpPut("favorite-video/{vimeoVideoId}")]

@@ -4,6 +4,7 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220711003427_video_comment_4")]
+    partial class video_comment_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,17 +333,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<int>("TimestampSeconds")
                         .HasColumnType("int");
 
-                    b.Property<string>("VideoWatchedStatus")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("VideoWatchedStatus");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ArchiveVideoId");
-                    b.HasIndex("MemberId");
-                    b.ToTable("MembersVideosProgress", (string)null);
+
                     b.ToTable("Question", (string)null);
                 });
 
@@ -598,24 +593,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
-                {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "Video")
-                        .WithMany("MembersVideoProgress")
-                        .HasForeignKey("ArchiveVideoId")
-                        .IsRequired();
-
-                    b.HasOne("DevBetterWeb.Core.Entities.Member", "Member")
-                        .WithMany("MemberVideosProgress")
-                        .HasForeignKey("MemberId")
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("Video");
-                });
-
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
@@ -669,8 +646,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.Navigation("MemberFavorites");
 
-                    b.Navigation("MembersVideoProgress");
-
                     b.Navigation("Questions");
                 });
 
@@ -681,9 +656,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("FavoriteArchiveVideos");
 
                     b.Navigation("MemberSubscriptions");
-
-
-                    b.Navigation("MemberVideosProgress");
 
                     b.Navigation("VideosComments");
                 });
