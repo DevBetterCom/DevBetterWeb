@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class VideoCommentByVideoIdSpec : Specification<VideoComment>
+public sealed class VideoCommentByVideoIdSpec : Specification<VideoComment>
 {
   public VideoCommentByVideoIdSpec(string videoId)
   {

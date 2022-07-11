@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class ArchiveVideoByVideoIdWithMemberFavoritesAndCommentsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
+public sealed class ArchiveVideoByVideoIdWithMemberFavoritesAndCommentsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
 {
   public ArchiveVideoByVideoIdWithMemberFavoritesAndCommentsSpec(string videoId)
   {

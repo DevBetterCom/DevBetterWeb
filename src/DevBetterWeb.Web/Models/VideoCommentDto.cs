@@ -10,7 +10,7 @@ public class VideoCommentDto
 	public string? Body { get; set; }
 	public string? MdBody { get; set; }
 	public int MemberId { get; set; }
-	public string MemberName { get; set; }
+	public string MemberName { get; set; } = string.Empty;
 	public DateTimeOffset CreatedAt { get; set; }
 	public List<VideoCommentDto> Replies { get; private set; } = new List<VideoCommentDto>();
 }

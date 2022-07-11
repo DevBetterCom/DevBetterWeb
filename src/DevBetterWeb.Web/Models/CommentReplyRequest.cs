@@ -2,7 +2,7 @@
 
 public class CommentReplyRequest
 {
-  public string VideoId { get; set; }
-  public string CommentReplyToSubmit { get; set; }
+  public string VideoId { get; set; } = string.Empty;
+  public string CommentReplyToSubmit { get; set; } = string.Empty;
   public int? ParentCommentId { get; set; }
 }
