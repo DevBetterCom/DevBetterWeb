@@ -88,7 +88,7 @@ public class EditAvatarModel : PageModel
       if (uploadSuccess)
       {
         var spec = new MemberByUserIdSpec(applicationUser.Id);
-        var member = await _memberRepository.GetBySpecAsync(spec);
+        var member = await _memberRepository.FirstOrDefaultAsync(spec);
         if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
         var memberAvatarUpdatedEvent = new MemberAvatarUpdatedEvent(member);

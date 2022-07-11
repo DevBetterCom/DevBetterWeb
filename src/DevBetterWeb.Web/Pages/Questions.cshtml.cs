@@ -24,7 +24,7 @@ public class QuestionsModel : PageModel
   public async Task OnGetAsync()
   {
     Question = await _context.Questions!.AsQueryable().ToListAsync();
-    Videos = await _context.ArchiveVideos
+    Videos = await _context.ArchiveVideos!
         .Include(v => v.Questions)
         .OrderByDescending(v => v.DateCreated)
         .ToListAsync();

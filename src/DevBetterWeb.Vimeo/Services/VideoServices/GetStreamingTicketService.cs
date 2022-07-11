@@ -25,11 +25,10 @@ public class GetStreamingTicketService : BaseAsyncApiCaller
   public override async Task<HttpResponse<UploadTicket>> ExecuteAsync(CancellationToken cancellationToken = default)
   {
     var uri = $"me/videos";
-    try
-    {
-      var query = new Dictionary<string, string>();
-
-      query.AddIfNotNull("type", UploadVideoType.STREAMING?.ToString());
+		var query = new Dictionary<string, string>();
+		query.AddIfNotNull("type", UploadVideoType.STREAMING?.ToString());
+		try
+		{
 
       var response = await _httpService.HttpPostByQueryAsync<UploadTicket>(uri, query);
 
@@ -37,7 +36,7 @@ public class GetStreamingTicketService : BaseAsyncApiCaller
     }
     catch (Exception exception)
     {
-      _logger.LogError(exception);
+      _logger.LogError(exception, "Details: uri, querytype {0}, {1}", uri, UploadVideoType.STREAMING?.ToString());
       return HttpResponse<UploadTicket>.FromException(exception.Message);
     }
   }

@@ -60,8 +60,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Start
         }
         catch (Exception ex)
         {
-          logger.LogError(ex, "An error occurred seeding the " +
-                    "database with test messages. Error: {ex.Message}");
+          logger.LogError(ex, $"An error occurred seeding the database with test messages. Error: {ex.Message}");
         }
       }
     });

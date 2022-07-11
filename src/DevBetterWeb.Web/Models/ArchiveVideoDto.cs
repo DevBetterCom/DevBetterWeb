@@ -15,4 +15,6 @@ public class ArchiveVideoDto
   public DateTimeOffset DateCreated { get; set; }
   public DateTimeOffset DateUploaded { get; set; }
   public string? VideoUrl { get; set; }
+  public bool IsMemberFavorite { get; set; }
+  public int MemberFavoritesCount { get; set; }
 }

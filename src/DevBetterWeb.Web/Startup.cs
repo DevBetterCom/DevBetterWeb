@@ -100,6 +100,7 @@ public class Startup
     services.AddAutoMapper(webProjectAssembly);
 
     services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+    services.AddScoped<IJsonParserService, JsonParserService>();
 
     services.AddMemberSubscriptionServices();
 
@@ -111,6 +112,7 @@ public class Startup
     services.AddScoped<IUserLookupService, UserLookupService>();
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
+    services.AddScoped<IVideosService, VideosService>();
     // list services
     services.Configure<ServiceConfig>(config =>
     {
