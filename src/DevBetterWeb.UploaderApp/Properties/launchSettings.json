@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DevBetterWeb.UploaderApp": {
-      "commandName": "Project",
-      "commandLineArgs": "folder -t token -k key -l devbetter.com -v verbose"
-    }
-  }
-}
