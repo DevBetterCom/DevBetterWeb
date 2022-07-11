@@ -17,11 +17,22 @@ public class VideoComment : BaseEntity, IAggregateRoot
 
   public string? Body { get; set; }
   public int MemberId { get; set; }
-  public TimeSpan CreatedAt { get; set; }
-  public Member MemberWhoCreate { get; private set; } = new Member();
-  public VideoComment ParentComment { get; private set; } = new VideoComment();
+  public DateTimeOffset CreatedAt { get; set; }
+  public Member? MemberWhoCreate { get; private set; }
+  public VideoComment? ParentComment { get; private set; }
   public List<VideoComment> Replies { get; private set; } = new List<VideoComment>();
   public ArchiveVideo Video { get; set; } = new ArchiveVideo();
+
+  public VideoComment()
+  {
+  }
+  public VideoComment(int memberId, int videoId, string body)
+  {
+	  MemberId = memberId;
+	  Body = body;
+	  VideoId = videoId;
+	  CreatedAt = DateTime.Now;
+  }
 
   public void AddReplay(VideoComment comment)
   {

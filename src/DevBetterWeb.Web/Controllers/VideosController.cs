@@ -155,6 +155,28 @@ public class VideosController : Controller
     return Ok();
   }
 
+  [HttpPost("submit-comment-reply")]
+  public async Task<IActionResult> SubmitCommentReply([FromForm] CommentReplyRequest request)
+  {
+	var userId = _userManager.GetUserId(User);
+	var memberByUserSpec = new MemberByUserIdSpec(userId);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
+    if (member == null)
+    {
+	  return Unauthorized();
+    }
+
+	var spec = new ArchiveVideoByVideoIdSpec(request.VideoId!);
+	var existVideo = await _repository.FirstOrDefaultAsync(spec);
+	if (existVideo == null)
+	{
+		return NotFound("Video not found!");
+	}
+	existVideo.AddComment(new VideoComment(member.Id, existVideo.Id, request.CommentReplyToSubmit));
+	await _repository.UpdateAsync(existVideo);
+
+	return Json(new { success = true, responseText = "Your message successfuly sent!" });
+  }
 
   [AllowAnonymous]
   [HttpPost("add-video-info")]
