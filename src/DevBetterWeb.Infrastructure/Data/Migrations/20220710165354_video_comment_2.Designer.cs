@@ -4,6 +4,7 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220710165354_video_comment_2")]
+    partial class video_comment_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -350,13 +352,14 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<TimeSpan>("CreatedAt")
+                        .HasColumnType("time");
 
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentCommentId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("VideoId")
@@ -609,7 +612,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasOne("DevBetterWeb.Core.Entities.VideoComment", "ParentComment")
                         .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId");
+                        .HasForeignKey("ParentCommentId")
+                        .IsRequired();
 
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "Video")
                         .WithMany("Comments")
