@@ -14,7 +14,7 @@ public class MemberVideoProgress : BaseEntity, IAggregateRoot
   /// The last moment watched by this member in milliseconds
   /// Duration max is stored on ArchiveVideo
   /// </summary>
-  public int CurrentDuration { get; } = 0;
+  public int CurrentDuration { get; private set; } = 0;
 
   public VideoWatchedStatus VideoWatchedStatus { get; private set; }
   public MemberVideoProgress(int memberId, int archiveVideoId, int currentDuration)
