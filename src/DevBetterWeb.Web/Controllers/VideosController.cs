@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -153,6 +153,29 @@ public class VideosController : Controller
     if (!response.Data || response.Code != System.Net.HttpStatusCode.OK) return NotFound($"Subtitle Not Found {request.VideoId}");
 
     return Ok();
+  }
+
+  [HttpPost("submit-comment-reply")]
+  public async Task<IActionResult> SubmitCommentReply([FromForm] CommentReplyRequest request)
+  {
+	var userId = _userManager.GetUserId(User);
+	var memberByUserSpec = new MemberByUserIdSpec(userId);
+    var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
+    if (member == null)
+    {
+	  return Unauthorized();
+    }
+
+	var spec = new ArchiveVideoByVideoIdSpec(request.VideoId!);
+	var existVideo = await _repository.FirstOrDefaultAsync(spec);
+	if (existVideo == null)
+	{
+		return NotFound("Video not found!");
+	}
+	existVideo.AddComment(new VideoComment(member.Id, existVideo.Id, request.CommentReplyToSubmit));
+	await _repository.UpdateAsync(existVideo);
+
+	return Json(new { success = true, responseText = "Your message successfuly sent!" });
   }
 
   [HttpPut("favorite-video/{vimeoVideoId}")]
