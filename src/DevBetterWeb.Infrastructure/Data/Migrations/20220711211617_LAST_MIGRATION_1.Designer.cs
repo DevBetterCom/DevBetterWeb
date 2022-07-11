@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220710162320_video_comment")]
-    partial class video_comment
+    [Migration("20220711211617_LAST_MIGRATION_1")]
+    partial class LAST_MIGRATION_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -315,6 +315,38 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("MemberSubscriptionPlan");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ArchiveVideoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideoWatchedStatus")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)")
+                        .HasColumnName("VideoWatchedStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArchiveVideoId");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("MembersVideosProgress", (string)null);
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -352,11 +384,13 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentCommentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("VideoId")
@@ -591,6 +625,23 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "Video")
+                        .WithMany("MembersVideoProgress")
+                        .HasForeignKey("ArchiveVideoId")
+                        .IsRequired();
+
+                    b.HasOne("DevBetterWeb.Core.Entities.Member", "Member")
+                        .WithMany("MemberVideosProgress")
+                        .HasForeignKey("MemberId")
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Video");
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
@@ -609,8 +660,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasOne("DevBetterWeb.Core.Entities.VideoComment", "ParentComment")
                         .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId")
-                        .IsRequired();
+                        .HasForeignKey("ParentCommentId");
 
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "Video")
                         .WithMany("Comments")
@@ -645,6 +695,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.Navigation("MemberFavorites");
 
+                    b.Navigation("MembersVideoProgress");
+
                     b.Navigation("Questions");
                 });
 
@@ -655,6 +707,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("FavoriteArchiveVideos");
 
                     b.Navigation("MemberSubscriptions");
+
+                    b.Navigation("MemberVideosProgress");
 
                     b.Navigation("VideosComments");
                 });
