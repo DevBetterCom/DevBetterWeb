@@ -51,7 +51,7 @@ public class MyProfileBooksModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
     {
@@ -73,7 +73,7 @@ public class MyProfileBooksModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     if (UserBooksUpdateModel.AddedBook.HasValue)
@@ -97,7 +97,7 @@ public class MyProfileBooksModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     if (UserBooksUpdateModel.RemovedBook.HasValue)

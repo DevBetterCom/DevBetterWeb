@@ -44,7 +44,7 @@ public class MyProfilePersonalModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     //var books = await _appDbContext.Books
     //    .Include(book => book.MembersWhoHaveRead)
@@ -74,7 +74,7 @@ public class MyProfilePersonalModel : PageModel
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var spec = new MemberByUserIdSpec(applicationUser.Id);
-    var member = await _memberRepository.GetBySpecAsync(spec);
+    var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName);
