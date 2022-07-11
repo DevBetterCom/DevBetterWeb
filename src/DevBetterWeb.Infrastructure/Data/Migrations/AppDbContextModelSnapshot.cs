@@ -313,6 +313,38 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.ToTable("MemberSubscriptionPlan");
                 });
 
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ArchiveVideoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideoWatchedStatus")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)")
+                        .HasColumnName("VideoWatchedStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArchiveVideoId");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("MembersVideosProgress", (string)null);
+                });
+
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -331,17 +363,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Property<int>("TimestampSeconds")
                         .HasColumnType("int");
 
-                    b.Property<string>("VideoWatchedStatus")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("VideoWatchedStatus");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ArchiveVideoId");
-                    b.HasIndex("MemberId");
-                    b.ToTable("MembersVideosProgress", (string)null);
+
                     b.ToTable("Question", (string)null);
                 });
 
@@ -598,7 +623,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-
             modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberVideoProgress", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", "Video")
@@ -681,7 +705,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("FavoriteArchiveVideos");
 
                     b.Navigation("MemberSubscriptions");
-
 
                     b.Navigation("MemberVideosProgress");
 
