@@ -59,6 +59,7 @@ public class Member : BaseEntity, IAggregateRoot
   public string? DiscordUsername { get; private set; }
 
   public List<Book> BooksRead { get; set; } = new List<Book>();
+  public List<MemberVideoProgress> MemberVideosProgress { get; set; } = new List<MemberVideoProgress>();
   public List<VideoComment> VideosComments { get; set; } = new List<VideoComment>();
 
   public DateTime DateCreated { get; private set; } = DateTime.UtcNow;

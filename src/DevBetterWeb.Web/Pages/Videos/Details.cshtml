@@ -131,6 +131,41 @@ textarea {
                     changeButtonEnable('uploadSubtitleBtn', false);
                 }            
             });
+
+            var iframe = document.getElementById('videoIframe');
+            var player = new Vimeo.Player(iframe);
+            var videoId = document.getElementById("videoId").innerHTML;
+            var videoPlayInterval = setInterval(function ()
+            {
+	            player.on('timeupdate', function (getAll)
+	            {
+                    if (getAll.percent == 1) {
+	                    $.ajax({
+		                    type: "GET",
+		                    url: "/videos/watched/"+videoId,
+		                    success: function (videosResponse) {
+		                    },
+		                    error: function (errMsg) {
+			                    alert(errMsg);
+		                    }
+	                    });
+                    }else if (getAll.percent < 1) {
+	                    $.ajax({
+		                    type: "GET",
+		                    url: "/videos/inprogress/"+videoId,
+		                    success: function (videosResponse) {
+		                    },
+		                    error: function (errMsg) {
+			                    alert(errMsg);
+		                    }
+	                    });
+                    }
+	            });
+	            player.on('ended', function ()
+	            {
+		            clearInterval(videoPlayInterval);
+	            });
+            }, 1000);
         });
 
         function saveDescriptionClick() {
