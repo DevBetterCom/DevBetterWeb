@@ -34,7 +34,7 @@ public class UpdateVideoThumbnailsByArchiveVideo : EndpointBaseAsync
 		var existVideo = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
 		if (existVideo == null)
 		{
-			return BadRequest();
+			return NotFound();
 		}
 
 		existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
