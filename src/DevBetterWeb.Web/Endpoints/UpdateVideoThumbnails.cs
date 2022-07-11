@@ -42,13 +42,13 @@ public class UpdateVideoThumbnails : EndpointBaseAsync
 		var existVideo = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
 		if (existVideo == null)
 		{
-			return BadRequest();
+			return NotFound();
 		}
 
 		var response = await _getVideoService.ExecuteAsync(videoId.ToString(), cancellationToken);
 		if (response?.Data == null)
 		{
-			return BadRequest("Video Not Found!");
+			return NotFound("Video Not Found!");
 		}
 
 		var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null), cancellationToken);
@@ -57,7 +57,7 @@ public class UpdateVideoThumbnails : EndpointBaseAsync
 			var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId, cancellationToken);
 			if (getAnimatedThumbnailResult == null)
 			{
-				return BadRequest();
+				return NotFound();
 			}
 			existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
 		}
