@@ -26,4 +26,16 @@ public class MarkdigService : IMarkdownService
 
     return result;
   }
+
+  public static string RenderHtml(string mdContent)
+  {
+	  var pipeline = new MarkdownPipelineBuilder()
+		  .UseAdvancedExtensions()
+		  .UseBootstrap()
+		  .Build();
+
+	  var result = Markdown.ToHtml(mdContent, pipeline);
+
+	  return result;
+  }
 }

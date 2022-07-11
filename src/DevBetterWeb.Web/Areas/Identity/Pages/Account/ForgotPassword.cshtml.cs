@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -69,6 +70,7 @@ public class ForgotPasswordModel : PageModel
           pageHandler: null,
           values: new { code },
           protocol: Request.Scheme);
+      if (string.IsNullOrEmpty(callbackUrl)) throw new Exception("Callback URL is null or empty.");
 
       _logger.LogInformation("Sending password reset request with URL " + callbackUrl);
 

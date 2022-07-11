@@ -16,6 +16,7 @@ using Serilog;
 namespace DevBetterWeb.UploaderApp;
 
 // TODO: Refactor - this is way too big and has too many responsibilities and abstraction levels in it.
+// TODO: This uses a TON of RAM because it keeps the content of every file in memory. Refactor to work on one file at a time.
 public class UploaderService
 {
   private const string ALL_FILES = "*.*";
@@ -83,7 +84,7 @@ public class UploaderService
     {
       _logger.LogInformation($"{vimeoId} Is Not Delete!");
       _logger.LogError($"Delete Response Code: {responseCode}");
-      _logger.LogError($"Delete Response Text: {deleteResponse.Text}");
+      _logger.LogError($"Delete Response Text: {deleteResponse?.Text}");
       return;
     }
 
@@ -99,8 +100,8 @@ public class UploaderService
     if (response?.Code != HttpStatusCode.OK)
     {
       _logger.LogInformation("Video Does Not Exist on Vimeo!");
-      _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
-      _logger.LogError($"Error: {response.Text}");
+      _logger.LogError($"Vimeo ID: {vimeoId} Update Animated Thumbnails getVideoService Error!");
+      _logger.LogError($"Error: HTTP {response?.Code} {response?.Text}");
       return;
     }
 
@@ -115,10 +116,10 @@ public class UploaderService
     archiveVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
 
     var updateVideoThumbnailsResponse = await _updateVideoThumbnails.ExecuteAsync(archiveVideo);
-    if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != System.Net.HttpStatusCode.OK)
+    if (updateVideoThumbnailsResponse == null || updateVideoThumbnailsResponse.Code != HttpStatusCode.OK)
     {
-      _logger.LogError($"{vimeoId} Update Animated Thumbnails Error!");
-      _logger.LogError($"Error: {updateVideoThumbnailsResponse.Text}");
+      _logger.LogError($"{vimeoId} Update Animated Thumbnails _updateVideoThumbnails Error!");
+      _logger.LogError($"Error: HTTP {updateVideoThumbnailsResponse?.Code} {updateVideoThumbnailsResponse?.Text}");
       return;
     }
 
@@ -133,11 +134,13 @@ public class UploaderService
     var allExistingVideos = await GetExistingVideosAsync();
     _logger.LogDebug($"Found {allExistingVideos.Count} videos in devBetter API.");
 
+		// TODO: Change this to use an async enumerable or yield return pattern
     var videosToUpload = GetVideos(folderToUpload, allExistingVideos);
     _logger.LogInformation($"Found {videosToUpload.Count} videos in {folderToUpload}.");
     foreach (var video in videosToUpload)
     {
       var vimeoVideo = allExistingVideos.FirstOrDefault(x => x.Name.ToLower() == video.Name.ToLower());
+			// TODO: Why doesn't this work with some videos like 2022-05-09 and 2022-04-08 Afternoon which are re-uploaded every time?
       if (vimeoVideo != null)
       {
         _logger.LogWarning($"{video.Name} already exists on vimeo.");
@@ -223,7 +226,7 @@ public class UploaderService
     if (videoInfoResponse == null || videoInfoResponse.Code != System.Net.HttpStatusCode.OK)
     {
       _logger.LogError($"{video.Name} - {videoId} Add/Update info Error!");
-      _logger.LogError($"Error: {videoInfoResponse.Text}");
+      _logger.LogError($"Error: {videoInfoResponse?.Text}");
       return false;
     }
 
@@ -244,7 +247,7 @@ public class UploaderService
       {
         _logger.LogError($"Video does not exist on vimeo!");
 
-        return null;
+        return null!;
       }
 
       video = response.Data;
@@ -257,7 +260,7 @@ public class UploaderService
     if (string.IsNullOrEmpty(pictureId))
     {
       _logger.LogError($"Creating Animated Thumbnails Error!");
-      return null;
+      return null!;
     }
 
     var statusAnimatedThumbnails = string.Empty;
@@ -300,7 +303,10 @@ public class UploaderService
       pageNumber++;
     } while (allVideosResponse != null && allVideosResponse.Data != null);
 
-    return videos;
+		var videoSize = System.Text.Json.JsonSerializer.Serialize(videos).Length;
+		_logger.LogInformation($"Vimeo existing videos size: {videoSize.ToString("N")}");
+
+		return videos;
   }
 
   private List<Video> GetVideos(string folderPath, List<Video> existingVideos)
@@ -323,35 +329,42 @@ public class UploaderService
     {
       foreach (var videoPath in videosPaths)
       {
+				try
+				{
+					var video = new Video();
 
-        var video = new Video();
+					var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
+					var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
 
-        var mdFilePath = mdsPaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
-        var description = string.IsNullOrEmpty(mdFilePath) ? string.Empty : File.ReadAllText(mdFilePath);
+					var subtitlePath = subtitlePaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
+					var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
 
-        var subtitlePath = subtitlePaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.ToLower().Trim()) == Path.GetFileNameWithoutExtension(videoPath.ToLower().Trim()));
-        var subtitle = string.IsNullOrEmpty(subtitlePath) ? string.Empty : File.ReadAllText(subtitlePath);
+					var name = Path.GetFileNameWithoutExtension(videoPath);
+					_logger.LogDebug($"Update {name} Video MD, Subtitle and Mp4 information");
 
-        var name = Path.GetFileNameWithoutExtension(videoPath);
-        _logger.LogDebug($"Update {name} Video MD, Subtitle and Mp4 information");
+					var mediaInfo = new MediaInfoWrapper(videoPath);
+					video
+						.SetCreatedTime(mediaInfo.Tags.EncodedDate)
+						.SetDuration(mediaInfo.Duration)
+						.SetName(Path.GetFileNameWithoutExtension(videoPath))
+						.SetDescription(description)
+						.SetSubtitle(subtitle);
 
-        var mediaInfo = new MediaInfoWrapper(videoPath);
-        video
-          .SetCreatedTime(mediaInfo.Tags.EncodedDate)
-          .SetDuration(mediaInfo.Duration)
-          .SetName(Path.GetFileNameWithoutExtension(videoPath))
-          .SetDescription(description)
-          .SetSubtitle(subtitle);
+					video.Data = File.ReadAllBytes(videoPath);
+					if (video.Data == null || video.Data.Length <= 0)
+					{
+						continue;
+					}
+					video
+						.SetEmbedProtecedPrivacy()
+						.SetEmbed();
+					result.Add(video);
 
-        video.Data = File.ReadAllBytes(videoPath);
-        if (video.Data == null || video.Data.Length <= 0)
-        {
-          continue;
-        }
-        video
-          .SetEmbedProtecedPrivacy()
-          .SetEmbed();
-        result.Add(video);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, $"Error with video {videoPath}");
+				}
       }
     }
     else if (mdsPaths.Length > 0)
@@ -399,7 +412,10 @@ public class UploaderService
       }
     }
 
+		var videoSize = System.Text.Json.JsonSerializer.Serialize(result).Length;
+		_logger.LogInformation($"Get Videos To Upload Size: {videoSize.ToString("N")}");
 
-    return result;
+
+		return result;
   }
 }

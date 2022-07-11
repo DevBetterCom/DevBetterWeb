@@ -52,6 +52,7 @@ public class EditModel : PageModel
       return Page();
     }
 
+    if (Book == null) return NotFound();
     _context.Attach(Book).State = EntityState.Modified;
 
     try
