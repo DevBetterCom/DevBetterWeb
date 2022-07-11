@@ -16,7 +16,7 @@ public class SendFutureCancellationEmailAsync : MemberSubscriptionCancellationSe
   [Fact]
   public async Task SendsEmail()
   {
-    _memberRepository.Setup(s => s.GetBySpecAsync(It.IsAny<MemberByUserIdSpec>(), CancellationToken.None)).ReturnsAsync(new Member());
+    _memberRepository.Setup(s => s.FirstOrDefaultAsync(It.IsAny<MemberByUserIdSpec>(), CancellationToken.None)).ReturnsAsync(new Member());
     _subscriptionPeriodCalculationsService.Setup(s => s.GetCurrentSubscriptionEndDate(It.IsAny<Member>())).Returns(_date);
 
     await _memberCancellationService.SendFutureCancellationEmailAsync(_email);

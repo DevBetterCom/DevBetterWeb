@@ -130,7 +130,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20201016195014_InitialModel')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20201016195014_InitialModel', N'5.0.11');
+    VALUES (N'20201016195014_InitialModel', N'6.0.5');
 END;
 GO
 
@@ -149,7 +149,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20201016200028_CodinGameUrl')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20201016200028_CodinGameUrl', N'5.0.11');
+    VALUES (N'20201016200028_CodinGameUrl', N'6.0.5');
 END;
 GO
 
@@ -180,7 +180,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20201104211836_DiscordUsername')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20201104211836_DiscordUsername', N'5.0.11');
+    VALUES (N'20201104211836_DiscordUsername', N'6.0.5');
 END;
 GO
 
@@ -205,7 +205,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210118212122_MapCoordinates')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210118212122_MapCoordinates', N'5.0.11');
+    VALUES (N'20210118212122_MapCoordinates', N'6.0.5');
 END;
 GO
 
@@ -260,7 +260,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210207162757_AddShippingAddress')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210207162757_AddShippingAddress', N'5.0.11');
+    VALUES (N'20210207162757_AddShippingAddress', N'6.0.5');
 END;
 GO
 
@@ -285,7 +285,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210209190217_InviteEntity')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210209190217_InviteEntity', N'5.0.11');
+    VALUES (N'20210209190217_InviteEntity', N'6.0.5');
 END;
 GO
 
@@ -304,7 +304,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210209190650_InviteEntityActiveBool')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210209190650_InviteEntityActiveBool', N'5.0.11');
+    VALUES (N'20210209190650_InviteEntityActiveBool', N'6.0.5');
 END;
 GO
 
@@ -361,7 +361,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210218184116_InviteEntityConfig')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210218184116_InviteEntityConfig', N'5.0.11');
+    VALUES (N'20210218184116_InviteEntityConfig', N'6.0.5');
 END;
 GO
 
@@ -394,7 +394,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210325205032_BillingActivity')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210325205032_BillingActivity', N'5.0.11');
+    VALUES (N'20210325205032_BillingActivity', N'6.0.5');
 END;
 GO
 
@@ -461,7 +461,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210412190046_SubscriptionPlanAndBillingDetails')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210412190046_SubscriptionPlanAndBillingDetails', N'5.0.11');
+    VALUES (N'20210412190046_SubscriptionPlanAndBillingDetails', N'6.0.5');
 END;
 GO
 
@@ -480,7 +480,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210412195027_DateToBillingDetailsFromBillingActivity')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210412195027_DateToBillingDetailsFromBillingActivity', N'5.0.11');
+    VALUES (N'20210412195027_DateToBillingDetailsFromBillingActivity', N'6.0.5');
 END;
 GO
 
@@ -562,7 +562,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210614175320_RenameSubscriptionToMemberSubscription')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210614175320_RenameSubscriptionToMemberSubscription', N'5.0.11');
+    VALUES (N'20210614175320_RenameSubscriptionToMemberSubscription', N'6.0.5');
 END;
 GO
 
@@ -665,7 +665,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210615133924_SubscriptionFullRename')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210615133924_SubscriptionFullRename', N'5.0.11');
+    VALUES (N'20210615133924_SubscriptionFullRename', N'6.0.5');
 END;
 GO
 
@@ -689,7 +689,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210617200829_DailyCheckEntity')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210617200829_DailyCheckEntity', N'5.0.11');
+    VALUES (N'20210617200829_DailyCheckEntity', N'6.0.5');
 END;
 GO
 
@@ -720,7 +720,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210713141727_InviteEntityDateProperties')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210713141727_InviteEntityDateProperties', N'5.0.11');
+    VALUES (N'20210713141727_InviteEntityDateProperties', N'6.0.5');
 END;
 GO
 
@@ -783,7 +783,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210914184658_MIGRATIONNAME')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210914184658_MIGRATIONNAME', N'5.0.11');
+    VALUES (N'20210914184658_MIGRATIONNAME', N'6.0.5');
 END;
 GO
 
@@ -829,7 +829,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210916044929_VideoProgress')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210916044929_VideoProgress', N'5.0.11');
+    VALUES (N'20210916044929_VideoProgress', N'6.0.5');
 END;
 GO
 
@@ -854,7 +854,68 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20211006222227_MemberVideoList')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20211006222227_MemberVideoList', N'5.0.11');
+    VALUES (N'20211006222227_MemberVideoList', N'6.0.5');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    ALTER TABLE [MemberVideoProgress] DROP CONSTRAINT [FK_MemberVideoProgress_ArchiveVideos_ArchiveVideoId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    DROP INDEX [IX_MemberVideoProgress_ArchiveVideoId] ON [MemberVideoProgress];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    DECLARE @var9 sysname;
+    SELECT @var9 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[MemberVideoProgress]') AND [c].[name] = N'IsCompleted');
+    IF @var9 IS NOT NULL EXEC(N'ALTER TABLE [MemberVideoProgress] DROP CONSTRAINT [' + @var9 + '];');
+    ALTER TABLE [MemberVideoProgress] DROP COLUMN [IsCompleted];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    EXEC sp_rename N'[MemberVideoProgress].[SecondWatched]', N'CurrentDuration', N'COLUMN';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    CREATE TABLE [MemberFavoriteArchiveVideos] (
+        [MemberId] int NOT NULL,
+        [ArchiveVideoId] int NOT NULL,
+        CONSTRAINT [PK_MemberFavoriteArchiveVideos] PRIMARY KEY ([MemberId], [ArchiveVideoId]),
+        CONSTRAINT [FK_MemberFavoriteArchiveVideos_ArchiveVideos_ArchiveVideoId] FOREIGN KEY ([ArchiveVideoId]) REFERENCES [ArchiveVideos] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_MemberFavoriteArchiveVideos_Members_MemberId] FOREIGN KEY ([MemberId]) REFERENCES [Members] ([Id]) ON DELETE CASCADE
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    CREATE INDEX [IX_MemberFavoriteArchiveVideos_ArchiveVideoId] ON [MemberFavoriteArchiveVideos] ([ArchiveVideoId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220523231128_AddMemberFavoriteVideo')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220523231128_AddMemberFavoriteVideo', N'6.0.5');
 END;
 GO
 

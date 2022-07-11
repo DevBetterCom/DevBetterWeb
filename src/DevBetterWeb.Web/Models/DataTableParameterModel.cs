@@ -24,4 +24,5 @@ public class DataTableParameterModel
   public string? Length { get; set; }
 
   public string? Search { get; set; }
+  public bool FilterFavorites { get; set; }
 }

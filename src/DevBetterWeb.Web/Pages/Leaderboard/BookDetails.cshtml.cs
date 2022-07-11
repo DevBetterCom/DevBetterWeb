@@ -22,7 +22,7 @@ public class BookDetailsModel : PageModel
   public async Task<IActionResult> OnGet(string bookId)
   {
     var spec = new BookByIdWithMembersSpec(int.Parse(bookId));
-    var book = await _bookRepository.GetBySpecAsync(spec);
+    var book = await _bookRepository.FirstOrDefaultAsync(spec);
 
     if (book == null) return NotFound(bookId);
 

@@ -175,7 +175,7 @@ public class WebhookHandlerService : IWebhookHandlerService
 
     var userId = await _userLookupService.FindUserIdByEmailAsync(paymentHandlerCustomer.Email);
     var spec = new MemberByUserIdSpec(userId);
-    var member = await _repository.GetBySpecAsync(spec);
+    var member = await _repository.FirstOrDefaultAsync(spec);
 
     if (member != null)
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
@@ -60,25 +59,29 @@ public class Member : BaseEntity, IAggregateRoot
   public string? DiscordUsername { get; private set; }
 
   public List<Book> BooksRead { get; set; } = new List<Book>();
+  public List<VideoComment> VideosComments { get; set; } = new List<VideoComment>();
 
   public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
   public List<MemberSubscription> MemberSubscriptions { get; set; } = new List<MemberSubscription>();
   public decimal? CityLatitude { get; set; }
   public decimal? CityLongitude { get; set; }
   public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
-  public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  //public List<MemberVideoProgress> Videos { get; private set; } = new List<MemberVideoProgress>();
+  private readonly List<MemberFavoriteArchiveVideo> _favoriteArchiveVideos = new();
+  public IEnumerable<MemberFavoriteArchiveVideo> FavoriteArchiveVideos => _favoriteArchiveVideos.AsReadOnly();
 
-  public void AddVideoProgress(MemberVideoProgress videoProgress)
-  {
-    Guard.Against.Null(videoProgress, nameof(videoProgress));
-    Videos.Add(videoProgress);
-  }
 
-  public void AddVideoProgress(ArchiveVideo archiveVideo, int secondWatch)
-  {
-    var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
-    Videos.Add(video);
-  }
+  //public void AddVideoProgress(MemberVideoProgress videoProgress)
+  //{
+  //  Guard.Against.Null(videoProgress, nameof(videoProgress));
+  //  Videos.Add(videoProgress);
+  //}
+
+  //public void AddVideoProgress(ArchiveVideo archiveVideo, int secondWatch)
+  //{
+  //  var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
+  //  Videos.Add(video);
+  //}
 
   public string UserFullName()
   {
@@ -117,6 +120,26 @@ public class Member : BaseEntity, IAggregateRoot
 
     Address = address;
     CreateOrUpdateUpdateEvent(nameof(Address));
+  }
+
+  public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  {
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+      return;
+    }
+
+    _favoriteArchiveVideos.Add(new MemberFavoriteArchiveVideo(Id, archiveVideo.Id));
+  }
+
+  public void RemoveFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  {
+    if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
+    {
+      var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
+
+      _favoriteArchiveVideos.Remove(removal);
+    }
   }
 
   public void UpdateShippingAddress(Address newAddress)
@@ -242,7 +265,7 @@ public class Member : BaseEntity, IAggregateRoot
 
     MemberSubscriptions.Add(subscription);
 
-    CreateOrUpdateUpdateEvent("Subscription Added");
+    Events.Add(new SubscriptionAddedEvent(this, subscription));
   }
 
   public void ExtendCurrentSubscription(DateTime newEndDate)
@@ -253,7 +276,7 @@ public class Member : BaseEntity, IAggregateRoot
       if (s.Dates.Contains(DateTime.Today))
       {
         s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
-        CreateOrUpdateUpdateEvent("Subscription Updated");
+        Events.Add(new SubscriptionUpdatedEvent(this, s));
       }
     }
   }
@@ -263,7 +286,7 @@ public class Member : BaseEntity, IAggregateRoot
     var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
     var activity = new BillingActivity(Id, details);
     BillingActivities.Add(activity);
-    CreateOrUpdateUpdateEvent("BillingActivities");
+    Events.Add(new BillingActivityCreatedEvent(activity, this));
   }
 
   public void UpdateDiscord(string? discordUsername)
@@ -301,16 +324,19 @@ public class Member : BaseEntity, IAggregateRoot
   {
     private readonly IRepository<Member> _memberRepository;
     private readonly IAppLogger<MemberAddressUpdatedHandler> _logger;
+    private readonly IJsonParserService _jsonParserService;
 
     public IMapCoordinateService _mapCoordinateService { get; }
 
     public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
       IRepository<Member> memberRepository,
-      IAppLogger<MemberAddressUpdatedHandler> logger)
+      IAppLogger<MemberAddressUpdatedHandler> logger,
+      IJsonParserService jsonParserService)
     {
       _mapCoordinateService = mapCoordinateService;
       _memberRepository = memberRepository;
       _logger = logger;
+      _jsonParserService = jsonParserService;
     }
 
     public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
@@ -336,8 +362,7 @@ public class Member : BaseEntity, IAggregateRoot
 
       if (string.IsNullOrEmpty(responseString)) return;
 
-      // TODO: Refactor Json Parsing to get Geolocation to separate service
-      var doc = JsonDocument.Parse(responseString);
+      var doc = this._jsonParserService.Parse(responseString);
 
       try
       {

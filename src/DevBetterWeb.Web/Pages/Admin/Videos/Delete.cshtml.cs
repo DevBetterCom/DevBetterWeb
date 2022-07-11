@@ -66,7 +66,7 @@ public class DeleteModel : PageModel
     await _deleteVideoService.ExecuteAsync(id);
 
     var spec = new ArchiveVideoByVideoIdSpec(id);
-    var archiveVideo = await _repository.GetBySpecAsync(spec);
+    var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo != null)
     {
       await _repository.DeleteAsync(archiveVideo);

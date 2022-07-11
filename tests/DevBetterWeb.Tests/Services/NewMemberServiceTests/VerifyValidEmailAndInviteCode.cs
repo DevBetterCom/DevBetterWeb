@@ -38,8 +38,7 @@ public class VerifyValidEmailAndInviteCode
       _emailService.Object,
       _memberRegistrationService.Object,
       _logger.Object,
-              null); // TODO: Add dependency
-
+              null!); // TODO: Add dependency
   }
 
   [Fact]
@@ -47,11 +46,11 @@ public class VerifyValidEmailAndInviteCode
   {
     var invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-    _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
+    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
+    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
     Assert.Equal(_validEmailAndInviteCodeString, result.Value);
   }
 
@@ -60,11 +59,11 @@ public class VerifyValidEmailAndInviteCode
   {
     var invitation = new Invitation("", _inviteCode, _subscriptionId);
 
-    _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
+    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
+    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
     Assert.Equal(_invalidEmailString, result.Value);
   }
 
@@ -74,13 +73,13 @@ public class VerifyValidEmailAndInviteCode
 
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-    _ = _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync((Invitation)null);
+    _ = _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync((Invitation)null);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
+    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
     Assert.Equal(_invalidInviteCodeString, result.Value);
   }
 
@@ -91,11 +90,11 @@ public class VerifyValidEmailAndInviteCode
 
     _invitation.Deactivate();
 
-    _invitationRepository.Setup(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
+    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.GetBySpecAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
+    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
     Assert.Equal(_inactiveInviteString, result.Value);
   }
 }

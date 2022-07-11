@@ -61,7 +61,7 @@ public class DetailsModel : PageModel
     StartTime = startTime;
 
     var spec = new ArchiveVideoWithQuestionsSpec(id.Value);
-    var archiveVideoEntity = await _videoRepository.GetBySpecAsync(spec);
+    var archiveVideoEntity = await _videoRepository.FirstOrDefaultAsync(spec);
 
     if (archiveVideoEntity == null)
     {
