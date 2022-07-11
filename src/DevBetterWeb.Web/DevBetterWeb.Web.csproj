@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ardalis.ApiEndpoints" Version="4.0.1" />
         <PackageReference Include="Ardalis.ListStartupServices" Version="1.1.4" />
         <PackageReference Include="Ardalis.SmartEnum" Version="2.1.0" />
         <PackageReference Include="Autofac" Version="6.4.0" />
