@@ -31,4 +31,10 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
     Guard.Against.Null(question, nameof(question));
     Questions.Add(question);
   }
+
+  public void AddVideoProgress(MemberVideoProgress memberVideoProgress)
+  {
+	  Guard.Against.Null(memberVideoProgress, nameof(memberVideoProgress));
+	  MembersVideoProgress.Add(memberVideoProgress);
+  }
 }
