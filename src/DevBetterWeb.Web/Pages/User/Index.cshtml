@@ -7,6 +7,18 @@
 
 <h3>Members</h3>
 
+@if (Model.IsAdministrator)
+{
+	<br />
+	<div class="row">
+		<div class="col-auto">
+			<input type="checkbox" id="showAllMembers" name="showAllMembers">
+			<label for="showAllMembers"> All Members</label><br>
+		</div>
+	</div>
+	<br />
+}
+
 <table class="table table-sm table-striped" id="membersTable">
     <thead>
         <tr>
@@ -19,13 +31,13 @@
 	            <th>Is member</th>
             }
 	        <th></th>
-            <th></th>
+          <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var member in Model.Members)
         {
-            <tr>
+	        <tr>
                 <td><img src="@string.Format(DevBetterWeb.Core.Constants.AVATAR_IMGURL_FORMAT_STRING, member.UserId)" class="db-avatar-small" height="200" width="200" onerror='epic(this)' alt="Avatar (@member.FullName)" /></td>
                 <td><a asp-page="Details" asp-route-userid="@member.UserId">@member.FullName</a></td>
                 <td>@member.SubscribedDays</td>
@@ -81,6 +93,5 @@
 </table>
 
 @section scripts{
-    <script src="~/js/members.js" asp-append-version="true"></script>
+	<script src="~/js/members.js" asp-append-version="true"></script>
 }
-
