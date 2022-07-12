@@ -10,7 +10,6 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
 {
   public string? Title { get; set; }
   public string? VideoId { get; set; }
-  public string? ShowNotes { get; set; }
   public string? Description { get; set; }
   public int Duration { get; set; }
   public DateTimeOffset DateCreated { get; set; }

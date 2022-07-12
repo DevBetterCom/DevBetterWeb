@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -100,7 +100,6 @@ public class VideosController : Controller
 		Duration = av.Duration,
 		IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == av.Id),
 		MemberFavoritesCount = av.MemberFavorites.Count(),
-		ShowNotes = av.ShowNotes,
 		Status = av.Status,
 		Title = av.Title,
 		VideoId = av.VideoId,
