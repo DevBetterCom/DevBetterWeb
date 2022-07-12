@@ -42,17 +42,17 @@ public class IndexModel : PageModel
     // TODO: Write a LINQ join for this
     // TODO: See if we can use a specification here
     var userIds = usersInRole.Select(x => x.Id).ToList();
-#nullable disable
-    var members = await _appDbContext.Members
+
+    var members = await _appDbContext.Members!
         .Include(m => m.MemberSubscriptions)
         .AsNoTracking()
         .Where(member => userIds.Contains(member.UserId))
         .OrderBy(member => member.LastName)
         .ToListAsync();
 
-    Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
+    Members = members.Select(MemberLinksDTO.FromMemberEntity)
         .ToList();
-#nullable enable
+
 
     foreach (var member in Members)
     {
