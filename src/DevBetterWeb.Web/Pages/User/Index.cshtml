@@ -13,11 +13,12 @@
             <th>Avatar</th>
             <th>Name</th>
             <th>Subscribed<br />Days</th>
-            <th></th>
-            @if (Model.IsAdministrator)
+	        @if (Model.IsAdministrator)
             {
-                <th></th>
+	            <th></th>
+	            <th>Is member</th>
             }
+	        <th></th>
             <th></th>
         </tr>
     </thead>
@@ -30,7 +31,8 @@
                 <td>@member.SubscribedDays</td>
                 @if (Model.IsAdministrator)
                 {
-                    <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
+	                <td><a asp-page="/Admin/User" asp-route-userid="@member.UserId">Edit User</a></td>
+	                <td>@member.IsMember</td>
                 }
                 <td data-order="@member.SubscribedDays">
                     @if (member.SubscribedDays >= 730)
