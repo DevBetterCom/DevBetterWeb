@@ -39,18 +39,18 @@
 
                     <div class="form-group">
                         <label class="font-weight-bold">Discord Username</label>
-                        <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" />
+                        <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234" />
                         <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Project Euler Username</label>
-                        <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" />
+                        <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username" />
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Project Euler Friend Code</label>
-                        <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" />
+                        <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789" />
                     </div>
 
                 </div>
