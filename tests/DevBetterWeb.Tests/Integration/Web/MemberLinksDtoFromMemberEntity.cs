@@ -1,5 +1,5 @@
-﻿using Xunit;
-using static DevBetterWeb.Web.Pages.User.IndexModel;
+﻿using DevBetterWeb.Web.Models;
+using Xunit;
 
 namespace DevBetterWeb.Tests.Web;
 
