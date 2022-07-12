@@ -4,14 +4,6 @@
 
 });
 
-$(document).ready(function() {
-	showAllMembersFunc();
-
-	$('#showAllMembers').change(function() {
-		showAllMembersFunc();
-	});
-});
-
 function showAllMembersFunc() {
 	var showAllMembers = document.getElementById("showAllMembers").checked;
 	var table = $('#membersTable').DataTable();
