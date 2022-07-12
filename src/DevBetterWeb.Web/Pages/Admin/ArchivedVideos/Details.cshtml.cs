@@ -39,8 +39,6 @@ public class DetailsModel : PageModel
     public int Id { get; set; }
     [Required]
     public string? Title { get; set; }
-    [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-    public string? ShowNotes { get; set; }
 
     [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
     public DateTimeOffset DateCreated { get; set; }
@@ -73,7 +71,6 @@ public class DetailsModel : PageModel
     ArchiveVideoDetails = new ArchiveVideoDetailsDTO
     {
       DateCreated = archiveVideoEntity.DateCreated,
-      ShowNotes = archiveVideoEntity.ShowNotes,
       Title = archiveVideoEntity.Title,
       VideoUrl = videoUrl,
       Id = archiveVideoEntity.Id

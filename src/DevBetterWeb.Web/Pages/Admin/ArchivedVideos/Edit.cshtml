@@ -33,15 +33,8 @@
             </div>
         </div>
     </div>
-    <div class="">
-        <div class="form-group">
-            <label asp-for="ArchiveVideoModel.ShowNotes" class="control-label"></label>
-            <textarea asp-for="ArchiveVideoModel.ShowNotes" class="form-control" style="max-width: 100%" rows="10"></textarea>
-            <span asp-validation-for="ArchiveVideoModel.ShowNotes" class="text-danger"></span>
-        </div>
-    </div>
 
-    <input type="hidden" asp-for="ArchiveVideoModel.Id" />
+	<input type="hidden" asp-for="ArchiveVideoModel.Id" />
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-success" />
     </div>
