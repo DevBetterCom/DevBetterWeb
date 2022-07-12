@@ -94,4 +94,16 @@
 
 @section scripts{
 	<script src="~/js/members.js" asp-append-version="true"></script>
+	<script>
+		$(document).ready(function () {
+			var isAdmin = "@Model.IsAdministrator";
+			if (isAdmin == "True") {
+				showAllMembersFunc();
+
+				$('#showAllMembers').change(function () {
+					showAllMembersFunc();
+				});
+			}
+		});
+	</script>
 }
