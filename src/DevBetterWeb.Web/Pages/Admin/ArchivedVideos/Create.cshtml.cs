@@ -45,8 +45,6 @@ public class CreateModel : PageModel
   {
     [Required]
     public string? Title { get; set; }
-    [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-    public string? ShowNotes { get; set; }
 
     [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -64,7 +62,6 @@ public class CreateModel : PageModel
     var videoEntity = new ArchiveVideo()
     {
       DateCreated = ArchiveVideoModel.DateCreated,
-      ShowNotes = ArchiveVideoModel.ShowNotes,
       Title = ArchiveVideoModel.Title,
       VideoUrl = ""
     };

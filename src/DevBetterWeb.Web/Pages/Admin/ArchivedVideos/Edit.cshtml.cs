@@ -39,8 +39,6 @@ public class EditModel : PageModel
     public int Id { get; set; }
     [Required]
     public string? Title { get; set; }
-    [DisplayName(DisplayConstants.ArchivedVideo.ShowNotes)]
-    public string? ShowNotes { get; set; }
 
     [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -72,7 +70,6 @@ public class EditModel : PageModel
     {
       Id = archiveVideoEntity.Id,
       DateCreated = archiveVideoEntity.DateCreated,
-      ShowNotes = archiveVideoEntity.ShowNotes,
       Title = archiveVideoEntity.Title,
       VideoUrl = archiveVideoEntity.VideoUrl
     };
@@ -95,7 +92,6 @@ public class EditModel : PageModel
       return NotFound();
     }
 
-    currentVideoEntity.ShowNotes = ArchiveVideoModel.ShowNotes;
     currentVideoEntity.Title = ArchiveVideoModel.Title;
     currentVideoEntity.VideoUrl = ArchiveVideoModel.VideoUrl;
 
