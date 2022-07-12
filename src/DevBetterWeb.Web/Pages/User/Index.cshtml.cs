@@ -4,108 +4,92 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User;
 
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
 public class IndexModel : PageModel
 {
-  private readonly UserManager<ApplicationUser> _userManager;
-  private readonly AppDbContext _appDbContext;
-  public readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
+	private readonly UserManager<ApplicationUser> _userManager;
+	public readonly IMemberSubscriptionPeriodCalculationsService _memberSubscriptionPeriodCalculationsService;
+	private readonly IRepository<Member> _memberRepository;
 
-  public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
-  public List<MemberSubscriptionPercentCircleViewModel> PercentModels { get; set; } = new List<MemberSubscriptionPercentCircleViewModel>();
-  public bool IsAdministrator { get; set; }
+	public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
+	public List<MemberSubscriptionPercentCircleViewModel> PercentModels { get; set; } = new List<MemberSubscriptionPercentCircleViewModel>();
+	public bool IsAdministrator { get; set; }
 
-  public IndexModel(UserManager<ApplicationUser> userManager,
-      AppDbContext appDbContext,
-      IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService)
-  {
-    _userManager = userManager;
-    _appDbContext = appDbContext;
-    _memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
-  }
+	public IndexModel(UserManager<ApplicationUser> userManager, IMemberSubscriptionPeriodCalculationsService memberSubscriptionPeriodCalculationsService, 
+		IRepository<Member> memberRepository)
+	{
+		_userManager = userManager;
+		_memberSubscriptionPeriodCalculationsService = memberSubscriptionPeriodCalculationsService;
+		_memberRepository = memberRepository;
+	}
 
-  public async Task OnGet()
-  {
-    IsAdministrator = User.IsInRole(AuthConstants.Roles.ADMINISTRATORS);
+	public async Task OnGet()
+	{
+		IsAdministrator = User.IsInRole(AuthConstants.Roles.ADMINISTRATORS);
 
-    var usersInRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+		IList<ApplicationUser> users;
 
-    // TODO: Write a LINQ join for this
-    // TODO: See if we can use a specification here
-    var userIds = usersInRole.Select(x => x.Id).ToList();
-#nullable disable
-    var members = await _appDbContext.Members
-        .Include(m => m.MemberSubscriptions)
-        .AsNoTracking()
-        .Where(member => userIds.Contains(member.UserId))
-        .OrderBy(member => member.LastName)
-        .ToListAsync();
+		if (IsAdministrator)
+		{
+			users = _userManager.Users.ToList();
+		}
+		else
+		{
+			users = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+		}
 
-    Members = members.Select(member => MemberLinksDTO.FromMemberEntity(member))
-        .ToList();
-#nullable enable
+		var members = await GetMembersByUsers(users);
 
-    foreach (var member in Members)
-    {
-      var model = new MemberSubscriptionPercentCircleViewModel(0);
-      model.Percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member.SubscribedDays);
-      PercentModels.Add(model);
-    }
-  }
+		Members = members.Select(MemberLinksDTO.FromMemberEntity)
+				.ToList();
 
-  public class MemberLinksDTO
-  {
-    public string? UserId { get; set; }
-    public string? FullName { get; set; }
-    public string? BlogUrl { get; private set; }
-    public string? GitHubUrl { get; private set; }
-    public string? LinkedInUrl { get; private set; }
-    public string? OtherUrl { get; private set; }
-    public string? TwitchUrl { get; private set; }
-    public string? YouTubeUrl { get; private set; }
-    public string? TwitterUrl { get; private set; }
-    public string? PEUsername { get; private set; }
-    public string? PEBadgeURL { get; private set; }
-    public string? Address { get; private set; }
-    public string? CodinGameUrl { get; private set; }
-    public int SubscribedDays { get; private set; }
+		await UpdateMembersPercentageProgressToAlumniAndMemberStatus();
+	}
 
-    public static MemberLinksDTO FromMemberEntity(Member member)
-    {
+	private async Task UpdateMembersPercentageProgressToAlumniAndMemberStatus()
+	{
+		var memberUserIds = await GetUserIdsByMemberRole();
+		foreach (var member in Members)
+		{
+			var model = new MemberSubscriptionPercentCircleViewModel(0);
+			model.Percentage = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member.SubscribedDays);
+			PercentModels.Add(model);
 
-      var dto = new MemberLinksDTO
-      {
-        FullName = member.UserFullName(),
-        BlogUrl = member.BlogUrl,
-        GitHubUrl = member.GitHubUrl,
-        LinkedInUrl = member.LinkedInUrl,
-        OtherUrl = member.OtherUrl,
-        TwitchUrl = member.TwitchUrl,
-        YouTubeUrl = member.YouTubeUrl,
-        TwitterUrl = member.TwitterUrl,
-        UserId = member.UserId,
-        PEUsername = member.PEUsername,
-        PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png",
-        Address = member.Address,
-        CodinGameUrl = member.CodinGameUrl,
-        SubscribedDays = member.TotalSubscribedDays()
-      };
+			if (memberUserIds.Contains(member.UserId!))
+			{
+				member.IsMember = true;
+			}
+			else
+			{
+				member.IsMember = false;
+			}
+		}
+	}
 
-      if (!(string.IsNullOrEmpty(dto.YouTubeUrl)) && !(dto.YouTubeUrl.Contains("?")))
-      {
-        dto.YouTubeUrl = dto.YouTubeUrl + "?sub_confirmation=1";
-      }
+	private async Task<List<Member>> GetMembersByUsers(IList<ApplicationUser> users)
+	{
+		// TODO: Write a LINQ join for this
+		var userIds = users.Select(x => x.Id).ToList();
+		var membersByUsersIdSpec = new MembersByUsersIdSpec(userIds);
+		var members = await _memberRepository.ListAsync(membersByUsersIdSpec);
 
-      return dto;
-    }
-  }
+		return members;
+	}
+
+	private async Task<List<string>> GetUserIdsByMemberRole()
+	{
+		IList<ApplicationUser> memberUsers = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+		var memberUserIds = memberUsers.Select(x => x.Id).ToList();
+
+		return memberUserIds;
+	}
 }
