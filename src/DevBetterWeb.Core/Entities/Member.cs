@@ -123,7 +123,7 @@ public class Member : BaseEntity, IAggregateRoot
 
     if (isEvent)
     {
-	    CreateOrUpdateUpdateEvent(nameof(Address));
+	    CreateOrUpdateAddressUpdateEvent(nameof(Address));
 		}
   }
 
@@ -329,7 +329,19 @@ public class Member : BaseEntity, IAggregateRoot
     Events.Add(updatedEvent);
   }
 
-  public int TotalSubscribedDays()
+  private void CreateOrUpdateAddressUpdateEvent(string updateDetails)
+  {
+	  if (Events.Find(evt => evt is MemberHomeAddressUpdatedEvent) is MemberHomeAddressUpdatedEvent updatedEvent)
+	  {
+		  updatedEvent.UpdateDetails += "," + updateDetails;
+		  return;
+	  }
+
+	  updatedEvent = new MemberHomeAddressUpdatedEvent(this, updateDetails);
+	  Events.Add(updatedEvent);
+  }
+
+	public int TotalSubscribedDays()
   {
     Guard.Against.Null(MemberSubscriptions, nameof(MemberSubscriptions));
 
