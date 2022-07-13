@@ -96,7 +96,7 @@ public class Member : BaseEntity, IAggregateRoot
     }
   }
 
-  public void UpdateName(string? firstName, string? lastName)
+  public void UpdateName(string? firstName, string? lastName, bool isEvent=true)
   {
     bool valueChanged = false;
     if (FirstName != firstName)
@@ -109,18 +109,22 @@ public class Member : BaseEntity, IAggregateRoot
       LastName = lastName;
       valueChanged = true;
     }
-    if (valueChanged)
+    if (valueChanged && isEvent)
     {
       CreateOrUpdateUpdateEvent("Name");
     }
   }
 
-  public void UpdateAddress(string? address)
+  public void UpdateAddress(string? address, bool isEvent = true)
   {
     if (Address == address) return;
 
     Address = address;
-    CreateOrUpdateUpdateEvent(nameof(Address));
+
+    if (isEvent)
+    {
+	    CreateOrUpdateUpdateEvent(nameof(Address));
+		}
   }
 
   public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
@@ -143,22 +147,30 @@ public class Member : BaseEntity, IAggregateRoot
     }
   }
 
-  public void UpdateShippingAddress(Address newAddress)
+  public void UpdateShippingAddress(Address newAddress, bool isEvent = true)
   {
     if (ShippingAddress == newAddress) return;
-    var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
-    Events.Add(addressUpdatedEvent);
+
+    if (isEvent)
+    {
+	    var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
+	    Events.Add(addressUpdatedEvent);
+		}
+    
     ShippingAddress = newAddress;
   }
 
-  public void UpdateAboutInfo(string? aboutInfo)
+  public void UpdateAboutInfo(string? aboutInfo, bool isEvent = true)
   {
     if (AboutInfo == aboutInfo) return;
 
     AboutInfo = aboutInfo;
-    CreateOrUpdateUpdateEvent(nameof(AboutInfo));
+    if (isEvent)
+    {
+	    CreateOrUpdateUpdateEvent(nameof(AboutInfo));
+		}
   }
-  public void UpdatePEInfo(string? peFriendCode, string? peUsername)
+  public void UpdatePEInfo(string? peFriendCode, string? peUsername, bool isEvent = true)
   {
     bool valueChanged = false;
 
@@ -173,7 +185,7 @@ public class Member : BaseEntity, IAggregateRoot
       valueChanged = true;
     }
 
-    if (valueChanged)
+    if (valueChanged && isEvent)
     {
       CreateOrUpdateUpdateEvent("ProjectEuler");
     }
@@ -186,7 +198,8 @@ public class Member : BaseEntity, IAggregateRoot
       string? otherUrl,
       string? twitchUrl,
       string? youtubeUrl,
-      string? twitterUrl)
+      string? twitterUrl, 
+	    bool isEvent = true)
   {
     bool valueChanged = false;
     if (BlogUrl != blogUrl)
@@ -229,7 +242,7 @@ public class Member : BaseEntity, IAggregateRoot
       TwitterUrl = twitterUrl;
       valueChanged = true;
     }
-    if (valueChanged)
+    if (valueChanged && isEvent)
     {
       CreateOrUpdateUpdateEvent("Links");
     }
@@ -290,12 +303,16 @@ public class Member : BaseEntity, IAggregateRoot
     Events.Add(new BillingActivityCreatedEvent(activity, this));
   }
 
-  public void UpdateDiscord(string? discordUsername)
+  public void UpdateDiscord(string? discordUsername, bool isEvent=true)
   {
     if (DiscordUsername == discordUsername) return;
 
     DiscordUsername = discordUsername;
-    CreateOrUpdateUpdateEvent("Discord Username");
+
+    if (isEvent)
+    {
+	    CreateOrUpdateUpdateEvent("Discord Username");
+		}
   }
 
   private void CreateOrUpdateUpdateEvent(string updateDetails)
