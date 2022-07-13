@@ -22,7 +22,7 @@
     <PackageReference Include="Markdig" Version="0.30.2" />
     <PackageReference Include="Sendgrid" Version="9.28.0" />
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
