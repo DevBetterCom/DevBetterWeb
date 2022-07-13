@@ -31,8 +31,9 @@ public class UserLinksUpdateModel
   public string? OtherUrl { get; set; }
   [ValidUrlContainingString("CodinGame")]
   public string? CodinGameUrl { get; set; }
+  public string? UserId { get; set; }
 
-  public UserLinksUpdateModel()
+	public UserLinksUpdateModel()
   {
 
   }
@@ -40,6 +41,7 @@ public class UserLinksUpdateModel
   public UserLinksUpdateModel(Member member)
   {
 
+	  UserId = member.UserId;
     BlogUrl = member.BlogUrl;
     TwitchUrl = member.TwitchUrl;
     YouTubeUrl = member.YouTubeUrl;

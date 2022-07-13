@@ -8,6 +8,7 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.User;
@@ -20,6 +21,7 @@ public class UserPersonalUpdateModel
   [Required]
   public string? LastName { get; set; }
   public string? Address { get; set; }
+  public string? UserId { get; set; }
   public string? AboutInfo { get; set; }
   public string? PEFriendCode { get; set; }
   public string? PEUsername { get; set; }
@@ -33,8 +35,8 @@ public class UserPersonalUpdateModel
 
   public UserPersonalUpdateModel(Member member)
   {
-
-    AboutInfo = member.AboutInfo;
+	  UserId = member.UserId;
+	  AboutInfo = member.AboutInfo;
     FirstName = member.FirstName;
     LastName = member.LastName;
     Address = member.Address;
