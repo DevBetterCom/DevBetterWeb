@@ -101,7 +101,6 @@ public class UserModel : PageModel
 
 		var memberByUserSpec = new MemberByUserIdSpec(userId);
 		var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
-		var subscriptions = new List<MemberSubscription>();
 		if (member != null)
 		{
 			UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
@@ -110,7 +109,7 @@ public class UserModel : PageModel
 			MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
 
 			var subscriptionByMemberSpec = new MemberSubscriptionsByMemberSpec(member.Id);
-			subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
+			var subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
 
 			foreach (var subscription in subscriptions)
 			{
@@ -165,14 +164,14 @@ public class UserModel : PageModel
 		var subscriptionsFromDb = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
 
 		// return error message if new subscription overlaps an existing subscription
-		foreach (var subscriptionFromDb in subscriptionsFromDb)
+		var isError = subscriptionsFromDb.Any(x =>
+			((subscription.StartDate >= x.Dates.StartDate && subscription.StartDate <= x.Dates.EndDate) ||
+			 (subscription.EndDate >= x.Dates.StartDate && subscription.EndDate <= x.Dates.EndDate)));
+
+		if (isError)
 		{
-			if ((subscription.StartDate >= subscriptionFromDb.Dates.StartDate && subscription.StartDate <= subscriptionFromDb.Dates.EndDate) ||
-					(subscription.EndDate >= subscriptionFromDb.Dates.StartDate && subscription.EndDate <= subscriptionFromDb.Dates.EndDate))
-			{
-				ModelState.AddModelError("OverlappingSubscription", "Subscriptions cannot overlap");
-				return BadRequest(ModelState);
-			}
+			ModelState.AddModelError("OverlappingSubscription", "Subscriptions cannot overlap");
+			return BadRequest(ModelState);
 		}
 
 		try
