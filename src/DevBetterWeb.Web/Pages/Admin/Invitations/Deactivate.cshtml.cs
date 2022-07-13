@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
@@ -27,14 +28,9 @@ public class DeactivateModel : PageModel
     var spec = new InvitationByInviteCodeSpec(inviteCode);
     var invitation = await _invitationRepository.FirstOrDefaultAsync(spec);
 
-    if (invitation != null)
-    {
-	    Message = $"If you are sure you want to deactivate {inviteCode} with email {invitation.Email} from DevBetter, click below.";
-    }
-    else
-    {
-      Message = "Invalid Link. Please try again.";
-    }
+    Message = invitation != null ? 
+	    $"If you are sure you want to deactivate {inviteCode} with email {invitation.Email} from DevBetter, click below." : 
+	    "Invalid Link. Please try again.";
   }
 
   public async Task<PageResult> OnPost(string inviteCode)
@@ -48,7 +44,7 @@ public class DeactivateModel : PageModel
       Message = $"{inviteCode} [{invitation.Email}] has been deactivated from DevBetter.";
       return Page();
     }
-    catch
+    catch(Exception)
     {
       Message = "Attempt to deactivate invitation failed.";
       return Page();
