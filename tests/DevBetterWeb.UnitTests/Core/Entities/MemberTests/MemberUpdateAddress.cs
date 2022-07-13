@@ -39,7 +39,7 @@ public class MemberUpdateAddress
 
     var member = GetMemberWithDefaultAddress();
     member.UpdateAddress(newAddress);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberHomeAddressUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Address", eventCreated.UpdateDetails);
@@ -57,14 +57,14 @@ public class MemberUpdateAddress
   [Fact]
   public void RecordsEventWithAppendedDetailsIfOtherThingsChanged()
   {
-    string newAddress = Guid.NewGuid().ToString();
+    string newDiscord = Guid.NewGuid().ToString();
 
     var member = GetMemberWithDefaultAddress();
     member.UpdateName("kylo", "ren");
-    member.UpdateAddress(newAddress);
+    member.UpdateDiscord(newDiscord);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
-    Assert.Equal("Name,Address", eventCreated.UpdateDetails);
+    Assert.Equal("Name,Discord Username", eventCreated.UpdateDetails);
   }
 }
