@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Infrastructure.DiscordWebooks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
@@ -9,17 +10,21 @@ namespace DevBetterWeb.Infrastructure.Handlers;
 public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
 {
   private readonly ILogger<MemberAddressUpdatedHandler> _logger;
+
+  private readonly AdminUpdatesWebhook _webhook;
   //private readonly IRepository _repository;
 
   public IMapCoordinateService _mapCoordinateService { get; }
 
   public MemberAddressUpdatedHandler(IMapCoordinateService mapCoordinateService,
-    ILogger<MemberAddressUpdatedHandler> logger
-    //IRepository repository
-    )
+    ILogger<MemberAddressUpdatedHandler> logger,
+    AdminUpdatesWebhook webhook
+		//IRepository repository
+		)
   {
     _mapCoordinateService = mapCoordinateService;
     _logger = logger;
+    _webhook = webhook;
     //_repository = repository;
   }
 
@@ -49,8 +54,12 @@ public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
           member.CityLongitude = longitude;
           _logger.LogInformation($"Set lat/long to {latitude}/{longitude}.");
         }
-        //await _repository.UpdateAsync(member);
-      }
+
+        _webhook.Content = $"Member {member.UserFullName()} change the address to {member.Address}";
+        await _webhook.Send();
+
+				//await _repository.UpdateAsync(member);
+			}
     }
   }
 }
