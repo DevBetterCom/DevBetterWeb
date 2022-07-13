@@ -1,0 +1,24 @@
+﻿@page "{inviteCode}"
+@model DevBetterWeb.Web.Pages.Admin.Invitations.DeactivateModel
+@{
+}
+
+<h3>Deactivate Invitation</h3>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+	            Deactivate Invitation
+            </div>
+            <div class="card-body">
+                <p>@Model.Message</p>
+                <br />
+                <br />
+                <form method="post">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Deactivate Invitation" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
