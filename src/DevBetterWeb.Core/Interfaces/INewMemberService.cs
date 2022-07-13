@@ -10,4 +10,5 @@ public interface INewMemberService
   Task SendRegistrationEmailAsync(Invitation invitation);
   Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
   Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode, string email);
+  Task DeactivateInviteAsync(Invitation invite);
 }

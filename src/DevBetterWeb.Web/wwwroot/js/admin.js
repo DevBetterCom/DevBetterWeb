@@ -2,6 +2,8 @@
 
     $('#usersTable').DataTable({ "pageLength": 25 });
 
+	  $('#invitationsTable').DataTable({ "pageLength": 25 });
+
     $('#removeUserModal').on('show.bs.modal', function (e) {
         var button = $(e.relatedTarget);
 
@@ -47,3 +49,9 @@
     })
 
 });
+
+function showActiveAndInactiveFunc() {
+	var showActiveAndInactive = document.getElementById("showActiveAndInactive").checked;
+	var table = $('#invitationsTable').DataTable();
+	table.column(1).search(showActiveAndInactive ? "" : "true").draw();
+}
