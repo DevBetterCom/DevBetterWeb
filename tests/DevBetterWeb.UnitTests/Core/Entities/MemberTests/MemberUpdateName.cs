@@ -77,11 +77,11 @@ public class MemberUpdateName
     string newLastName = Guid.NewGuid().ToString();
 
     var member = GetMemberWithDefaultName();
-    member.UpdateAddress("new address");
+    member.UpdateDiscord("new discord");
     member.UpdateName(_initialFirstName, newLastName);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
-    Assert.Equal("Address,Name", eventCreated.UpdateDetails);
+    Assert.Equal("Discord Username,Name", eventCreated.UpdateDetails);
   }
 }

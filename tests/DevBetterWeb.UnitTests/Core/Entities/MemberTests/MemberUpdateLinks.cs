@@ -97,7 +97,6 @@ public class MemberUpdateLinks
     var member = GetMemberWithDefaultLinks();
     member.UpdateName("kylo", "ren");
     member.UpdateAboutInfo("About kylo");
-    member.UpdateAddress("123 main street");
     member.UpdateLinks(newLink,
       _initialCodinGameUrl,
       _initialGitHubUrl,
@@ -109,7 +108,7 @@ public class MemberUpdateLinks
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
-    Assert.Equal("Name,AboutInfo,Address,Links", eventCreated.UpdateDetails);
+    Assert.Equal("Name,AboutInfo,Links", eventCreated.UpdateDetails);
     Assert.Single(member.Events);
   }
 
