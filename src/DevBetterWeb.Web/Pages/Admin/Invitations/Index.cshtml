@@ -1,0 +1,55 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Admin.Invitations.IndexModel
+@{
+}
+
+<div class="d-flex mb-3">
+	<div class="mr-3">
+		<h3>Invitations</h3>
+	</div>
+</div>
+
+<br />
+<div class="row">
+	<div class="col-auto">
+		<input type="checkbox" id="showActiveAndInactive" name="showActiveAndInactive">
+		<label for="showActiveAndInactive"> Show Active And Inactive</label><br>
+	</div>
+</div>
+<br />
+
+<table class="table table-striped table-bordered" id="invitationsTable">
+    <thead>
+        <tr>
+	        <th>Email</th>
+	        <th>Is Active</th>
+          <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invitation in Model.Invitations)
+        {
+            <tr>
+                <td>@invitation.Email</td>
+                <td>@invitation.Active</td>
+                <td>
+                    <a href ="./Invitations/Deactivate/@invitation.InviteCode">Deactivate Invitation</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts{
+	<script src="~/js/admin.js" asp-append-version="true"></script>
+	<script>
+		$(document).ready(function () {
+			showActiveAndInactiveFunc();
+
+			$('#showActiveAndInactive').change(function () {
+				showActiveAndInactiveFunc();
+			});
+		});
+	</script>
+}
