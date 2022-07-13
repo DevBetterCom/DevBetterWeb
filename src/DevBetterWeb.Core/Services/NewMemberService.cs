@@ -127,7 +127,14 @@ public class NewMemberService : INewMemberService
     return member;
   }
 
-  private async Task DeactivateInviteAndDuplicates(Invitation invite)
+  public async Task DeactivateInviteAsync(Invitation invite)
+  {
+	  invite.Deactivate();
+	  await _invitationRepository.UpdateAsync(invite);
+	  await _invitationRepository.SaveChangesAsync();
+  }
+
+	private async Task DeactivateInviteAndDuplicates(Invitation invite)
   {
     invite.Deactivate();
     await _invitationRepository.UpdateAsync(invite);
