@@ -53,6 +53,7 @@ public class DefaultInfrastructureModule : Module
     builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
         .As<IUserEmailConfirmationService>();
     builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
+    builder.RegisterType<CoachingSessionsWebhook>().InstancePerDependency();
     builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
     builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
     builder.RegisterGeneric(typeof(LoggerAdapter<>))
