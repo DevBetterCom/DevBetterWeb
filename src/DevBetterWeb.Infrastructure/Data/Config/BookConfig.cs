@@ -13,5 +13,11 @@ public class BookConfig : IEntityTypeConfiguration<Book>
     builder.Property(x => x.Author).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
     builder.Property(x => x.Details).HasMaxLength(1000);
     builder.Property(x => x.PurchaseUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
-  }
+
+    builder
+	    .HasOne(t => t.BookCategory)
+	    .WithMany(p => p.Books)
+	    .HasForeignKey(d => d.BookCategoryId)
+	    .OnDelete(DeleteBehavior.ClientSetNull);
+	}
 }
