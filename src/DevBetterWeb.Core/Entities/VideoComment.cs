@@ -11,8 +11,6 @@ public class VideoComment : BaseEntity, IAggregateRoot
 {
   public int VideoId { get; set; }
   public int? ParentCommentId { get; set; }
-
-  [NotMapped]
   public string? MdBody { get; set; }
 
   public string? Body { get; set; }
