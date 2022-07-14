@@ -37,7 +37,7 @@ public class AddVideoInfo : EndpointBaseAsync
 		{
 			var videoAddedEvent = new VideoAddedEvent(archiveVideo);
 			archiveVideo.Events.Add(videoAddedEvent);
-			archiveVideo = await _repository.AddAsync(archiveVideo, cancellationToken);
+			_ = await _repository.AddAsync(archiveVideo, cancellationToken);
 		}
 		else
 		{
