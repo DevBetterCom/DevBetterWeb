@@ -12,7 +12,9 @@ public class BookProfile : Profile
 	    .ForPath(dest => dest.CategoryTitle,
 		    opt => opt.MapFrom(source => source.BookCategory!.Title))
 	    .ForPath(dest => dest.MembersWhoHaveReadCount,
-		    opt => opt.MapFrom(source => source.MembersWhoHaveRead!.Count));
+		    opt => opt.MapFrom(source => source.MembersWhoHaveRead!.Count))
+	    .ForPath(dest => dest.TitleWithAuthor,
+		    opt => opt.MapFrom(source => source.ToString()));
 		CreateMap<BookDto, Book>();
   }
 }

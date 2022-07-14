@@ -21,132 +21,76 @@ public class IndexModel : PageModel
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
   private readonly IRepository<Book> _bookRepository;
+  private readonly IRepository<BookCategory> _bookCategoryRepository;
   private readonly IMapper _mapper;
   private readonly RankingService<int> _rankingService = new RankingService<int>();
 
-  public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
-  public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
+  public List<MemberForBookDto> Members { get; set; } = new List<MemberForBookDto>();
+  public List<MemberForBookDto> Alumni { get; set; } = new List<MemberForBookDto>();
   public List<BookDto> Books { get; set; } = new List<BookDto>();
-  public Dictionary<int, int> MemberRankings { get; set; } = new Dictionary<int, int>();
-  public Dictionary<int, int> AlumniRankings { get; set; } = new Dictionary<int, int>();
-  public Dictionary<int, int> BookRankings { get; set; } = new Dictionary<int, int>();
-
-  public Dictionary<int, int> BookRanks { get; set; } = new Dictionary<int, int>();
-
+  public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
 
   public IndexModel(UserManager<ApplicationUser> userManager,
       IRepository<Member> memberRepository,
       IRepository<Book> bookRepository,
+      IRepository<BookCategory> bookCategoryRepository,
       IMapper mapper)
   {
     _userManager = userManager;
     _memberRepository = memberRepository;
     _bookRepository = bookRepository;
+    _bookCategoryRepository = bookCategoryRepository;
     _mapper = mapper;
   }
 
   public async Task OnGet()
   {
-    var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
-    var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
+		var alumniMembers = await SetAlumniMembersAsync();
+		await SetMembersAsync(alumniMembers.Select(x => x.Id).ToList());
+		await SetBooksAsync();
+		await SetBookCategoriesAsync();
+  }
 
-    var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
-    var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
-
-    var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds);
-    var members = await _memberRepository.ListAsync(memberSpec);
-
-    var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
-    var alumni = await _memberRepository.ListAsync(alumniSpec);
-
-    Members = members
-        .Where(m => (m.BooksRead?.Count ?? 0) > 0 &&
-              !alumni.Any(alumni => alumni.Id == m.Id))
-        .Select(member => MemberLinksDTO.FromMemberEntity(member))
-        .ToList();
-
-    var memberRanks = _rankingService.Rank(Members.Select(m => m.BooksRead!.Count));
-    Members.ForEach(m => m.Rank = memberRanks[m.BooksRead!.Count]);
-
-    Alumni = alumni.Select(alumni => MemberLinksDTO.FromMemberEntity(alumni))
-        .Where(m => (m.BooksRead?.Count ?? 0) > 0)
-        .ToList();
-
-    var alumniRanks = _rankingService.Rank(Alumni.Select(m => m.BooksRead!.Count));
-    Alumni.ForEach(m => m.Rank = alumniRanks[m.BooksRead!.Count]);
-
-    var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
-    var booksEntity = await _bookRepository.ListAsync(bookSpec);
-    Books = _mapper.Map<List<BookDto>>(booksEntity);
-
-    BookRanks = _rankingService.Rank(Books.Select(b => b.MembersWhoHaveReadCount));
-
-		//TODO: this need to be removed I do not think they are used anywhere!
-    MemberRankings = CalculateMemberBookRanks(Members);
-    AlumniRankings = CalculateMemberBookRanks(Alumni);
-    BookRankings = CalculateBookRanks(booksEntity);
+  private async Task SetBookCategoriesAsync()
+  {
+		var spec = new BookCategoriesSpec();
+		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
+		BookCategory.CalcAndSetCategoriesBooksRank(_rankingService, bookCategoriesEntity);
+		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
+		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
 	}
 
-  private Dictionary<int, int> CalculateMemberBookRanks(List<MemberLinksDTO> members)
+	private async Task SetBooksAsync()
   {
-	  // could probably do this with a groupby bookcount
-	  var memberBookCounts = members
-		  .Select(m => m.BooksRead!.Count)
-		  .Distinct()
-		  .OrderByDescending(c => c);
+	  var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
+	  var booksEntity = await _bookRepository.ListAsync(bookSpec);
+	  Book.CalcAndSetRank(_rankingService, booksEntity);
+	  Books = _mapper.Map<List<BookDto>>(booksEntity);
+	}
 
-	  var memberBookRankings = new Dictionary<int, int>();
-	  var rank = 1;
-	  foreach (var count in memberBookCounts)
-	  {
-		  memberBookRankings[count] = rank;
-		  rank += 1;
-	  }
+  private async Task<List<Member>> SetMembersAsync(List<int> excludedAlumniMembersIds)
+  {
+	  var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+	  var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
 
-	  return memberBookRankings;
+	  var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds, excludedAlumniMembersIds);
+	  var members = await _memberRepository.ListAsync(memberSpec);
+	  Member.CalcAndSetBooksRank(_rankingService, members);
+	  Members = _mapper.Map<List<MemberForBookDto>>(members);
+
+	  return members;
   }
 
-  private Dictionary<int, int> CalculateBookRanks(List<Book> books)
+  private async Task<List<Member>> SetAlumniMembersAsync()
   {
-	  var bookCounts = books
-		  .Select(m => m.MembersWhoHaveRead!.Count)
-		  .Distinct()
-		  .OrderByDescending(c => c);
+	  var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
+	  var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 
-	  var bookRankings = new Dictionary<int, int>();
-	  var rank = 1;
-	  foreach (var count in bookCounts)
-	  {
-		  bookRankings[count] = rank;
-		  rank += 1;
-	  }
+		var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
+	  var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
+	  Member.CalcAndSetBooksRank(_rankingService, alumniMembers);
+	  Alumni = _mapper.Map<List<MemberForBookDto>>(alumniMembers);
 
-	  return bookRankings;
-  }
-
-
-	public class MemberLinksDTO
-  {
-    public string? UserId { get; set; }
-    public string? FullName { get; set; }
-    public List<Book>? BooksRead { get; private set; }
-    public int Rank { get; set; }
-
-    public static MemberLinksDTO FromMemberEntity(Member member)
-    {
-      var dto = new MemberLinksDTO
-      {
-        FullName = member.UserFullName(),
-        BooksRead = member.BooksRead,
-        UserId = member.UserId
-      };
-
-      if (dto.BooksRead == null)
-      {
-        dto.BooksRead = new List<Book>();
-      }
-
-      return dto;
-    }
+	  return alumniMembers;
   }
 }

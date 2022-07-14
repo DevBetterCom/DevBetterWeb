@@ -9,6 +9,9 @@ public class BookConfig : IEntityTypeConfiguration<Book>
 
   public void Configure(EntityTypeBuilder<Book> builder)
   {
+	  builder
+		  .Ignore(x => x.Rank);
+
     builder
 	    .Property(x => x.Title)
 	    .HasMaxLength(500);

@@ -1,115 +1,122 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
 @{
-    ViewData["Title"] = "Index";
+  ViewData["Title"] = "Index";
 }
 
 <h3>Leaderboard</h3>
 
-<p>Learn more about why we are tracking 
-    this <a href="https://www.linkedin.com/pulse/20140716032618-1856486-a-simple-successful-motivation-story/">in this article</a>. The original <a href="https://www.linkedin.com/pulse/developer-reading-list-steve-smith/">reading list from <a href="https://nimblepros.com/">NimblePros</a> can be found here</a>.</p>
+<p>
+  Learn more about why we are tracking
+  this <a href="https://www.linkedin.com/pulse/20140716032618-1856486-a-simple-successful-motivation-story/">in this article</a>. The original <a href="https://www.linkedin.com/pulse/developer-reading-list-steve-smith/">reading list from <a href="https://nimblepros.com/">NimblePros</a> can be found here</a>.
+</p>
 <p>Looking for our <a href="https://mee6.xyz/leaderboard/633401358992801800">Discord MEE6 Bot Leaderboard?</a></p>
 <div class="row">
-    <div class="col-6">
-        <h4>Members</h4>
-        <table class="table table-sm table-striped" id="leaderboardTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Number of Books Read</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var member in Model.Members)
-                {
-                    <tr>
-                        <td>@member.Rank</td>
-                        <td>
-                            <a href="/User/Details/@member.UserId">@member.FullName</a>
-                        </td>
-                        <td>
-                            @member.BooksRead!.Count
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="col-6">
-        <h4>Alumni</h4>
-        <table class="table table-sm table-striped" id="leaderboardTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Number of Books Read</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var member in Model.Alumni)
-                {
-                    <tr>
-                        <td>@member.Rank</td>
-                        <td>
-                            <a href="/User/Details/@member.UserId">@member.FullName</a>
-                        </td>
-                        <td>
-                            @member.BooksRead!.Count
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-</div>
-<div class="row">
-    <div class="col-7">
-        <table class="table table-sm table-striped" id="leaderboardBooksTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-		                <th>Book</th>
-		                <th>Category</th>
-                    <th></th>
-                    <th></th>
-                    <th>Read by...</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var book in Model.Books)
-                {
-                    <tr>
-                        <td>@(Model.BookRanks[book.MembersWhoHaveReadCount])</td>
-		                    <td>
-			                    <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
-		                    </td>
-		                    <td>@book.CategoryTitle</td>
-                        <td>
-                            <a href="@book.PurchaseUrl" target="_blank"><i class="fas fa-shopping-cart"></i></a>
-                        </td>
-                        <td></td>
-                        <td>
-                            @book.MembersWhoHaveReadCount
-                            @if (book.MembersWhoHaveReadCount == 1)
-                            {
-                                @Html.Raw("Member");
-                            }
-                            else
-                            { @Html.Raw("Members");
-                        }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-    </div>
-
+  <div class="col-12">
+    <h4>Alumni</h4>
+    <table class="table table-sm table-striped" id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Number of Books Read</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var member in Model.Alumni)
+        {
+          <tr>
+            <td>@member.BooksRank</td>
+            <td>
+              <a href="/User/Details/@member.UserId">@member.FullName</a>
+            </td>
+            <td>
+              @member.BooksRead!.Count
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 
-    @section scripts{
-        <script src="~/js/members.js" asp-append-version="true"></script>
+@foreach (var bookCategory in @Model.BookCategories)
+{
+  <div class="row">
+    <div class="col-12">
+      <h4>Members (@bookCategory.Title)</h4>
+      <table class="table table-sm table-striped" id="leaderboardTable">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Number of Books Read</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var member in bookCategory.Members)
+          {
+            <tr>
+              <td>@member.BooksRank</td>
+              <td>
+                <a href="/User/Details/@member.UserId">@member.FullName</a>
+              </td>
+              <td>
+                @member.BooksReadCount
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-sm table-striped" id="leaderboardBooksTable">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Book</th>
+            <th></th>
+            <th></th>
+            <th>Read by...</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var book in bookCategory.Books!)
+          {
+            <tr>
+              <td>@(book.Rank)</td>
+              <td>
+                <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.TitleWithAuthor</a>
+              </td>
+              <td>
+                <a href="@book.PurchaseUrl" target="_blank"><i class="fas fa-shopping-cart"></i></a>
+              </td>
+              <td></td>
+              <td>
+                @book.MembersWhoHaveReadCount
+                @if (@book.MembersWhoHaveReadCount == 1)
+                {
+                  @Html.Raw("Member")
+                }
+                else
+                {
+                  @Html.Raw("Members")
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+}
+
+
+@section scripts{
+<script src="~/js/members.js" asp-append-version="true"></script>
     }
 
