@@ -2,10 +2,6 @@
 @model DevBetterWeb.Web.Pages.Leaderboard.IndexModel
 @{
     ViewData["Title"] = "Index";
-
-    var memberRankings = Model.CalculateMemberBookRanks(Model.Members);
-    var alumniRankings = Model.CalculateMemberBookRanks(Model.Alumni);
-    var bookRankings = Model.CalculateBookRanks(Model.Books);
 }
 
 <h3>Leaderboard</h3>
@@ -74,7 +70,8 @@
             <thead>
                 <tr>
                     <th>Rank</th>
-                    <th>Book</th>
+		                <th>Book</th>
+		                <th>Category</th>
                     <th></th>
                     <th></th>
                     <th>Read by...</th>
@@ -84,17 +81,18 @@
                 @foreach (var book in Model.Books)
                 {
                     <tr>
-                        <td>@(Model.BookRanks[book.MembersWhoHaveRead!.Count])</td>
-                        <td>
-                            <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
-                        </td>
+                        <td>@(Model.BookRanks[book.MembersWhoHaveReadCount])</td>
+		                    <td>
+			                    <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a>
+		                    </td>
+		                    <td>@book.CategoryTitle</td>
                         <td>
                             <a href="@book.PurchaseUrl" target="_blank"><i class="fas fa-shopping-cart"></i></a>
                         </td>
                         <td></td>
                         <td>
-                            @book.MembersWhoHaveRead!.Count
-                            @if (book.MembersWhoHaveRead.Count == 1)
+                            @book.MembersWhoHaveReadCount
+                            @if (book.MembersWhoHaveReadCount == 1)
                             {
                                 @Html.Raw("Member");
                             }

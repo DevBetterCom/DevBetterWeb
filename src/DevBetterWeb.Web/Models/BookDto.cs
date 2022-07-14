@@ -10,4 +10,9 @@ public class BookDto
 	public int BookCategoryId { get; set; }
 	public string? CategoryTitle { get; set; }
 	public int MembersWhoHaveReadCount { get; set; }
+
+	public override string ToString()
+	{
+		return Title + " by " + Author;
+	}
 }

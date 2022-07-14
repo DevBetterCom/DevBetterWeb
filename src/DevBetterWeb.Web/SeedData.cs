@@ -101,7 +101,15 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 
 	  var personalCareerCategory = new BookCategory { Title = "Personal/Career" };
 	  dbContext.BookCategories!.Add(personalCareerCategory);
-
 	  dbContext.SaveChanges();
+
+		var books = dbContext.Books!;
+		foreach (var book in books)
+		{
+			book.BookCategoryId = 1;
+			dbContext.Books!.Update(book);
+		}
+		
+		dbContext.SaveChanges();
   }
 }

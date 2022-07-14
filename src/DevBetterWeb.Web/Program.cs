@@ -33,11 +33,13 @@ public class Program
       var logger = services.GetRequiredService<ILogger<Program>>();
       var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
       logger.LogInformation($"Current environment: {environment}");
-      if (environment == "Production")
+
+      var context = services.GetRequiredService<AppDbContext>();
+      SeedData.PopulateInitData(context);
+
+			if (environment == "Production")
       {
-	      var context = services.GetRequiredService<AppDbContext>();
-	      SeedData.PopulateInitData(context);
-				return;
+	      return;
       }
 
       logger.LogInformation("Seeding database...");
@@ -54,7 +56,7 @@ public class Program
           await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
           logger.LogDebug("Populated AppIdentityDbContext test data.");
         }
-        var context = services.GetRequiredService<AppDbContext>();
+        //var context = services.GetRequiredService<AppDbContext>();
         if (await context.Questions!.AnyAsync())
         {
           logger.LogDebug("Database already has data in it.");

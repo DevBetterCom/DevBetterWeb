@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,61 +21,29 @@ public class IndexModel : PageModel
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
   private readonly IRepository<Book> _bookRepository;
+  private readonly IMapper _mapper;
   private readonly RankingService<int> _rankingService = new RankingService<int>();
 
   public List<MemberLinksDTO> Members { get; set; } = new List<MemberLinksDTO>();
   public List<MemberLinksDTO> Alumni { get; set; } = new List<MemberLinksDTO>();
-  public List<Book> Books { get; set; } = new List<Book>();
+  public List<BookDto> Books { get; set; } = new List<BookDto>();
+  public Dictionary<int, int> MemberRankings { get; set; } = new Dictionary<int, int>();
+  public Dictionary<int, int> AlumniRankings { get; set; } = new Dictionary<int, int>();
+  public Dictionary<int, int> BookRankings { get; set; } = new Dictionary<int, int>();
 
   public Dictionary<int, int> BookRanks { get; set; } = new Dictionary<int, int>();
 
 
   public IndexModel(UserManager<ApplicationUser> userManager,
       IRepository<Member> memberRepository,
-      IRepository<Book> bookRepository)
+      IRepository<Book> bookRepository,
+      IMapper mapper)
   {
     _userManager = userManager;
     _memberRepository = memberRepository;
     _bookRepository = bookRepository;
+    _mapper = mapper;
   }
-
-  public Dictionary<int, int> CalculateMemberBookRanks(List<MemberLinksDTO> members)
-  {
-    // could probably do this with a groupby bookcount
-    var memberBookCounts = members
-            .Select(m => m.BooksRead!.Count)
-            .Distinct()
-            .OrderByDescending(c => c);
-
-    var memberBookRankings = new Dictionary<int, int>();
-    var rank = 1;
-    foreach (var count in memberBookCounts)
-    {
-      memberBookRankings[count] = rank;
-      rank += 1;
-    }
-
-    return memberBookRankings;
-  }
-
-  public Dictionary<int, int> CalculateBookRanks(List<Book> books)
-  {
-    var bookCounts = books
-      .Select(m => m.MembersWhoHaveRead!.Count)
-      .Distinct()
-      .OrderByDescending(c => c);
-
-    var bookRankings = new Dictionary<int, int>();
-    var rank = 1;
-    foreach (var count in bookCounts)
-    {
-      bookRankings[count] = rank;
-      rank += 1;
-    }
-
-    return bookRankings;
-  }
-
 
   public async Task OnGet()
   {
@@ -106,12 +76,56 @@ public class IndexModel : PageModel
     Alumni.ForEach(m => m.Rank = alumniRanks[m.BooksRead!.Count]);
 
     var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
-    Books = await _bookRepository.ListAsync(bookSpec);
+    var booksEntity = await _bookRepository.ListAsync(bookSpec);
+    Books = _mapper.Map<List<BookDto>>(booksEntity);
 
-    BookRanks = _rankingService.Rank(Books.Select(b => b.MembersWhoHaveRead!.Count));
+    BookRanks = _rankingService.Rank(Books.Select(b => b.MembersWhoHaveReadCount));
+
+		//TODO: this need to be removed I do not think they are used anywhere!
+    MemberRankings = CalculateMemberBookRanks(Members);
+    AlumniRankings = CalculateMemberBookRanks(Alumni);
+    BookRankings = CalculateBookRanks(booksEntity);
+	}
+
+  private Dictionary<int, int> CalculateMemberBookRanks(List<MemberLinksDTO> members)
+  {
+	  // could probably do this with a groupby bookcount
+	  var memberBookCounts = members
+		  .Select(m => m.BooksRead!.Count)
+		  .Distinct()
+		  .OrderByDescending(c => c);
+
+	  var memberBookRankings = new Dictionary<int, int>();
+	  var rank = 1;
+	  foreach (var count in memberBookCounts)
+	  {
+		  memberBookRankings[count] = rank;
+		  rank += 1;
+	  }
+
+	  return memberBookRankings;
   }
 
-  public class MemberLinksDTO
+  private Dictionary<int, int> CalculateBookRanks(List<Book> books)
+  {
+	  var bookCounts = books
+		  .Select(m => m.MembersWhoHaveRead!.Count)
+		  .Distinct()
+		  .OrderByDescending(c => c);
+
+	  var bookRankings = new Dictionary<int, int>();
+	  var rank = 1;
+	  foreach (var count in bookCounts)
+	  {
+		  bookRankings[count] = rank;
+		  rank += 1;
+	  }
+
+	  return bookRankings;
+  }
+
+
+	public class MemberLinksDTO
   {
     public string? UserId { get; set; }
     public string? FullName { get; set; }
