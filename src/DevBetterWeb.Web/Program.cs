@@ -33,7 +33,12 @@ public class Program
       var logger = services.GetRequiredService<ILogger<Program>>();
       var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
       logger.LogInformation($"Current environment: {environment}");
-      if (environment == "Production") return;
+      if (environment == "Production")
+      {
+	      var context = services.GetRequiredService<AppDbContext>();
+	      SeedData.PopulateInitData(context);
+				return;
+      }
 
       logger.LogInformation("Seeding database...");
       try
