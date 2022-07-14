@@ -27,8 +27,7 @@ public class BookConfig : IEntityTypeConfiguration<Book>
 
     builder
 	    .Property(x => x.BookCategoryId)
-	    .HasDefaultValue(1)
-	    .IsRequired();
+	    .HasDefaultValue(1);
 
     builder
 	    .HasOne(t => t.BookCategory)
