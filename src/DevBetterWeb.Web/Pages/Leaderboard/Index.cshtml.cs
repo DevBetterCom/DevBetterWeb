@@ -20,25 +20,20 @@ public class IndexModel : PageModel
 {
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
-  private readonly IRepository<Book> _bookRepository;
   private readonly IRepository<BookCategory> _bookCategoryRepository;
   private readonly IMapper _mapper;
   private readonly RankingService<int> _rankingService = new RankingService<int>();
 
-  public List<MemberForBookDto> Members { get; set; } = new List<MemberForBookDto>();
   public List<MemberForBookDto> Alumni { get; set; } = new List<MemberForBookDto>();
-  public List<BookDto> Books { get; set; } = new List<BookDto>();
   public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
 
   public IndexModel(UserManager<ApplicationUser> userManager,
       IRepository<Member> memberRepository,
-      IRepository<Book> bookRepository,
       IRepository<BookCategory> bookCategoryRepository,
       IMapper mapper)
   {
     _userManager = userManager;
     _memberRepository = memberRepository;
-    _bookRepository = bookRepository;
     _bookCategoryRepository = bookCategoryRepository;
     _mapper = mapper;
   }
@@ -46,40 +41,19 @@ public class IndexModel : PageModel
   public async Task OnGet()
   {
 		var alumniMembers = await SetAlumniMembersAsync();
-		await SetMembersAsync(alumniMembers.Select(x => x.Id).ToList());
-		await SetBooksAsync();
-		await SetBookCategoriesAsync();
+		var excludedAlumniMembersIds = alumniMembers.Select(x => x.Id).ToList();
+		await SetBookCategoriesAsync(excludedAlumniMembersIds);
   }
 
-  private async Task SetBookCategoriesAsync()
+  private async Task SetBookCategoriesAsync(List<int> excludedAlumniMembersIds)
   {
 		var spec = new BookCategoriesSpec();
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
 		BookCategory.CalcAndSetCategoriesBooksRank(_rankingService, bookCategoriesEntity);
 		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
+		BookCategory.ExcludeMembers(bookCategoriesEntity, excludedAlumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
 	}
-
-	private async Task SetBooksAsync()
-  {
-	  var bookSpec = new BooksByMemberReadCountWithMembersWhoHaveReadSpec();
-	  var booksEntity = await _bookRepository.ListAsync(bookSpec);
-	  Book.CalcAndSetRank(_rankingService, booksEntity);
-	  Books = _mapper.Map<List<BookDto>>(booksEntity);
-	}
-
-  private async Task<List<Member>> SetMembersAsync(List<int> excludedAlumniMembersIds)
-  {
-	  var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
-	  var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
-
-	  var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds, excludedAlumniMembersIds);
-	  var members = await _memberRepository.ListAsync(memberSpec);
-	  Member.CalcAndSetBooksRank(_rankingService, members);
-	  Members = _mapper.Map<List<MemberForBookDto>>(members);
-
-	  return members;
-  }
 
   private async Task<List<Member>> SetAlumniMembersAsync()
   {
@@ -89,6 +63,7 @@ public class IndexModel : PageModel
 		var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
 	  var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
 	  Member.CalcAndSetBooksRank(_rankingService, alumniMembers);
+		Member.SetRoleToMembers(alumniMembers, AuthConstants.Roles.ALUMNI);
 	  Alumni = _mapper.Map<List<MemberForBookDto>>(alumniMembers);
 
 	  return alumniMembers;

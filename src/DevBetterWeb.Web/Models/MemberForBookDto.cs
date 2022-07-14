@@ -9,4 +9,5 @@ public class MemberForBookDto
 	public List<BookDto>? BooksRead { get; set; }
 	public int BooksRank { get; set; }
 	public int BooksReadCount { get; set; }
+	public string? RoleName { get; set; }
 }

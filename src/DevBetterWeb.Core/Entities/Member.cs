@@ -58,6 +58,7 @@ public class Member : BaseEntity, IAggregateRoot
   public string? TwitterUrl { get; private set; }
   public string? CodinGameUrl { get; private set; }
   public string? DiscordUsername { get; private set; }
+  public string? RoleName { get; private set; }
   public int BooksRank { get; private set; }
 
   public List<Book> BooksRead { get; set; } = new List<Book>();
@@ -85,6 +86,12 @@ public class Member : BaseEntity, IAggregateRoot
   //  var video = new MemberVideoProgress(Id, archiveVideo, secondWatch);
   //  Videos.Add(video);
   //}
+
+  public void SetRoleName(string roleName)
+  {
+	  RoleName = roleName;
+
+  }
 
   public string UserFullName()
   {
@@ -256,7 +263,15 @@ public class Member : BaseEntity, IAggregateRoot
 	  members.ForEach(m => m.BooksRank = memberRanks[m.BooksRead!.Count]);
 	}
 
-  public void AddBookRead(Book book)
+  public static void SetRoleToMembers(List<Member> members, string roleName)
+  {
+	  foreach (var member in members)
+	  {
+		  member.RoleName = roleName;
+	  }
+  }
+
+	public void AddBookRead(Book book)
   {
     if (!(BooksRead!.Any(b => b.Id == book.Id)))
     {
