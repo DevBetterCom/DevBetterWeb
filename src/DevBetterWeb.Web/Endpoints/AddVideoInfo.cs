@@ -35,9 +35,9 @@ public class AddVideoInfo : EndpointBaseAsync
 		var existVideo = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
 		if (existVideo == null)
 		{
-			archiveVideo = await _repository.AddAsync(archiveVideo, cancellationToken);
 			var videoAddedEvent = new VideoAddedEvent(archiveVideo);
 			archiveVideo.Events.Add(videoAddedEvent);
+			_ = await _repository.AddAsync(archiveVideo, cancellationToken);
 		}
 		else
 		{
