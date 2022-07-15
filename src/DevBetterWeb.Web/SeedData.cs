@@ -14,7 +14,9 @@ public static class SeedData
   {
     if (dbContext.ArchiveVideos!.Any()) return;
 
-    var vid1 = new ArchiveVideo()
+    AddMembers(dbContext, userManager);
+
+		var vid1 = new ArchiveVideo()
     {
       Title = "Video One",
       Description = @"
@@ -41,16 +43,9 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
       Title = "Video Two",
       DateCreated = new DateTime(2019, 3, 15)
     };
-    var questionA = new Question()
-    {
-      QuestionText = "How do I A?",
-      TimestampSeconds = 30
-    };
-    var questionB = new Question()
-    {
-      QuestionText = "How do I B?",
-      TimestampSeconds = 245
-    };
+    var questionA = new Question(1, "How do I A?");
+    var questionB = new Question(1, "How do I B?");
+
     vid1.Questions.Add(questionA);
     vid1.Questions.Add(questionB);
 
@@ -65,8 +60,6 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
       Details = "A classic."
     });
     dbContext.SaveChanges();
-
-    AddMembers(dbContext, userManager);
   }
 
   private static void AddMembers(AppDbContext dbContext,

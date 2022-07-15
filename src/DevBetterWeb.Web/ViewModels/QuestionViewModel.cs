@@ -1,7 +1,9 @@
-﻿namespace DevBetterWeb.Web.ViewModels;
+﻿using System;
+
+namespace DevBetterWeb.Web.ViewModels;
 
 public class QuestionViewModel
 {
   public string? QuestionText { get; set; }
-  public int TimestampSeconds { get; set; }
+  public long TimestampSeconds { get; set; }
 }

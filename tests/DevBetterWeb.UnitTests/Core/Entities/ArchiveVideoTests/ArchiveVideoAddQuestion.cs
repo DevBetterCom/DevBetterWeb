@@ -14,15 +14,4 @@ public class ArchiveVideoAddQuestion
 
     var exception = Assert.Throws<ArgumentNullException>(() => video.AddQuestion(null!));
   }
-
-  [Fact]
-  public void AddsQuestionToQuestionsList()
-  {
-    var video = new ArchiveVideo();
-    var question = new Question();
-
-    video.AddQuestion(question);
-
-    Assert.Same(question, video.Questions.First());
-  }
 }
