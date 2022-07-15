@@ -20,5 +20,11 @@ public class QuestionConfig : IEntityTypeConfiguration<Question>
 	    .WithMany(p => p.Questions)
 	    .HasForeignKey(d => d.MemberId)
 	    .OnDelete(DeleteBehavior.ClientSetNull);
+
+    builder
+	    .HasOne(t => t.CoachingSession)
+	    .WithMany(p => p.Questions)
+	    .HasForeignKey(d => d.CoachingSessionId)
+	    .OnDelete(DeleteBehavior.ClientSetNull);
 	}
 }
