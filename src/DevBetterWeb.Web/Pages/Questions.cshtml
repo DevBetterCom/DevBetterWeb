@@ -27,7 +27,7 @@
                         @Html.DisplayFor(modelItem => item.QuestionText)
                     </div>
                     <div class="w-25 ml-auto">
-                        <a asp-page="./ArchivedVideos/Details" asp-route-id="@video.Id" asp-route-startTime="@item.TimestampSeconds">View Clip</a>
+                        <a asp-page="./ArchivedVideos/Details" asp-route-id="@video.Id" asp-route-startTime="@item.CreatedAt">View Clip</a>
                     </div>
                 </div>
             }

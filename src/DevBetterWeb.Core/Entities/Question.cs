@@ -10,7 +10,7 @@ public class Question : BaseEntity
   public int MemberId { get; private set; }
   public int CoachingSessionId { get; private set; }
   public string? QuestionText { get; private set; }
-  public DateTime TimestampSeconds { get; private set; }
+  public DateTime CreatedAt { get; private set; }
   public CoachingSession CoachingSession { get; private set; } = new CoachingSession(DateTime.UtcNow);
 	public int Votes { get; private set; }
 	public Member MemberWhoCreate { get; private set; } = new Member();
@@ -19,7 +19,7 @@ public class Question : BaseEntity
 	{
 		MemberId = memberId;
 		QuestionText = questionText;
-		TimestampSeconds = DateTime.UtcNow;
+		CreatedAt = DateTime.UtcNow;
 	}
 
 	public Question(int coachingSessionId, int memberId, string questionText)
@@ -27,7 +27,7 @@ public class Question : BaseEntity
 	  CoachingSessionId = coachingSessionId;
 		MemberId = memberId;
 	  QuestionText = questionText;
-	  TimestampSeconds = DateTime.UtcNow;
+	  CreatedAt = DateTime.UtcNow;
   }
 
   public void UpdateQuestion(string questionText)

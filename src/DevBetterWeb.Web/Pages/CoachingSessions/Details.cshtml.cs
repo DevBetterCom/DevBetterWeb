@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace DevBetterWeb.Web.Pages.Admin.ArchivedVideos;
+namespace DevBetterWeb.Web.Pages.CoachingSessions;
 
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
 public class DetailsModel : PageModel

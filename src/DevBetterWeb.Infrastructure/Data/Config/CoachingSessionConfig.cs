@@ -9,6 +9,7 @@ public class CoachingSessionConfig : IEntityTypeConfiguration<CoachingSession>
   public void Configure(EntityTypeBuilder<CoachingSession> builder)
   {
 	  builder
-	    .ToTable("CoachingSessions");
+		  .ToTable("CoachingSessions")
+		  .Ignore(x => x.IsActive);
   }
 }
