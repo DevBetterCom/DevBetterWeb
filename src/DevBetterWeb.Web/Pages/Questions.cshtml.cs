@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Ardalis.GuardClauses;
+using AutoMapper;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages;
 
 public class QuestionsModel : PageModel
 {
-  private readonly AppDbContext _context;
+	private readonly IMapper _mapper;
+	private readonly IRepository<Question> _questionRepository;
 
-  public QuestionsModel(AppDbContext context)
-  {
-    _context = context;
-  }
+	public QuestionsModel(IMapper mapper, IRepository<Question> questionRepository)
+	{
+		_mapper = mapper;
+		_questionRepository = questionRepository;
+	}
 
-  public IList<Question> Question { get; set; } = new List<Question>();
-  public IList<ArchiveVideo> Videos { get; set; } = new List<ArchiveVideo>();
+  public List<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
 
   public async Task OnGetAsync()
   {
-    Question = await _context.Questions!.AsQueryable().ToListAsync();
-    Videos = await _context.ArchiveVideos!
-        //.Include(v => v.Questions)
-        .OrderByDescending(v => v.DateCreated)
-        .ToListAsync();
+	  var spec = new QuestionsSortedSpec();
+	  var questionsEntity = await _questionRepository.ListAsync(spec);
+	  Questions = _mapper.Map<List<QuestionDto>>(questionsEntity);
   }
 }
