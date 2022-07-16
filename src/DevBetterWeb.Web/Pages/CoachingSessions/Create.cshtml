@@ -2,48 +2,71 @@
 @model DevBetterWeb.Web.Pages.CoachingSessions.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+  ViewData["Title"] = "Create";
 }
 
-<h3>Add Video</h3>
+<h3>Create Coaching Session</h3>
 
 <hr />
-<form method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-4">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.Title" class="control-label"></label>
-                <input asp-for="ArchiveVideoModel.Title" class="form-control" />
-                <span asp-validation-for="ArchiveVideoModel.Title" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.DateCreated" class="control-label"></label>
-                <input asp-for="ArchiveVideoModel.DateCreated" class="form-control"/>
-                <span asp-validation-for="ArchiveVideoModel.DateCreated" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <div class="col-md-10">
-                    <label>Video Files</label>
-                    <input type="file" name="files" multiple />
-                </div>
-            </div>
-        </div>
+<div class="row">
+  <div class="col-md-12">
+    <input type="text" id="dateStart" />
+  </div>
+</div>
+<div class="row" style="padding-top: 10px;">
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="button" value="Create" class="btn btn-success" onclick="createCoachingSession()" />
     </div>
-	<div class="form-group">
-        <input type="submit" value="Create" class="btn btn-success" />
-    </div>
-
-</form>
+  </div>
+</div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+  <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+  $(document).ready(function () {
+    $("#dateStart").datepicker({
+      dateFormat: "dd-mm-yy",
+      onSelect: function(datetext) {
+        var d = new Date(); // for now
+
+        var h = d.getHours();
+        h = (h < 10) ? ("0" + h) : h ;
+
+        var m = d.getMinutes();
+        m = (m < 10) ? ("0" + m) : m ;
+
+        var s = d.getSeconds();
+        s = (s < 10) ? ("0" + s) : s ;
+
+        datetext = datetext + " " + h + ":" + m + ":" + s;
+
+        $('#dateStart').val(datetext);
+      }
+    });
+  });
+
+  function createCoachingSession() {
+	  var startAt = document.getElementById("dateStart").value;
+
+	  $.ajax({
+		  type: "POST",
+		  url: "/coaching-session/create",
+		  data: JSON.stringify({ startAt: startAt }),
+		  dataType: "json",
+		  contentType: "application/json",
+		  success: function (response) {
+			  window.location.href = '/CoachingSessions/Index';
+		  },
+		  error: function (errMsg) {
+			  alert(errMsg);
+		  }
+	  });
+  }
+</script>
+
 }
