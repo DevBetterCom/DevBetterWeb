@@ -5,183 +5,70 @@
     ViewData["Title"] = "Edit";
 }
 
+<h3>Edit Coaching Session</h3>
 
 <hr />
-<form method="post">
-    <div class="row">
-        <div class="col-md-4">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.Title" class="control-label"></label>
-                <input asp-for="ArchiveVideoModel.Title" class="form-control" />
-                <span asp-validation-for="ArchiveVideoModel.Title" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.DateCreated" class="control-label"></label>
-                <input asp-for="ArchiveVideoModel.DateCreated" class="form-control" />
-                <span asp-validation-for="ArchiveVideoModel.DateCreated" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4">
-
-            <div class="form-group">
-                <label asp-for="ArchiveVideoModel.VideoUrl" class="control-label"></label>
-                <input asp-for="ArchiveVideoModel.VideoUrl" class="form-control" />
-                <span asp-validation-for="ArchiveVideoModel.VideoUrl" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-
-	<input type="hidden" asp-for="ArchiveVideoModel.Id" />
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-success" />
-    </div>
-</form>
-
-<h3>Questions</h3>
-<div class="card mb-2">
-    <div class="card-header p-2">
-        <span class="font-weight-bold">Add a question</span>
-    </div>
-
-    <div class="card-body">
-        <form method="post" asp-page-handler="AddQuestion">
-            <input type="hidden" name="archiveVideoId" asp-for="ArchiveVideoModel.Id" />
-            <div class="row">
-                <div class="col-8">
-                    <input style="max-width:100%" type="text" name="questionText" class="form-control" placeholder="Question Text">
-                </div>
-                <div class="col-2">
-                    <input type="text" name="timeStamp" class="form-control" placeholder="TimeStamp">
-                </div>
-                <div class="col-2">
-                    <input type="submit" class="btn btn-success" value="Add" />
-                </div>
-            </div>
-        </form>
-    </div>
+<div class="row">
+	<div class="col-md-12">
+		<input type="text" id="dateStart" />
+	</div>
 </div>
-
-<div id="questionContainer">
-    @foreach (var question in Model.Questions)
-    {
-        <div class="border bg-light p-2 mb-2 d-flex">
-            <div class="w-75 ">
-                <label class="font-weight-bold">Question Text</label>
-                <br />
-                <span id="questionText_@question.Id">@question.QuestionText</span>
-            </div>
-            <div class="">
-                <label class="font-weight-bold">Timestamp</label>
-                <br />
-                <span id="questionTimeStamp_@question.Id">@question.CreatedAt</span>
-            </div>
-            <div class="ml-auto">
-                <button class="btn btn-primary btn-sm editQuestionButton" data-target="#editQuestionModal" data-toggle="modal" data-id="@question.Id">Edit</button>
-                <button class="btn btn-danger btn-sm deleteQuestionButton" data-target="#deleteQuestionModal" data-toggle="modal" data-id="@question.Id">Delete</button>
-            </div>
-        </div>
-    }
+<div class="row" style="padding-top: 10px;">
+	<div class="col-md-12">
+		<div class="form-group">
+			<input type="button" value="Save" class="btn btn-success" onclick="editCoachingSession()" />
+		</div>
+	</div>
 </div>
-
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+	<a asp-page="Index">Back to List</a>
 </div>
-
-
-<!-- edit question Modal -->
-<div class="modal fade" id="editQuestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form method="post" asp-page-handler="EditQuestion">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Question</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">Question Text</label>
-                        <textarea rows="3" class="form-control" id="editQuestionTextInput" name="questionText"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="font-weight-bold">Timestamp</label>
-                        <input type="text" id="editTimeStampInput" name="timestamp" class="form-control" />
-                    </div>
-
-                    <input type="hidden" name="questionId" id="editQuestionId" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-
-<!-- edit question Modal -->
-<div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form method="post" asp-page-handler="DeleteQuestion">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Question</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="alert alert-danger">
-                        Are you sure you want to delete this question?
-                    </div>
-
-                    <input type="hidden" name="questionId" id="deleteQuestionId" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script>
-        $(document).ready(function () {
-            $('#editQuestionModal').on('shown.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var questionId = button.attr('data-id');
+	<script>
+		$(document).ready(function () {
+			document.getElementById("dateStart").value = "@Model.CoachingSessionModel.StartAt";
+			$("#dateStart").datepicker({
+				dateFormat: "dd-mm-yy",
+				onSelect: function(datetext) {
+					var d = new Date(); // for now
 
-                var currentQuestionValueElement = $('#questionText_' + questionId);
-                var currentTimeStampValueElement = $('#questionTimeStamp_' + questionId);
+					var h = d.getHours();
+					h = (h < 10) ? ("0" + h) : h ;
 
-                var editQuestionTextInput = $('#editQuestionTextInput');
-                var editTimeStampInput = $('#editTimeStampInput');
-                var editQuestionId = $('#editQuestionId');
+					var m = d.getMinutes();
+					m = (m < 10) ? ("0" + m) : m ;
 
-                editQuestionTextInput.val(currentQuestionValueElement.text());
-                editTimeStampInput.val(currentTimeStampValueElement.text());
-                editQuestionId.val(questionId);
-            });
+					var s = d.getSeconds();
+					s = (s < 10) ? ("0" + s) : s ;
 
-            $('#deleteQuestionModal').on('shown.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var questionId = button.attr('data-id');
+					datetext = datetext + " " + h + ":" + m + ":" + s;
 
-                $('#deleteQuestionId').val(questionId);
-            });
-        });
-    </script>
+					$('#dateStart').val(datetext);
+				}
+			});
+		});
+
+		function editCoachingSession() {
+			var startAt = document.getElementById("dateStart").value;
+			var id = "@Model.CoachingSessionModel.Id";
+
+			$.ajax({
+				type: "PUT",
+				url: "/coaching-session/edit",
+				data: JSON.stringify({ startAt: startAt, id: id }),
+				dataType: "json",
+				contentType: "application/json",
+				success: function (response) {
+					window.location.href = '/CoachingSessions/Index';
+				},
+				error: function (errMsg) {
+					alert(errMsg);
+				}
+			});
+		}
+	</script>
+
 }

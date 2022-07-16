@@ -36,7 +36,7 @@ public class DetailsModel : PageModel
 
   public CoachingSessionDto CoachingSession { get; set; } = new CoachingSessionDto();
 
-  public async Task<IActionResult> OnGetAsync(int id, int? startTime = null)
+  public async Task<IActionResult> OnGetAsync(int id)
   {
 	  var currentUserName = User.Identity!.Name;
 	  var applicationUser = await _userManager.FindByNameAsync(currentUserName);
