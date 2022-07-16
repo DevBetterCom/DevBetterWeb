@@ -12,20 +12,20 @@ namespace DevBetterWeb.Web.Pages;
 public class QuestionsModel : PageModel
 {
 	private readonly IMapper _mapper;
-	private readonly IRepository<Question> _questionRepository;
+	private readonly IRepository<CoachingSession> _coachingSessionRepository;
 
-	public QuestionsModel(IMapper mapper, IRepository<Question> questionRepository)
+	public QuestionsModel(IMapper mapper, IRepository<CoachingSession> coachingSessionRepository)
 	{
 		_mapper = mapper;
-		_questionRepository = questionRepository;
+		_coachingSessionRepository = coachingSessionRepository;
 	}
 
-  public List<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
+  public List<CoachingSessionDto> CoachingSessions { get; set; } = new List<CoachingSessionDto>();
 
   public async Task OnGetAsync()
   {
-	  var spec = new QuestionsSortedSpec();
-	  var questionsEntity = await _questionRepository.ListAsync(spec);
-	  Questions = _mapper.Map<List<QuestionDto>>(questionsEntity);
+	  var spec = new CoachingSessionsWithQuestionsSpec();
+	  var coachingSessionsEntity = await _coachingSessionRepository.ListAsync(spec);
+	  CoachingSessions = _mapper.Map<List<CoachingSessionDto>>(coachingSessionsEntity);
   }
 }
