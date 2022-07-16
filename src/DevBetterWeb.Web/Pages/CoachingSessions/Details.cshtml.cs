@@ -1,88 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Infrastructure.Data;
-using DevBetterWeb.Web.ViewModels;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace DevBetterWeb.Web.Pages.CoachingSessions;
 
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
 public class DetailsModel : PageModel
 {
-  private readonly IConfiguration _configuration;
-  private readonly IRepository<ArchiveVideo> _videoRepository;
+	private readonly IMapper _mapper;
+  private readonly IRepository<CoachingSession> _coachingSessionRepository;
 
-  public DetailsModel(IConfiguration configuration,
-      IRepository<ArchiveVideo> videoRepository)
+  public DetailsModel(IMapper mapper, IRepository<CoachingSession> coachingSessionRepository)
   {
-    _configuration = configuration;
-    _videoRepository = videoRepository;
+	  _mapper = mapper;
+    _coachingSessionRepository = coachingSessionRepository;
   }
 
-  public ArchiveVideoDetailsDTO? ArchiveVideoDetails { get; set; }
-  public int? StartTime { get; set; }
+  public CoachingSessionDto CoachingSession { get; set; } = new CoachingSessionDto();
 
-  public class ArchiveVideoDetailsDTO
+  public async Task<IActionResult> OnGetAsync(int id, int? startTime = null)
   {
-    public int Id { get; set; }
-    [Required]
-    public string? Title { get; set; }
-
-    [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
-    public DateTimeOffset DateCreated { get; set; }
-
-    [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-    public string? VideoUrl { get; set; }
-
-    public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
-  }
-
-  public async Task<IActionResult> OnGetAsync(int? id, int? startTime = null)
-  {
-    if (id == null)
+	  var spec = new CoachingSessionWithQuestionsSpec(id);
+    var coachingSessionEntity = await _coachingSessionRepository.FirstOrDefaultAsync(spec);
+    if (coachingSessionEntity == null)
     {
       return NotFound();
     }
 
-    StartTime = startTime;
-
-    var spec = new ArchiveVideoWithQuestionsSpec(id.Value);
-    var archiveVideoEntity = await _videoRepository.FirstOrDefaultAsync(spec);
-
-    if (archiveVideoEntity == null)
-    {
-      return NotFound();
-    }
-
-    string videoUrl = _configuration["videoUrlPrefix"] + archiveVideoEntity.VideoUrl;
-
-    ArchiveVideoDetails = new ArchiveVideoDetailsDTO
-    {
-      DateCreated = archiveVideoEntity.DateCreated,
-      Title = archiveVideoEntity.Title,
-      VideoUrl = videoUrl,
-      Id = archiveVideoEntity.Id
-    };
-
-    ArchiveVideoDetails.Questions.AddRange(
-        archiveVideoEntity.Questions
-            .Select(q => new QuestionViewModel
-            {
-              QuestionText = q.QuestionText,
-              CreatedAt = q.CreatedAt
-						}));
+    CoachingSession = _mapper.Map<CoachingSessionDto>(coachingSessionEntity);
 
     return Page();
   }

@@ -3,6 +3,7 @@
     $('#usersTable').DataTable({ "pageLength": 25 });
 
 	  $('#invitationsTable').DataTable({ "pageLength": 25 });
+		$('#questionsTable').DataTable({ "pageLength": 25 });
 
     $('#removeUserModal').on('show.bs.modal', function (e) {
         var button = $(e.relatedTarget);
