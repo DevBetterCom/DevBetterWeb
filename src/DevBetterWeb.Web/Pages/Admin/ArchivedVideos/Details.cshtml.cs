@@ -76,13 +76,13 @@ public class DetailsModel : PageModel
       Id = archiveVideoEntity.Id
     };
 
-    ArchiveVideoDetails.Questions.AddRange(
-        archiveVideoEntity.Questions
-            .Select(q => new QuestionViewModel
-            {
-              QuestionText = q.QuestionText,
-              CreatedAt = q.CreatedAt
-						}));
+    //ArchiveVideoDetails.Questions.AddRange(
+    //    archiveVideoEntity.Questions
+    //        .Select(q => new QuestionViewModel
+    //        {
+    //          QuestionText = q.QuestionText,
+    //          CreatedAt = q.CreatedAt
+				//		}));
 
     return Page();
   }

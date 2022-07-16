@@ -14,7 +14,7 @@
             <span class="font-weight-bold">@video.DateCreated.ToString("d MMM yyyy") - @video.Title</span>
         </div>
         <div class="card-body p-2">
-            @if (!video.Questions.Any())
+@*            @if (!video.Questions.Any())
             {
                 <span>No questions for this video.</span>
             }
@@ -30,7 +30,7 @@
                         <a asp-page="./ArchivedVideos/Details" asp-route-id="@video.Id" asp-route-startTime="@item.CreatedAt">View Clip</a>
                     </div>
                 </div>
-            }
+            }*@
 
         </div>
     </div>

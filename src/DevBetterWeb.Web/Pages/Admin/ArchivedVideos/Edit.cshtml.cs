@@ -69,7 +69,7 @@ public class EditModel : PageModel
     // TODO: use repo + spec here
     var archiveVideoEntity = await _context.ArchiveVideos!
         .AsNoTracking()
-        .Include(v => v.Questions)
+        //.Include(v => v.Questions)
         .FirstOrDefaultAsync(v => v.Id == id);
 
 
@@ -85,7 +85,7 @@ public class EditModel : PageModel
       VideoUrl = archiveVideoEntity.VideoUrl
     };
 
-    Questions = archiveVideoEntity.Questions;
+    //Questions = archiveVideoEntity.Questions;
 
     return Page();
   }

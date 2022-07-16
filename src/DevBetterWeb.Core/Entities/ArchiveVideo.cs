@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
@@ -19,20 +19,12 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
   public string? AnimatedThumbnailUri { get; set; }
   public int Views { get; set; } = 0;
 
-  public List<Question> Questions { get; private set; } = new List<Question>();
   public List<MemberVideoProgress> MembersVideoProgress { get; set; } = new List<MemberVideoProgress>();
   public List<VideoComment> Comments { get; private set; } = new List<VideoComment>();
 
 
   private readonly List<MemberFavoriteArchiveVideo> _memberFavorites = new();
   public IEnumerable<MemberFavoriteArchiveVideo> MemberFavorites => _memberFavorites.AsReadOnly();
-
-  public void AddQuestion(Question question)
-  {
-    Guard.Against.Null(question, nameof(question));
-    Questions.Add(question);
-  }
-
 
   public void AddVideoProgress(MemberVideoProgress memberVideoProgress)
   {

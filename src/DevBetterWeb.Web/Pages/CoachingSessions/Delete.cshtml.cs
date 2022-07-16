@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,11 +13,13 @@ namespace DevBetterWeb.Web.Pages.CoachingSessions;
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class DeleteModel : PageModel
 {
-  private readonly IRepository<ArchiveVideo> _videoRepository;
+	private readonly IMapper _mapper;
+	private readonly IRepository<CoachingSession> _coachingSessionRepository;
 
-  public DeleteModel(IRepository<ArchiveVideo> videoRepository)
+  public DeleteModel(IMapper mapper, IRepository<CoachingSession> coachingSessionRepository)
   {
-    _videoRepository = videoRepository;
+	  _mapper = mapper;
+	  _coachingSessionRepository = coachingSessionRepository;
   }
 
   protected class DeleteVideoModel
@@ -25,56 +27,29 @@ public class DeleteModel : PageModel
     public int Id { get; set; }
   }
 
-  public ArchiveVideoDeleteDTO? ArchiveVideoToDelete { get; set; }
+  public CoachingSessionDto? CoachingSessionToDelete { get; set; }
 
-  public class ArchiveVideoDeleteDTO
+  public async Task<IActionResult> OnGetAsync(int id)
   {
-    public int Id { get; set; }
-    public string? Title { get; set; }
+    var coachingSession = await _coachingSessionRepository.GetByIdAsync(id);
 
-    [DisplayName(DisplayConstants.ArchivedVideo.DateCreated)]
-    public DateTimeOffset DateCreated { get; set; }
-
-    [DisplayName(DisplayConstants.ArchivedVideo.VideoUrl)]
-    public string? VideoUrl { get; set; }
-  }
-
-  public async Task<IActionResult> OnGetAsync(int? id)
-  {
-    if (id == null)
+    if (coachingSession == null)
     {
       return NotFound();
     }
 
-    var archiveVideo = await _videoRepository.GetByIdAsync(id.Value);
-
-    if (archiveVideo == null)
-    {
-      return NotFound();
-    }
-    ArchiveVideoToDelete = new ArchiveVideoDeleteDTO
-    {
-      Id = archiveVideo.Id,
-      Title = archiveVideo.Title,
-      DateCreated = archiveVideo.DateCreated,
-      VideoUrl = archiveVideo.VideoUrl
-    };
+    CoachingSessionToDelete = _mapper.Map<CoachingSessionDto>(coachingSession);
     return Page();
   }
 
-  public async Task<IActionResult> OnPostAsync(int? id)
+  public async Task<IActionResult> OnPostAsync(int id)
   {
-    if (id == null)
-    {
-      return NotFound();
-    }
+	  var coachingSession = await _coachingSessionRepository.GetByIdAsync(id);
 
-    var archiveVideo = await _videoRepository.GetByIdAsync(id.Value);
-
-    if (archiveVideo != null)
+		if (coachingSession != null)
     {
-      await _videoRepository.DeleteAsync(archiveVideo);
-    }
+			await _coachingSessionRepository.DeleteAsync(coachingSession);
+		}
 
     return RedirectToPage("./Index");
   }

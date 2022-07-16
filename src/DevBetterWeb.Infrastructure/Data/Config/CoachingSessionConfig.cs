@@ -11,5 +11,12 @@ public class CoachingSessionConfig : IEntityTypeConfiguration<CoachingSession>
 	  builder
 		  .ToTable("CoachingSessions")
 		  .Ignore(x => x.IsActive);
+
+	  builder
+		  .HasMany(t => t.Questions)
+		  .WithOne(p => p.CoachingSession)
+		  .HasForeignKey(x => x.CoachingSessionId)
+		  .OnDelete(DeleteBehavior.Cascade)
+		  .IsRequired();
   }
 }

@@ -16,6 +16,13 @@ public static class SeedData
 
     AddMembers(dbContext, userManager);
 
+    var questionA = new Question(1, "How do I A?");
+    var questionB = new Question(1, "How do I B?");
+    var coachingSession = new CoachingSession(DateTime.UtcNow);
+    coachingSession.AddQuestion(questionA);
+    coachingSession.AddQuestion(questionB);
+    dbContext.CoachingSessions!.Add(coachingSession);
+
     var vid1 = new ArchiveVideo()
     {
       Title = "Video One",
@@ -44,21 +51,10 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
       DateCreated = new DateTime(2019, 3, 15)
     };
 
-    var questionA = new Question(1, "How do I A?");
-    var questionB = new Question(1, "How do I B?");
-
-		vid1.Questions.Add(questionA);
-    vid1.Questions.Add(questionB);
-
     dbContext.ArchiveVideos!.Add(vid1);
     dbContext.ArchiveVideos.Add(vid2);
 
-    var coachingSession = new CoachingSession(DateTime.UtcNow);
-    coachingSession.AddQuestion(questionA);
-    coachingSession.AddQuestion(questionA);
-    dbContext.CoachingSessions!.Add(coachingSession);
-
-		dbContext.Books!.Add(new Book
+    dbContext.Books!.Add(new Book
     {
       Author = "Steve Smith",
       Title = "ASP.NET By Example",

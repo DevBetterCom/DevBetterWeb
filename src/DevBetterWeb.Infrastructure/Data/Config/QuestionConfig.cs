@@ -8,23 +8,22 @@ public class QuestionConfig : IEntityTypeConfiguration<Question>
 {
   public void Configure(EntityTypeBuilder<Question> builder)
   {
-    builder
+	  builder
+		  .ToTable("Questions");
+
+		builder
+		  .Property(x => x.CoachingSessionId)
+		  .IsRequired();
+
+		builder
 	    .Property(x => x.QuestionText)
-	    .HasMaxLength(500);
+	    .HasMaxLength(500)
+	    .IsRequired();
 
-    builder
-	    .ToTable("Questions");
-
-    builder
+		builder
 	    .HasOne(t => t.MemberWhoCreate)
 	    .WithMany(p => p.Questions)
 	    .HasForeignKey(d => d.MemberId)
-	    .OnDelete(DeleteBehavior.ClientSetNull);
-
-    builder
-	    .HasOne(t => t.CoachingSession)
-	    .WithMany(p => p.Questions)
-	    .HasForeignKey(d => d.CoachingSessionId)
 	    .OnDelete(DeleteBehavior.ClientSetNull);
 
     builder

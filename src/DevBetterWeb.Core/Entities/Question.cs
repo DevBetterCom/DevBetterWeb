@@ -13,8 +13,8 @@ public class Question : BaseEntity, IAggregateRoot
   public int CoachingSessionId { get; private set; }
   public string? QuestionText { get; private set; }
   public DateTime CreatedAt { get; private set; }
+  public int Votes { get; private set; }
   public CoachingSession? CoachingSession { get; private set; }
-	public int Votes { get; private set; }
 	public Member? MemberWhoCreate { get; private set; }
 	public List<QuestionVote> QuestionVotes { get; set; } = new List<QuestionVote>();
 
@@ -25,15 +25,7 @@ public class Question : BaseEntity, IAggregateRoot
 		CreatedAt = DateTime.UtcNow;
 	}
 
-	public Question(int coachingSessionId, int memberId, string questionText)
-  {
-	  CoachingSessionId = coachingSessionId;
-		MemberId = memberId;
-	  QuestionText = questionText;
-	  CreatedAt = DateTime.UtcNow;
-  }
-
-  public void UpdateQuestion(string questionText)
+	public void UpdateQuestion(string questionText)
   {
 	  QuestionText = questionText;
   }
