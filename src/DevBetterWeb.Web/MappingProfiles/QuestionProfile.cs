@@ -8,8 +8,8 @@ public class QuestionProfile : Profile
 {
   public QuestionProfile()
   {
-    CreateMap<Question, QuestionDto>()
-	    .ForPath(dest => dest.MemberName,
-		    opt => opt.MapFrom(source => source.MemberWhoCreate!.UserFullName()));
-	}
+	  CreateMap<Question, QuestionDto>()
+		  .ForPath(dest => dest.MemberName,
+			  opt => opt.MapFrom(source => source.MemberWhoCreate!.UserFullName()));
+  }
 }

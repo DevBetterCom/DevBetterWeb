@@ -10,6 +10,7 @@ public sealed class CoachingSessionWithQuestionsSpec : Specification<CoachingSes
 	  Query
 		  .Where(coachingSession => coachingSession.Id == coachingSessionId)
 		  .Include(coachingSession => coachingSession.Questions)
+				.ThenInclude(question => question.QuestionVotes)
 		  .OrderByDescending(x => x.StartAt);
   }
 }

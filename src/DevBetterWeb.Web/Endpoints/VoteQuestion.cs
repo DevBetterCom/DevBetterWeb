@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
-using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
@@ -15,26 +14,29 @@ using Microsoft.AspNetCore.Identity;
 namespace DevBetterWeb.Web.Endpoints;
 
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS)]
-public class CreateQuestion : EndpointBaseAsync
-	.WithRequest<NewQuestionRequestDto>
-	.WithResult<ActionResult<NewQuestionRequestDto>>
+public class VoteQuestion : EndpointBaseAsync
+	.WithRequest<VoteQuestionRequestDto>
+	.WithResult<ActionResult<VoteQuestionRequestDto>>
 {
-	private readonly IRepository<CoachingSession> _repository;
+	private readonly IRepository<Question> _repository;
+	private readonly IRepository<QuestionVote> _questionVoteRepository;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IRepository<Member> _memberRepository;
 
-	public CreateQuestion(
-		IRepository<CoachingSession> repository,
+	public VoteQuestion(
+		IRepository<Question> repository,
+		IRepository<QuestionVote> questionVoteRepository,
 		UserManager<ApplicationUser> userManager,
 		IRepository<Member> memberRepository)
 	{
 		_repository = repository;
+		_questionVoteRepository = questionVoteRepository;
 		_userManager = userManager;
 		_memberRepository = memberRepository;
 	}
 
-	[HttpPost("coaching-session/create-question")]
-	public override async Task<ActionResult<NewQuestionRequestDto>> HandleAsync([FromBody] NewQuestionRequestDto request, CancellationToken cancellationToken = default)
+	[HttpPost("coaching-session/vote-question")]
+	public override async Task<ActionResult<VoteQuestionRequestDto>> HandleAsync([FromBody] VoteQuestionRequestDto request, CancellationToken cancellationToken = default)
 	{
 		var currentUserName = User.Identity!.Name;
 		var applicationUser = await _userManager.FindByNameAsync(currentUserName);
@@ -46,17 +48,15 @@ public class CreateQuestion : EndpointBaseAsync
 			return Unauthorized();
 		}
 
-		var spec = new CoachingSessionWithQuestionsSpec(request.CoachingSessionId);
-		var coachingSession = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-		if (coachingSession is null)
+		var spec = new QuestionWithVotesSpec(request.QuestionId);
+		var question = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
+		if (question is null)
 		{
 			return NotFound();
 		}
-		var newQuestion = new Question(member.Id, request.QuestionText);
-		newQuestion.AddRemoveVote(member.Id);
-		coachingSession.AddQuestion(newQuestion);
 
-		await _repository.UpdateAsync(coachingSession, cancellationToken);
+		question.AddRemoveVote(member.Id);
+		await _repository.UpdateAsync(question, cancellationToken);
 
 		return Ok(request);
 	}

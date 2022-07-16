@@ -62,8 +62,9 @@ public class Member : BaseEntity, IAggregateRoot
   public List<MemberVideoProgress> MemberVideosProgress { get; set; } = new List<MemberVideoProgress>();
   public List<VideoComment> VideosComments { get; set; } = new List<VideoComment>();
   public List<Question> Questions { get; set; } = new List<Question>();
+	public List<QuestionVote> QuestionVotes { get; set; } = new List<QuestionVote>();
 
-  public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
+	public DateTime DateCreated { get; private set; } = DateTime.UtcNow;
   public List<MemberSubscription> MemberSubscriptions { get; set; } = new List<MemberSubscription>();
   public decimal? CityLatitude { get; set; }
   public decimal? CityLongitude { get; set; }

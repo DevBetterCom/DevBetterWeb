@@ -26,5 +26,11 @@ public class QuestionConfig : IEntityTypeConfiguration<Question>
 	    .WithMany(p => p.Questions)
 	    .HasForeignKey(d => d.CoachingSessionId)
 	    .OnDelete(DeleteBehavior.ClientSetNull);
+
+    builder
+	    .HasMany(t => t.QuestionVotes)
+	    .WithOne(p => p.Question)
+	    .HasForeignKey(x => x.QuestionId)
+	    .OnDelete(DeleteBehavior.Cascade);
 	}
 }
