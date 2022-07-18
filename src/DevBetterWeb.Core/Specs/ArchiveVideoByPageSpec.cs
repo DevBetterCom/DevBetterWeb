@@ -3,7 +3,7 @@ using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
-public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
+public sealed class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
 {
   public ArchiveVideoByPageSpec(int skip, int size, string? search, bool filterFavorites, int memberId)
   {
@@ -25,7 +25,8 @@ public class ArchiveVideoByPageSpec : Specification<ArchiveVideo>
     else
     {
       Query
-        .Where(s => s.Description != null && !string.IsNullOrEmpty(search) && s.Description.Contains(search))
+        .Where(s => (s.Description != null && s.Description.Contains(search)) ||
+                    (s.Title != null && s.Title.Contains(search)))
         .OrderByDescending(x => x.DateCreated)
         .Skip(skip)
         .Take(size);

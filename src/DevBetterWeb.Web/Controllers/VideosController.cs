@@ -74,10 +74,7 @@ public class VideosController : Controller
     int pageSize = length != null ? Convert.ToInt32(length) : 20;
     var startIndex = Convert.ToInt32(dataTableParameterModel.Start);
 
-    var filterSpec = new ArchiveVideoFilteredSpec(dataTableParameterModel.Search);
-    var totalRecords = await _repository.CountAsync(filterSpec);
-
-	var currentUserName = User.Identity!.Name;
+    var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
     var memberSpec = new  MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
@@ -89,7 +86,8 @@ public class VideosController : Controller
     }
 
     var pagedSpec = new ArchiveVideoByPageSpec(startIndex, pageSize, dataTableParameterModel.Search, dataTableParameterModel.FilterFavorites, member.Id);
-    var archiveVideos = await _repository.ListAsync(pagedSpec);
+    var totalRecords = await _repository.CountAsync(pagedSpec);
+		var archiveVideos = await _repository.ListAsync(pagedSpec);
 
     var archiveVideosDto = archiveVideos.Select(av => new ArchiveVideoDto
 	{
