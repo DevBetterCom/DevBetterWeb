@@ -50,6 +50,7 @@ public class Member : BaseEntity, IAggregateRoot
 
   public string? BlogUrl { get; private set; }
   public string? GitHubUrl { get; private set; }
+  public string? Email { get; private set; }
   public string? LinkedInUrl { get; private set; }
   public string? OtherUrl { get; private set; }
   public string? TwitchUrl { get; private set; }
@@ -127,7 +128,19 @@ public class Member : BaseEntity, IAggregateRoot
 		}
   }
 
-  public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
+  public void UpdateEmail(string? email, bool isEvent = true)
+  {
+	  if (Email == email) return;
+
+	  Email = email;
+
+	  if (isEvent)
+	  {
+		  CreateOrUpdateAddressUpdateEvent(nameof(Email));
+	  }
+  }
+
+	public void AddFavoriteArchiveVideo(ArchiveVideo archiveVideo)
   {
     if (FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id))
     {

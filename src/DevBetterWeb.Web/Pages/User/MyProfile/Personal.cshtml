@@ -13,47 +13,53 @@
                 <div class="card-header">
                     <b>Personal</b>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">First Name</label>
-                        <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
-                    </div>
+	            <div class="card-body">
+		            <div class="form-group">
+			            <label class="font-weight-bold">Email</label>
+			            <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
+			            <span asp-validation-for="UserPersonalUpdateModel.Email" class="text-danger"></span>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Last Name</label>
-                        <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm" />
-                        <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">First Name</label>
+			            <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm"/>
+			            <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Shipping Address</label>
-                        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-                        <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">Last Name</label>
+			            <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm"/>
+			            <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">About</label>
-                        <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width:100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">Shipping Address</label>
+			            <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+			            <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Discord Username</label>
-                        <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234" />
-                        <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">About</label>
+			            <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Project Euler Username</label>
-                        <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username" />
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">Discord Username</label>
+			            <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234"/>
+			            <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
+		            </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Project Euler Friend Code</label>
-                        <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789" />
-                    </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">Project Euler Username</label>
+			            <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username"/>
+		            </div>
 
-                </div>
+		            <div class="form-group">
+			            <label class="font-weight-bold">Project Euler Friend Code</label>
+			            <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789"/>
+		            </div>
+
+	            </div>
             </div>
         </div>
     </div>

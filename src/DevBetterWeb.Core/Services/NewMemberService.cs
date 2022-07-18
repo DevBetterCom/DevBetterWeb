@@ -96,7 +96,7 @@ public class NewMemberService : INewMemberService
     string firstName, string lastName, string inviteCode, string email)
   {
     Guard.Against.NullOrEmpty(inviteCode, nameof(inviteCode));
-    Member member = await CreateNewMemberAsync(userId, firstName, lastName);
+    Member member = await CreateNewMemberAsync(userId, firstName, lastName, email);
     await AddUserToMemberRoleAsync(userId);
 
     var spec = new InvitationByInviteCodeSpec(inviteCode);
@@ -152,10 +152,11 @@ public class NewMemberService : INewMemberService
     await _invitationRepository.SaveChangesAsync();
   }
 
-  private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName)
+  private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName, string email)
   {
     Member member = await _memberRegistrationService.RegisterMemberAsync(userId);
     member.UpdateName(firstName, lastName);
+		member.UpdateEmail(email);
 
     return member;
   }
