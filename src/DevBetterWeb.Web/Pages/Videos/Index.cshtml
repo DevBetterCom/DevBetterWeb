@@ -101,7 +101,7 @@
   <div id="members-videos-list" class="row">
   </div>
   <div class="row">
-    <ul id="pagination-demo" class="pagination-md paging"></ul>
+    <ul id="videoPagination" class="pagination-md paging"></ul>
   </div>
 
 </div>
@@ -117,7 +117,7 @@
   }
 
   function refreshMembersVideos(currentPageIndex) {
-      currentPage = currentPageIndex;
+    currentPage = currentPageIndex;
       var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
       if (userRole) {
         var search = $("#SearchString").val();
@@ -128,20 +128,24 @@
               url: "/videos/list",
               data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search, filterFavorites: filterFavorites },
               dataType: "json",
-              success: function (videosReponse) {
+              success: function (videosResponse) {
                   var divHtml = "";
-                  if (videosReponse && videosReponse.data && videosReponse.data.length > 0) {
-                      recordsTotal = videosReponse.recordsTotal;
-                      videosReponse.data.forEach(video => {
+                  if (videosResponse && videosResponse.data && videosResponse.data.length > 0) {
+                      recordsTotal = videosResponse.recordsTotal;
+                      page = videosResponse.currentPage;
+                      videosResponse.data.forEach(video => {
                           divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='/Videos/Details/" + video.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video.animatedThumbnailUri + "'></a><h3><a href='/Videos/Details/" + video.videoId + "'>" + video.title + "</a></h3><span class='style-scope ytd-video-meta-block'>" + video.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video.dateCreated)) + " ago</span><span><i class='" + (video.isMemberFavorite ? "fas fa-star" : "far fa-star") + "'></i>(" + video.memberFavoritesCount + ")</span></div>";
                       });
                   }
                   document.getElementById('members-videos-list').innerHTML = divHtml;
 
-                  $('#pagination-demo').twbsPagination({
+                  $pagination.twbsPagination('destroy');
+
+                  $pagination.twbsPagination({
                       totalPages: numPages(),
                       visiblePages: 7,
                       startPage: page,
+                      initiateStartPageClick: false,
                       onPageClick: function (event, page) {
                           refreshMembersVideos(page - 1);
                       }
