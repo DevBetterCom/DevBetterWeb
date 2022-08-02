@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +28,7 @@ public class AppIdentityDbContextSeed
   private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager,
     string userName)
   {
-    var user = new ApplicationUser { UserName = userName, Email = userName, EmailConfirmed = true };
+    var user = new ApplicationUser { UserName = userName, Email = userName, EmailConfirmed = true, DateCreated = DateTime.UtcNow };
     await userManager.CreateAsync(user, AuthConstants.DEFAULT_PASSWORD);
     return await userManager.FindByNameAsync(userName);
   }

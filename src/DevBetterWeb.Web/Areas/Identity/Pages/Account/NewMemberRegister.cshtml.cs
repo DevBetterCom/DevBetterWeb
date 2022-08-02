@@ -111,7 +111,7 @@ public class NewMemberRegisterModel : PageModel
     if (ModelState.IsValid)
     {
       if (Input is null) throw new Exception("Input is null.");
-      var user = new ApplicationUser { UserName = email, Email = email };
+      var user = new ApplicationUser { UserName = email, Email = email, DateCreated = DateTime.UtcNow };
       var result = await _userManager.CreateAsync(user, Input.Password);
       if (result.Succeeded)
       {
