@@ -40,6 +40,7 @@ public class AppDbContext : DbContext
 	public DbSet<MemberSubscriptionPlan>? MemberSubscriptionPlan { get; set; }
 	public DbSet<MemberVideoProgress>? MembersVideosProgress { get; set; }
 	public DbSet<CoachingSession>? CoachingSessions { get; set; }
+	public DbSet<BookCategory>? BookCategories { get; set; }
 
 	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
 	{

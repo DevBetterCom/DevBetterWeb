@@ -51,8 +51,9 @@ public class IndexModel : PageModel
 
     }
 
+    UsersWithRole = UsersWithRole.OrderBy(x => x.User.DateCreated).ToList();
 
-    return Page();
+		return Page();
   }
 
   public void SetPageRole(IdentityRole role)

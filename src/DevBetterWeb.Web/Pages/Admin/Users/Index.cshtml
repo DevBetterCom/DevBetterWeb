@@ -29,7 +29,8 @@
         <tr>
             <th>Email</th>
             <th>Confirmed?</th>
-            <th>Roles</th>
+		        <th>Roles</th>
+		        <th>Created Date</th>
             <th></th>
         </tr>
     </thead>
@@ -39,12 +40,13 @@
             <tr>
                 <td>@userWithRole.User.Email</td>
                 <td>@userWithRole.User.EmailConfirmed</td>
-                <td>
-                    @foreach (var role in userWithRole.Roles)
-                    {
-                        <span class="mr-2 badge badge-pill badge-primary">@role</span>
-                    }
-                </td>
+		            <td>
+			            @foreach (var role in userWithRole.Roles)
+			            {
+				            <span class="mr-2 badge badge-pill badge-primary">@role</span>
+			            }
+		            </td>
+                <td>@userWithRole.User.DateCreated.ToShortDateString()</td>
                 <td>  <a asp-page="./../User" asp-route-userId="@userWithRole.User.Id" class="">Edit</a></td>
             </tr>
         }
