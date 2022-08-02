@@ -19,7 +19,7 @@ public class VideoComment : BaseEntity, IAggregateRoot
   public Member? MemberWhoCreate { get; private set; }
   public VideoComment? ParentComment { get; private set; }
   public List<VideoComment> Replies { get; private set; } = new List<VideoComment>();
-  public ArchiveVideo Video { get; set; } = new ArchiveVideo();
+  public ArchiveVideo? Video { get; set; }
 
   public VideoComment()
   {
