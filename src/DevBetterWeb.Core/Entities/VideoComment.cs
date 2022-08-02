@@ -11,8 +11,6 @@ public class VideoComment : BaseEntity, IAggregateRoot
 {
   public int VideoId { get; set; }
   public int? ParentCommentId { get; set; }
-
-  [NotMapped]
   public string? MdBody { get; set; }
 
   public string? Body { get; set; }
@@ -21,7 +19,7 @@ public class VideoComment : BaseEntity, IAggregateRoot
   public Member? MemberWhoCreate { get; private set; }
   public VideoComment? ParentComment { get; private set; }
   public List<VideoComment> Replies { get; private set; } = new List<VideoComment>();
-  public ArchiveVideo Video { get; set; } = new ArchiveVideo();
+  public ArchiveVideo? Video { get; set; }
 
   public VideoComment()
   {

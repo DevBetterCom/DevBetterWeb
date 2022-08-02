@@ -1,0 +1,72 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.CoachingSessions.CreateModel
+
+@{
+  ViewData["Title"] = "Create";
+}
+
+<h3>Create Coaching Session</h3>
+
+<hr />
+<div class="row">
+  <div class="col-md-12">
+    <input type="text" id="dateStart" />
+  </div>
+</div>
+<div class="row" style="padding-top: 10px;">
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="button" value="Create" class="btn btn-success" onclick="createCoachingSession()" />
+    </div>
+  </div>
+</div>
+
+<div>
+  <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+
+<script>
+  $(document).ready(function () {
+    $("#dateStart").datepicker({
+      dateFormat: "dd-mm-yy",
+      onSelect: function(datetext) {
+        var d = new Date(); // for now
+
+        var h = d.getHours();
+        h = (h < 10) ? ("0" + h) : h ;
+
+        var m = d.getMinutes();
+        m = (m < 10) ? ("0" + m) : m ;
+
+        var s = d.getSeconds();
+        s = (s < 10) ? ("0" + s) : s ;
+
+        datetext = datetext + " " + h + ":" + m + ":" + s;
+
+        $('#dateStart').val(datetext);
+      }
+    });
+  });
+
+  function createCoachingSession() {
+	  var startAt = document.getElementById("dateStart").value;
+
+	  $.ajax({
+		  type: "POST",
+		  url: "/coaching-session/create",
+		  data: JSON.stringify({ startAt: startAt }),
+		  dataType: "json",
+		  contentType: "application/json",
+		  success: function (response) {
+			  window.location.href = '/CoachingSessions/Index';
+		  },
+		  error: function (errMsg) {
+			  alert(errMsg);
+		  }
+	  });
+  }
+</script>
+
+}

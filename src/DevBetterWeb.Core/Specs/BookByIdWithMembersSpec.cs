@@ -3,11 +3,13 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class BookByIdWithMembersSpec : Specification<Book>, ISingleResultSpecification
+public sealed class BookByIdWithMembersSpec : Specification<Book>, ISingleResultSpecification
 {
   public BookByIdWithMembersSpec(int bookId)
   {
-    Query.Where(book => book.Id == bookId);
-    Query.Include(book => book.MembersWhoHaveRead);
+	  Query
+		  .Where(book => book.Id == bookId)
+		  .Include(book => book.MembersWhoHaveRead)
+		  .Include(book => book.BookCategory);
   }
 }
