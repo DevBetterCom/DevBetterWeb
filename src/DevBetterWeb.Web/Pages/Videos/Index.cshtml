@@ -1,178 +1,188 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.Videos.IndexModel
 @{
-	ViewData["Title"] = "Index";
+  ViewData["Title"] = "Index";
 }
 
 <style>
-	#videosDatatable {
-	  font-family: Arial, Helvetica, sans-serif;
-	  border-collapse: collapse;
-	  width: 100%;
-	}
+  #videosDatatable {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
 
-	#videosDatatable td, #videosDatatable th {
-	  border: 1px solid #ddd;
-	  padding: 8px;
-	}
+      #videosDatatable td, #videosDatatable th {
+          border: 1px solid #ddd;
+          padding: 8px;
+      }
 
-	#videosDatatable tr:nth-child(even){background-color: #f2f2f2;}
+      #videosDatatable tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
 
-	#videosDatatable tr:hover {background-color: #ddd;}
+      #videosDatatable tr:hover {
+          background-color: #ddd;
+      }
 
-	#videosDatatable th {
-	  padding-top: 12px;
-	  padding-bottom: 12px;
-	  text-align: left;
-	  background-color: #007bff;
-	  color: white;
-	}
+      #videosDatatable th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #007bff;
+          color: white;
+      }
 
-	.pagination-disabled {
-		cursor: not-allowed;
-		background-color: #fff !important;
-	}
+  .pagination-disabled {
+      cursor: not-allowed;
+      background-color: #fff !important;
+  }
 
-	.pagination {
-	  display: inline-block;
-	  float: right;
-	}
+  .pagination {
+      display: inline-block;
+      float: right;
+  }
 
-	.pagination a {
-	  color: black;
-	  float: left;
-	  padding: 8px 16px;
-	  text-decoration: none;
-	  border: 1px solid #007bff;
-	}
+      .pagination a {
+          color: black;
+          float: left;
+          padding: 8px 16px;
+          text-decoration: none;
+          border: 1px solid #007bff;
+      }
 
-	.pagination a.active {
-	  background-color: #007bff;
-	  color: white;
-	  border: 1px solid #007bff;
-	}
+          .pagination a.active {
+              background-color: #007bff;
+              color: white;
+              border: 1px solid #007bff;
+          }
 
-	.pagination a:hover:not(.active) {background-color: #007bff;}
+          .pagination a:hover:not(.active) {
+              background-color: #007bff;
+          }
 
-	.pagination a:first-child {
-	  border-top-left-radius: 5px;
-	  border-bottom-left-radius: 5px;
-	}
+          .pagination a:first-child {
+              border-top-left-radius: 5px;
+              border-bottom-left-radius: 5px;
+          }
 
-	.pagination a:last-child {
-	  border-top-right-radius: 5px;
-	  border-bottom-right-radius: 5px;
-	}
+          .pagination a:last-child {
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+          }
 
-	
-	.ytd-video-meta-block:not(:last-of-type)::after {
-		content: "•";
-		margin: 0 4px;
-	}
 
-	.padding-10 {
-		padding: 10px;
-	}
+  .ytd-video-meta-block:not(:last-of-type)::after {
+      content: "•";
+      margin: 0 4px;
+  }
 
-    .paging {
-        display: flex;
-    }
+  .padding-10 {
+      padding: 10px;
+  }
 
-    .page-item {
-        border-radius: 0px !important;
-    }
+  .paging {
+      display: flex;
+  }
+
+  .page-item {
+      border-radius: 0px !important;
+  }
 </style>
 
 <h3>Recorded Coaching Sessions</h3>
 
 <p>
-    Search: <input type="text" name="SearchString" id="SearchString" />
-    <button type="button" onclick="return refreshMembersVideos(0);">Search</button>
-    <span class="px-2"><input type="checkbox" name="Favorites" id="FavoritesCheckbox" onclick="return refreshMembersVideos(0);"/><label class="px-1">Favorites</label></span>
+  Search: <input type="text" name="SearchString" id="SearchString" />
+  <button type="button" onclick="return refreshMembersVideos(0);">Search</button>
+  <span class="px-2"><input type="checkbox" name="Favorites" id="FavoritesCheckbox" onclick="return refreshMembersVideos(0);" /><label class="px-1">Favorites</label></span>
 </p>
 
 <div asp-authorize asp-roles="Administrators,Members,Alumni">
-	<div id="members-videos-list" class="row">
-	</div>		
-    <div class="row">
-        <ul id="pagination-demo" class="pagination-md paging"></ul>
-    </div>
-    
+  <div id="members-videos-list" class="row">
+  </div>
+  <div class="row">
+    <ul id="videoPagination" class="pagination-md paging"></ul>
+  </div>
+
 </div>
 
 
 @section scripts{
-    <script src="~/js/videos-members.js" asp-append-version="true" asp-authorize asp-roles="Administrators,Members,Alumni"></script>
+<script src="~/js/videos-members.js" asp-append-version="true" asp-authorize asp-roles="Administrators,Members,Alumni"></script>
 }
 
 <script>
-    function numPages() {
-        return Math.ceil(recordsTotal / recordsPage);
-    }
-    
-    function refreshMembersVideos(currentPageIndex) {
-        currentPage = currentPageIndex;
-        var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
-        if (userRole) {
-            const search = $("#SearchString").val();
-            const filterFavorites = $("#FavoritesCheckbox").is(":checked");
+  function numPages() {
+      return Math.ceil(recordsTotal / recordsPage);
+  }
 
-            $.ajax({
-                type: "POST",
-                url: "/videos/list",
-                data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search, filterFavorites: filterFavorites },
-                dataType: "json",
-                success: function (videosReponse) {
-                    var divHtml = "";
-                    if (videosReponse && videosReponse.data && videosReponse.data.length > 0) {
-                        recordsTotal = videosReponse.recordsTotal;
-                        videosReponse.data.forEach(video => {
-                            divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='/Videos/Details/" + video?.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video?.animatedThumbnailUri + "'></a><h3><a href='/Videos/Details/" + video?.videoId + "'>" + video?.title + "</a></h3><span class='style-scope ytd-video-meta-block'>" + video?.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video?.dateCreated)) + " ago</span><span><i class='" + (video.isMemberFavorite ? "fas fa-star" : "far fa-star") + "'></i>(" + video.memberFavoritesCount + ")</span></div>";
-                        });
-                    }
-                    document.getElementById('members-videos-list').innerHTML = divHtml;
+  function refreshMembersVideos(currentPageIndex) {
+    currentPage = currentPageIndex;
+      var userRole = '@(User.IsInRole("Administrators,Members,Alumni") ? "true" : "false")';
+      if (userRole) {
+        var search = $("#SearchString").val();
+          var filterFavorites = $("#FavoritesCheckbox").is(":checked");
 
-                    $('#pagination-demo').twbsPagination({
-                        totalPages: numPages(),
-                        visiblePages: 7,
-                        startPage: page,
-                        onPageClick: function (event, page) {
-                            refreshMembersVideos(page - 1);
-                        }
-                    });               
-                },
-                error: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
-        }
-    }
+          $.ajax({
+              type: "POST",
+              url: "/videos/list",
+              data: { draw: '1', start: (currentPageIndex*recordsPage), length: recordsPage.toString(), search: search, filterFavorites: filterFavorites },
+              dataType: "json",
+              success: function (videosResponse) {
+                  var divHtml = "";
+                  if (videosResponse && videosResponse.data && videosResponse.data.length > 0) {
+                      recordsTotal = videosResponse.recordsTotal;
+                      page = videosResponse.currentPage;
+                      videosResponse.data.forEach(video => {
+                          divHtml += "<div class='col col-sm-12 col-md-3 col-lg-3 padding-10'><a href='/Videos/Details/" + video.videoId + "'><img class='img-fluid' style='height: 160px' src='" + video.animatedThumbnailUri + "'></a><h3><a href='/Videos/Details/" + video.videoId + "'>" + video.title + "</a></h3><span class='style-scope ytd-video-meta-block'>" + video.views + " views</span><span class='style-scope ytd-video-meta-block'> " + timeSince(new Date(video.dateCreated)) + " ago</span><span><i class='" + (video.isMemberFavorite ? "fas fa-star" : "far fa-star") + "'></i>(" + video.memberFavoritesCount + ")</span></div>";
+                      });
+                  }
+                  document.getElementById('members-videos-list').innerHTML = divHtml;
 
-    function timeSince(date) {
+                  $pagination.twbsPagination('destroy');
 
-        var seconds = Math.floor((new Date() - date) / 1000);
+                  $pagination.twbsPagination({
+                      totalPages: numPages(),
+                      visiblePages: 7,
+                      startPage: page,
+                      initiateStartPageClick: false,
+                      onPageClick: function (event, page) {
+                          refreshMembersVideos(page - 1);
+                      }
+                  });
+              },
+              error: function (errMsg) {
+                  alert(errMsg);
+              }
+          });
+      }
+  }
 
-        var interval = seconds / 31536000;
+  function timeSince(date) {
 
-        if (interval > 1) {
-            return Math.floor(interval) + " years";
-        }
-        interval = seconds / 2592000;
-        if (interval > 1) {
-            return Math.floor(interval) + " months";
-        }
-        interval = seconds / 86400;
-        if (interval > 1) {
-            return Math.floor(interval) + " days";
-        }
-        interval = seconds / 3600;
-        if (interval > 1) {
-            return Math.floor(interval) + " hours";
-        }
-        interval = seconds / 60;
-        if (interval > 1) {
-            return Math.floor(interval) + " minutes";
-        }
-        return Math.floor(seconds) + " seconds";
-    }
+      var seconds = Math.floor((new Date() - date) / 1000);
+
+      var interval = seconds / 31536000;
+
+      if (interval > 1) {
+          return Math.floor(interval) + " years";
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+          return Math.floor(interval) + " months";
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+          return Math.floor(interval) + " days";
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+          return Math.floor(interval) + " hours";
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+          return Math.floor(interval) + " minutes";
+      }
+      return Math.floor(seconds) + " seconds";
+  }
 </script>
