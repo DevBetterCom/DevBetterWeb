@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Ardalis.GuardClauses;
+using AutoMapper;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages;
 
 public class QuestionsModel : PageModel
 {
-  private readonly AppDbContext _context;
+	private readonly IMapper _mapper;
+	private readonly IRepository<CoachingSession> _coachingSessionRepository;
 
-  public QuestionsModel(AppDbContext context)
-  {
-    _context = context;
-  }
+	public QuestionsModel(IMapper mapper, IRepository<CoachingSession> coachingSessionRepository)
+	{
+		_mapper = mapper;
+		_coachingSessionRepository = coachingSessionRepository;
+	}
 
-  public IList<Question> Question { get; set; } = new List<Question>();
-  public IList<ArchiveVideo> Videos { get; set; } = new List<ArchiveVideo>();
+  public List<CoachingSessionDto> CoachingSessions { get; set; } = new List<CoachingSessionDto>();
 
   public async Task OnGetAsync()
   {
-    Question = await _context.Questions!.AsQueryable().ToListAsync();
-    Videos = await _context.ArchiveVideos!
-        .Include(v => v.Questions)
-        .OrderByDescending(v => v.DateCreated)
-        .ToListAsync();
+	  var spec = new CoachingSessionsWithQuestionsSpec();
+	  var coachingSessionsEntity = await _coachingSessionRepository.ListAsync(spec);
+	  CoachingSessions = _mapper.Map<List<CoachingSessionDto>>(coachingSessionsEntity);
   }
 }

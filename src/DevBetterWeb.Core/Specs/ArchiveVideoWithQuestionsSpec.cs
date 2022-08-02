@@ -3,15 +3,11 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class ArchiveVideoWithQuestionsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
+public sealed class ArchiveVideoWithQuestionsSpec : Specification<ArchiveVideo>, ISingleResultSpecification
 {
   public ArchiveVideoWithQuestionsSpec(int archiveVideoId)
   {
-    ArchiveVideoId = archiveVideoId;
-
-    Query.Where(video => video.Id == archiveVideoId)
-        .Include(video => video.Questions);
+	  Query
+	    .Where(video => video.Id == archiveVideoId);
   }
-
-  public int ArchiveVideoId { get; }
 }

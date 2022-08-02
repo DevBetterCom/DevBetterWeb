@@ -1,0 +1,43 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.CoachingSessions.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h3>Coaching Sessions</h3>
+<p asp-authorize asp-roles="Administrators">
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Start At
+            </th>
+            <th>
+                Active
+            </th>
+	         <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CoachingSessions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+								<td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    <span asp-authorize asp-roles="Administrators">
+                        |
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
