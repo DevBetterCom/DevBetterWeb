@@ -9,7 +9,10 @@ public class VideoCommentConfig : IEntityTypeConfiguration<VideoComment>
 
   public void Configure(EntityTypeBuilder<VideoComment> builder)
   {
-    builder
+	  builder
+		  .Ignore(x => x.MdBody);
+
+		builder
 	    .Property(x => x.Body)
 	    .HasMaxLength(2000);
 
