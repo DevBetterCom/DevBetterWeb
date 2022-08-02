@@ -154,6 +154,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.CoachingSession", b =>
+								{ 
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
