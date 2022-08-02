@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +23,19 @@ public class EditModel : PageModel
 {
   private readonly IRepository<ArchiveVideo> _videoRepository;
   private readonly AppDbContext _context;
+  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly IRepository<Member> _memberRepository;
 
-  public EditModel(IRepository<ArchiveVideo> videoRepository, AppDbContext context)
+  public EditModel(
+	  IRepository<ArchiveVideo> videoRepository, 
+	  AppDbContext context,
+		UserManager<ApplicationUser> userManager,
+	  IRepository<Member> memberRepository)
   {
     _videoRepository = videoRepository;
     _context = context;
+    _userManager = userManager;
+    _memberRepository = memberRepository;
   }
 
 #nullable disable
@@ -58,7 +69,7 @@ public class EditModel : PageModel
     // TODO: use repo + spec here
     var archiveVideoEntity = await _context.ArchiveVideos!
         .AsNoTracking()
-        .Include(v => v.Questions)
+        //.Include(v => v.Questions)
         .FirstOrDefaultAsync(v => v.Id == id);
 
 
@@ -74,7 +85,7 @@ public class EditModel : PageModel
       VideoUrl = archiveVideoEntity.VideoUrl
     };
 
-    Questions = archiveVideoEntity.Questions;
+    //Questions = archiveVideoEntity.Questions;
 
     return Page();
   }
@@ -108,9 +119,7 @@ public class EditModel : PageModel
     {
       return BadRequest();
     }
-
-    question.QuestionText = questionText;
-    question.TimestampSeconds = timestamp;
+    question.UpdateQuestion(questionText);
 
     _context.SaveChanges();
 
@@ -118,16 +127,24 @@ public class EditModel : PageModel
     return RedirectToPage("edit", new { id = question.ArchiveVideoId });
   }
 
-  public IActionResult OnPostAddQuestion(int archiveVideoId, string questionText, int timestamp)
+  public async Task<IActionResult> OnPostAddQuestion(int archiveVideoId, string questionText, int timestamp)
   {
-    var question = new Question();
-    question.ArchiveVideoId = archiveVideoId;
-    question.QuestionText = questionText;
-    question.TimestampSeconds = timestamp;
+		var currentUserName = User.Identity!.Name;
+		var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+
+		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
+		var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
+		if (member is null)
+		{
+			return Unauthorized();
+		}
+
+		var question = new Question(member.Id, questionText);
+    question.SetArchiveVideoId(archiveVideoId);
 
     _context.Questions!.Add(question);
 
-    _context.SaveChanges();
+    await _context.SaveChangesAsync();
 
     return RedirectToPage("edit", new { id = archiveVideoId });
   }
