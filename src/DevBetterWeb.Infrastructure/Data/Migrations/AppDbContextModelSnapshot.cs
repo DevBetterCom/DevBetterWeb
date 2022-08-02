@@ -144,6 +144,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("Title")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -154,10 +155,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.CoachingSession", b =>
-								{ 
+                {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
@@ -408,8 +411,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ArchiveVideoId");
 
                     b.HasIndex("CoachingSessionId");
 
@@ -722,10 +723,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ArchiveVideoId");
-
                     b.HasOne("DevBetterWeb.Core.Entities.CoachingSession", "CoachingSession")
                         .WithMany("Questions")
                         .HasForeignKey("CoachingSessionId")
@@ -805,18 +802,16 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("MemberFavorites");
 
                     b.Navigation("MembersVideoProgress");
+                });
 
-                    b.Navigation("Questions");
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookCategory", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.CoachingSession", b =>
                 {
                     b.Navigation("Questions");
-                });
-                
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookCategory", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>

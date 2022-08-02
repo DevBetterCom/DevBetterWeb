@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220716162338_Coaching_Session_changes")]
-    partial class Coaching_Session_changes
+    [Migration("20220802213750_changes_fix_02082022")]
+    partial class changes_fix_02082022
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,6 +115,11 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("BookCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<string>("Details")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -129,7 +134,26 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookCategoryId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BookCategories");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.CoachingSession", b =>
@@ -390,8 +414,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArchiveVideoId");
-
                     b.HasIndex("CoachingSessionId");
 
                     b.HasIndex("MemberId");
@@ -536,6 +558,15 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                     b.Navigation("Details")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.Book", b =>
+                {
+                    b.HasOne("DevBetterWeb.Core.Entities.BookCategory", "BookCategory")
+                        .WithMany("Books")
+                        .HasForeignKey("BookCategoryId");
+
+                    b.Navigation("BookCategory");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
@@ -694,10 +725,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Question", b =>
                 {
-                    b.HasOne("DevBetterWeb.Core.Entities.ArchiveVideo", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ArchiveVideoId");
-
                     b.HasOne("DevBetterWeb.Core.Entities.CoachingSession", "CoachingSession")
                         .WithMany("Questions")
                         .HasForeignKey("CoachingSessionId")
@@ -777,8 +804,11 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("MemberFavorites");
 
                     b.Navigation("MembersVideoProgress");
+                });
 
-                    b.Navigation("Questions");
+            modelBuilder.Entity("DevBetterWeb.Core.Entities.BookCategory", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.CoachingSession", b =>
