@@ -69,6 +69,11 @@ Add a new migration (from the DevBetter.Web folder):
 dotnet ef migrations add MIGRATIONNAME -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Data/Migrations
 ```
 
+If changes on the Identity then you need to Add a new migration (from the DevBetter.Web folder):
+```powershell
+ dotnet ef migrations add MIGRATIONNAME -c IdentityDbContext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Identity/Data/Migrations
+```
+
 Update AppDbContext model (from the DevBetter.Web folder):
 
 ```powershell

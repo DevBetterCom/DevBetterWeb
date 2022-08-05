@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DevBetterWeb.Infrastructure.Data.Migrations
+namespace DevBetterWeb.Infrastructure.Identity.Data.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20220714170447_DateCreated")]
-    partial class DateCreated
+    [Migration("20220802231307_IdentityDbContext_created_date")]
+    partial class IdentityDbContext_created_date
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

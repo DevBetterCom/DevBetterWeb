@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
-    public partial class Coaching_Session_changes : Migration
+    public partial class changes_fix_02082022 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,14 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 name: "PK_Question",
                 table: "Question");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Question_ArchiveVideoId",
+                table: "Question");
+
+            migrationBuilder.DropColumn(
+                name: "ShowNotes",
+                table: "ArchiveVideos");
+
             migrationBuilder.RenameTable(
                 name: "Question",
                 newName: "Questions");
@@ -26,10 +34,12 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 table: "Questions",
                 newName: "Votes");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Question_ArchiveVideoId",
-                table: "Questions",
-                newName: "IX_Questions_ArchiveVideoId");
+            migrationBuilder.AddColumn<int>(
+                name: "BookCategoryId",
+                table: "Books",
+                type: "int",
+                nullable: true,
+                defaultValue: 1);
 
             migrationBuilder.AlterColumn<string>(
                 name: "QuestionText",
@@ -78,6 +88,19 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 column: "Id");
 
             migrationBuilder.CreateTable(
+                name: "BookCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CoachingSessions",
                 columns: table => new
                 {
@@ -116,6 +139,11 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Books_BookCategoryId",
+                table: "Books",
+                column: "BookCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_CoachingSessionId",
                 table: "Questions",
                 column: "CoachingSessionId");
@@ -136,10 +164,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 column: "QuestionId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Questions_ArchiveVideos_ArchiveVideoId",
-                table: "Questions",
-                column: "ArchiveVideoId",
-                principalTable: "ArchiveVideos",
+                name: "FK_Books_BookCategories_BookCategoryId",
+                table: "Books",
+                column: "BookCategoryId",
+                principalTable: "BookCategories",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
@@ -161,8 +189,8 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Questions_ArchiveVideos_ArchiveVideoId",
-                table: "Questions");
+                name: "FK_Books_BookCategories_BookCategoryId",
+                table: "Books");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Questions_CoachingSessions_CoachingSessionId",
@@ -173,10 +201,17 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 table: "Questions");
 
             migrationBuilder.DropTable(
+                name: "BookCategories");
+
+            migrationBuilder.DropTable(
                 name: "CoachingSessions");
 
             migrationBuilder.DropTable(
                 name: "QuestionVote");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Books_BookCategoryId",
+                table: "Books");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Questions",
@@ -189,6 +224,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_Questions_MemberId",
                 table: "Questions");
+
+            migrationBuilder.DropColumn(
+                name: "BookCategoryId",
+                table: "Books");
 
             migrationBuilder.DropColumn(
                 name: "CoachingSessionId",
@@ -211,10 +250,11 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 table: "Question",
                 newName: "TimestampSeconds");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Questions_ArchiveVideoId",
-                table: "Question",
-                newName: "IX_Question_ArchiveVideoId");
+            migrationBuilder.AddColumn<string>(
+                name: "ShowNotes",
+                table: "ArchiveVideos",
+                type: "nvarchar(max)",
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "QuestionText",
@@ -240,6 +280,11 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                 name: "PK_Question",
                 table: "Question",
                 column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Question_ArchiveVideoId",
+                table: "Question",
+                column: "ArchiveVideoId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Question_ArchiveVideos_ArchiveVideoId",

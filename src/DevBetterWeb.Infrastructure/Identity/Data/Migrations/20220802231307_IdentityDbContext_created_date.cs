@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DevBetterWeb.Infrastructure.Data.Migrations
+namespace DevBetterWeb.Infrastructure.Identity.Data.Migrations
 {
-    public partial class DateCreated : Migration
+    public partial class IdentityDbContext_created_date : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
