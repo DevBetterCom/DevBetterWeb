@@ -35,7 +35,8 @@ public class Program
       logger.LogInformation($"Current environment: {environment}");
 
       var context = services.GetRequiredService<AppDbContext>();
-      SeedData.PopulateInitData(context);
+      var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+			SeedData.PopulateInitData(context, userManager);
 
 			if (environment == "Production")
       {
@@ -45,8 +46,7 @@ public class Program
       logger.LogInformation("Seeding database...");
       try
       {
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+	      var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         if (userManager.Users.Any() || roleManager.Roles.Any())
         {
           logger.LogDebug("User/Role data already exists.");

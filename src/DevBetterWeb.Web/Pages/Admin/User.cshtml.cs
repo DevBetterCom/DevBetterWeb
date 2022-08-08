@@ -239,8 +239,16 @@ public class UserModel : PageModel
 		member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo, false);
 		member.UpdateAddress(UserPersonalUpdateModel.Address, false);
 		member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername, false);
+		member.UpdateEmail(UserPersonalUpdateModel.Email, false);
 
 		await _memberRepository.UpdateAsync(member);
+
+		if (!string.IsNullOrEmpty(UserPersonalUpdateModel.Email))
+		{
+			var user = await _userManager.FindByIdAsync(userId);
+			user.Email = UserPersonalUpdateModel.Email;
+			await _userManager.UpdateAsync(user);
+		}
 
 		return RedirectToPage("./User", new { userId });
 	}

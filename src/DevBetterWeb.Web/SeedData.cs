@@ -9,9 +9,10 @@ namespace DevBetterWeb.Web;
 
 public static class SeedData
 {
-	public static void PopulateInitData(AppDbContext dbContext)
+	public static void PopulateInitData(AppDbContext dbContext, UserManager<ApplicationUser> userManager)
 	{
 		PopulateBookCategoriesInitData(dbContext);
+		PopulateMembersInitData(dbContext, userManager);
 	}
 
 	public static void PopulateTestData(AppDbContext dbContext,
@@ -87,7 +88,27 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
     dbContext.SaveChanges();
   }
 
-  private static void PopulateBookCategoriesInitData(AppDbContext dbContext)
+  private static void PopulateMembersInitData(AppDbContext dbContext, UserManager<ApplicationUser> userManager)
+  {
+	  if (dbContext.Members!.Any()) return;
+
+	  var members = dbContext.Members!.Where(member => string.IsNullOrEmpty(member.Email)).ToList();
+	  foreach (var member in members)
+	  {
+		  var user = userManager.Users.FirstOrDefault(user => user.Id == member.UserId);
+		  if (string.IsNullOrEmpty(user?.Email))
+		  {
+				continue;
+		  }
+
+		  member.UpdateEmail(user.Email);
+		  dbContext.Members!.Update(member);
+	  }
+
+	  dbContext.SaveChanges();
+  }
+
+	private static void PopulateBookCategoriesInitData(AppDbContext dbContext)
   {
 	  if (dbContext.BookCategories!.Any()) return;
 

@@ -173,8 +173,7 @@ public class WebhookHandlerService : IWebhookHandlerService
 
     var subscriptionDateTimeRange = _paymentHandlerSubscription.GetDateTimeRange(subscriptionId);
 
-    var userId = await _userLookupService.FindUserIdByEmailAsync(paymentHandlerCustomer.Email);
-    var spec = new MemberByUserIdSpec(userId);
+    var spec = new MemberByEmailSpec(paymentHandlerCustomer.Email);
     var member = await _repository.FirstOrDefaultAsync(spec);
 
     if (member != null)

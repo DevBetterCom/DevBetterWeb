@@ -22,6 +22,7 @@ public class UserPersonalUpdateModel
   public string? LastName { get; set; }
   public string? Address { get; set; }
   public string? UserId { get; set; }
+  public string? Email { get; set; }
   public string? AboutInfo { get; set; }
   public string? PEFriendCode { get; set; }
   public string? PEUsername { get; set; }
@@ -40,6 +41,7 @@ public class UserPersonalUpdateModel
     FirstName = member.FirstName;
     LastName = member.LastName;
     Address = member.Address;
+    Email = member.Email;
     PEFriendCode = member.PEFriendCode;
     PEUsername = member.PEUsername;
     DiscordUsername = member.DiscordUsername;
