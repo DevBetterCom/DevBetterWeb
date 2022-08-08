@@ -82,7 +82,14 @@ public class MyProfilePersonalModel : PageModel
     member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
     member.UpdateAddress(UserPersonalUpdateModel.Address);
     member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername);
+    member.UpdateEmail(UserPersonalUpdateModel.Email);
 
     await _memberRepository.UpdateAsync(member);
-  }
+
+    if (!string.IsNullOrEmpty(UserPersonalUpdateModel.Email))
+    {
+	    applicationUser.Email = UserPersonalUpdateModel.Email;
+	    await _userManager.UpdateAsync(applicationUser);
+    }
+	}
 }
