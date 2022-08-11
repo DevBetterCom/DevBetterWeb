@@ -31,15 +31,10 @@ public class BookCategory : BaseEntity, IAggregateRoot
   }
 	public void AddMembersRole(List<int> excludedMembersIds)
 	{
-		foreach (var book in Books)
+		foreach (var book in Books.Where(book => book.MembersWhoHaveRead != null))
 		{
-			if (book.MembersWhoHaveRead == null) continue;
-			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead)
+			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead!.Where(memberWhoHaveRead => !excludedMembersIds.Contains(memberWhoHaveRead.Id)))
 			{
-				if (excludedMembersIds.Contains(memberWhoHaveRead.Id))
-				{
-					continue;					
-				}
 				memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
 			}
 		}
