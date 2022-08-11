@@ -9,7 +9,7 @@ namespace DevBetterWeb.Core.Entities;
 public class BookCategory : BaseEntity, IAggregateRoot
 {
   public string? Title { get; set; }
-  public List<Book> Books { get; set; } = new List<Book>();
+  public List<Book> Books { get; private set; } = new List<Book>();
 
   public void CalcAndSetBooksRank(RankingService<int> rankingService)
   {
