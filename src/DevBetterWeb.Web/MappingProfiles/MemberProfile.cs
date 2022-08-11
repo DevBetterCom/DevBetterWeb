@@ -8,9 +8,9 @@ public class MemberProfile : Profile
 {
   public MemberProfile()
   {
-    CreateMap<Member, MemberForBookDto>()
-	    .ForPath(dest => dest.FullName,
-		    opt => opt.MapFrom(source => source.UserFullName()));
+		CreateMap<Member, MemberForBookDto>()
+			.ForPath(dest => dest.FullName,
+				opt => opt.MapFrom(source => source.UserFullName()));
 		CreateMap<Member, MemberLinksDTO>();
   }
 }

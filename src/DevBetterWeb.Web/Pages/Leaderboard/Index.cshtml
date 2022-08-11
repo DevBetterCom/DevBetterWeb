@@ -56,6 +56,7 @@
         <tbody>
           @foreach (var member in bookCategory.Members)
           {
+              @if(member.RoleName?.ToLower() != "Members".ToLower()) continue;
             <tr>
               <td>@member.BooksRank</td>
               <td>

@@ -9,7 +9,7 @@ namespace DevBetterWeb.Core.Entities;
 public class BookCategory : BaseEntity, IAggregateRoot
 {
   public string? Title { get; set; }
-  public List<Book> Books { get; set; } = new List<Book>();
+  public List<Book> Books { get; private set; } = new List<Book>();
 
   public void CalcAndSetBooksRank(RankingService<int> rankingService)
   {
@@ -26,9 +26,20 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  foreach (var book in Books)
 	  {
 		  var newMembers = book.MembersWhoHaveRead!.Where(memberWhoHaveRead => !excludedMembersIds.Contains(memberWhoHaveRead.Id)).ToList();
-		  book.MembersWhoHaveRead = newMembers;
-	  }
+		  book.MembersWhoHaveRead = newMembers.OrderBy(x => x.BooksRank).ToList();
+		}
   }
+	public void AddMembersRole(List<int> excludedMembersIds)
+	{
+		foreach (var book in Books.Where(book => book.MembersWhoHaveRead != null))
+		{
+			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead!.Where(memberWhoHaveRead => !excludedMembersIds.Contains(memberWhoHaveRead.Id)))
+			{
+				memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
+			}
+		}
+	}
+	
 
 	public static void CalcAndSetCategoriesBooksRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
   {
@@ -36,7 +47,7 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  {
 		  bookCategory.CalcAndSetBooksRank(rankingService);
 	  }
-  }
+	}
 
   public static void CalcAndSetMemberCategoriesMembersRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
   {
@@ -54,8 +65,16 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  }
 	}
 
+	public static void AddMembersRole(List<BookCategory> bookCategories, List<int> excludedMembersIds)
+	{
+		foreach (var bookCategory in bookCategories)
+		{
+			bookCategory.AddMembersRole(excludedMembersIds);
+		}
+	}
 
-  public override string ToString()
+
+	public override string ToString()
   {
     return Title + string.Empty;
   }
