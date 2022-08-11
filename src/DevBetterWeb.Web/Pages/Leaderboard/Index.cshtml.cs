@@ -51,6 +51,7 @@ public class IndexModel : PageModel
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
 		BookCategory.CalcAndSetCategoriesBooksRank(_rankingService, bookCategoriesEntity);
 		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
+		BookCategory.AddMembersRole(bookCategoriesEntity, excludedAlumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
 		OderByRankForMembers();
 	}

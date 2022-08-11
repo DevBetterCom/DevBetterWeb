@@ -29,6 +29,21 @@ public class BookCategory : BaseEntity, IAggregateRoot
 		  book.MembersWhoHaveRead = newMembers.OrderBy(x => x.BooksRank).ToList();
 		}
   }
+	public void AddMembersRole(List<int> excludedMembersIds)
+	{
+		foreach (var book in Books)
+		{
+			if (book.MembersWhoHaveRead == null) continue;
+			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead)
+			{
+				if (!excludedMembersIds.Contains(memberWhoHaveRead.Id))
+				{
+					memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
+				}				
+			}
+		}
+	}
+	
 
 	public static void CalcAndSetCategoriesBooksRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
   {
@@ -56,8 +71,16 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  }
 	}
 
+	public static void AddMembersRole(List<BookCategory> bookCategories, List<int> excludedMembersIds)
+	{
+		foreach (var bookCategory in bookCategories)
+		{
+			bookCategory.AddMembersRole(excludedMembersIds);
+		}
+	}
 
-  public override string ToString()
+
+	public override string ToString()
   {
     return Title + string.Empty;
   }
