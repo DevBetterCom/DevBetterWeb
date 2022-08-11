@@ -36,10 +36,11 @@ public class BookCategory : BaseEntity, IAggregateRoot
 			if (book.MembersWhoHaveRead == null) continue;
 			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead)
 			{
-				if (!excludedMembersIds.Contains(memberWhoHaveRead.Id))
+				if (excludedMembersIds.Contains(memberWhoHaveRead.Id))
 				{
-					memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
-				}				
+					continue;					
+				}
+				memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
 			}
 		}
 	}
