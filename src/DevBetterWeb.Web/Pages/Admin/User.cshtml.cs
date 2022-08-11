@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Web.Pages.Admin;
 
@@ -25,6 +26,7 @@ public class UserModel : PageModel
 	[BindProperty] public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; } = new UserPersonalUpdateModel();
 	[BindProperty] public UserLinksUpdateModel UserLinksUpdateModel { get; set; } = new UserLinksUpdateModel();
 
+	private readonly ILogger<UserModel> _logger;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly RoleManager<IdentityRole> _roleManager;
 	private readonly IUserRoleMembershipService _userRoleMembershipService;
@@ -34,7 +36,8 @@ public class UserModel : PageModel
 	private readonly IRepository<MemberSubscriptionPlan> _subscriptionPlanRepository;
 	private readonly IUserEmailConfirmationService _userEmailConfirmationService;
 
-	public UserModel(UserManager<ApplicationUser> userManager,
+	public UserModel(ILogger<UserModel> logger,
+		UserManager<ApplicationUser> userManager,
 			RoleManager<IdentityRole> roleManager,
 			IUserRoleMembershipService userRoleMembershipService,
 			IMemberRegistrationService memberRegistrationService,
@@ -43,6 +46,7 @@ public class UserModel : PageModel
 			IRepository<MemberSubscriptionPlan> subscriptionPlanRepository,
 			IUserEmailConfirmationService userEmailConfirmationService)
 	{
+		_logger = logger;
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_userRoleMembershipService = userRoleMembershipService;
@@ -66,72 +70,84 @@ public class UserModel : PageModel
 
 	public async Task<IActionResult> OnGetAsync(string userId)
 	{
-		if (string.IsNullOrEmpty(userId))
+		try
 		{
-			NotFound();
-		}
-
-		var currentUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-
-		if (currentUser == null)
-		{
-			return BadRequest();
-		}
-
-		var roles = await _roleManager.Roles.ToListAsync();
-
-		var unassignedRoles = new List<IdentityRole>();
-		var assignedRoles = new List<IdentityRole>();
-		// TODO: Fix this awful performing code
-		foreach (var role in roles)
-		{
-			if (!(await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
+			if (string.IsNullOrEmpty(userId))
 			{
-				unassignedRoles.Add(role);
+				NotFound();
 			}
-			else
+
+			var currentUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+			if (currentUser == null)
 			{
-				assignedRoles.Add(role);
+				return BadRequest();
 			}
-		}
 
-		IdentityUser = currentUser;
-		RolesNotAssignedToUser = unassignedRoles.Select(x => new SelectListItem(x.Name, x.Id)).ToList();
-		Roles = assignedRoles.ToList();
+			var roles = await _roleManager.Roles.ToListAsync();
 
-		var memberByUserSpec = new MemberByUserIdSpec(userId);
-		var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
-		if (member != null)
-		{
-			UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
-			UserLinksUpdateModel = new UserLinksUpdateModel(member);
-
-			MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
-
-			var subscriptionByMemberSpec = new MemberSubscriptionsByMemberSpec(member.Id);
-			var subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
-
-			foreach (var subscription in subscriptions)
+			var unassignedRoles = new List<IdentityRole>();
+			var assignedRoles = new List<IdentityRole>();
+			// TODO: Fix this awful performing code
+			foreach (var role in roles)
 			{
-				Subscriptions.Add(new SubscriptionDTO()
+				if (!(await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
 				{
-					Id = subscription.Id,
-					StartDate = subscription.Dates.StartDate,
-					EndDate = subscription.Dates.EndDate,
-					MemberSubscriptionPlan = MemberSubscriptionPlans.FirstOrDefault(msp => msp.Id == subscription.MemberSubscriptionPlanId)
-				});
-
-				var totalDaysInSubscription = subscription.Dates.EndDate != null ? ((DateTime)subscription.Dates.EndDate - subscription.Dates.StartDate).TotalDays : (DateTime.Today - subscription.Dates.StartDate).TotalDays;
-				TotalDaysInAllSubscriptions += totalDaysInSubscription;
+					unassignedRoles.Add(role);
+				}
+				else
+				{
+					assignedRoles.Add(role);
+				}
 			}
+
+			IdentityUser = currentUser;
+			RolesNotAssignedToUser = unassignedRoles.Select(x => new SelectListItem(x.Name, x.Id)).ToList();
+			Roles = assignedRoles.ToList();
+
+			var memberByUserSpec = new MemberByUserIdSpec(userId);
+			var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
+			if (member != null)
+			{
+				UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
+				UserLinksUpdateModel = new UserLinksUpdateModel(member);
+
+				MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
+				_logger.LogInformation($"MemberSubscriptionPlans Count: {MemberSubscriptionPlans.Count}");
+
+				var subscriptionByMemberSpec = new MemberSubscriptionsByMemberSpec(member.Id);
+				var subscriptions = await _subscriptionRepository.ListAsync(subscriptionByMemberSpec);
+
+				foreach (var subscription in subscriptions)
+				{
+					Subscriptions.Add(new SubscriptionDTO()
+					{
+						Id = subscription.Id,
+						StartDate = subscription.Dates.StartDate,
+						EndDate = subscription.Dates.EndDate,
+						MemberSubscriptionPlan =
+							MemberSubscriptionPlans.FirstOrDefault(msp => msp.Id == subscription.MemberSubscriptionPlanId)
+					});
+
+					var totalDaysInSubscription = subscription.Dates.EndDate != null
+						? ((DateTime)subscription.Dates.EndDate - subscription.Dates.StartDate).TotalDays
+						: (DateTime.Today - subscription.Dates.StartDate).TotalDays;
+					TotalDaysInAllSubscriptions += totalDaysInSubscription;
+				}
+			}
+
+
+			EmailConfirmation.IsConfirmedString = IdentityUser.EmailConfirmed ? "Yes" : "No";
+			string emailAddressMessage = "the email address";
+			EmailConfirmation.EditEmailConfirmationMessage = @$"Are you sure you want to {(IdentityUser.EmailConfirmed
+				? $"revoke {emailAddressMessage} confirmation"
+				: $"confirm {emailAddressMessage}")}?";
 		}
-
-
-		EmailConfirmation.IsConfirmedString = IdentityUser.EmailConfirmed ? "Yes" : "No";
-		string emailAddressMessage = "the email address";
-		EmailConfirmation.EditEmailConfirmationMessage = @$"Are you sure you want to {(IdentityUser.EmailConfirmed
-			? $"revoke {emailAddressMessage} confirmation"
-			: $"confirm {emailAddressMessage}")}?";
+		catch (Exception exception)
+		{
+			_logger.LogError(exception, "exception");
+		}
+		
 
 		return Page();
 	}
