@@ -276,6 +276,7 @@ public class Member : BaseEntity, IAggregateRoot
   {
 	  var memberRanks = rankingService.Rank(members.Select(m => m.BooksRead!.Count));
 	  members.ForEach(m => m.BooksRank = memberRanks[m.BooksRead!.Count]);
+		members = members.OrderBy(x => x.BooksRank).ToList();
 	}
 
   public static void SetRoleToMembers(List<Member> members, string roleName)

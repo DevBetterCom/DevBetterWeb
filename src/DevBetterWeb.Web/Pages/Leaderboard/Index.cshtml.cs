@@ -51,8 +51,16 @@ public class IndexModel : PageModel
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
 		BookCategory.CalcAndSetCategoriesBooksRank(_rankingService, bookCategoriesEntity);
 		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
-		BookCategory.ExcludeMembers(bookCategoriesEntity, excludedAlumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
+		OderByRankForMembers();
+	}
+
+	private void OderByRankForMembers()
+	{
+		foreach (var bookCategory in BookCategories)
+		{
+			bookCategory.Members = bookCategory.Members.OrderBy(x => x.BooksRank).ToList();
+		}
 	}
 
   private async Task<List<Member>> SetAlumniMembersAsync()
@@ -63,8 +71,8 @@ public class IndexModel : PageModel
 		var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
 	  var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
 	  Member.CalcAndSetBooksRank(_rankingService, alumniMembers);
-		Member.SetRoleToMembers(alumniMembers, AuthConstants.Roles.ALUMNI);
-	  Alumni = _mapper.Map<List<MemberForBookDto>>(alumniMembers);
+		Member.SetRoleToMembers(alumniMembers, AuthConstants.Roles.ALUMNI);		
+		Alumni = _mapper.Map<List<MemberForBookDto>>(alumniMembers);
 
 	  return alumniMembers;
   }
