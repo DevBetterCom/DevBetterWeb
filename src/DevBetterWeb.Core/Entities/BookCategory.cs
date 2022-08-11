@@ -46,8 +46,7 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  foreach (var bookCategory in bookCategories)
 	  {
 		  bookCategory.CalcAndSetBooksRank(rankingService);
-			bookCategory.Books = bookCategory.Books.OrderBy(x => x.Rank).ToList();
-		}
+	  }
 	}
 
   public static void CalcAndSetMemberCategoriesMembersRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
@@ -55,8 +54,7 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	  foreach (var bookCategory in bookCategories)
 	  {
 		  bookCategory.CalcAndSetMembersRank(rankingService);
-			bookCategory.Books = bookCategory.Books.OrderBy(x => x.Rank).ToList();
-		}
+	  }
   }
 
   public static void ExcludeMembers(List<BookCategory> bookCategories, List<int> excludedMembersIds)

@@ -53,18 +53,20 @@ public class IndexModel : PageModel
 		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
 		BookCategory.AddMembersRole(bookCategoriesEntity, excludedAlumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
-		OderByRankForMembers();
+		OderByRankForMembersAndBooks();
 	}
 
-	private void OderByRankForMembers()
+	private void OderByRankForMembersAndBooks()
 	{
 		foreach (var bookCategory in BookCategories)
 		{
 			bookCategory.Members = bookCategory.Members.OrderBy(x => x.BooksRank).ToList();
+			bookCategory.Books = bookCategory.Books!.OrderBy(x => x.Rank).ToList();
 		}
 	}
 
-  private async Task<List<Member>> SetAlumniMembersAsync()
+
+	private async Task<List<Member>> SetAlumniMembersAsync()
   {
 	  var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
 	  var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
