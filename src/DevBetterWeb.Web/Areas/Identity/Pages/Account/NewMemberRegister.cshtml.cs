@@ -103,50 +103,63 @@ public class NewMemberRegisterModel : PageModel
 
   public async Task<IActionResult> OnPostAsync(string captcha, string inviteCode, string email, string? returnUrl = null)
   {
-    returnUrl = returnUrl ?? Url.Content("~/");
-    if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
-    {
-      ModelState.AddModelError("captcha", "Captcha validation failed");
-    }
-    if (ModelState.IsValid)
-    {
-      if (Input is null) throw new Exception("Input is null.");
-      var user = new ApplicationUser { UserName = email, Email = email, DateCreated = DateTime.UtcNow };
-      var result = await _userManager.CreateAsync(user, Input.Password);
-      if (result.Succeeded)
-      {
-        _logger.LogInformation("User created a new account with password.");
+	  try
+	  {
+		  returnUrl = returnUrl ?? Url.Content("~/");
+		  if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
+		  {
+			  ModelState.AddModelError("captcha", "Captcha validation failed");
+		  }
 
-        var newUserEvent = new NewUserRegisteredEvent(email,
-          Request.HttpContext.Connection.RemoteIpAddress!.ToString());
+		  if (ModelState.IsValid)
+		  {
+			  if (Input is null) throw new Exception("Input is null.");
+			  var user = new ApplicationUser { UserName = email, Email = email, DateCreated = DateTime.UtcNow };
+			  var result = await _userManager.CreateAsync(user, Input.Password);
+			  if (result.Succeeded)
+			  {
+				  _logger.LogInformation("User created a new account with password.");
 
-        await _dispatcher.Dispatch(newUserEvent);
+				  var newUserEvent = new NewUserRegisteredEvent(email,
+					  Request.HttpContext.Connection.RemoteIpAddress!.ToString());
 
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var userId = user.Id;
+				  await _dispatcher.Dispatch(newUserEvent);
 
-        var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, code);
-        if (!emailConfirmationResult.Succeeded)
-        {
-          throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
-        }
+				  var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+				  var userId = user.Id;
 
-        await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email);
+				  var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, code);
+				  if (!emailConfirmationResult.Succeeded)
+				  {
+					  throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
+				  }
 
-        _logger.LogInformation($"Adding user {user.Email} to Member Role");
-        var roles = await _roleManager.Roles.ToListAsync();
-        var memberRole = roles.FirstOrDefault(r => r.Name == "Member");
-        if (memberRole != null)
-        {
-          await _userRoleMembershipService.AddUserToRoleAsync(userId, memberRole.Id);
-        }
-        return RedirectToRoute("/User/MyProfile");
-      }
-      foreach (var error in result.Errors)
-      {
-        ModelState.AddModelError(string.Empty, error.Description);
-      }
-    }
+				  await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email);
+
+				  _logger.LogInformation($"Adding user {user.Email} to Member Role");
+				  var roles = await _roleManager.Roles.ToListAsync();
+				  var memberRole = roles.FirstOrDefault(r => r.Name == "Member");
+				  if (memberRole != null)
+				  {
+					  await _userRoleMembershipService.AddUserToRoleAsync(userId, memberRole.Id);
+				  }
+
+				  return RedirectToRoute("/User/MyProfile");
+			  }
+
+			  foreach (var error in result.Errors)
+			  {
+				  ModelState.AddModelError(string.Empty, error.Description);
+			  }
+		  }
+	  }
+	  catch (Exception exception)
+	  {
+			_logger.LogError(exception, "NewUserRegistered Exception");
+			var exceptionEvent = new ExceptionEvent(exception);
+			await _dispatcher.Dispatch(exceptionEvent);
+	  }
+    
 
     // If we got this far, something failed, redisplay form
     return Page();
