@@ -113,6 +113,7 @@ public class Startup
     services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
     services.AddScoped<IVideosService, VideosService>();
+    services.AddSingleton<IVideosCacheService, VideosCacheService>();
     // list services
     services.Configure<ServiceConfig>(config =>
     {
