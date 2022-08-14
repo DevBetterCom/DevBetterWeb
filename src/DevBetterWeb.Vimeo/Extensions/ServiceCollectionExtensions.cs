@@ -50,7 +50,9 @@ public static class ServiceCollectionExtensions
     services.AddScoped<GetAllAnimatedThumbnailService>();
     services.AddScoped<GetStatusAnimatedThumbnailService>();
     services.AddScoped<AddAnimatedThumbnailsToVideoService>();
-    services.AddScoped<ISleepService, SleepService>();
+    services.AddScoped<UploadResumableVideoService>();
+    services.AddScoped<UploadResumableCreateVideoLinkService>();
+		services.AddScoped<ISleepService, SleepService>();
 
     return services;
   }

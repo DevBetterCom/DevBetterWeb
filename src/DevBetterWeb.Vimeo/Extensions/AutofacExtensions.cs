@@ -52,6 +52,8 @@ public class AutofacExtensions
     builder.RegisterType<GetAllAnimatedThumbnailService>();
     builder.RegisterType<GetStatusAnimatedThumbnailService>();
     builder.RegisterType<AddAnimatedThumbnailsToVideoService>();
-    builder.RegisterType<SleepService>().As<ISleepService>();
+    builder.RegisterType<UploadResumableVideoService>();
+    builder.RegisterType<UploadResumableCreateVideoLinkService>();
+		builder.RegisterType<SleepService>().As<ISleepService>();
   }
 }
