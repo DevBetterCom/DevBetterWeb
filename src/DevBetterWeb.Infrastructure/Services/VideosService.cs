@@ -17,12 +17,12 @@ public class VideosService : IVideosService
   private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
   private readonly DeleteVideoService _deleteVideoService;
   private readonly GetVideoService _getVideoService;
-  private readonly GetAllVideosService _getAllVideosService;
+  private readonly GetPagedVideosService _getPagedVideosService;
   public readonly IVideosCacheService _videosCacheService;
 
   public VideosService(IAppLogger<VideosService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo,
     CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
-    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetAllVideosService getAllVideosService, IVideosCacheService videosCacheService)
+    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetPagedVideosService getPagedVideosService, IVideosCacheService videosCacheService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
@@ -30,7 +30,7 @@ public class VideosService : IVideosService
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
     _deleteVideoService = deleteVideoService;
     _getVideoService = getVideoService;
-    _getAllVideosService = getAllVideosService;
+    _getPagedVideosService = getPagedVideosService;
     _videosCacheService = videosCacheService;
 
   }
@@ -116,7 +116,7 @@ public class VideosService : IVideosService
   public async Task DeleteVideosNotExistOnVimeoFromVimeo(AppendOnlyStringList? messages)
   {
     var request = new GetAllVideosRequest("me");
-    var videosResponse = await _getAllVideosService.ExecuteAsync(request);
+    var videosResponse = await _getPagedVideosService.ExecuteAsync(request);
     if (videosResponse?.Data?.Data == null)
     {
       return;
