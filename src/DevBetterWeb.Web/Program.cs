@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Areas.Identity;
@@ -37,6 +38,10 @@ public class Program
       var context = services.GetRequiredService<AppDbContext>();
       var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 			SeedData.PopulateInitData(context, userManager);
+
+			//TODO: need to be checked without token.
+			var videosCacheService = services.GetRequiredService<IVideosCacheService>();
+			await videosCacheService.UpdateAllVideosAsync();
 
 			if (environment == "Production")
       {
