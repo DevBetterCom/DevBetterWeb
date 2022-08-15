@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
     services.AddScoped<CompleteUploadByCompleteUriService>();
     services.AddScoped<CompleteUploadService>();
     services.AddScoped<DeleteVideoService>();
+    services.AddScoped<GetPagedVideosService>();
     services.AddScoped<GetAllVideosService>();
     services.AddScoped<GetAttemptService>();
     services.AddScoped<GetOEmbedVideoService>();

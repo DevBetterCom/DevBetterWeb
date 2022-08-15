@@ -35,6 +35,7 @@ public class AutofacExtensions
     builder.RegisterType<CompleteUploadByCompleteUriService>();
     builder.RegisterType<CompleteUploadService>();
     builder.RegisterType<DeleteVideoService>();
+    builder.RegisterType<GetPagedVideosService>();
     builder.RegisterType<GetAllVideosService>();
     builder.RegisterType<GetAttemptService>();
     builder.RegisterType<GetOEmbedVideoService>();
