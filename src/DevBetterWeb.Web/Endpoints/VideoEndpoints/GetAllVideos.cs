@@ -31,11 +31,13 @@ public class GetAllVideos : EndpointBaseAsync
 	[HttpGet("videos/get-all-videos")]
 	public override async Task<ActionResult<List<ArchiveVideoDto>>> HandleAsync(CancellationToken cancellationToken = default)
 	{
-		var archiveVideos = _repository.ListAsync(cancellationToken);
+		var archiveVideos = await _repository.ListAsync(cancellationToken);
 		var videosDto = _mapper.Map<List<ArchiveVideoDto>>(archiveVideos);
 		var vimeoVideos = _videosCacheService.GetAllVideos();
 		foreach (var videoDto in videosDto)
 		{
+			videoDto.IsInfoUploaded = true;
+
 			var vimeoVideo = vimeoVideos.FirstOrDefault(x => x.Name.ToLower() == videoDto.Title?.ToLower());
 			if (vimeoVideo == null)
 			{
@@ -44,6 +46,9 @@ public class GetAllVideos : EndpointBaseAsync
 			else
 			{
 				videoDto.IsUploaded = true;
+				videoDto.DateCreated = vimeoVideo.CreatedTime;
+				videoDto.Title = vimeoVideo.Name;
+				videoDto.Duration = vimeoVideo.Duration;
 			}
 		}
 
@@ -53,10 +58,12 @@ public class GetAllVideos : EndpointBaseAsync
 			if (videoDto == null)
 			{
 				var videosDtoToAdd = new ArchiveVideoDto();
+				videosDtoToAdd.Title = vimeoVideo.Name;
 				videosDtoToAdd.VideoId = vimeoVideo.Id;
 				videosDtoToAdd.VideoUrl = vimeoVideo.Uri;
 				videosDtoToAdd.DateUploaded = vimeoVideo.CreatedTime;
-				videosDtoToAdd.IsUploaded = false;
+				videosDtoToAdd.IsUploaded = true;
+				videosDtoToAdd.IsInfoUploaded = false;
 
 				videosDto.Insert(0, videosDtoToAdd);
 			}
