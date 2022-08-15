@@ -9,6 +9,7 @@ namespace DevBetterWeb.Infrastructure.Services;
 
 public class VideosCacheService: IVideosCacheService
 {
+	public bool IsEmpty => _vimeoVideos.Count <= 0;
 	private readonly ILogger<VideosCacheService> _logger;
 	private readonly GetAllVideosService _getAllVideosService;
 	private List<Video> _vimeoVideos = new List<Video>();
@@ -26,14 +27,14 @@ public class VideosCacheService: IVideosCacheService
 		Clear();
 		var request = new GetAllVideosRequest("me");
 		var videosResponse = await _getAllVideosService.ExecuteAsync(request);
-		if (videosResponse?.Data?.Data == null)
+		if (videosResponse?.Data == null)
 		{
 			_logger.LogInformation("No Videos on vimeo server");
 			return;
 		}
-		_logger.LogInformation($"Videos from vimeo server: {videosResponse.Data.Data.Count}");
+		_logger.LogInformation($"Videos from vimeo server: {videosResponse.Data.Count}");
 
-		AddRange(videosResponse.Data.Data);
+		AddRange(videosResponse.Data);
 
 		_logger.LogInformation("Videos update finished");
 	}
