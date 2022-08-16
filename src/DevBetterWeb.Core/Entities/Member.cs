@@ -472,4 +472,9 @@ public class Member : BaseEntity, IAggregateRoot
   {
     return new Member(userId, firstName, lastName);
   }
+
+	public override string ToString()
+	{
+		return $"{FirstName} {LastName}";
+	}
 }
