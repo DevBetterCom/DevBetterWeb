@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Web.Models;
+using DevBetterWeb.Web.Pages.Admin.Books;
 
 namespace DevBetterWeb.Web.MappingProfiles;
 
@@ -17,6 +18,11 @@ public class BookProfile : Profile
 		    opt => opt.MapFrom(source => source.ToString()))
 			.ForPath(dest => dest.MemberWhoUploaded,
 				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()));
+		
+		CreateMap<Book, BookViewModel>()
+			.ForPath(dest => dest.MemberWhoUploaded,
+				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()));
+
 		CreateMap<BookDto, Book>();
   }
 }
