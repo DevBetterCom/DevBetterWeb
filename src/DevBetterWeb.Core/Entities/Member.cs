@@ -299,7 +299,17 @@ public class Member : BaseEntity, IAggregateRoot
     }
   }
 
-  public void RemoveBookRead(Book book)
+	public void AddBookForAdd(Book book)
+	{
+		if (!UploadedBooks!.Any())
+		{
+			UploadedBooks.Add(book);
+			var newBookAddedEvent = new MemberAddedBookAddEvent(this, book);
+			Events.Add(newBookAddedEvent);
+		}
+	}
+
+	public void RemoveBookRead(Book book)
   {
     if (BooksRead!.Any(b => b.Id == book.Id))
     {

@@ -1,0 +1,107 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MyProfileBooksAddModel
+@{
+    ViewData["Title"] = "My Profile: Books Added";
+}
+
+<h3>My Profile: Books To Add</h3>
+
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header">
+                <b>Books You've Added</b>
+            </div>
+            <div class="card-body">
+                @if (Model.UserBooksAddModel.BooksAdd.Any())
+                {
+                <ul>
+                    @foreach (var book in Model.UserBooksAddModel.BooksAdd)
+                    {
+                    <li><a href="@book.PurchaseUrl">@book.Title by @book.Author</a></li>
+                    }
+                </ul>
+                }
+                else
+                {
+                <strong>You haven't add any books yet. Time to start adding!</strong>
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-5">
+        <form method="post" asp-page-handler="add">
+            <div class="card">
+                <div class="card-header">
+                    <b>Add Books</b>
+                </div>
+                <div class="card-body">
+                    <label for="addBooks">Select a book to add.</label>
+
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group" style="width: 100%;">
+                            <label asp-for="UserBooksAddModel.AddedBook!.Title" class="control-label"></label>
+                            <input asp-for="UserBooksAddModel.AddedBook!.Title" class="form-control" />
+                            <span asp-validation-for="UserBooksAddModel.AddedBook!.Title" class="text-danger"></span>
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group" style="width: 100%;">
+                            <label asp-for="UserBooksAddModel.AddedBook!.BookCategoryId" class="control-label"></label>
+                            <select asp-for="UserBooksAddModel.AddedBook.BookCategoryId" class="form-control" id="bookCategory">
+                                <option value="">None</option>
+                                @foreach (var category in Model.BookCategories)
+                                {
+                                    <option value="@category.Id">@category.Title</option>                                
+                                }
+                            </select>
+                            <span asp-validation-for="UserBooksAddModel.AddedBook!.BookCategoryId" class="text-danger" style="width:100%"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" style="width: 100%;">
+                            <label asp-for="UserBooksAddModel.AddedBook!.Author" class="control-label"></label>
+                            <input asp-for="UserBooksAddModel.AddedBook!.Author" class="form-control" />
+                            <span asp-validation-for="UserBooksAddModel.AddedBook!.Author" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" style="width: 100%;">
+                            <label asp-for="UserBooksAddModel.AddedBook!.Details" class="control-label"></label>
+                            <input asp-for="UserBooksAddModel.AddedBook!.Details" class="form-control" />
+                            <span asp-validation-for="UserBooksAddModel.AddedBook!.Details" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group" style="width: 100%;">
+                            <label asp-for="UserBooksAddModel.AddedBook!.PurchaseUrl" class="control-label"></label>
+                            <input asp-for="UserBooksAddModel.AddedBook!.PurchaseUrl" class="form-control" />
+                            <span asp-validation-for="UserBooksAddModel.AddedBook!.PurchaseUrl" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <input type="submit" value="Add" class="btn btn-success" />
+                        </div>    
+                    </div>  
+                </div>  
+                <br />
+                <br />
+            </div>
+        </form>
+        <br />
+    </div>
+</div>
+
+<br />
+<br />
+
+<a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+
+
+
