@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Infrastructure.Data;
+using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web.Pages.Admin.Books;
@@ -17,51 +17,77 @@ namespace DevBetterWeb.Web.Pages.Admin.Books;
 
 public class EditModel : PageModel
 {
-  private readonly DevBetterWeb.Infrastructure.Data.AppDbContext _context;
+	public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
 
-  public EditModel(DevBetterWeb.Infrastructure.Data.AppDbContext context)
+	private readonly IRepository<Book> _bookRepository;
+	private readonly IRepository<BookCategory> _bookCategoryRepository;
+	private readonly IMapper _mapper;
+	private int? MemberWhoUploadId;
+
+	public EditModel(
+		IRepository<Book> bookRepository,
+		IRepository<BookCategory> bookCategoryRepository,
+		IMapper mapper)
   {
-    _context = context;
-  }
+		_bookRepository = bookRepository;
+		_bookCategoryRepository = bookCategoryRepository;
+		_mapper = mapper;
+	}
 
   [BindProperty]
   public Book? Book { get; set; }
 
   public async Task<IActionResult> OnGetAsync(int? id)
   {
-    if (id == null)
+		BookCategories = _mapper.Map<List<BookCategoryDto>>(await _bookCategoryRepository.ListAsync());
+
+		if (id == null)
     {
       return NotFound();
     }
 
-    Book = await _context.Books!.AsQueryable().FirstOrDefaultAsync(m => m.Id == id);
-
-    if (Book == null)
+		var spec = new BookByIdWithMembersSpec(id.Value);
+		Book = await _bookRepository.FirstOrDefaultAsync(spec);	
+		if (Book == null)
     {
       return NotFound();
     }
-    return Page();
+
+		MemberWhoUploadId = Book!.MemberWhoUploadId;
+		return Page();
   }
 
   // To protect from overposting attacks, enable the specific properties you want to bind to.
   // For more details, see https://aka.ms/RazorPagesCRUD.
   public async Task<IActionResult> OnPostAsync()
   {
-    if (!ModelState.IsValid)
+		BookCategories = _mapper.Map<List<BookCategoryDto>>(await _bookCategoryRepository.ListAsync());
+
+		if (!ModelState.IsValid)
     {
       return Page();
     }
 
     if (Book == null) return NotFound();
-    _context.Attach(Book).State = EntityState.Modified;
 
-    try
+		var bookEntity = new Book
+		{
+			Author = Book.Author,
+			Details = Book.Details,
+			PurchaseUrl = Book.PurchaseUrl,
+			Title = Book.Title,
+			BookCategoryId = Book.BookCategoryId,
+			MemberWhoUploadId = MemberWhoUploadId
+		};
+		await _bookRepository.UpdateAsync(bookEntity);
+
+		try
     {
-      await _context.SaveChangesAsync();
+      await _bookRepository.SaveChangesAsync();
     }
     catch (DbUpdateConcurrencyException)
     {
-      if (!BookExists(Book!.Id))
+      if (!await BookExistsAsync(Book!.Id))
       {
         return NotFound();
       }
@@ -74,8 +100,10 @@ public class EditModel : PageModel
     return RedirectToPage("./Index");
   }
 
-  private bool BookExists(int id)
+  private async Task<bool> BookExistsAsync(int id)
   {
-    return _context.Books!.Any(e => e.Id == id);
+		var spec = new BookByIdWithMembersSpec(id);
+
+		return await _bookRepository.AnyAsync(spec);
   }
 }
