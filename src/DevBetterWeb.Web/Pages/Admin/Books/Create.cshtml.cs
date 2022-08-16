@@ -74,7 +74,7 @@ public class CreateModel : PageModel
       PurchaseUrl = Book.PurchaseUrl,
       Title = Book.Title,
 			BookCategoryId = Book.BookCategoryId,
-			MemberWhoUploadId = member.Id
+			MemberWhoUploadId = member!.Id
     };
 
     var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
