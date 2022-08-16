@@ -18,10 +18,14 @@ public class BookProfile : Profile
 		    opt => opt.MapFrom(source => source.ToString()))
 			.ForPath(dest => dest.MemberWhoUploaded,
 				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()));
-		
+
 		CreateMap<Book, BookViewModel>()
 			.ForPath(dest => dest.MemberWhoUploaded,
-				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()));
+				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()))
+			.ForPath(dest => dest.CategoryTitle,
+				opt => opt.MapFrom(source => source.BookCategory!.Title));
+
+		CreateMap<BookViewModel, Book>();
 
 		CreateMap<BookDto, Book>();
   }
