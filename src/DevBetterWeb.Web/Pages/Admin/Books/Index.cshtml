@@ -26,6 +26,9 @@
                 @Html.DisplayNameFor(model => model.Books![0].PurchaseUrl)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Books![0].CategoryTitle)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Books![0].MemberWhoUploaded)
             </th>
             <th></th>
@@ -45,6 +48,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PurchaseUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryTitle)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MemberWhoUploaded)
