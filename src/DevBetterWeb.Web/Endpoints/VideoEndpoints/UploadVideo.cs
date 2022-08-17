@@ -1,17 +1,14 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
-using AutoMapper;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Events;
-using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
+using DevBetterWeb.Vimeo.Models;
+using System.IO;
+using DevBetterWeb.Vimeo.Constants;
+using System;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 namespace DevBetterWeb.Web.Endpoints;
 
@@ -21,10 +18,20 @@ public class UploadVideo : EndpointBaseAsync
 	.WithResult<ActionResult<UploadVideoResumableInfo>>
 {
 	private readonly UploadResumableVideoService _uploadResumableVideoService;
+	private readonly UpdateVideoDetailsService _updateVideoDetailsService;
+	private readonly AddDomainToVideoService _addDomainToVideoService;
+	private readonly CompleteUploadService _completeUploadService;
 
-	public UploadVideo(UploadResumableVideoService uploadResumableVideoService)
+	public UploadVideo(
+		UploadResumableVideoService uploadResumableVideoService, 
+		UpdateVideoDetailsService updateVideoDetailsService, 
+		AddDomainToVideoService addDomainToVideoService,
+		CompleteUploadService completeUploadService)
 	{
 		_uploadResumableVideoService = uploadResumableVideoService;
+		_updateVideoDetailsService = updateVideoDetailsService;
+		_addDomainToVideoService = addDomainToVideoService;
+		_completeUploadService = completeUploadService;
 	}
 
 	[HttpPost("videos/upload-video")]
@@ -32,6 +39,35 @@ public class UploadVideo : EndpointBaseAsync
 	{
 		var result = await _uploadResumableVideoService.ExecuteAsync(request, cancellationToken);
 
+		if (result.Data.PartSize == result.Data.UploadOffset)
+		{
+			await AddVimeoVideoInfoAndGetVideoIdAsync(request, cancellationToken);
+		}
+
 		return Ok(result?.Data);
+	}
+
+	private async Task AddVimeoVideoInfoAndGetVideoIdAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
+	{
+		var completeUploadRequest = new CompleteUploadRequest(request.UploadUrl);
+		var completeUploadResponse = await _completeUploadService.ExecuteAsync(completeUploadRequest, cancellationToken);
+
+		var video = new Video();
+
+		video
+			.SetName(Path.GetFileNameWithoutExtension(request.FileName))
+			.SetEmbedProtecedPrivacy()
+			.SetEmbed();
+
+		var videoId = 0;
+
+		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(videoId, video);
+		var updateVideoDetailsResponse = await _updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
+
+		string allowedDomain = Request.GetUri().GetLeftPart(UriPartial.Authority);
+		var addDomainRequest = new AddDomainToVideoRequest(videoId, allowedDomain);
+		var addDomainToVideoResponse = await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
+
+		request.VideoId = videoId.ToString();
 	}
 }
