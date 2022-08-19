@@ -39,7 +39,7 @@ public class UploadVideo : EndpointBaseAsync
 	{
 		var result = await _uploadResumableVideoService.ExecuteAsync(request, cancellationToken);
 
-		if (result.Data.PartSize == result.Data.UploadOffset)
+		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
 			await AddVimeoVideoInfoAndGetVideoIdAsync(request, cancellationToken);
 		}
@@ -53,21 +53,17 @@ public class UploadVideo : EndpointBaseAsync
 		var completeUploadResponse = await _completeUploadService.ExecuteAsync(completeUploadRequest, cancellationToken);
 
 		var video = new Video();
-
 		video
+			.SetVideoUrl(request.VideoUrl)
 			.SetName(Path.GetFileNameWithoutExtension(request.FileName))
 			.SetEmbedProtecedPrivacy()
 			.SetEmbed();
 
-		var videoId = 0;
-
-		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(videoId, video);
+		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(long.Parse(video.Id), video);
 		var updateVideoDetailsResponse = await _updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
 
-		string allowedDomain = Request.GetUri().GetLeftPart(UriPartial.Authority);
-		var addDomainRequest = new AddDomainToVideoRequest(videoId, allowedDomain);
-		var addDomainToVideoResponse = await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
-
-		request.VideoId = videoId.ToString();
+		var allowedDomain = Request.GetUri().Authority;
+		var addDomainRequest = new AddDomainToVideoRequest(long.Parse(video.Id), allowedDomain);
+		var addDomainToVideoResponse = await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
 	}
 }
