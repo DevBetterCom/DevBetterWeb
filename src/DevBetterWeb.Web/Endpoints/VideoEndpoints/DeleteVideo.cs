@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
@@ -34,8 +35,7 @@ public class DeleteVideo : EndpointBaseAsync
 			await _repository.DeleteAsync(existVideo, cancellationToken);
 		}
 
-		await _deleteVideoService.ExecuteAsync(vimeoVideoId, cancellationToken);
-
-		return Ok();
+		var deleteResponse = await _deleteVideoService.ExecuteAsync(vimeoVideoId, cancellationToken);
+		return (ActionResult)deleteResponse.ActionResult;
 	}
 }
