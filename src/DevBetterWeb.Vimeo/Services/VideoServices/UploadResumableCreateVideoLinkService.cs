@@ -46,6 +46,8 @@ public class UploadResumableCreateVideoLinkService : BaseAsyncApiCaller
 
 			request.UploadUrl = response.Data?.Upload?.UploadLink;
 			request.UploadOffset = 0;
+			request.VideoId = response.Data?.VideoId;
+			request.VideoUrl = response.Data?.Uri;
 
 			return new HttpResponse<UploadVideoResumableInfo>(request, HttpStatusCode.OK);
     }
