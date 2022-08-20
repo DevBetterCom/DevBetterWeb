@@ -21,14 +21,9 @@ public class UserBooksAddModel
 
   public bool HasAddBook(Book book)
   {
-    if (BooksAdd == null)
+    foreach (Book bookToCheck in BooksAdd)
     {
-      return false;
-    }
-
-    foreach (Book Book in BooksAdd)
-    {
-      if (Book != null && Book.Equals(book))
+      if (bookToCheck.Equals(book))
       {
         return true;
       }
