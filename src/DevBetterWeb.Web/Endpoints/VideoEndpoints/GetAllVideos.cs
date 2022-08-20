@@ -64,6 +64,7 @@ public class GetAllVideos : EndpointBaseAsync
 				videosDtoToAdd.DateUploaded = vimeoVideo.CreatedTime;
 				videosDtoToAdd.IsUploaded = true;
 				videosDtoToAdd.IsInfoUploaded = false;
+				videosDtoToAdd.Duration = vimeoVideo.Duration;
 
 				videosDto.Insert(0, videosDtoToAdd);
 			}
