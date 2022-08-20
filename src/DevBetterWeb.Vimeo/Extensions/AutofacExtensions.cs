@@ -46,7 +46,7 @@ public class AutofacExtensions
     builder.RegisterType<ActiveTextTrackService>();
     builder.RegisterType<GetUploadLinkTextTrackService>();
     builder.RegisterType<UploadTextTrackFileService>();
-    builder.RegisterType<UploadSubtitleToVideoService>();
+    builder.RegisterType<UploadVideoSubtitleService>();
     builder.RegisterType<GetAllTextTracksService>();
     builder.RegisterType<CreateAnimatedThumbnailsService>();
     builder.RegisterType<GetAnimatedThumbnailService>();
