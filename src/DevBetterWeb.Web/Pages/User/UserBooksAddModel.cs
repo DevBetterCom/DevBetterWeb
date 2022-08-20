@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Web.Pages.Admin.Books;
 
@@ -21,14 +22,6 @@ public class UserBooksAddModel
 
   public bool HasAddBook(Book book)
   {
-    foreach (Book bookToCheck in BooksAdd)
-    {
-      if (bookToCheck.Equals(book))
-      {
-        return true;
-      }
-    }
-
-    return false;
+	  return Enumerable.Contains(BooksAdd, book);
   }
 }
