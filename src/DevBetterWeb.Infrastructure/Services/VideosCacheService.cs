@@ -12,7 +12,7 @@ public class VideosCacheService: IVideosCacheService
 	public bool IsEmpty => _vimeoVideos.Count <= 0;
 	private readonly ILogger<VideosCacheService> _logger;
 	private readonly GetAllVideosService _getAllVideosService;
-	private List<Video> _vimeoVideos = new List<Video>();
+	private readonly List<Video> _vimeoVideos = new List<Video>();
 
 	public VideosCacheService(ILogger<VideosCacheService> logger, GetAllVideosService getAllVideosService)
 	{
@@ -24,7 +24,6 @@ public class VideosCacheService: IVideosCacheService
 	{
 		_logger.LogInformation("Videos update started");
 
-		Clear();
 		var request = new GetAllVideosRequest("me");
 		var videosResponse = await _getAllVideosService.ExecuteAsync(request);
 		if (videosResponse?.Data == null)
@@ -34,6 +33,7 @@ public class VideosCacheService: IVideosCacheService
 		}
 		_logger.LogInformation($"Videos from vimeo server: {videosResponse.Data.Count}");
 
+		Clear();
 		AddRange(videosResponse.Data);
 
 		_logger.LogInformation("Videos update finished");
