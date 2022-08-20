@@ -36,14 +36,7 @@ public class GetPagedVideosService : BaseAsyncApiCaller
     }
     else
     {
-      if (request.UserId.ToLower().Equals(ServiceConstants.ME))
-      {
-        uri = $"{request.UserId}/videos";
-      }
-      else
-      {
-        uri = $"users/{request.UserId}/videos";
-      }
+	    uri = request.UserId.ToLower().Equals(ServiceConstants.ME) ? $"{request.UserId}/videos" : $"users/{request.UserId}/videos";
     }
 
     try
