@@ -25,7 +25,7 @@ public class GetAnimatedThumbnailService : BaseAsyncApiCaller
     var uri = $"videos/{request.VideoId}/animated_thumbsets/{request.PictureId}";
     try
     {
-      var response = await _httpService.HttpGetAsync<AnimatedThumbnailsResponse>(uri);
+      var response = await _httpService.HttpGetAsync<AnimatedThumbnailsResponse>(uri, cancellationToken);
 
       return response;
     }

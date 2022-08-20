@@ -53,7 +53,7 @@ public class GetPagedVideosService : BaseAsyncApiCaller
       query.AddIfNotNull("page", request.Page?.ToString());
       query.AddIfNotNull("per_page", request.PageSize?.ToString());
 
-			var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query);
+			var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query, cancellationToken);
 
       return response;
     }

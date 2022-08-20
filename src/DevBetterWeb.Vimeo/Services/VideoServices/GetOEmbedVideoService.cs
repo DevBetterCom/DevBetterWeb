@@ -28,7 +28,7 @@ public class GetOEmbedVideoService : BaseAsyncApiCaller
     try
     {
       _httpService.ResetBaseUri();
-      var response = await _httpService.HttpGetAsync<OEmbed>($"{uri}?url={link}");
+      var response = await _httpService.HttpGetAsync<OEmbed>($"{uri}?url={link}", cancellationToken);
       _httpService.ResetHttp(ServiceConstants.VIMEO_URI);
 
       return response;

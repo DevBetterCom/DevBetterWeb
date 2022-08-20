@@ -30,7 +30,7 @@ public class GetStreamingTicketService : BaseAsyncApiCaller
 		try
 		{
 
-      var response = await _httpService.HttpPostByQueryAsync<UploadTicket>(uri, query);
+      var response = await _httpService.HttpPostByQueryAsync<UploadTicket>(uri, query, cancellationToken);
 
       return response;
     }

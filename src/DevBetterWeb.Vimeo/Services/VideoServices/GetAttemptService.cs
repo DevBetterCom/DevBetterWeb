@@ -28,7 +28,7 @@ public class GetAttemptService : BaseAsyncApiCaller
     try
     {
       var uploadId = new RandomHelper().CreateNumber(10000, 99999);
-      var uploadAttempt = await _httpService.HttpGetAsync<UploadAttempt>($"{uri}/{request.UserId}/uploads/{request.UploadId}");
+      var uploadAttempt = await _httpService.HttpGetAsync<UploadAttempt>($"{uri}/{request.UserId}/uploads/{request.UploadId}", cancellationToken);
 
       return uploadAttempt;
     }

@@ -38,7 +38,7 @@ public class UploadResumableCreateVideoLinkService : BaseAsyncApiCaller
     try
     {
 			var uploadTus = new UploadTusRequest(request.FileFullSize);
-			var response = await _httpService.HttpPostAsync<VideoForCreateResumableLink>($"{ServiceConstants.ME}/videos", uploadTus);
+			var response = await _httpService.HttpPostAsync<VideoForCreateResumableLink>($"{ServiceConstants.ME}/videos", uploadTus, cancellationToken);
 			if (response.Code != HttpStatusCode.OK && response.Code != HttpStatusCode.Created)
 			{
 				return new HttpResponse<UploadVideoResumableInfo>(response.Code);

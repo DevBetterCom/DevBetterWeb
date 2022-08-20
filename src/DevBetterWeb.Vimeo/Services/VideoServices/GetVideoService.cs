@@ -27,7 +27,7 @@ public class GetVideoService : BaseAsyncApiCaller
 
 		try
     {
-      var response = await _httpService.HttpGetAsync<Video>(fullPath);
+      var response = await _httpService.HttpGetAsync<Video>(fullPath, cancellationToken);
 
       return response;
     }

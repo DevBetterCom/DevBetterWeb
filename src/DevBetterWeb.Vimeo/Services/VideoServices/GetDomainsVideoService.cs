@@ -26,7 +26,7 @@ public class GetDomainsVideoService : BaseAsyncApiCaller
     var uri = $"videos/{videoId}/privacy/domains?page=1&per_page=100";
     try
     {
-      var response = await _httpService.HttpGetAsync<Domain>(uri);
+      var response = await _httpService.HttpGetAsync<Domain>(uri, cancellationToken);
 
       return response;
     }
