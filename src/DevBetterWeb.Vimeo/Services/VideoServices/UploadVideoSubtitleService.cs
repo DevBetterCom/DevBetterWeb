@@ -66,12 +66,12 @@ public class UploadVideoSubtitleService : BaseAsyncApiCaller
       }
 
       var textTracksResponse = await _getAllTextTracksService.ExecuteAsync(request.VideoId, cancellationToken);
-      if (textTracksResponse.Code != System.Net.HttpStatusCode.OK || textTracksResponse.Data == null || textTracksResponse.Data.Data == null || textTracksResponse.Data.Data.Count <= 0)
+      if (textTracksResponse.Code != System.Net.HttpStatusCode.OK || textTracksResponse.Data?.Data == null || textTracksResponse.Data.Data.Count <= 0)
       {
         return new HttpResponse<bool>(false, textTracksResponse.Code);
       }
 
-      var activeTextTrackRequest = new ActiveTextTrackRequest(textTracksResponse.Data.Data[textTracksResponse.Data.Data.Count - 1].Uri);
+      var activeTextTrackRequest = new ActiveTextTrackRequest(textTracksResponse.Data.Data[^1].Uri);
       var activeTextTrackServiceResponse = await _activeTextTrackService.ExecuteAsync(activeTextTrackRequest, cancellationToken);
       if (activeTextTrackServiceResponse.Code != System.Net.HttpStatusCode.OK)
       {
