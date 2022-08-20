@@ -27,13 +27,8 @@ public class VideosController : Controller
 	private readonly IMapper _mapper;
 	private readonly GetOEmbedVideoService _getOEmbedVideoService;
 	private readonly GetVideoService _getVideoService;
-	private readonly DeleteVideoService _deleteVideoService;
-	private readonly UploadSubtitleToVideoService _uploadSubtitleToVideoService;
 	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly IMarkdownService _markdownService;
-	private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
-	private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
-	private readonly IVideosService _videosService;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IRepository<Member> _memberRepository;
 
@@ -42,26 +37,16 @@ public class VideosController : Controller
 		IOptions<ApiSettings> apiSettings,
 		GetOEmbedVideoService getOEmbedVideoService,
 		GetVideoService getVideoService,
-		DeleteVideoService deleteVideoService,
-		UploadSubtitleToVideoService uploadSubtitleToVideoService,
 		IMarkdownService markdownService,
-		CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
-		GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
-		IVideosService videosService,
 		UserManager<ApplicationUser> userManager,
 		IRepository<Member> memberRepository)
 	{
 		_mapper = mapper;
 		_getOEmbedVideoService = getOEmbedVideoService;
 		_getVideoService = getVideoService;
-		_deleteVideoService = deleteVideoService;
-		_uploadSubtitleToVideoService = uploadSubtitleToVideoService;
 		_repository = repository;
 		_expectedApiKey = apiSettings.Value.ApiKey;
 		_markdownService = markdownService;
-		_createAnimatedThumbnailsService = createAnimatedThumbnailsService;
-		_getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
-		_videosService = videosService;
 		_userManager = userManager;
 		_memberRepository = memberRepository;
 	}
@@ -210,17 +195,6 @@ public class VideosController : Controller
 		await _repository.UpdateAsync(existVideo);
 
 		return Json(new { success = true, responseText = "Done!" });
-	}
-
-	[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
-	[HttpPost("upload-subtitle")]
-	public async Task<IActionResult> UploadSubtitleAsync([FromForm] UploadSubtitleRequest request)
-	{
-		var uploadSubtitleToVideoRequest = new UploadSubtitleToVideoRequest(request.VideoId, request.Subtitle, request.Language);
-		var response = await _uploadSubtitleToVideoService.ExecuteAsync(uploadSubtitleToVideoRequest);
-		if (!response.Data || response.Code != System.Net.HttpStatusCode.OK) return NotFound($"Subtitle Not Found {request.VideoId}");
-
-		return Ok();
 	}
 
 	[HttpPost("submit-comment-reply")]
