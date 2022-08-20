@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
@@ -18,11 +17,13 @@ public class DeleteVideo : EndpointBaseAsync
 {
 	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly DeleteVideoService _deleteVideoService;
+	private readonly IVideosCacheService _videosCacheService;
 
-	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService)
+	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService, IVideosCacheService videosCacheService)
 	{
 		_repository = repository;
 		_deleteVideoService = deleteVideoService;
+		_videosCacheService = videosCacheService;
 	}
 
 	[HttpDelete("videos/uploader/delete-video/{vimeoVideoId}")]
@@ -36,6 +37,8 @@ public class DeleteVideo : EndpointBaseAsync
 		}
 
 		var deleteResponse = await _deleteVideoService.ExecuteAsync(vimeoVideoId, cancellationToken);
+		_ = _videosCacheService.UpdateAllVideosAsync();
+
 		return (ActionResult)deleteResponse.ActionResult;
 	}
 }

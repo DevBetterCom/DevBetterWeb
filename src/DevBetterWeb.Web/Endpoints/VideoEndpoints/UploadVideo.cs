@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
 using DevBetterWeb.Vimeo.Models;
 using System.IO;
-using DevBetterWeb.Vimeo.Constants;
 using System;
+using System.Net;
+using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Core.Interfaces;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 namespace DevBetterWeb.Web.Endpoints;
@@ -20,18 +22,21 @@ public class UploadVideo : EndpointBaseAsync
 	private readonly UploadResumableVideoService _uploadResumableVideoService;
 	private readonly UpdateVideoDetailsService _updateVideoDetailsService;
 	private readonly AddDomainToVideoService _addDomainToVideoService;
-	private readonly CompleteUploadService _completeUploadService;
+	private readonly GetVideoService _getVideoService;
+	private readonly IVideosService _videosService;
 
 	public UploadVideo(
 		UploadResumableVideoService uploadResumableVideoService, 
 		UpdateVideoDetailsService updateVideoDetailsService, 
 		AddDomainToVideoService addDomainToVideoService,
-		CompleteUploadService completeUploadService)
+		GetVideoService getVideoService,
+		IVideosService videosService)
 	{
 		_uploadResumableVideoService = uploadResumableVideoService;
 		_updateVideoDetailsService = updateVideoDetailsService;
 		_addDomainToVideoService = addDomainToVideoService;
-		_completeUploadService = completeUploadService;
+		_getVideoService = getVideoService;
+		_videosService = videosService;
 	}
 
 	[HttpPost("videos/upload-video")]
@@ -41,17 +46,15 @@ public class UploadVideo : EndpointBaseAsync
 
 		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
-			await AddVimeoVideoInfoAndGetVideoIdAsync(request, cancellationToken);
+			await AddVimeoVideoInfoAsync(request, cancellationToken);
+			await AddArchiveVideoInfoAsync(request, cancellationToken);
 		}
 
 		return Ok(result?.Data);
 	}
 
-	private async Task AddVimeoVideoInfoAndGetVideoIdAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
+	private async Task AddVimeoVideoInfoAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
 	{
-		var completeUploadRequest = new CompleteUploadRequest(request.UploadUrl);
-		var completeUploadResponse = await _completeUploadService.ExecuteAsync(completeUploadRequest, cancellationToken);
-
 		var video = new Video();
 		video
 			.SetVideoUrl(request.VideoUrl)
@@ -65,5 +68,25 @@ public class UploadVideo : EndpointBaseAsync
 		var allowedDomain = Request.GetUri().Authority;
 		var addDomainRequest = new AddDomainToVideoRequest(long.Parse(video.Id), allowedDomain);
 		var addDomainToVideoResponse = await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
+	}
+
+	private async Task AddArchiveVideoInfoAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
+	{
+		var response = await _getVideoService.ExecuteAsync(request.VideoId, cancellationToken);
+		if (response.Code != HttpStatusCode.OK)
+		{
+			return;
+		}
+		var archiveVideo = new ArchiveVideo
+		{
+			Title = request.VideoName,
+			DateCreated = request.CreatedTime,
+			DateUploaded = DateTimeOffset.UtcNow,
+			Duration = response.Data.Duration*1000,
+			VideoId = request.VideoId,
+			VideoUrl = request.VideoUrl
+		};
+
+		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
 	}
 }
