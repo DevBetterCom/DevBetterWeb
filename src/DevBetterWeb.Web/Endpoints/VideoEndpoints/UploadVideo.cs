@@ -63,11 +63,11 @@ public class UploadVideo : EndpointBaseAsync
 			.SetEmbed();
 
 		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(long.Parse(video.Id), video);
-		var updateVideoDetailsResponse = await _updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
+		_ = await _updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
 
 		var allowedDomain = Request.GetUri().Authority;
 		var addDomainRequest = new AddDomainToVideoRequest(long.Parse(video.Id), allowedDomain);
-		var addDomainToVideoResponse = await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
+		_ = await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
 	}
 
 	private async Task AddArchiveVideoInfoAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
