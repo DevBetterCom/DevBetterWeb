@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
-using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +22,7 @@ public class GetVideoService : BaseAsyncApiCaller
 
   public override async Task<HttpResponse<Video>> ExecuteAsync(string videoId, CancellationToken cancellationToken = default)
   {
-    var uri = $"videos";
+    var uri = "videos";
 		var fullPath = $"{uri}/{videoId}";
 
 		try

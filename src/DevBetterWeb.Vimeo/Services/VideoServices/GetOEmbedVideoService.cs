@@ -24,7 +24,7 @@ public class GetOEmbedVideoService : BaseAsyncApiCaller
 
   public override async Task<HttpResponse<OEmbed>> ExecuteAsync(string link, CancellationToken cancellationToken = default)
   {
-    var uri = $"https://vimeo.com/api/oembed.json";
+    var uri = "https://vimeo.com/api/oembed.json";
     try
     {
       _httpService.ResetBaseUri();
