@@ -47,6 +47,8 @@ public class UploadResumableVideoService : BaseAsyncApiCaller
 			var byteContent = new ByteArrayContent(request.FilePartData, 0, request.PartSize);
 			byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/offset+octet-stream");
 			var response = await _httpService.HttpPatchBytesAsync(path, byteContent, cancellationToken);
+			byteContent.Dispose();
+
 			var uploadOffsetString = response.ResponseHeaders.GetValues("Upload-Offset")?.FirstOrDefault();
 
 	    int.TryParse(uploadOffsetString, out var uploadOffset);
