@@ -34,32 +34,34 @@ public class UploadResumableVideoService : BaseAsyncApiCaller
 
   public override async Task<HttpResponse<UploadVideoResumableInfo>> ExecuteAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
   {
-    try
-    {
-	    var uri = new Uri(request.UploadUrl);
-			var baseAddress = uri.GetLeftPart(System.UriPartial.Authority);
-			var path = request.UploadUrl.Replace(baseAddress + "/", "");
-			_httpService.SetBaseUri(ServiceConstants.VIMEO_HTTP_ACCEPT, new Uri(baseAddress));
+	  var byteContent = new ByteArrayContent(request.FilePartData, 0, request.PartSize);
 
-			_httpService.AddHeader("Tus-Resumable", "1.0.0");
-			_httpService.AddHeader("Upload-Offset", request.UploadOffset.ToString());
+		try
+	  {
+		  var uri = new Uri(request.UploadUrl);
+		  var baseAddress = uri.GetLeftPart(System.UriPartial.Authority);
+		  var path = request.UploadUrl.Replace(baseAddress + "/", "");
+		  _httpService.SetBaseUri(ServiceConstants.VIMEO_HTTP_ACCEPT, new Uri(baseAddress));
 
-			var byteContent = new ByteArrayContent(request.FilePartData, 0, request.PartSize);
-			byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/offset+octet-stream");
-			var response = await _httpService.HttpPatchBytesAsync(path, byteContent, cancellationToken);
-			byteContent.Dispose();
+		  _httpService.AddHeader("Tus-Resumable", "1.0.0");
+		  _httpService.AddHeader("Upload-Offset", request.UploadOffset.ToString());
 
+		  
+		  byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/offset+octet-stream");
+		  var response = await _httpService.HttpPatchBytesAsync(path, byteContent, cancellationToken);
+		  byteContent.Dispose();
 			var uploadOffsetString = response.ResponseHeaders.GetValues("Upload-Offset")?.FirstOrDefault();
 
-	    int.TryParse(uploadOffsetString, out var uploadOffset);
-	    request.UploadOffset = uploadOffset;
+		  int.TryParse(uploadOffsetString, out var uploadOffset);
+		  request.UploadOffset = uploadOffset;
 
-			return new HttpResponse<UploadVideoResumableInfo>(request, HttpStatusCode.OK);
-    }
-    catch (Exception exception)
-    {
-      _logger.LogError(exception);
-      return HttpResponse<UploadVideoResumableInfo>.FromException(exception.Message);
-    }
+		  return new HttpResponse<UploadVideoResumableInfo>(request, HttpStatusCode.OK);
+	  }
+	  catch (Exception exception)
+	  {
+		  byteContent.Dispose();
+			_logger.LogError(exception);
+		  return HttpResponse<UploadVideoResumableInfo>.FromException(exception.Message);
+	  }
   }
 }
