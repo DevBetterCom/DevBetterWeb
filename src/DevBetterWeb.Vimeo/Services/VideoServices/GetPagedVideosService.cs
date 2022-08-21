@@ -29,17 +29,9 @@ public class GetPagedVideosService : BaseAsyncApiCaller
   public override async Task<HttpResponse<DataPaged<Video>>> ExecuteAsync(GetAllVideosRequest request,
     CancellationToken cancellationToken = default)
   {
-    var uri = string.Empty;
-    if (string.IsNullOrEmpty(request.UserId))
-    {
-      uri = $"videos";
-    }
-    else
-    {
-	    uri = request.UserId.ToLower().Equals(ServiceConstants.ME) ? $"{request.UserId}/videos" : $"users/{request.UserId}/videos";
-    }
+    var uri = string.IsNullOrEmpty(request.UserId) ? "videos" : request.UserId.ToLower().Equals(ServiceConstants.ME) ? $"{request.UserId}/videos" : $"users/{request.UserId}/videos";
 
-    try
+		try
     {
       var query = new Dictionary<string, string>();
 
