@@ -55,7 +55,7 @@ public class UploadVideoSubtitleService : BaseAsyncApiCaller
       var getUploadLinkTextTrackResponse = await _getUploadLinkTextTrackService.ExecuteAsync(getUploadLinkTextTrackRequest, cancellationToken);
       if (getUploadLinkTextTrackResponse!.Code != HttpStatusCode.OK && getUploadLinkTextTrackResponse!.Code != HttpStatusCode.Created)
       {
-        return new HttpResponse<bool>(false, getUploadLinkTextTrackResponse.Code);
+        return new HttpResponse<bool>(false, getUploadLinkTextTrackResponse!.Code);
       }
 
       var uploadTextTrackFileRequest = new UploadTextTrackFileRequest(getUploadLinkTextTrackResponse?.Data?.Link, request.SubtitleFile);
