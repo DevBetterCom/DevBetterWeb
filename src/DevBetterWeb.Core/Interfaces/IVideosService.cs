@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Interfaces;
 
 public interface IVideosService
 { 
-  Task UpdateVideosThumbnail(AppendOnlyStringList? messages);
+  Task UpdateVideosThumbnail(AppendOnlyStringList? messages, CancellationToken cancellationToken = default);
+  Task UpdateVideosCache(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromVimeo(AppendOnlyStringList? messages);
+  Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, CancellationToken cancellationToken = default);
+  Task<ArchiveVideo?> UpdateVideoThumbnailsAsync(long videoId, CancellationToken cancellationToken = default);
 }

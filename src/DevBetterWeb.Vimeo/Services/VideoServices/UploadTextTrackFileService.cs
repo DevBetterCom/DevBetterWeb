@@ -27,7 +27,7 @@ public class UploadTextTrackFileService : BaseAsyncApiCaller
     try
     {
       _httpService.ResetBaseUri();
-      var response = await _httpService.HttpPutBytesWithoutResponseAsync(uri, request.FileData);
+      var response = await _httpService.HttpPutBytesWithoutResponseAsync(uri, request.FileData, cancellationToken);
       _httpService.ResetHttp(ServiceConstants.VIMEO_URI);
 
       if (!response)

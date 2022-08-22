@@ -25,7 +25,7 @@ public class AddDomainToVideoService : BaseAsyncApiCaller
     var uri = $"videos/{request.VideoId}/privacy/domains/{request.Domain}";
     try
     {
-      var response = await _httpService.HttpPutBytesAsync(uri, null);
+      var response = await _httpService.HttpPutBytesAsync(uri, null, cancellationToken);
 
       return response;
     }

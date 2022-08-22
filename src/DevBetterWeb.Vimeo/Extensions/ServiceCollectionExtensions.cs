@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
     services.AddScoped<CompleteUploadByCompleteUriService>();
     services.AddScoped<CompleteUploadService>();
     services.AddScoped<DeleteVideoService>();
+    services.AddScoped<GetPagedVideosService>();
     services.AddScoped<GetAllVideosService>();
     services.AddScoped<GetAttemptService>();
     services.AddScoped<GetOEmbedVideoService>();
@@ -43,14 +44,16 @@ public static class ServiceCollectionExtensions
     services.AddScoped<ActiveTextTrackService>();
     services.AddScoped<GetUploadLinkTextTrackService>();
     services.AddScoped<UploadTextTrackFileService>();
-    services.AddScoped<UploadSubtitleToVideoService>();
+    services.AddScoped<UploadVideoSubtitleService>();
     services.AddScoped<GetAllTextTracksService>();
     services.AddScoped<CreateAnimatedThumbnailsService>();
     services.AddScoped<GetAnimatedThumbnailService>();
     services.AddScoped<GetAllAnimatedThumbnailService>();
     services.AddScoped<GetStatusAnimatedThumbnailService>();
     services.AddScoped<AddAnimatedThumbnailsToVideoService>();
-    services.AddScoped<ISleepService, SleepService>();
+    services.AddScoped<UploadResumableVideoService>();
+    services.AddScoped<UploadResumableCreateVideoLinkService>();
+		services.AddScoped<ISleepService, SleepService>();
 
     return services;
   }

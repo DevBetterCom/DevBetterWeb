@@ -27,7 +27,7 @@ public class GetAllTextTracksService : BaseAsyncApiCaller
     var uri = $"videos/{videoId}/texttracks";
     try
     {
-      var response = await _httpService.HttpGetAsync<GetAllTextTracksResponse>(uri);
+      var response = await _httpService.HttpGetAsync<GetAllTextTracksResponse>(uri, cancellationToken);
 
       return response;
     }

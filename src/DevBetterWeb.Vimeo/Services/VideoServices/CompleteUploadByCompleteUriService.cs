@@ -24,7 +24,7 @@ public class CompleteUploadByCompleteUriService : BaseAsyncApiCaller
   {
     try
     {
-      var response = await _httpService.HttpDeleteAsync(request.CompleteUri);
+      var response = await _httpService.HttpDeleteAsync(request.CompleteUri, cancellationToken);
 
       return HttpResponse<long>.FromHttpResponseMessage(ParseVideoId(response), response.Code);
     }

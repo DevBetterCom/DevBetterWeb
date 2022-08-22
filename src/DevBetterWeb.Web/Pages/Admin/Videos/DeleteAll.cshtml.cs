@@ -17,14 +17,14 @@ namespace DevBetterWeb.Web.Pages.Admin.Videos;
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class DeleteAllModel : PageModel
 {
-  private readonly GetAllVideosService _getAllVideosService;
+  private readonly GetPagedVideosService _getPagedVideosService;
   private readonly GetVideoService _getVideoService;
   private readonly DeleteVideoService _deleteVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
 
-  public DeleteAllModel(GetAllVideosService getAllVideosService, GetVideoService getVideoService, DeleteVideoService deleteVideoService, IRepository<ArchiveVideo> repository)
+  public DeleteAllModel(GetPagedVideosService getPagedVideosService, GetVideoService getVideoService, DeleteVideoService deleteVideoService, IRepository<ArchiveVideo> repository)
   {
-    _getAllVideosService = getAllVideosService;
+    _getPagedVideosService = getPagedVideosService;
     _getVideoService = getVideoService;
 
     _deleteVideoService = deleteVideoService;
@@ -38,13 +38,13 @@ public class DeleteAllModel : PageModel
 
   public async Task<IActionResult> OnPostAsync()
   {
-    await deleteAllVimeoVideosAsync();
-    await deleteAllArchiveVideosAsync();
+    await DeleteAllVimeoVideosAsync();
+    await DeleteAllArchiveVideosAsync();
 
     return RedirectToPage("./Index");
   }
 
-  private async Task deleteAllVimeoVideosAsync()
+  private async Task DeleteAllVimeoVideosAsync()
   {
     HttpResponse<DataPaged<Video>> allVideos;
     var videosToDelete = new List<Video>();
@@ -52,7 +52,7 @@ public class DeleteAllModel : PageModel
     do
     {
       var getAllRequest = new GetAllVideosRequest(ServiceConstants.ME, pageNumber);
-      allVideos = await _getAllVideosService.ExecuteAsync(getAllRequest);
+      allVideos = await _getPagedVideosService.ExecuteAsync(getAllRequest);
       if (allVideos != null && allVideos.Data != null)
       {
         videosToDelete.AddRange(allVideos.Data.Data);
@@ -66,7 +66,7 @@ public class DeleteAllModel : PageModel
     }
   }
 
-  private async Task deleteAllArchiveVideosAsync()
+  private async Task DeleteAllArchiveVideosAsync()
   {
     var archiveVideos = await _repository.ListAsync();
     if (archiveVideos != null)

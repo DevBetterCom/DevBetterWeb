@@ -31,7 +31,7 @@ public class GetUploadLinkTextTrackService : BaseAsyncApiCaller
       texttack.Language = request.Language;
       texttack.Type = request.Type;
 
-      var response = await _httpService.HttpPostAsync<GetUploadLinkTextTrackResponse>(uri, texttack);
+      var response = await _httpService.HttpPostAsync<GetUploadLinkTextTrackResponse>(uri, texttack, cancellationToken);
 
       return response;
     }

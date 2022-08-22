@@ -26,7 +26,7 @@ public class ActiveTextTrackService : BaseAsyncApiCaller
     try
     {
       var activeTextTrack = new ActiveTextTrack(request.Active);
-      var response = await _httpService.HttpPatchWithoutResponseAsync(request.Uri, activeTextTrack);
+      var response = await _httpService.HttpPatchWithoutResponseAsync(request.Uri, activeTextTrack, cancellationToken);
 
       return response;
     }

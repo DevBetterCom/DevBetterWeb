@@ -16,4 +16,7 @@ public class ArchiveVideoDto
   public string? VideoUrl { get; set; }
   public bool IsMemberFavorite { get; set; }
   public int MemberFavoritesCount { get; set; }
+  public bool IsUploaded { get; set; }
+  public bool IsInfoUploaded { get; set; }
+
 }

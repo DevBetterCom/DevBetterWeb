@@ -32,19 +32,18 @@ public class CreateAnimatedThumbnailsService
     _sleepService = sleepService;
   }
 
-  public async Task<AnimatedThumbnailsResponse> ExecuteAsync(long videoId, 
-    CancellationToken cancellationToken = default)
+  public async Task<AnimatedThumbnailsResponse> ExecuteAsync(long videoId, CancellationToken cancellationToken = default)
   {
-    return await CreateAnimatedThumbnails(videoId);
+    return await CreateAnimatedThumbnails(videoId, cancellationToken);
   }
 
-  private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId)
+  private async Task<AnimatedThumbnailsResponse> CreateAnimatedThumbnails(long videoId, CancellationToken cancellationToken = default)
   {
     Video video = new Video();
     while (video.Status != "available")
     {
       _sleepService.Sleep(20 * 1000);
-      var response = await _getVideoService.ExecuteAsync(videoId.ToString());
+      var response = await _getVideoService.ExecuteAsync(videoId.ToString(), cancellationToken);
       if (response?.Data == null)
       {
         _logger.LogError($"Video does not exist on vimeo!");
@@ -57,7 +56,7 @@ public class CreateAnimatedThumbnailsService
 
     var startAnimation = GetRandomStart(video.Duration > 6 ? video.Duration : 0);
     var addAnimatedThumbnailsToVideoRequest = new AddAnimatedThumbnailsToVideoRequest(videoId, startAnimation, video.Duration >= 6 ? 6 : video.Duration);
-    var addAnimatedThumbnailsToVideoResult = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(addAnimatedThumbnailsToVideoRequest);
+    var addAnimatedThumbnailsToVideoResult = await _addAnimatedThumbnailsToVideoService.ExecuteAsync(addAnimatedThumbnailsToVideoRequest, cancellationToken);
     var pictureId = addAnimatedThumbnailsToVideoResult?.Data?.PictureId;
     if (string.IsNullOrEmpty(pictureId))
     {
@@ -72,7 +71,7 @@ public class CreateAnimatedThumbnailsService
     var getStatusAnimatedThumbnailRequest = new GetAnimatedThumbnailRequest(videoId, pictureId);
     while (statusAnimatedThumbnails != "completed")
     {
-      var statusResult = await _getStatusAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
+      var statusResult = await _getStatusAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest, cancellationToken);
       if (statusResult.Code == System.Net.HttpStatusCode.InternalServerError || statusResult.Code == System.Net.HttpStatusCode.Unauthorized || statusResult.Code == System.Net.HttpStatusCode.NotFound)
       {
         statusAnimatedThumbnails = string.Empty;
@@ -84,7 +83,7 @@ public class CreateAnimatedThumbnailsService
 
       _sleepService.Sleep(5 * 1000);
     }
-    var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest);
+    var getAnimatedThumbnailResult = await _getAnimatedThumbnailService.ExecuteAsync(getStatusAnimatedThumbnailRequest, cancellationToken);
 
     _logger.LogInformation($"Creating Animated Thumbnails Done!");
 
