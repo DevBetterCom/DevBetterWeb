@@ -63,6 +63,7 @@ public class Member : BaseEntity, IAggregateRoot
   public int BooksRank { get; private set; }
 
   public List<Book> BooksRead { get; set; } = new List<Book>();
+  public List<Book> UploadedBooks { get; set; } = new List<Book>();
   public List<MemberVideoProgress> MemberVideosProgress { get; set; } = new List<MemberVideoProgress>();
   public List<VideoComment> VideosComments { get; set; } = new List<VideoComment>();
   public List<Question> Questions { get; set; } = new List<Question>();
@@ -298,7 +299,17 @@ public class Member : BaseEntity, IAggregateRoot
     }
   }
 
-  public void RemoveBookRead(Book book)
+	public void AddBookForAdd(Book book)
+	{
+		if (!UploadedBooks!.Any())
+		{
+			UploadedBooks.Add(book);
+			var newBookAddedEvent = new MemberAddedBookAddEvent(this, book);
+			Events.Add(newBookAddedEvent);
+		}
+	}
+
+	public void RemoveBookRead(Book book)
   {
     if (BooksRead!.Any(b => b.Id == book.Id))
     {
@@ -471,4 +482,9 @@ public class Member : BaseEntity, IAggregateRoot
   {
     return new Member(userId, firstName, lastName);
   }
+
+	public override string ToString()
+	{
+		return $"{FirstName} {LastName}";
+	}
 }
