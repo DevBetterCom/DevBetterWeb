@@ -92,7 +92,7 @@
               <td>
                 <a asp-page="BookDetails" asp-route-bookId="@book.Id"> @book.TitleWithAuthor</a>
               </td>
-              <td>@(book.MemberWhoUploaded)</td>
+              <td><a href="/User/Details/@book.MemberWhoUploadedUserId">@book.MemberWhoUploaded</a></td>
               <td>
                 <a href="@book.PurchaseUrl" target="_blank"><i class="fas fa-shopping-cart"></i></a>
               </td>
