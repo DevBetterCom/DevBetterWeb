@@ -12,5 +12,6 @@ public class BookDto
 	public int BookCategoryId { get; set; }
 	public string? CategoryTitle { get; set; }
 	public string? MemberWhoUploaded { get; set; }
+	public string? MemberWhoUploadedUserId { get; set; }
 	public int MembersWhoHaveReadCount { get; set; }
 }
