@@ -19,11 +19,13 @@ public class AddVideoInfo : EndpointBaseAsync
 {
 	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly IMapper _mapper;
+	private readonly IVideosService _videosService;
 
-	public AddVideoInfo(IRepository<ArchiveVideo> repository, IMapper mapper)
+	public AddVideoInfo(IRepository<ArchiveVideo> repository, IMapper mapper, IVideosService videosService)
 	{
 		_repository = repository;
 		_mapper = mapper;
+		_videosService = videosService;
 	}
 
 	[HttpPost("videos/add-video-info")]
@@ -31,26 +33,7 @@ public class AddVideoInfo : EndpointBaseAsync
 	{
 		var archiveVideo = _mapper.Map<ArchiveVideo>(request);
 
-		var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
-		var existVideo = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-		if (existVideo == null)
-		{
-			var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-			archiveVideo.Events.Add(videoAddedEvent);
-			_ = await _repository.AddAsync(archiveVideo, cancellationToken);
-		}
-		else
-		{
-			existVideo.Description = archiveVideo.Description;
-			existVideo.Title = archiveVideo.Title;
-			existVideo.Duration = archiveVideo.Duration;
-			if (!string.IsNullOrEmpty(archiveVideo.AnimatedThumbnailUri))
-			{
-				existVideo.AnimatedThumbnailUri = archiveVideo.AnimatedThumbnailUri;
-			}
-
-			await _repository.UpdateAsync(existVideo, cancellationToken);
-		}
+		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
 
 		return Ok(request);
 	}

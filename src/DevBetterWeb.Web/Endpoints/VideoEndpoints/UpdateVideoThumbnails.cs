@@ -1,13 +1,8 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using AutoMapper;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
@@ -19,57 +14,25 @@ public class UpdateVideoThumbnails : EndpointBaseAsync
 	.WithRequest<long>
 	.WithResult<ActionResult<ArchiveVideoDto>>
 {
-	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly IMapper _mapper;
-	private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
-	private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
-	private readonly GetVideoService _getVideoService;
+	private readonly IVideosService _videosService;
 
-	public UpdateVideoThumbnails(IRepository<ArchiveVideo> repository, IMapper mapper, CreateAnimatedThumbnailsService createAnimatedThumbnailsService,
-		GetAllAnimatedThumbnailService getAllAnimatedThumbnailService, GetVideoService getVideoService)
+	public UpdateVideoThumbnails(IMapper mapper, IVideosService videosService)
 	{
-		_repository = repository;
 		_mapper = mapper;
-		_createAnimatedThumbnailsService = createAnimatedThumbnailsService;
-		_getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
-		_getVideoService = getVideoService;
+		_videosService = videosService;
 	}
 
 	[HttpGet("videos/update-video-thumbnails/{videoId}")]
 	public override async Task<ActionResult<ArchiveVideoDto>> HandleAsync(long videoId, CancellationToken cancellationToken = default)
 	{
-		var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
-		var existVideo = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-		if (existVideo == null)
+		var response = await _videosService.UpdateVideoThumbnailsAsync(videoId, cancellationToken);
+		if (response == null)
 		{
 			return NotFound();
 		}
 
-		var response = await _getVideoService.ExecuteAsync(videoId.ToString(), cancellationToken);
-		if (response?.Data == null)
-		{
-			return NotFound("Video Not Found!");
-		}
-
-		var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null), cancellationToken);
-		if (existThumbsResponse.Data.Total <= 0)
-		{
-			var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId, cancellationToken);
-			if (getAnimatedThumbnailResult == null)
-			{
-				return NotFound();
-			}
-			existVideo.AnimatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
-		}
-		else
-		{
-			existVideo.AnimatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
-		}
-
-
-		await _repository.UpdateAsync(existVideo, cancellationToken);
-		var updatedVideo = _mapper.Map<ArchiveVideoDto>(existVideo);
-
+		var updatedVideo = _mapper.Map<ArchiveVideoDto>(response);
 		return Ok(updatedVideo);
 	}
 }

@@ -25,7 +25,7 @@ public class AddSubtitleToVideoService : BaseAsyncApiCaller
     var uri = $"videos/{request.VideoId}/animated_thumbsets";
     try
     {
-      var response = await _httpService.HttpPostAsync<AnimatedThumbnailsResponse>(uri, request);
+      var response = await _httpService.HttpPostAsync<AnimatedThumbnailsResponse>(uri, request, cancellationToken);
 
       return response;
     }
