@@ -7,8 +7,10 @@ public sealed class BookCategoriesSpec : Specification<BookCategory>
 {
   public BookCategoriesSpec()
   {
-	  Query
-		  .Include(bookCategory => bookCategory.Books!)
-				.ThenInclude(book => book.MembersWhoHaveRead);
+		Query
+			.Include(bookCategory => bookCategory.Books!)
+				.ThenInclude(book => book.MembersWhoHaveRead)
+			.Include(bookCategory => bookCategory.Books!)
+				.ThenInclude(book => book.MemberWhoUpload);
   }
 }

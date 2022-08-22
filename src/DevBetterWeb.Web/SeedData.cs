@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -13,6 +14,7 @@ public static class SeedData
 	{
 		PopulateBookCategoriesInitData(dbContext);
 		PopulateMembersInitData(dbContext, userManager);
+		PopulateBookUploaderMemberInitData(dbContext, userManager);
 	}
 
 	public static void PopulateTestData(AppDbContext dbContext,
@@ -104,6 +106,23 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 		  member.UpdateEmail(user.Email);
 		  dbContext.Members!.Update(member);
 	  }
+
+	  dbContext.SaveChanges();
+  }
+	
+	private static void PopulateBookUploaderMemberInitData(AppDbContext dbContext, UserManager<ApplicationUser> userManager)
+  {
+	  if (!dbContext.Books!.Any()) return;
+
+	  var adminMember = dbContext.Members!.FirstOrDefault(member => !string.IsNullOrEmpty(member.DiscordUsername) && member.DiscordUsername!.Contains("9871"));
+		if (adminMember == null) return;	
+
+	  var books = dbContext.Books!.Where(b => b.MemberWhoUploadId == null).ToList();
+		foreach(var book in books)
+		{
+			book.MemberWhoUploadId = adminMember.Id;
+			dbContext.Books!.Update(book);
+		}	  
 
 	  dbContext.SaveChanges();
   }

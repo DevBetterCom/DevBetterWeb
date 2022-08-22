@@ -33,6 +33,7 @@ public class UserProfileViewModel
   public string? PEUsername { get; set; }
   public string? DiscordUsername { get; set; }
   public List<Book> BooksRead { get; set; } = new List<Book>();
+  public List<Book> BooksAdd { get; set; } = new List<Book>();
   public int? AddedBook { get; set; }
   public int? RemovedBook { get; set; }
 
@@ -46,6 +47,7 @@ public class UserProfileViewModel
     FirstName = member.FirstName;
     LastName = member.LastName;
     BooksRead = member.BooksRead!;
+    BooksAdd = member.UploadedBooks!;
 
     string valueToUseIfNull = "none";
 
