@@ -37,5 +37,11 @@ public class BookConfig : IEntityTypeConfiguration<Book>
 	    .WithMany(p => p.Books)
 	    .HasForeignKey(d => d.BookCategoryId)
 	    .OnDelete(DeleteBehavior.ClientSetNull);
+
+		builder
+			.HasOne(t => t.MemberWhoUpload)
+			.WithMany(p => p.UploadedBooks)
+			.HasForeignKey(d => d.MemberWhoUploadId)
+			.OnDelete(DeleteBehavior.ClientSetNull);
 	}
 }
