@@ -4,7 +4,7 @@
 
 # DevBetterWeb
 
-A simple web application for devBetter.com.
+A web application for devBetter.com, a developer coaching program web site and application.
 
 ## What is devBetter?
 
