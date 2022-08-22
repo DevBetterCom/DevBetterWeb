@@ -26,7 +26,7 @@ public class UpdateVideoDetailsService : BaseAsyncApiCaller
     var uri = $"videos/{request.VideoId}";
     try
     {
-      var response = await _httpService.HttpPatchWithoutResponseAsync(uri, request.Video);
+      var response = await _httpService.HttpPatchWithoutResponseAsync(uri, request.Video, cancellationToken);
 
       return response;
     }

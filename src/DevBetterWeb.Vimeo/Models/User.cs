@@ -50,9 +50,6 @@ public class User
   [JsonPropertyName("pictures")]
   public Pictures Pictures { get; set; }
 
-  [JsonPropertyName("preferences")]
-  public Preferences Preferences { get; set; }
-
   [JsonPropertyName("resource_key")]
   public string ResourceKey { get; set; }
 

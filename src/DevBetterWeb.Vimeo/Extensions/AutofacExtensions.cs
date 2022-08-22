@@ -35,6 +35,7 @@ public class AutofacExtensions
     builder.RegisterType<CompleteUploadByCompleteUriService>();
     builder.RegisterType<CompleteUploadService>();
     builder.RegisterType<DeleteVideoService>();
+    builder.RegisterType<GetPagedVideosService>();
     builder.RegisterType<GetAllVideosService>();
     builder.RegisterType<GetAttemptService>();
     builder.RegisterType<GetOEmbedVideoService>();
@@ -45,13 +46,15 @@ public class AutofacExtensions
     builder.RegisterType<ActiveTextTrackService>();
     builder.RegisterType<GetUploadLinkTextTrackService>();
     builder.RegisterType<UploadTextTrackFileService>();
-    builder.RegisterType<UploadSubtitleToVideoService>();
+    builder.RegisterType<UploadVideoSubtitleService>();
     builder.RegisterType<GetAllTextTracksService>();
     builder.RegisterType<CreateAnimatedThumbnailsService>();
     builder.RegisterType<GetAnimatedThumbnailService>();
     builder.RegisterType<GetAllAnimatedThumbnailService>();
     builder.RegisterType<GetStatusAnimatedThumbnailService>();
     builder.RegisterType<AddAnimatedThumbnailsToVideoService>();
-    builder.RegisterType<SleepService>().As<ISleepService>();
+    builder.RegisterType<UploadResumableVideoService>();
+    builder.RegisterType<UploadResumableCreateVideoLinkService>();
+		builder.RegisterType<SleepService>().As<ISleepService>();
   }
 }

@@ -6,22 +6,22 @@ using Xunit;
 
 namespace DevBetterWeb.Vimeo.Tests;
 
-public class GetAllVideosTest
+public class GetPagedVideosTest
 {
-  private readonly GetAllVideosService _getAllVideosService;
+  private readonly GetPagedVideosService _getPagedVideosService;
 
-  public GetAllVideosTest()
+  public GetPagedVideosTest()
   {
     var httpService = HttpServiceBuilder.Build();
-    _getAllVideosService = GetAllVideosServiceBuilder.Build(httpService);
+		_getPagedVideosService = GetPagedVideosServiceBuilder.Build(httpService);
   }
 
   [Fact]
-  public async Task ReturnsAllVideosTest()
+  public async Task ReturnsPagedVideosTest()
   {
     var request = new GetAllVideosRequest("me");
-    var response = await _getAllVideosService
-      .ExecuteAsync(request);
+    var response = await _getPagedVideosService
+			.ExecuteAsync(request);
 
     response.Code.ShouldBe(System.Net.HttpStatusCode.OK);
     response.Data.Data.Count.ShouldBeGreaterThan(0);

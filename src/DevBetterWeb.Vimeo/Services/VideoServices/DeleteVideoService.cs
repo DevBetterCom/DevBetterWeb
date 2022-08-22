@@ -26,7 +26,7 @@ public class DeleteVideoService : BaseAsyncApiCaller
     var uri = $"videos/{videoId}";
     try
     {
-      var response = await _httpService.HttpDeleteAsync(uri);
+      var response = await _httpService.HttpDeleteAsync(uri, cancellationToken);
 
       return HttpResponse.FromHttpResponseMessage(response.Code);
     }

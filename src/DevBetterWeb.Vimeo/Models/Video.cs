@@ -157,8 +157,14 @@ public class Video
 
     return this;
   }
+  public Video SetVideoUrl(string url)
+  {
+	  Link = url;
 
-  public Video SetDescription(string description)
+	  return this;
+  }
+
+	public Video SetDescription(string description)
   {
     Description = description;
 

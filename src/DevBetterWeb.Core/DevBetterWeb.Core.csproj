@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 

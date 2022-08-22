@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Constants;
-using DevBetterWeb.Vimeo.Extensions;
 using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 
@@ -12,53 +11,33 @@ namespace DevBetterWeb.Vimeo.Services.VideoServices;
 
 public class GetAllVideosService : BaseAsyncApiCaller
   .WithRequest<GetAllVideosRequest>
-  .WithResponse<DataPaged<Video>>
+  .WithResponse<List<Video>>
 {
-  private readonly HttpService _httpService;
-  private readonly ILogger<GetAllVideosService> _logger;
+	private readonly ILogger<GetAllVideosService> _logger;
+  private readonly GetPagedVideosService _getPagedVideosService;
 
-  public GetAllVideosService(HttpService httpService,
-    ILogger<GetAllVideosService> logger)
+  public GetAllVideosService(ILogger<GetAllVideosService> logger, GetPagedVideosService getPagedVideosService)
   {
-    _httpService = httpService;
-    _logger = logger;
+	  _logger = logger;
+    _getPagedVideosService = getPagedVideosService;
   }
 
-  public override async Task<HttpResponse<DataPaged<Video>>> ExecuteAsync(GetAllVideosRequest request,
-    CancellationToken cancellationToken = default)
+  public override async Task<HttpResponse<List<Video>>> ExecuteAsync(GetAllVideosRequest request, CancellationToken cancellationToken = default)
   {
-    var uri = string.Empty;
-    if (string.IsNullOrEmpty(request.UserId))
-    {
-      uri = $"videos";
-    }
-    else
-    {
-      if (request.UserId.ToLower().Equals(ServiceConstants.ME))
-      {
-        uri = $"{request.UserId}/videos";
-      }
-      else
-      {
-        uri = $"users/{request.UserId}/videos";
-      }
-    }
+	  HttpResponse<DataPaged<Video>> allVideos;
+	  var videosResult = new List<Video>();
+	  var pageNumber = 1;
+	  do
+	  {
+		  var getAllRequest = new GetAllVideosRequest(ServiceConstants.ME, pageNumber);
+		  allVideos = await _getPagedVideosService.ExecuteAsync(getAllRequest, cancellationToken);
+		  if (allVideos != null && allVideos.Data != null)
+		  {
+			  videosResult.AddRange(allVideos.Data.Data);
+		  }
+		  pageNumber++;
+	  } while (allVideos != null && allVideos.Data != null);
 
-    try
-    {
-      var query = new Dictionary<string, string>();
-
-      query.AddIfNotNull("page", request.Page?.ToString());
-      query.AddIfNotNull("per_page", request.PageSize?.ToString());
-
-      var response = await _httpService.HttpGetAsync<DataPaged<Video>>($"{uri}", query);
-
-      return response;
-    }
-    catch (Exception exception)
-    {
-      _logger.LogError(exception);
-      return HttpResponse<DataPaged<Video>>.FromException(exception.Message);
-    }
+	  return new HttpResponse<List<Video>>(videosResult, HttpStatusCode.OK);
   }
 }

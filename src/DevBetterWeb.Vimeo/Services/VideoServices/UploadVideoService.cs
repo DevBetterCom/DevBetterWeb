@@ -42,7 +42,7 @@ public class UploadVideoService : BaseAsyncApiCaller
       var getStreamingTicketResponse = await _getStreamingTicketService.ExecuteAsync(cancellationToken);
       if (getStreamingTicketResponse?.Data == null)
       {
-        return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
+        return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse!.Code);
       }
 
       var uploadTicket = getStreamingTicketResponse.Data;
@@ -56,8 +56,7 @@ public class UploadVideoService : BaseAsyncApiCaller
       {
         return HttpResponse<long>.FromHttpResponseMessage(0, getStreamingTicketResponse.Code);
       }
-      var completeUploadRequest = new CompleteUploadRequest();
-      completeUploadRequest.CompleteUri = uploadTicket.CompleteUri;
+      var completeUploadRequest = new CompleteUploadRequest(uploadTicket.CompleteUri);
       var completeUploadResponse = await _completeUploadService.ExecuteAsync(completeUploadRequest, cancellationToken);
       if (completeUploadResponse.Data == 0)
       {
@@ -67,7 +66,7 @@ public class UploadVideoService : BaseAsyncApiCaller
       await _updateVideoDetailsService.ExecuteAsync(new UpdateVideoDetailsRequest(completeUploadResponse.Data, request.Video), cancellationToken);
 
       var addDomainRequest = new AddDomainToVideoRequest(completeUploadResponse.Data, request.AllowedDomain);
-      await _addDomainToVideoService.ExecuteAsync(addDomainRequest);
+      await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
 
       return HttpResponse<long>.FromHttpResponseMessage(completeUploadResponse.Data, completeUploadResponse.Code);
     }
