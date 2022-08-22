@@ -17,7 +17,9 @@ public class BookProfile : Profile
 	    .ForPath(dest => dest.TitleWithAuthor,
 		    opt => opt.MapFrom(source => source.ToString()))
 			.ForPath(dest => dest.MemberWhoUploaded,
-				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()));
+				opt => opt.MapFrom(source => source.MemberWhoUpload!.ToString()))
+					.ForPath(dest => dest.MemberWhoUploadedUserId,
+						opt => opt.MapFrom(source => source.MemberWhoUpload!.UserId));
 
 		CreateMap<Book, BookViewModel>()
 			.ForPath(dest => dest.MemberWhoUploaded,

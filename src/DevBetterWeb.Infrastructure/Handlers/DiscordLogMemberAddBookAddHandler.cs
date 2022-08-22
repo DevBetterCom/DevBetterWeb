@@ -16,8 +16,8 @@ public class DiscordLogMemberAddBookAddHandler : IHandle<MemberAddedBookAddEvent
 
   public static string returnWebhookMessageString(MemberAddedBookAddEvent domainEvent)
   {
-    return $"User {domainEvent.Member.FirstName} {domainEvent.Member.LastName} just finished adding {domainEvent.Book.Title}! " +
-        $"Check out the leaderboard here: https://devbetter.com/Leaderboard.";
+    return $"User {domainEvent.Member.FirstName} {domainEvent.Member.LastName} just added {domainEvent.Book.Title} to our book list!" +
+        "Check out the leaderboard here: https://devbetter.com/Leaderboard.";
   }
 
   public Task Handle(MemberAddedBookAddEvent domainEvent)
