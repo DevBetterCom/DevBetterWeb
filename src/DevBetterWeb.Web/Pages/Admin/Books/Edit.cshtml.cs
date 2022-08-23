@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
@@ -35,7 +36,7 @@ public class EditModel : PageModel
 	}
 
   [BindProperty]
-  public Book? Book { get; set; }
+  public BookDto? Book { get; set; }
 
   public async Task<IActionResult> OnGetAsync(int? id)
   {
@@ -47,11 +48,20 @@ public class EditModel : PageModel
     }
 
 		var spec = new BookByIdWithMembersSpec(id.Value);
-		Book = await _bookRepository.FirstOrDefaultAsync(spec);	
-		if (Book == null)
+		var bookEntity = await _bookRepository.FirstOrDefaultAsync(spec);
+		if (bookEntity == null)
     {
       return NotFound();
     }
+		Book = new BookDto
+		{
+			Author = bookEntity.Author,
+			BookCategoryId = bookEntity.BookCategoryId,
+			Details = bookEntity.Details,
+			MemberWhoUploadId = bookEntity.MemberWhoUploadId,
+			PurchaseUrl = bookEntity.PurchaseUrl,
+			Title = bookEntity.Title
+		};
 
 		MemberWhoUploadId = Book!.MemberWhoUploadId;
 		return Page();
@@ -68,17 +78,17 @@ public class EditModel : PageModel
       return Page();
     }
 
-    if (Book == null) return NotFound();
+		var spec = new BookByIdWithMembersSpec(Book.Id);
+		var bookEntity = await _bookRepository.FirstOrDefaultAsync(spec);
 
-		var bookEntity = new Book
-		{
-			Author = Book.Author,
-			Details = Book.Details,
-			PurchaseUrl = Book.PurchaseUrl,
-			Title = Book.Title,
-			BookCategoryId = Book.BookCategoryId,
-			MemberWhoUploadId = MemberWhoUploadId
-		};
+		if (bookEntity == null) return NotFound();
+
+		bookEntity.Title = Book.Title;
+		bookEntity.BookCategoryId = Book.BookCategoryId;
+		bookEntity.Author = Book.Author;
+		bookEntity.Details = Book.Details;
+		bookEntity.PurchaseUrl = Book.PurchaseUrl;
+
 		await _bookRepository.UpdateAsync(bookEntity);
 
 		try
@@ -105,5 +115,18 @@ public class EditModel : PageModel
 		var spec = new BookByIdWithMembersSpec(id);
 
 		return await _bookRepository.AnyAsync(spec);
-  }
+	}
+
+	public class BookDto
+	{
+		public int Id { get; set; }
+		public string? Title { get; set; }
+		public string? Author { get; set; }
+		public int? MemberWhoUploadId { get; set; }
+		public string? Details { get; set; }
+		public string? PurchaseUrl { get; set; }
+		[Display(Name = "Book Category")]
+		public int? BookCategoryId { get; set; }
+	}
+
 }

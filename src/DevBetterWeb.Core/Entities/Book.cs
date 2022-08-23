@@ -19,6 +19,7 @@ public class Book : BaseEntity, IAggregateRoot
 	public Member? MemberWhoUpload { get; set; }
   public BookCategory? BookCategory { get; set; }
 
+	// TODO: Rank shouldn't be persisted, it should only be calculated when being displayed
   public static void CalcAndSetRank(RankingService<int> rankingService, List<Book> books)
   {
 	  var bookRanks = rankingService.Rank(books.Select(m => m.MembersWhoHaveRead!.Count));
