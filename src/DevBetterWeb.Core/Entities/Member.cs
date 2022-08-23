@@ -307,6 +307,7 @@ public class Member : BaseEntity, IAggregateRoot
 			var newBookAddedEvent = new MemberAddedBookAddEvent(this, book);
 			Events.Add(newBookAddedEvent);
 		}
+		// TODO: throw an exception if somehow someone is trying to add more than one book
 	}
 
 	public void RemoveBookRead(Book book)

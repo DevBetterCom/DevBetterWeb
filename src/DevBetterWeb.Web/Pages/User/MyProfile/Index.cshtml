@@ -75,7 +75,7 @@
         {
             <div class="card">
                 <div class="card-header">
-                    <b>Books You've Add</b>
+                    <b>Books You've Added</b>
                 </div>
                 @if (Model.UserProfileViewModel.BooksAdd.Any())
                 {
@@ -90,13 +90,12 @@
                 }
                 else
                 {
-                    <div class="card-body">You haven't add any books yet. Add one below!</div>
+                    <div class="card-body">You haven't added any books yet. Alumni members can add one book to the devBetter reading list. 
+                        Add one below!</div>
+                    <div class="card-body">
+                        <a class="btn btn-primary nav-item" href="/User/MyProfile/BooksAdd">Add</a>
+                    </div>
                 }
-                <div class="card-body">
-
-                    <a class="btn btn-primary nav-item" href="/User/MyProfile/BooksAdd">Add</a>
-
-                </div>
             </div>
             <br />
         }

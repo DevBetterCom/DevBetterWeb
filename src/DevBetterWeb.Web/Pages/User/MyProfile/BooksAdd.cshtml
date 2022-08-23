@@ -24,14 +24,15 @@
                 }
                 else
                 {
-                <strong>You haven't add any books yet. Time to start adding!</strong>
+                <strong>You haven't added any books yet. Time to start add one!</strong>
                 }
             </div>
 
         </div>
-
     </div>
 
+    @if (!Model.UserBooksAddModel.BooksAdd.Any())
+    {
     <div class="col-5">
         <form method="post" asp-page-handler="add">
             <div class="card">
@@ -39,7 +40,7 @@
                     <b>Add Books</b>
                 </div>
                 <div class="card-body">
-                    <label for="addBooks">Select a book to add.</label>
+                    <label for="addBooks">Add a book with the following details.</label>
 
                     <div class="row">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -54,7 +55,6 @@
                         <div class="form-group" style="width: 100%;">
                             <label asp-for="UserBooksAddModel.AddedBook!.BookCategoryId" class="control-label"></label>
                             <select asp-for="UserBooksAddModel.AddedBook.BookCategoryId" class="form-control" id="bookCategory">
-                                <option value="">None</option>
                                 @foreach (var category in Model.BookCategories)
                                 {
                                     <option value="@category.Id">@category.Title</option>                                
@@ -96,12 +96,10 @@
         </form>
         <br />
     </div>
+    }
 </div>
 
 <br />
 <br />
 
 <a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
-
-
-
