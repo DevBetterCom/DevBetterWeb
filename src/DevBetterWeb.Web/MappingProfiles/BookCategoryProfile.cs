@@ -11,7 +11,7 @@ public class BookCategoryProfile : Profile
   {
     CreateMap<BookCategory, BookCategoryDto>()
 	    .ForPath(dest => dest.Members,
-		    opt => opt.MapFrom(source => source.Books!.SelectMany(book => book.MembersWhoHaveRead!).Distinct().ToList()));
+		    opt => opt.MapFrom(source => source.Books!.Where(b => b.BookCategoryId == source.Id).SelectMany(book => book.MembersWhoHaveRead!).Distinct().ToList()));
 		CreateMap<BookCategoryDto, BookCategory>();
   }
 }
