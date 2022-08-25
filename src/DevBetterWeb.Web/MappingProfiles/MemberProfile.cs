@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Web.Models;
 
