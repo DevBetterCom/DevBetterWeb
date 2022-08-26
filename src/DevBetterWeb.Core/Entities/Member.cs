@@ -273,9 +273,9 @@ public class Member : BaseEntity, IAggregateRoot
     }
   }
 
-  public static void CalcAndSetBooksRank(RankingService<int> rankingService, List<Member> members)
+  public static void CalcAndSetBooksRank(List<Member> members)
   {
-	  var memberRanks = rankingService.Rank(members.Select(m => m.BooksRead!.Count));
+	  var memberRanks = RankingService<int>.Rank(members.Select(m => m.BooksRead!.Count));
 	  members.ForEach(m => m.BooksRank = memberRanks[m.BooksRead!.Count]);
 		members = members.OrderBy(x => x.BooksRank).ToList();
 	}

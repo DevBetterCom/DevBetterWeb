@@ -11,14 +11,14 @@ public class BookCategory : BaseEntity, IAggregateRoot
   public string? Title { get; set; }
   public List<Book> Books { get; private set; } = new List<Book>();
 
-  public void CalcAndSetBooksRank(RankingService<int> rankingService)
+  public void CalcAndSetBooksRank()
   {
-		Book.CalcAndSetRank(rankingService, Books);
+		Book.CalcAndSetRank(Books);
   }
 
-  public void CalcAndSetMembersRank(RankingService<int> rankingService)
+  public void CalcAndSetMembersRank()
   {
-	  Member.CalcAndSetBooksRank(rankingService, Books.SelectMany(x => x.MembersWhoHaveRead!).ToList());
+	  Member.CalcAndSetBooksRank(Books.SelectMany(x => x.MembersWhoHaveRead!).ToList());
   }
 
   public void ExcludeMembers(List<int> excludedMembersIds)
@@ -33,27 +33,29 @@ public class BookCategory : BaseEntity, IAggregateRoot
 	{
 		foreach (var book in Books.Where(book => book.MembersWhoHaveRead != null))
 		{
-			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead!.Where(memberWhoHaveRead => !excludedMembersIds.Contains(memberWhoHaveRead.Id)))
+			foreach(var memberWhoHaveRead in book.MembersWhoHaveRead!)
 			{
-				memberWhoHaveRead.SetRoleName(AuthConstants.Roles.MEMBERS);
+				memberWhoHaveRead.SetRoleName(!excludedMembersIds.Contains(memberWhoHaveRead.Id)
+					? AuthConstants.Roles.MEMBERS
+					: AuthConstants.Roles.ALUMNI);
 			}
 		}
 	}
 	
 
-	public static void CalcAndSetCategoriesBooksRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
+	public static void CalcAndSetCategoriesBooksRank(List<BookCategory> bookCategories)
   {
 	  foreach (var bookCategory in bookCategories)
 	  {
-		  bookCategory.CalcAndSetBooksRank(rankingService);
+		  bookCategory.CalcAndSetBooksRank();
 	  }
 	}
 
-  public static void CalcAndSetMemberCategoriesMembersRank(RankingService<int> rankingService, List<BookCategory> bookCategories)
+  public static void CalcAndSetMemberCategoriesMembersRank(List<BookCategory> bookCategories)
   {
 	  foreach (var bookCategory in bookCategories)
 	  {
-		  bookCategory.CalcAndSetMembersRank(rankingService);
+		  bookCategory.CalcAndSetMembersRank();
 	  }
   }
 
