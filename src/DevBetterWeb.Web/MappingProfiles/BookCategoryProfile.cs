@@ -10,11 +10,7 @@ public class BookCategoryProfile : Profile
 {
   public BookCategoryProfile()
   {
-    CreateMap<BookCategory, BookCategoryDto>()
-	    .ForPath(dest => dest.Members,
-		    opt => opt.MapFrom(source => source.Books!.Where(b => b.BookCategoryId == source.Id).SelectMany(book => book.MembersWhoHaveRead!.Where(m => m.RoleName == AuthConstants.Roles.MEMBERS)).Distinct().ToList()))
-	    .ForPath(dest => dest.Alumnus,
-	    opt => opt.MapFrom(source => source.Books!.Where(b => b.BookCategoryId == source.Id).SelectMany(book => book.MembersWhoHaveRead!.Where(m => m.RoleName == AuthConstants.Roles.ALUMNI)).Distinct().ToList()));
-		CreateMap<BookCategoryDto, BookCategory>();
+	  CreateMap<BookCategory, BookCategoryDto>();
+    CreateMap<BookCategoryDto, BookCategory>();
   }
 }
