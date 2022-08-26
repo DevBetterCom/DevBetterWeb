@@ -47,44 +47,100 @@ public class IndexModel : PageModel
   {
 		var spec = new BookCategoriesSpec();
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
-		BookCategory.CalcAndSetCategoriesBooksRank(bookCategoriesEntity);
-		BookCategory.CalcAndSetMemberCategoriesMembersRank(bookCategoriesEntity);
-		BookCategory.AddMembersRole(bookCategoriesEntity, alumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
-		UpdateMembersReadCount();
+
+		UpdateRanksAndReadBooksCountForMember(alumniMembersIds);
 		UpdateMembersReadRank();
+		UpdateBooksRank();
 		OderByRankForMembersAndBooks();
 	}
-
-  private void UpdateMembersReadCount()
+  private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
   {
-	  foreach (var category in BookCategories)
-	  {
-		  foreach (var member in category.Members)
+	  var memberToAdd = new MemberForBookDto
 		  {
-			  member.BooksReadCount = member.BooksRead!.Count(x => x.BookCategoryId == category.Id);
-		  }
-		  foreach (var member in category.Alumnus)
-		  {
-			  member.BooksReadCount = member.BooksRead!.Count(x => x.BookCategoryId == category.Id);
-		  }
+			  Id = memberWhoHaveRead.Id, 
+			  FullName = memberWhoHaveRead.FullName,
+			  BooksReadCount = memberWhoHaveRead.BooksRead!.Count(x => x.BookCategoryId == bookCategory.Id)
+		  };
+
+	  var isAlumni = alumniMembersIds.Contains(memberWhoHaveRead.Id);
+		if (isAlumni)
+		{
+			if (bookCategory.Alumnus.Any(m => m.Id == memberWhoHaveRead.Id))
+			{
+				return;
+			}
+
+			memberToAdd.RoleName = AuthConstants.Roles.ALUMNI;
+			bookCategory.Alumnus.Add(memberToAdd);
+		}
+	  else
+		{
+			if (bookCategory.Members.Any(m => m.Id == memberWhoHaveRead.Id))
+			{
+				return;
+			}
+
+			memberToAdd.RoleName = AuthConstants.Roles.MEMBERS;
+			bookCategory.Members.Add(memberToAdd);
 		}
   }
 
-  private void UpdateMembersReadRank()
+	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, BookDto book, BookCategoryDto bookCategory)
   {
-	  foreach (var category in BookCategories)
+	  foreach (var memberWhoHaveRead in book.MembersWhoHaveRead!)
 	  {
-		  CalcMemberRank(category.Id, category.Members);
-		  CalcMemberRank(category.Id, category.Alumnus);
+		  UpdateRanksAndReadBooksCountForMember(alumniMembersIds, memberWhoHaveRead, bookCategory);
+	  }
+  }
+	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, BookCategoryDto bookCategory)
+  {
+	  foreach (var book in bookCategory.Books!)
+	  {
+			UpdateRanksAndReadBooksCountForMember(alumniMembersIds, book, bookCategory);
 	  }
   }
 
-  private void CalcMemberRank(int? bookCategoryId, List<MemberForBookDto> members)
+	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds)
   {
-	  var memberRanks = RankingService<int>.Rank(members.Select(m => m.BooksRead!.Count(b => bookCategoryId != null && b.BookCategoryId == bookCategoryId)));
-	  members.ForEach(m => m.BooksRank = memberRanks[m.BooksRead!.Count(b => bookCategoryId != null && b.BookCategoryId == bookCategoryId)]);
+	  foreach (var bookCategory in BookCategories)
+	  {
+			UpdateRanksAndReadBooksCountForMember(alumniMembersIds, bookCategory);
+	  }
+  }
+
+	private void UpdateMembersReadRank()
+	{
+		foreach (var category in BookCategories)
+		{
+			CalcMemberRank(category.Members);
+			CalcMemberRank(category.Alumnus);
+		}
 	}
+
+	private void CalcMemberRank(List<MemberForBookDto> members)
+	{
+		var memberRanks = RankingService<int>.Rank(members.Select(m => m.BooksReadCount));
+		foreach (var member in members)
+		{
+			member.BooksRank =
+				memberRanks[member.BooksReadCount];
+		}
+	}
+
+	private void UpdateBooksRank()
+  {
+	  foreach (var category in BookCategories)
+	  {
+		  CalcBookRank(category.Books!);
+	  }
+  }
+
+  private void CalcBookRank(List<BookDto> books)
+  {
+	  var bookRanks = RankingService<int>.Rank(books.Select(m => m.MembersWhoHaveReadCount));
+	  books.ForEach(m => m.Rank = bookRanks[m.MembersWhoHaveReadCount]);
+  }
 
 	private void OderByRankForMembersAndBooks()
 	{
