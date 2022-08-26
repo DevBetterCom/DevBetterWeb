@@ -6,7 +6,7 @@ namespace DevBetterWeb.Core.Services;
 
 public class RankingService<TKey> where TKey : notnull
 {
-  public Dictionary<TKey, int> Rank(IEnumerable<TKey> items)
+  public static Dictionary<TKey, int> Rank(IEnumerable<TKey> items)
   {
     var result = new Dictionary<TKey, int>();
 
