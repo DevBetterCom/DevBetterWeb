@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -23,9 +22,7 @@ public class IndexModel : PageModel
   private readonly IRepository<Member> _memberRepository;
   private readonly IRepository<BookCategory> _bookCategoryRepository;
   private readonly IMapper _mapper;
-  private readonly RankingService<int> _rankingService = new RankingService<int>();
 
-  public List<MemberForBookDto> Alumni { get; set; } = new List<MemberForBookDto>();
   public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
 
   public IndexModel(UserManager<ApplicationUser> userManager,
@@ -41,24 +38,25 @@ public class IndexModel : PageModel
 
   public async Task OnGet()
   {
-		var alumniMembers = await SetAlumniMembersAsync();
-		var excludedAlumniMembersIds = alumniMembers.Select(x => x.Id).ToList();
-		await SetBookCategoriesAsync(excludedAlumniMembersIds);
+		var alumniMembers = await GetAlumniMembersAsync();
+		var alumniMembersIds = alumniMembers.Select(x => x.Id).ToList();
+		await SetBookCategoriesAsync(alumniMembersIds);
   }
 
-  private async Task SetBookCategoriesAsync(List<int> excludedAlumniMembersIds)
+  private async Task SetBookCategoriesAsync(List<int> alumniMembersIds)
   {
 		var spec = new BookCategoriesSpec();
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
-		BookCategory.CalcAndSetCategoriesBooksRank(_rankingService, bookCategoriesEntity);
-		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
-		BookCategory.AddMembersRole(bookCategoriesEntity, excludedAlumniMembersIds);
+		BookCategory.CalcAndSetCategoriesBooksRank(bookCategoriesEntity);
+		BookCategory.CalcAndSetMemberCategoriesMembersRank(bookCategoriesEntity);
+		BookCategory.AddMembersRole(bookCategoriesEntity, alumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
-		UpdateBooksReadCount();
+		UpdateMembersReadCount();
+		UpdateMembersReadRank();
 		OderByRankForMembersAndBooks();
 	}
 
-  private void UpdateBooksReadCount()
+  private void UpdateMembersReadCount()
   {
 	  foreach (var category in BookCategories)
 	  {
@@ -66,8 +64,27 @@ public class IndexModel : PageModel
 		  {
 			  member.BooksReadCount = member.BooksRead!.Count(x => x.BookCategoryId == category.Id);
 		  }
+		  foreach (var member in category.Alumnus)
+		  {
+			  member.BooksReadCount = member.BooksRead!.Count(x => x.BookCategoryId == category.Id);
+		  }
+		}
+  }
+
+  private void UpdateMembersReadRank()
+  {
+	  foreach (var category in BookCategories)
+	  {
+		  CalcMemberRank(category.Id, category.Members);
+		  CalcMemberRank(category.Id, category.Alumnus);
 	  }
   }
+
+  private void CalcMemberRank(int? bookCategoryId, List<MemberForBookDto> members)
+  {
+	  var memberRanks = RankingService<int>.Rank(members.Select(m => m.BooksRead!.Count(b => bookCategoryId != null && b.BookCategoryId == bookCategoryId)));
+	  members.ForEach(m => m.BooksRank = memberRanks[m.BooksRead!.Count(b => bookCategoryId != null && b.BookCategoryId == bookCategoryId)]);
+	}
 
 	private void OderByRankForMembersAndBooks()
 	{
@@ -78,17 +95,13 @@ public class IndexModel : PageModel
 		}
 	}
 
-
-	private async Task<List<Member>> SetAlumniMembersAsync()
+	private async Task<List<Member>> GetAlumniMembersAsync()
   {
 	  var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
 	  var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 
 		var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
 	  var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
-	  Member.CalcAndSetBooksRank(_rankingService, alumniMembers);
-		Member.SetRoleToMembers(alumniMembers, AuthConstants.Roles.ALUMNI);		
-		Alumni = _mapper.Map<List<MemberForBookDto>>(alumniMembers);
 
 	  return alumniMembers;
   }
