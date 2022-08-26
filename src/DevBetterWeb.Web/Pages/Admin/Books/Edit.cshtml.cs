@@ -69,7 +69,7 @@ public class EditModel : PageModel
 
   // To protect from overposting attacks, enable the specific properties you want to bind to.
   // For more details, see https://aka.ms/RazorPagesCRUD.
-  public async Task<IActionResult> OnPostAsync()
+  public async Task<IActionResult> OnPostAsync(int? id)
   {
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(await _bookCategoryRepository.ListAsync());
 
@@ -78,7 +78,7 @@ public class EditModel : PageModel
       return Page();
     }
 
-		var spec = new BookByIdWithMembersSpec(Book.Id);
+		var spec = new BookByIdWithMembersSpec(id.Value);
 		var bookEntity = await _bookRepository.FirstOrDefaultAsync(spec);
 
 		if (bookEntity == null) return NotFound();

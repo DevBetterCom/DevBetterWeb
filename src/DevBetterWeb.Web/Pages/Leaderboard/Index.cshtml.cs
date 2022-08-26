@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -53,8 +54,20 @@ public class IndexModel : PageModel
 		BookCategory.CalcAndSetMemberCategoriesMembersRank(_rankingService, bookCategoriesEntity);
 		BookCategory.AddMembersRole(bookCategoriesEntity, excludedAlumniMembersIds);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
+		UpdateBooksReadCount();
 		OderByRankForMembersAndBooks();
 	}
+
+  private void UpdateBooksReadCount()
+  {
+	  foreach (var category in BookCategories)
+	  {
+		  foreach (var member in category.Members)
+		  {
+			  member.BooksReadCount = member.BooksRead!.Count(x => x.BookCategoryId == category.Id);
+		  }
+	  }
+  }
 
 	private void OderByRankForMembersAndBooks()
 	{
