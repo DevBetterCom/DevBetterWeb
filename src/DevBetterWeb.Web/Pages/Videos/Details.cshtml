@@ -151,44 +151,62 @@
 			if (!iframeElement) {
 				return;
 			}
-      
+
 			var videoId = videoIdElement.innerHTML;
-			if (videoId) {
-				var player = new Vimeo.Player(iframeElement);
-				var videoPlayInterval = setInterval(function() {
-						player.on('timeupdate',
-							function(getAll) {
-								if (getAll.percent == 1) {
-									$.ajax({
-										type: "GET",
-										url: "/videos/watched/" + videoId,
-										success: function(videosResponse) {
-										},
-										error: function(errMsg) {
-											console.log(errMsg);
-											alert(errMsg);
-										}
-									});
-								} else if (getAll.percent < 1) {
-									$.ajax({
-										type: "GET",
-										url: "/videos/inprogress/" + videoId,
-										success: function(videosResponse) {
-										},
-										error: function(errMsg) {
-											console.log(errMsg);
-											alert(errMsg);
-										}
-									});
-								}
-							});
-						player.on('ended',
-							function() {
-								clearInterval(videoPlayInterval);
-							});
-					},
-					1000);
+			if (!videoId) {
+				return;
 			}
+			var player = new Vimeo.Player(iframeElement);
+
+			player.on('play',
+				function() {
+					$.ajax({
+						type: "GET",
+						url: "/videos/inprogress/" + videoId,
+						success: function(videosResponse) {
+						},
+						error: function(errMsg) {
+							console.log(errMsg);
+						}
+					});
+				});
+
+			player.on('timeupdate',
+				function(getAll) {
+					if (getAll.percent >= 1) {
+						$.ajax({
+							type: "GET",
+							url: "/videos/watched/" + videoId,
+							success: function(videosResponse) {
+							},
+							error: function(errMsg) {
+								console.log(errMsg);
+							}
+						});
+					} else if (getAll.percent < 1 && Math.floor(getAll.seconds) % 10 == 0) {
+						$.ajax({
+							type: "GET",
+							url: "/videos/inprogress/" + videoId,
+							success: function(videosResponse) {
+							},
+							error: function(errMsg) {
+								console.log(errMsg);
+							}
+						});
+					}
+				});
+			player.on('ended',
+				function() {
+					$.ajax({
+						type: "GET",
+						url: "/videos/watched/" + videoId,
+						success: function(videosResponse) {
+						},
+						error: function(errMsg) {
+							console.log(errMsg);
+						}
+					});
+				});
 		});
 
 		function saveDescriptionClick() {
