@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
@@ -12,8 +13,7 @@ using DevBetterWeb.Web.Models;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-//TODO: need to add administrator here.
-[UploaderApiAuthorization]
+[UploaderApiOrRoleAuthorization(AuthConstants.Roles.ADMINISTRATORS)]
 public class UploadMd : EndpointBaseAsync
 	.WithRequest<UploadMdRequest>
 	.WithResult<HttpResponse<bool>>
