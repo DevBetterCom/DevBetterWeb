@@ -22,7 +22,7 @@
       padding: 5px 6px 7px 7px;
       font-size: 14px;
       background-color: lightgray;
-      display: block ruby;
+      display: flow-root;
   }
 
   .comment-reply {
@@ -225,8 +225,9 @@
 				$.ajax({
 					type: "POST",
 					url: "/videos/update-description",
-					data: { videoId: videoId, description: description },
+					data: JSON.stringify({ videoId: videoId, description: description }),
 					dataType: "json",
+					contentType: "application/json",
 					success: function(videosResponse) {
 						var elementDescription = document.getElementById('Description');
 						if (elementDescription) {
@@ -339,8 +340,9 @@
 			$.ajax({
 				type: "POST",
 				url: "/videos/upload-subtitle",
-				data: { videoId: videoId, subtitle: subtitleFile, language: language },
+				data: JSON.stringify({ videoId: videoId, subtitle: subtitleFile, language: language }),
 				dataType: "json",
+				contentType: "application/json",
 				success: function() {
 					var videoIframeElement = document.getElementById('videoIframe');
 					if (videoIframeElement) {
@@ -373,8 +375,9 @@
 			$.ajax({
 				type: "POST",
 				url: "/videos/submit-comment-reply",
-				data: { videoId: videoId, commentReplyToSubmit: commentReplyToSubmit },
+				data: JSON.stringify({ videoId: videoId, commentReplyToSubmit: commentReplyToSubmit }),
 				dataType: "json",
+				contentType: "application/json",
 				success: function(response) {
 					location.reload(true);
 				},
