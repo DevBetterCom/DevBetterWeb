@@ -2,344 +2,410 @@
 @model DevBetterWeb.Web.Pages.Videos.DetailsModel
 
 @{
-	ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
+  ViewData["Title"] = @Model!.OEmbedViewModel?.Name;
 }
 
 <style>
-textarea {
-    width:100%;
-    max-width:100%;
-}
-.post-signature {
-	text-align: left;
-	vertical-align: top;
-	width: 100%;
-}
-.user-info {
-	box-sizing: border-box;
-	padding: 5px 6px 7px 7px;
-	font-size: 14px;
-	background-color: lightgray;
-	display: block ruby;
-}
-.comment-reply {
-	padding: 20px 6px 7px 7px;
-}
+  textarea {
+      width: 100%;
+      max-width: 100%;
+  }
+
+  .post-signature {
+      text-align: left;
+      vertical-align: top;
+      width: 100%;
+  }
+
+  .user-info {
+      box-sizing: border-box;
+      padding: 5px 6px 7px 7px;
+      font-size: 14px;
+      background-color: lightgray;
+      display: block ruby;
+  }
+
+  .comment-reply {
+      padding: 20px 6px 7px 7px;
+  }
 </style>
 
 <div class="row">
-    <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
-    <h3>@Model!.OEmbedViewModel?.Name</h3>
-    <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model!.OEmbedViewModel!.VideoId"></i></button><span id="memberFavoritesCount" class="pt-1">(@Model.OEmbedViewModel.MemberFavoritesCount)</span></span>
+  <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
+  <h3>@Model!.OEmbedViewModel?.Name</h3>
+  <span><button onClick=toggleFavorite() class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model!.OEmbedViewModel!.VideoId"></i></button><span id="memberFavoritesCount" class="pt-1">(@Model.OEmbedViewModel.MemberFavoritesCount)</span></span>
 </div>
-    @Html.Raw(@Model!.OEmbedViewModel?.Html)
+@Html.Raw(@Model!.OEmbedViewModel?.Html)
 
-    <div class="row" asp-authorize asp-roles="Administrators">
-        <div class="col-auto">
-            <label class="form-label" for="subtitleFile">Subtitle VTT/SRT File</label>
-        </div>
-        <div class="col-auto">
-            <input type="file" class="form-control" id="subtitleFile"  accept=".vtt,.srt" />
-        </div>
-        <div class="col-auto">
-            <select id="subtiteLanguageSelect" class="form-select" aria-label="Language">
-                <option value="en" selected>English</option>
-            </select>
-        </div>
-        <div class="col-auto">
-            <a id="uploadSubtitleBtn" class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="uploadSubtitleClick()"><i class="fa fa-save"></i> Upload Subtitle</a>
-        </div>
+<div class="row" asp-authorize asp-roles="Administrators">
+  <div class="col-auto">
+    <label class="form-label" for="subtitleFile">Subtitle VTT/SRT File</label>
+  </div>
+  <div class="col-auto">
+    <input type="file" class="form-control" id="subtitleFile" accept=".vtt,.srt" />
+  </div>
+  <div class="col-auto">
+    <select id="subtitleLanguageSelect" class="form-select" aria-label="Language">
+      <option value="en" selected>English</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <a id="uploadSubtitleBtn" class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="uploadSubtitleClick()"><i class="fa fa-save"></i> Upload Subtitle</a>
+  </div>
+</div>
+
+<div class="row">
+  <p asp-authorize asp-roles="Administrators">
+    <textarea id="description" rows="20" cols="100">
+      @Model!.OEmbedViewModel?.Description
+            </textarea>
+  </p>
+</div>
+
+<p asp-authorize asp-roles="Administrators">
+  <a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
+</p>
+
+<br />
+<div class="row">
+  <div class="col-auto">
+    <input type="checkbox" id="isTimestamp" name="isTimestamp" value="false" onclick="changeIsTimestamp()">
+    <label for="isTimestamp"> With Timestamp</label><br>
+  </div>
+  <div class="col-auto">
+    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
+  </div>
+  <div class="col-auto">
+    <button id="copyLinkBtn" type="button" class="btn btn-primary" onclick="createAndCopyLink()">
+      Copy Link
+    </button>
+  </div>
+</div>
+
+<br />
+<h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
+
+<br />
+@foreach (var comment in Model!.OEmbedViewModel!.Comments)
+{
+  <p>@Html.Raw(@comment!.MdBody)</p>
+  <div class="post-signature">
+    <div class="user-info">
+      <span style="float: left;">@comment!.MemberName</span>
+      <span style="float: right;">@comment!.CreatedAt</span>
     </div>
+  </div>
+  <br />
+}
+<div class="comment-reply">
+  <textarea id="commentReplyToSubmit" rows="5" cols="100"></textarea>
+  <button type="button" onclick="submitReply()">
+    <i class="fas fa-reply"></i>
+  </button>
+</div>
 
-    <div class="row">
-        <p asp-authorize asp-roles="Administrators">
-            <textarea id="description" rows="20" cols="100">
-                @Model!.OEmbedViewModel?.Description
-            </textarea>	
-        </p>
-    </div>
 
-    <p asp-authorize asp-roles="Administrators">
-        <a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
-    </p>
-
-    <br />
-    <div class="row">
-      <div class="col-auto">
-        <input type="checkbox" id="isTimestamp" name="isTimestamp" value="false" onclick="changeIsTimestamp()">
-        <label for="isTimestamp"> With Timestamp</label><br>
-      </div>
-      <div class="col-auto">
-        <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
-      </div>
-      <div class="col-auto">
-        <button id="copyLinkBtn" type="button" class="btn btn-primary" onclick="createAndCopyLink()">
-            Copy Link
-        </button>
-      </div>
-    </div>
-
-    <br />
-    <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
-    
-	<br />
-	@foreach (var comment in Model!.OEmbedViewModel!.Comments)
-	{
-		<p>@Html.Raw(@comment!.MdBody)</p>
-		<div class="post-signature">
-			<div class="user-info">
-				<span style="float: left;">@comment!.MemberName</span>
-				<span style="float: right;">@comment!.CreatedAt</span>
-			</div>
-		</div>
-		<br />
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-	<div class="comment-reply">
-		<textarea id="commentReplyToSubmit" rows="5" cols="100"></textarea>	
-		<button  type="button" onclick="submitReply()">
-			<i class="fas fa-reply"></i>
-		</button>
-	</div>
+	<script>
+		var isTimestamp = false;
+		var copyLinkBtnLabel = 'Copy Link';
+		var subtitleFile = null;
 
+		$(document).ready(function() {
+			changeButtonEnable('uploadSubtitleBtn', false);
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        var isTimestamp = false;
-        var copyLinkBtnLabel = 'Copy Link';
-        var subtitleFile = null;
+			isTimestamp = false;
+			var checkBoxElement = document.getElementById("isTimestamp");
+			if (checkBoxElement) {
+				checkBoxElement.value = isTimestamp;
+			}
+			changeButtonText('copyLinkBtn', copyLinkBtnLabel);
 
-        $(document).ready(function () {
-            changeButtonEnable('uploadSubtitleBtn', false);
+			const fileSelectorElement = document.getElementById('subtitleFile');
+			if (fileSelectorElement) {
+				fileSelectorElement.addEventListener('change',
+					(event) => {
+						var fileReader = new FileReader();
+						fileReader.onload = function() {
+							subtitleFile = fileReader.result;
+						}
 
-            isTimestamp = false;
-            var checkBox = document.getElementById("isTimestamp");
-            if (checkBox) {
-	            checkBox.value = isTimestamp;
-            }
-            changeButtonText('copyLinkBtn', copyLinkBtnLabel);
+						if (event && event.target && event.target.files && event.target.files.length > 0) {
+							fileReader.readAsText(event.target.files[0]);
+							changeButtonEnable('uploadSubtitleBtn', true);
+						} else {
+							changeButtonEnable('uploadSubtitleBtn', false);
+						}
+					});
+			}
 
-            const fileSelector = document.getElementById('subtitleFile');
-            if (fileSelector) {
-	            fileSelector.addEventListener('change', (event) => {
-		            var fileReader = new FileReader();
-		            fileReader.onload=function() {
-			            subtitleFile = fileReader.result;
-		            }
-                  
-		            if (event && event.target && event.target.files && event.target.files.length > 0) {
-			            fileReader.readAsText(event.target.files[0]);
-			            changeButtonEnable('uploadSubtitleBtn', true);
-		            } else {
-			            changeButtonEnable('uploadSubtitleBtn', false);
-		            }            
-	            });
-            }
+			var videoIdElement = document.getElementById("videoId");
+			if (!videoIdElement) {
+				return;
+			}
 
-            var iframe = document.getElementById('videoIframe');
-            var videoId = document.getElementById("videoId").innerHTML;
-            if (iframe && videoId) {
-	            var player = new Vimeo.Player(iframe);
-	            var videoPlayInterval = setInterval(function ()
-	            {
-		            player.on('timeupdate', function (getAll)
-		            {
-			            if (getAll.percent == 1) {
-				            $.ajax({
-					            type: "GET",
-					            url: "/videos/watched/"+videoId,
-					            success: function (videosResponse) {
-					            },
-					            error: function (errMsg) {
-						            alert(errMsg);
-					            }
-				            });
-			            }else if (getAll.percent < 1) {
-				            $.ajax({
-					            type: "GET",
-					            url: "/videos/inprogress/"+videoId,
-					            success: function (videosResponse) {
-					            },
-					            error: function (errMsg) {
-						            alert(errMsg);
-					            }
-				            });
-			            }
-		            });
-		            player.on('ended', function ()
-		            {
-			            clearInterval(videoPlayInterval);
-		            });
-	            }, 1000);
-            }
-        });
+			var iframeElement = document.getElementById("videoIframe");
+			if (!iframeElement) {
+				return;
+			}
+      
+			var videoId = videoIdElement.innerHTML;
+			if (videoId) {
+				var player = new Vimeo.Player(iframeElement);
+				var videoPlayInterval = setInterval(function() {
+						player.on('timeupdate',
+							function(getAll) {
+								if (getAll.percent == 1) {
+									$.ajax({
+										type: "GET",
+										url: "/videos/watched/" + videoId,
+										success: function(videosResponse) {
+										},
+										error: function(errMsg) {
+											console.log(errMsg);
+											alert(errMsg);
+										}
+									});
+								} else if (getAll.percent < 1) {
+									$.ajax({
+										type: "GET",
+										url: "/videos/inprogress/" + videoId,
+										success: function(videosResponse) {
+										},
+										error: function(errMsg) {
+											console.log(errMsg);
+											alert(errMsg);
+										}
+									});
+								}
+							});
+						player.on('ended',
+							function() {
+								clearInterval(videoPlayInterval);
+							});
+					},
+					1000);
+			}
+		});
 
-        function saveDescriptionClick() {
-            var videoId = document.getElementById("videoId").innerHTML;
-            var description = document.getElementById("description").value;
-            if (videoId && description) {
-	            $.ajax({
-		            type: "POST",
-		            url: "/videos/update-description",
-		            data: { videoId: videoId, description: description },
-		            dataType: "json",
-		            success: function (videosResponse) {
-			            document.getElementById('Description').value = videosResponse.Description;
-			            document.getElementById('DescriptionMd').value = videosResponse.DescriptionMd;
-		            },
-		            error: function (errMsg) {
-			            console.log(errMsg);
-			            alert(errMsg);
-		            }
-	            });
-            }
-        }
+		function saveDescriptionClick() {
+			var videoIdElement = document.getElementById("videoId");
+			if (!videoIdElement) {
+				return;
+			}
+			var descriptionElement = document.getElementById("description");
+			if (!descriptionElement) {
+				return;
+			}
 
-        function changeIsTimestamp() {
-            var checkBox = document.getElementById("isTimestamp");
-            if (checkBox) {
-	            isTimestamp = checkBox.checked;
-            }
-        }
+			var videoId = videoIdElement.innerHTML;
+			var description = descriptionElement.value;
+			if (videoId && description) {
+				$.ajax({
+					type: "POST",
+					url: "/videos/update-description",
+					data: { videoId: videoId, description: description },
+					dataType: "json",
+					success: function(videosResponse) {
+						var elementDescription = document.getElementById('Description');
+						if (elementDescription) {
+							elementDescription.value = videosResponse.Description;
+						}
 
-        function createAndCopyLink() {
-            if (isTimestamp == true) {
-                var iframe = document.getElementById('videoIframe');
-                var player = new Vimeo.Player(iframe);
+						var elementDescriptionMd = document.getElementById('DescriptionMd');
+						if (elementDescriptionMd) {
+							elementDescriptionMd.value = videosResponse.DescriptionMd;
+						}
+					},
+					error: function(errMsg) {
+						console.log(errMsg);
+						alert(errMsg);
+					}
+				});
+			}
+		}
 
-                if (iframe && player) {
-	                player.getCurrentTime().then(function(seconds) {
-		                var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
-		                document.getElementById("copiedLink").value = link;
-		                navigator.clipboard.writeText(link);            
-	                });
-                }
-            }
-            else {
-                var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId;
-                var copiedLink = document.getElementById("copiedLink");
-                if (copiedLink) {
-	                copiedLink.value = link;
-                }
-                navigator.clipboard.writeText(link);    
-            }
-            
-            
-            changeButtonText('copyLinkBtn', 'Copied!');
-            setTimeout(function() {
-                changeButtonText('copyLinkBtn', copyLinkBtnLabel);
-            }, 2000);
-        }
+		function changeIsTimestamp() {
+			var checkBoxElement = document.getElementById("isTimestamp");
+			if (checkBoxElement) {
+				isTimestamp = checkBoxElement.checked;
+			}
+		}
 
-        function changeButtonText(buttonId, value) {
-            var button = document.getElementById(buttonId);
-            if (!button) {
+		function createAndCopyLink() {
+			if (isTimestamp == true) {
+				var iframeElement = document.getElementById('videoIframe');
+				if (!iframeElement) {
+					return;
+				}
+
+				var player = new Vimeo.Player(iframeElement);
+				player.getCurrentTime().then(function(seconds) {
+					var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
+					var copiedLinkElement = document.getElementById("copiedLink");
+	        if (!copiedLinkElement) {
 	            return;
-            }
-
-            if ( value === copyLinkBtnLabel ) {
-                button.classList.remove("btn-success");
-                button.classList.add("btn-primary");                   
-            } else {
-                button.classList.remove("btn-primary");
-                button.classList.add("btn-success"); 
-            }
-
-            button.innerHTML = value;
-            button.innerText = value;
-            button.textContent = value;
-        }
-
-        function changeButtonEnable(buttonId, isEnabled) {
-            var button = document.getElementById(buttonId);
-            if (!button) {
-	            return;
-            }
-
-            if ( isEnabled ) {
-                button.classList.remove("disabled");                
-            } else {
-                button.classList.add("disabled"); 
-            }
-        }
-
-        function uploadSubtitleClick() {
-            var videoId = document.getElementById("videoId").innerHTML;
-            var language = document.getElementById("subtiteLanguageSelect").value;
-            if (!videoId || !language) {
-	            return;
-            }
-            $.ajax({
-                type: "POST",
-                url: "/videos/upload-subtitle",
-                data: { videoId: videoId, subtitle: subtitleFile, language: language },
-                dataType: "json",
-                success: function () {
-                    document.getElementById('videoIframe').contentWindow.location.reload();
-                },
-                error: function (errMsg) {
-	                console.log(errMsg);
-                    alert(errMsg);
-                }
-            });
-        }
-
-        function submitReply() {
-	        var videoId = document.getElementById("videoId").innerHTML;
-	        var commentReplyToSubmit = document.getElementById("commentReplyToSubmit").value;
-	        if (!videoId || !commentReplyToSubmit) {
-		        return;
 	        }
+					copiedLinkElement.value = link;
+					navigator.clipboard.writeText(link);
+				});
 
-	        $.ajax({
-		        type: "POST",
-		        url: "/videos/submit-comment-reply",
-		        data: { videoId: videoId, commentReplyToSubmit: commentReplyToSubmit },
-		        dataType: "json",
-		        success: function (response) {
-			        location.reload(true);
-		        },
-		        error: function (errMsg) {
-			        console.log(errMsg);
-			        alert(errMsg);
-		        }
-	        });
-        }
+			} else {
+				var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId;
+				var copiedLinkElement = document.getElementById("copiedLink");
+				if (!copiedLinkElement) {
+					return;
+				}
+				copiedLinkElement.value = link;
+				navigator.clipboard.writeText(link);
+			}
 
-        function toggleFavorite() {
-            const videoId = document.getElementById("videoId").innerHTML;
-            const isMemberFavorite = window['is-member-favorite'];
-            const memberFavoritesCount = window['member-favorites-count'];
-            if (!videoId || !isMemberFavorite || !memberFavoritesCount) {
-	            return;
-            }
 
-            $.ajax({
-                type: "PUT",
-                url: "/videos/favorite-video/"+ videoId,
-                data: {},
-                dataType: "json",
-                success: function () {
-	                var element = document.getElementById("icn-" + videoId);
-                    if (!element) {
-	                    return;
-                    }
-                    const classes = element.classList;
-                    isMemberFavorite ?  classes.replace("fas", "far") : classes.replace("far", "fas");
-                    window['is-member-favorite'] = !isMemberFavorite;
-                    const newMemberFavoriteCount = isMemberFavorite ? memberFavoritesCount - 1 : memberFavoritesCount + 1;
-                    $("#memberFavoritesCount").text(`(${newMemberFavoriteCount})`);
-                    window['member-favorites-count'] = newMemberFavoriteCount;
-                },
-                error: function (errMsg) {
-	                console.log(errMsg);
-                    alert(errMsg);
-                }
-            });
-        }
-    </script>
-    <script type="module">
-      window['is-member-favorite'] = @Json.Serialize(Model.OEmbedViewModel?.IsMemberFavorite);
-      window['member-favorites-count'] = @Json.Serialize(Model.OEmbedViewModel?.MemberFavoritesCount);
-    </script>
+			changeButtonText('copyLinkBtn', 'Copied!');
+			setTimeout(function() {
+					changeButtonText('copyLinkBtn', copyLinkBtnLabel);
+				},
+				2000);
+		}
+
+		function changeButtonText(buttonId, value) {
+			var buttonElement = document.getElementById(buttonId);
+			if (!buttonElement) {
+				return;
+			}
+
+			if (value === copyLinkBtnLabel) {
+				buttonElement.classList.remove("btn-success");
+				buttonElement.classList.add("btn-primary");
+			} else {
+				buttonElement.classList.remove("btn-primary");
+				buttonElement.classList.add("btn-success");
+			}
+
+			buttonElement.innerHTML = value;
+			buttonElement.innerText = value;
+			buttonElement.textContent = value;
+		}
+
+		function changeButtonEnable(buttonId, isEnabled) {
+			var buttonElement = document.getElementById(buttonId);
+			if (!buttonElement) {
+				return;
+			}
+
+			if (isEnabled) {
+				buttonElement.classList.remove("disabled");
+			} else {
+				buttonElement.classList.add("disabled");
+			}
+		}
+
+		function uploadSubtitleClick() {
+			var videoIdElement = document.getElementById("videoId");
+			if (!videoIdElement) {
+				return;
+			}
+			var languageElement = document.getElementById("subtitleLanguageSelect");
+			if (!languageElement) {
+				return;
+			}
+
+			var videoId = videoIdElement.innerHTML;
+			var language = languageElement.value;
+			if (!videoId || !language) {
+				return;
+			}
+			$.ajax({
+				type: "POST",
+				url: "/videos/upload-subtitle",
+				data: { videoId: videoId, subtitle: subtitleFile, language: language },
+				dataType: "json",
+				success: function() {
+					var videoIframeElement = document.getElementById('videoIframe');
+					if (videoIframeElement) {
+            videoIframeElement.contentWindow.location.reload();
+					}
+				},
+				error: function(errMsg) {
+					console.log(errMsg);
+					alert(errMsg);
+				}
+			});
+		}
+
+		function submitReply() {
+			var videoIdElement = document.getElementById("videoId");
+			if (!videoIdElement) {
+				return;
+			}
+			var commentReplyToSubmitElement = document.getElementById("commentReplyToSubmit");
+			if (!commentReplyToSubmitElement) {
+				return;
+			}
+
+			var videoId = videoIdElement.innerHTML;
+			var commentReplyToSubmit = commentReplyToSubmitElement.value;
+			if (!videoId || !commentReplyToSubmit) {
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/videos/submit-comment-reply",
+				data: { videoId: videoId, commentReplyToSubmit: commentReplyToSubmit },
+				dataType: "json",
+				success: function(response) {
+					location.reload(true);
+				},
+				error: function(errMsg) {
+					console.log(errMsg);
+					alert(errMsg);
+				}
+			});
+		}
+
+		function toggleFavorite() {
+			var videoIdElement = document.getElementById("videoId");
+			if (!videoIdElement) {
+				return;
+			}
+
+			const videoId = videoIdElement.innerHTML;
+			const isMemberFavorite = window['is-member-favorite'];
+			const memberFavoritesCount = window['member-favorites-count'];
+			if (!videoId || !isMemberFavorite || !memberFavoritesCount) {
+				return;
+			}
+
+			$.ajax({
+				type: "PUT",
+				url: "/videos/favorite-video/" + videoId,
+				data: {},
+				dataType: "json",
+				success: function() {
+					var element = document.getElementById("icn-" + videoId);
+					if (!element) {
+						return;
+					}
+					const classes = element.classList;
+					isMemberFavorite ? classes.replace("fas", "far") : classes.replace("far", "fas");
+					window['is-member-favorite'] = !isMemberFavorite;
+					const newMemberFavoriteCount = isMemberFavorite ? memberFavoritesCount - 1 : memberFavoritesCount + 1;
+					$("#memberFavoritesCount").text(`(${newMemberFavoriteCount})`);
+					window['member-favorites-count'] = newMemberFavoriteCount;
+				},
+				error: function(errMsg) {
+					console.log(errMsg);
+					alert(errMsg);
+				}
+			});
+		}
+	</script>
+	<script type="module">
+  window['is-member-favorite'] = @Json.Serialize(Model.OEmbedViewModel?.IsMemberFavorite);
+  window['member-favorites-count'] = @Json.Serialize(Model.OEmbedViewModel?.MemberFavoritesCount);
+</script>
 }
