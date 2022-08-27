@@ -95,41 +95,6 @@ public class VideosController : Controller
 		return Ok(jsonData);
 	}
 
-	[HttpGet("watched/{videoId}")]
-	public async Task<IActionResult> VideoWatchedAsync(string videoId)
-	{
-		var userId = _userManager.GetUserId(User);
-		var memberByUserSpec = new MemberByUserIdSpec(userId);
-		var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
-		if (member == null)
-		{
-			return Unauthorized();
-		}
-
-		var spec = new ArchiveVideoByVideoIdWithProgressSpec(videoId);
-		var existVideo = await _repository.FirstOrDefaultAsync(spec);
-		if (existVideo == null)
-		{
-			return NotFound("Video not found!");
-		}
-
-		var progress = existVideo.MembersVideoProgress.FirstOrDefault(x => x.ArchiveVideoId == existVideo.Id && x.MemberId == member.Id);
-		if (progress == null)
-		{
-			var progressToAdd = new MemberVideoProgress(member.Id, existVideo.Id, existVideo.Duration);
-			progressToAdd.SetToWatched();
-			existVideo.AddVideoProgress(progressToAdd);
-		}
-		else
-		{
-			progress.SetToWatched();
-		}
-
-		await _repository.UpdateAsync(existVideo);
-
-		return Ok(Json(new { success = true, responseText = "Done!" }));
-	}
-
 	[HttpGet("inprogress/{videoId}")]
 	public async Task<IActionResult> VideoInProgressAsync(string videoId)
 	{
