@@ -31,7 +31,7 @@ public class UpdateDescription : EndpointBaseAsync
 	}
 
 	[HttpPost("videos/update-description")]
-	public override async Task<ActionResult> HandleAsync([FromForm] UpdateDescriptionRequest updateDescription, CancellationToken cancellationToken = default)
+	public override async Task<ActionResult> HandleAsync([FromBody] UpdateDescriptionRequest updateDescription, CancellationToken cancellationToken = default)
 	{
 		var video = await _getVideoService.ExecuteAsync(updateDescription.VideoId, cancellationToken);
 		if (video?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");

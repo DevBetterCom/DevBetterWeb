@@ -30,7 +30,7 @@ public class SubmitCommentReply : EndpointBaseAsync
 	}
 
 	[HttpPost("videos/submit-comment-reply")]
-	public override async Task<ActionResult> HandleAsync([FromForm] CommentReplyRequest request, CancellationToken cancellationToken = default)
+	public override async Task<ActionResult> HandleAsync([FromBody] CommentReplyRequest request, CancellationToken cancellationToken = default)
 	{
 		var userId = _userManager.GetUserId(User);
 		var memberByUserSpec = new MemberByUserIdSpec(userId);
