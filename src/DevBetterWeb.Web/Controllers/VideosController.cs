@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -159,7 +158,7 @@ public class VideosController : Controller
 
 		await _repository.UpdateAsync(existVideo);
 
-		return Json(new { success = true, responseText = "Done!" });
+		return Ok(Json(new { success = true, responseText = "Done!" }));
 	}
 
 	[HttpGet("inprogress/{videoId}")]
@@ -194,7 +193,7 @@ public class VideosController : Controller
 
 		await _repository.UpdateAsync(existVideo);
 
-		return Json(new { success = true, responseText = "Done!" });
+		return Ok(Json(new { success = true, responseText = "Done!" }));
 	}
 
 	[HttpPost("submit-comment-reply")]
@@ -217,7 +216,7 @@ public class VideosController : Controller
 		existVideo.AddComment(new VideoComment(member.Id, existVideo.Id, request.CommentReplyToSubmit));
 		await _repository.UpdateAsync(existVideo);
 
-		return Json(new { success = true, responseText = "Your message successfuly sent!" });
+		return Ok(Json(new { success = true, responseText = "Your message successfully sent!" }));
 	}
 
 	[HttpPut("favorite-video/{vimeoVideoId}")]
