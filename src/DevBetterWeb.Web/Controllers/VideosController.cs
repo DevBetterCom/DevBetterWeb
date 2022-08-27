@@ -95,29 +95,6 @@ public class VideosController : Controller
 		return Ok(jsonData);
 	}
 
-	[HttpPost("submit-comment-reply")]
-	public async Task<IActionResult> SubmitCommentReply([FromForm] CommentReplyRequest request)
-	{
-		var userId = _userManager.GetUserId(User);
-		var memberByUserSpec = new MemberByUserIdSpec(userId);
-		var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
-		if (member == null)
-		{
-			return Unauthorized();
-		}
-
-		var spec = new ArchiveVideoByVideoIdSpec(request.VideoId!);
-		var existVideo = await _repository.FirstOrDefaultAsync(spec);
-		if (existVideo == null)
-		{
-			return NotFound("Video not found!");
-		}
-		existVideo.AddComment(new VideoComment(member.Id, existVideo.Id, request.CommentReplyToSubmit));
-		await _repository.UpdateAsync(existVideo);
-
-		return Ok(Json(new { success = true, responseText = "Your message successfully sent!" }));
-	}
-
 	[HttpPut("favorite-video/{vimeoVideoId}")]
 	public async Task<IActionResult> PutToggleFavoriteVideo([FromRoute] string vimeoVideoId)
 	{

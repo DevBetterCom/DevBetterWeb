@@ -1,4 +1,4 @@
-﻿namespace DevBetterWeb.Web.Models;
+﻿namespace DevBetterWeb.Web.Endpoints;
 
 public class CommentReplyRequest
 {
