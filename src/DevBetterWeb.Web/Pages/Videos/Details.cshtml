@@ -114,82 +114,92 @@ textarea {
 
             isTimestamp = false;
             var checkBox = document.getElementById("isTimestamp");
-            checkBox.value = isTimestamp;
+            if (checkBox) {
+	            checkBox.value = isTimestamp;
+            }
             changeButtonText('copyLinkBtn', copyLinkBtnLabel);
 
             const fileSelector = document.getElementById('subtitleFile');
-            fileSelector.addEventListener('change', (event) => {
-                var fileReader = new FileReader();
-                fileReader.onload=function() {
-                    subtitleFile = fileReader.result;
-                }
+            if (fileSelector) {
+	            fileSelector.addEventListener('change', (event) => {
+		            var fileReader = new FileReader();
+		            fileReader.onload=function() {
+			            subtitleFile = fileReader.result;
+		            }
                   
-                if (event.target.files && event.target.files.length > 0) {
-                    fileReader.readAsText(event.target.files[0]);
-                    changeButtonEnable('uploadSubtitleBtn', true);
-                } else {
-                    changeButtonEnable('uploadSubtitleBtn', false);
-                }            
-            });
+		            if (event && event.target && event.target.files && event.target.files.length > 0) {
+			            fileReader.readAsText(event.target.files[0]);
+			            changeButtonEnable('uploadSubtitleBtn', true);
+		            } else {
+			            changeButtonEnable('uploadSubtitleBtn', false);
+		            }            
+	            });
+            }
 
             var iframe = document.getElementById('videoIframe');
-            var player = new Vimeo.Player(iframe);
             var videoId = document.getElementById("videoId").innerHTML;
-            var videoPlayInterval = setInterval(function ()
-            {
-	            player.on('timeupdate', function (getAll)
+            if (iframe && videoId) {
+	            var player = new Vimeo.Player(iframe);
+	            var videoPlayInterval = setInterval(function ()
 	            {
-                    if (getAll.percent == 1) {
-	                    $.ajax({
-		                    type: "GET",
-		                    url: "/videos/watched/"+videoId,
-		                    success: function (videosResponse) {
-		                    },
-		                    error: function (errMsg) {
-			                    alert(errMsg);
-		                    }
-	                    });
-                    }else if (getAll.percent < 1) {
-	                    $.ajax({
-		                    type: "GET",
-		                    url: "/videos/inprogress/"+videoId,
-		                    success: function (videosResponse) {
-		                    },
-		                    error: function (errMsg) {
-			                    alert(errMsg);
-		                    }
-	                    });
-                    }
-	            });
-	            player.on('ended', function ()
-	            {
-		            clearInterval(videoPlayInterval);
-	            });
-            }, 1000);
+		            player.on('timeupdate', function (getAll)
+		            {
+			            if (getAll.percent == 1) {
+				            $.ajax({
+					            type: "GET",
+					            url: "/videos/watched/"+videoId,
+					            success: function (videosResponse) {
+					            },
+					            error: function (errMsg) {
+						            alert(errMsg);
+					            }
+				            });
+			            }else if (getAll.percent < 1) {
+				            $.ajax({
+					            type: "GET",
+					            url: "/videos/inprogress/"+videoId,
+					            success: function (videosResponse) {
+					            },
+					            error: function (errMsg) {
+						            alert(errMsg);
+					            }
+				            });
+			            }
+		            });
+		            player.on('ended', function ()
+		            {
+			            clearInterval(videoPlayInterval);
+		            });
+	            }, 1000);
+            }
         });
 
         function saveDescriptionClick() {
             var videoId = document.getElementById("videoId").innerHTML;
             var description = document.getElementById("description").value;
-
-            $.ajax({
-                type: "POST",
-                url: "/videos/update-description",
-                data: { videoId: videoId, description: description },
-                dataType: "json",
-                success: function (videosReponse) {
-                    document.getElementById('Description').value = videosReponse.Description;
-                    document.getElementById('DescriptionMd').value = videosReponse.DescriptionMd;
-                },
-                error: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
+            if (videoId && description) {
+	            $.ajax({
+		            type: "POST",
+		            url: "/videos/update-description",
+		            data: { videoId: videoId, description: description },
+		            dataType: "json",
+		            success: function (videosResponse) {
+			            document.getElementById('Description').value = videosResponse.Description;
+			            document.getElementById('DescriptionMd').value = videosResponse.DescriptionMd;
+		            },
+		            error: function (errMsg) {
+			            console.log(errMsg);
+			            alert(errMsg);
+		            }
+	            });
+            }
         }
 
         function changeIsTimestamp() {
             var checkBox = document.getElementById("isTimestamp");
-            isTimestamp = checkBox.checked;
+            if (checkBox) {
+	            isTimestamp = checkBox.checked;
+            }
         }
 
         function createAndCopyLink() {
@@ -197,15 +207,20 @@ textarea {
                 var iframe = document.getElementById('videoIframe');
                 var player = new Vimeo.Player(iframe);
 
-                 player.getCurrentTime().then(function(seconds) {
-                    var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
-                    document.getElementById("copiedLink").value = link;
-                    navigator.clipboard.writeText(link);            
-                });
+                if (iframe && player) {
+	                player.getCurrentTime().then(function(seconds) {
+		                var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
+		                document.getElementById("copiedLink").value = link;
+		                navigator.clipboard.writeText(link);            
+	                });
+                }
             }
             else {
                 var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId;
-                document.getElementById("copiedLink").value = link;
+                var copiedLink = document.getElementById("copiedLink");
+                if (copiedLink) {
+	                copiedLink.value = link;
+                }
                 navigator.clipboard.writeText(link);    
             }
             
@@ -218,6 +233,9 @@ textarea {
 
         function changeButtonText(buttonId, value) {
             var button = document.getElementById(buttonId);
+            if (!button) {
+	            return;
+            }
 
             if ( value === copyLinkBtnLabel ) {
                 button.classList.remove("btn-success");
@@ -234,6 +252,9 @@ textarea {
 
         function changeButtonEnable(buttonId, isEnabled) {
             var button = document.getElementById(buttonId);
+            if (!button) {
+	            return;
+            }
 
             if ( isEnabled ) {
                 button.classList.remove("disabled");                
@@ -245,7 +266,9 @@ textarea {
         function uploadSubtitleClick() {
             var videoId = document.getElementById("videoId").innerHTML;
             var language = document.getElementById("subtiteLanguageSelect").value;
-
+            if (!videoId || !language) {
+	            return;
+            }
             $.ajax({
                 type: "POST",
                 url: "/videos/upload-subtitle",
@@ -255,6 +278,7 @@ textarea {
                     document.getElementById('videoIframe').contentWindow.location.reload();
                 },
                 error: function (errMsg) {
+	                console.log(errMsg);
                     alert(errMsg);
                 }
             });
@@ -263,6 +287,9 @@ textarea {
         function submitReply() {
 	        var videoId = document.getElementById("videoId").innerHTML;
 	        var commentReplyToSubmit = document.getElementById("commentReplyToSubmit").value;
+	        if (!videoId || !commentReplyToSubmit) {
+		        return;
+	        }
 
 	        $.ajax({
 		        type: "POST",
@@ -273,6 +300,7 @@ textarea {
 			        location.reload(true);
 		        },
 		        error: function (errMsg) {
+			        console.log(errMsg);
 			        alert(errMsg);
 		        }
 	        });
@@ -282,6 +310,9 @@ textarea {
             const videoId = document.getElementById("videoId").innerHTML;
             const isMemberFavorite = window['is-member-favorite'];
             const memberFavoritesCount = window['member-favorites-count'];
+            if (!videoId || !isMemberFavorite || !memberFavoritesCount) {
+	            return;
+            }
 
             $.ajax({
                 type: "PUT",
@@ -289,7 +320,11 @@ textarea {
                 data: {},
                 dataType: "json",
                 success: function () {
-                    const classes = document.getElementById("icn-" + videoId).classList;
+	                var element = document.getElementById("icn-" + videoId);
+                    if (!element) {
+	                    return;
+                    }
+                    const classes = element.classList;
                     isMemberFavorite ?  classes.replace("fas", "far") : classes.replace("far", "fas");
                     window['is-member-favorite'] = !isMemberFavorite;
                     const newMemberFavoriteCount = isMemberFavorite ? memberFavoritesCount - 1 : memberFavoritesCount + 1;
@@ -297,6 +332,7 @@ textarea {
                     window['member-favorites-count'] = newMemberFavoriteCount;
                 },
                 error: function (errMsg) {
+	                console.log(errMsg);
                     alert(errMsg);
                 }
             });
