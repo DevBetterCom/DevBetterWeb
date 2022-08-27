@@ -95,37 +95,6 @@ public class VideosController : Controller
 		return Ok(jsonData);
 	}
 
-	[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
-	[HttpPost("update-description")]
-	public async Task<IActionResult> UpdateDescriptionAsync([FromForm] UpdateDescription updateDescription)
-	{
-		var video = await _getVideoService.ExecuteAsync(updateDescription.VideoId);
-		if (video?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
-
-		var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
-		if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
-
-		var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId!);
-		var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
-		if (archiveVideo == null)
-		{
-			return NotFound($"Video Not Found {updateDescription.VideoId}");
-		}
-
-		archiveVideo.Description = updateDescription.Description;
-		await _repository.UpdateAsync(archiveVideo);
-		await _repository.SaveChangesAsync();
-
-		var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
-		oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
-		oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
-		oEmbedViewModel.Description = archiveVideo.Description;
-		oEmbedViewModel
-			.BuildHtml(video.Data.Link);
-
-		return Ok(oEmbedViewModel);
-	}
-
 	[HttpGet("watched/{videoId}")]
 	public async Task<IActionResult> VideoWatchedAsync(string videoId)
 	{
