@@ -66,12 +66,16 @@ public class DetailsModel : PageModel
     var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
     if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
 
-    OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
+    var spec = new ArchiveVideoByVideoIdWithProgressSpec(videoId);
+    var existVideoWithProgress = await _repository.FirstOrDefaultAsync(spec);
+    var progress = existVideoWithProgress!.MembersVideoProgress.FirstOrDefault(x => x.ArchiveVideoId == existVideoWithProgress.Id && x.MemberId == member.Id);
+
+		OEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
     OEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
     OEmbedViewModel.Name = archiveVideo.Title;
 
     archiveVideo.CreateMdComments(_markdownService);
-	OEmbedViewModel.Comments = _mapper.Map<List<VideoCommentDto>>(archiveVideo.Comments);
+		OEmbedViewModel.Comments = _mapper.Map<List<VideoCommentDto>>(archiveVideo.Comments);
 
     OEmbedViewModel.Password = video.Data.Password;
     OEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
@@ -80,7 +84,9 @@ public class DetailsModel : PageModel
       .AddStartTime(startTime)
       .BuildHtml(video.Data.Link);
     OEmbedViewModel.IsMemberFavorite = member.FavoriteArchiveVideos.Any(fav => fav.ArchiveVideoId == archiveVideo.Id);
-	OEmbedViewModel.MemberFavoritesCount = archiveVideo.MemberFavorites.Count();
+    OEmbedViewModel.IsMemberWatched = progress is { VideoWatchedStatus: VideoWatchedStatus.Watched };
+		OEmbedViewModel.MemberFavoritesCount = archiveVideo.MemberFavorites.Count();
+
     return Page();
   }
 }
