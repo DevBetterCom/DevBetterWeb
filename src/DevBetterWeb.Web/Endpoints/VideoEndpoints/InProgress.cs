@@ -57,6 +57,10 @@ public class InProgress : EndpointBaseAsync
 		}
 		else
 		{
+			if (progress.VideoWatchedStatus == VideoWatchedStatus.Watched)
+			{
+				return Ok(new InProgressResponse(true, "Done!"));
+			}
 			progress.SetToInProgress();
 		}
 
