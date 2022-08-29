@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
@@ -9,6 +10,8 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +29,8 @@ public class UserModel : PageModel
 	[BindProperty] public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; } = new UserPersonalUpdateModel();
 	[BindProperty] public UserLinksUpdateModel UserLinksUpdateModel { get; set; } = new UserLinksUpdateModel();
 
+	public List<StripeTransactionDto> Transactions = new List<StripeTransactionDto>();
+
 	private readonly ILogger<UserModel> _logger;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly RoleManager<IdentityRole> _roleManager;
@@ -35,6 +40,8 @@ public class UserModel : PageModel
 	private readonly IRepository<MemberSubscription> _subscriptionRepository;
 	private readonly IRepository<MemberSubscriptionPlan> _subscriptionPlanRepository;
 	private readonly IUserEmailConfirmationService _userEmailConfirmationService;
+	private readonly IIssuingHandlerTransactionListService _issuingHandlerTransactionListService;
+	private readonly IMapper _mapper;
 
 	public UserModel(ILogger<UserModel> logger,
 		UserManager<ApplicationUser> userManager,
@@ -44,7 +51,9 @@ public class UserModel : PageModel
 			IRepository<Member> memberRepository,
 			IRepository<MemberSubscription> subscriptionRepository,
 			IRepository<MemberSubscriptionPlan> subscriptionPlanRepository,
-			IUserEmailConfirmationService userEmailConfirmationService)
+			IUserEmailConfirmationService userEmailConfirmationService,
+			IIssuingHandlerTransactionListService issuingHandlerTransactionListService,
+			IMapper mapper)
 	{
 		_logger = logger;
 		_userManager = userManager;
@@ -55,6 +64,8 @@ public class UserModel : PageModel
 		_subscriptionRepository = subscriptionRepository;
 		_subscriptionPlanRepository = subscriptionPlanRepository;
 		_userEmailConfirmationService = userEmailConfirmationService;
+		_issuingHandlerTransactionListService = issuingHandlerTransactionListService;
+		_mapper = mapper;
 	}
 
 
@@ -83,6 +94,9 @@ public class UserModel : PageModel
 			{
 				return BadRequest();
 			}
+
+			var transactions = _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
+			Transactions = _mapper.Map<List<StripeTransactionDto>>(transactions);
 
 			var roles = await _roleManager.Roles.ToListAsync();
 

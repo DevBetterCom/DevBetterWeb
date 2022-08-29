@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Services;
@@ -23,6 +24,8 @@ public static class ConfigureServicesExtensions
     services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
     services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
     services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
+    services.AddScoped<IIssuingHandlerCardListService, StripeIssuingHandlerCardListService>();
+    services.AddScoped<IIssuingHandlerTransactionListService, StripeIssuingHandlerTransactionListService>();
   }
 
   public static void AddDailyCheckServices(this IServiceCollection services)
