@@ -60,7 +60,8 @@ public class IndexModel : PageModel
 		  {
 			  Id = memberWhoHaveRead.Id, 
 			  FullName = memberWhoHaveRead.FullName,
-			  BooksReadCount = memberWhoHaveRead.BooksRead!.Count(x => x.BookCategoryId == bookCategory.Id)
+			  BooksReadCount = memberWhoHaveRead.BooksRead!.Count(x => x.BookCategoryId == bookCategory.Id),
+				UserId = memberWhoHaveRead.UserId,
 		  };
 
 	  var isAlumni = alumniMembersIds.Contains(memberWhoHaveRead.Id);
