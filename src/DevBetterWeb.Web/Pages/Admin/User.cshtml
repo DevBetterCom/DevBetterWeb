@@ -127,53 +127,53 @@
             <input type="submit" value="Save" class="btn btn-success" />
           </div>
         </div>
-	      <div class="card-body">
-		      <div class="form-group">
-			      <label class="font-weight-bold">Email</label>
-			      <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
-			      <span asp-validation-for="UserPersonalUpdateModel.Email" class="text-danger"></span>
-		      </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="font-weight-bold">Email</label>
+            <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
+            <span asp-validation-for="UserPersonalUpdateModel.Email" class="text-danger"></span>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">First Name</label>
-			      <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm"/>
-			      <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">First Name</label>
+            <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm" />
+            <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">Last Name</label>
-			      <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm"/>
-			      <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Last Name</label>
+            <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm" />
+            <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">Shipping Address</label>
-			      <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-			      <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Shipping Address</label>
+            <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+            <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">About</label>
-			      <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">About</label>
+            <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">Discord Username</label>
-			      <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234"/>
-			      <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Discord Username</label>
+            <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234" />
+            <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">Project Euler Username</label>
-			      <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username"/>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Project Euler Username</label>
+            <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username" />
+          </div>
 
-		      <div class="form-group">
-			      <label class="font-weight-bold">Project Euler Friend Code</label>
-			      <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789"/>
-		      </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Project Euler Friend Code</label>
+            <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789" />
+          </div>
 
-	      </div>
+        </div>
       </div>
 
     </form>
@@ -183,57 +183,101 @@
 
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
-	  <form asp-page-handler="UpdateLinks">
-		  <input type="hidden" name="userId" value="@Model.UserLinksUpdateModel.UserId" />
-		  <div class="card">
-			  <div class="card-header">
-				  <b>Links</b>
-				  <div class="ml-auto" style="float: right;">
-					  <input type="submit" value="Save" class="btn btn-success"/>
-				  </div>
-			  </div>
-			  <div class="card-body">
+    <form asp-page-handler="UpdateLinks">
+      <input type="hidden" name="userId" value="@Model.UserLinksUpdateModel.UserId" />
+      <div class="card">
+        <div class="card-header">
+          <b>Links</b>
+          <div class="ml-auto" style="float: right;">
+            <input type="submit" value="Save" class="btn btn-success" />
+          </div>
+        </div>
+        <div class="card-body">
 
-				  <label class="font-weight-bold">Blog</label>
-				  <input type="text" asp-for="UserLinksUpdateModel.BlogUrl" value="@Model.UserLinksUpdateModel.BlogUrl" class="form-control form-control-sm" title="https://your-blog.com"/>
-				  <span asp-validation-for="UserLinksUpdateModel.BlogUrl" class="text-danger"></span>
-				  <br/>
-				  <label class="font-weight-bold">CodinGame</label>
-				  <input type="text" asp-for="UserLinksUpdateModel.CodinGameUrl" value="@Model.UserLinksUpdateModel.CodinGameUrl" class="form-control form-control-sm" title="https://www.codingame.com/profile/123456789/following/">
-				  <span asp-validation-for="UserLinksUpdateModel.CodinGameUrl" class="text-danger"></span>
-				  <br/>
-				  <label class="font-weight-bold">Github</label>
-				  <input type="text" asp-for="UserLinksUpdateModel.GithubUrl" value="@Model.UserLinksUpdateModel.GithubUrl" class="form-control form-control-sm" title="https://github.com/UserName"/>
-				  <span asp-validation-for="UserLinksUpdateModel.GithubUrl" class="text-danger"></span>
-				  <br/>
-				  <label class="font-weight-bold">LinkedIn</label>
-				  <input type="text" asp-for="UserLinksUpdateModel.LinkedInUrl" value="@Model.UserLinksUpdateModel.LinkedInUrl" class="form-control form-control-sm" title="https://www.linkedin.com/in/UserName"/>
-				  <span asp-validation-for="UserLinksUpdateModel.LinkedInUrl" class="text-danger"></span>
-				  <br/>
-				  <label class="font-weight-bold">Twitter</label>
-				  <input type="text" asp-for="UserLinksUpdateModel.TwitterUrl" value="@Model.UserLinksUpdateModel.TwitterUrl" class="form-control form-control-sm" title="https://twitter.com/UserName"/>
-				  <span asp-validation-for="UserLinksUpdateModel.TwitterUrl" class="text-danger"></span>
-				  <br/>
-				  <div class="form-group">
-					  <label class="font-weight-bold">Twitch</label>
-					  <input type="text" asp-for="UserLinksUpdateModel.TwitchUrl" value="@Model.UserLinksUpdateModel.TwitchUrl" class="form-control form-control-sm" title="https://www.twitch.tv/UserName"/>
-					  <span asp-validation-for="UserLinksUpdateModel.TwitchUrl" class="text-danger"></span>
-				  </div>
-				  <br/>
-				  <div class="form-group">
-					  <label class="font-weight-bold">YouTube</label>
-					  <input type="text" asp-for="UserLinksUpdateModel.YouTubeUrl" value="@Model.UserLinksUpdateModel.YouTubeUrl" class="form-control form-control-sm" title="https://www.youtube.com/channel/123456789"/>
-					  <span asp-validation-for="UserLinksUpdateModel.YouTubeUrl" class="text-danger"></span>
-				  </div>
-				  <br/>
-				  <div class="form-group">
-					  <label class="font-weight-bold">Other</label>
-					  <input type="text" asp-for="UserLinksUpdateModel.OtherUrl" value="@Model.UserLinksUpdateModel.OtherUrl" class="form-control form-control-sm" title="https://website.com"/>
-					  <span asp-validation-for="UserLinksUpdateModel.OtherUrl" class="text-danger"></span>
-				  </div>
-			  </div>
-		  </div>
-	  </form>
+          <label class="font-weight-bold">Blog</label>
+          <input type="text" asp-for="UserLinksUpdateModel.BlogUrl" value="@Model.UserLinksUpdateModel.BlogUrl" class="form-control form-control-sm" title="https://your-blog.com" />
+          <span asp-validation-for="UserLinksUpdateModel.BlogUrl" class="text-danger"></span>
+          <br />
+          <label class="font-weight-bold">CodinGame</label>
+          <input type="text" asp-for="UserLinksUpdateModel.CodinGameUrl" value="@Model.UserLinksUpdateModel.CodinGameUrl" class="form-control form-control-sm" title="https://www.codingame.com/profile/123456789/following/">
+          <span asp-validation-for="UserLinksUpdateModel.CodinGameUrl" class="text-danger"></span>
+          <br />
+          <label class="font-weight-bold">Github</label>
+          <input type="text" asp-for="UserLinksUpdateModel.GithubUrl" value="@Model.UserLinksUpdateModel.GithubUrl" class="form-control form-control-sm" title="https://github.com/UserName" />
+          <span asp-validation-for="UserLinksUpdateModel.GithubUrl" class="text-danger"></span>
+          <br />
+          <label class="font-weight-bold">LinkedIn</label>
+          <input type="text" asp-for="UserLinksUpdateModel.LinkedInUrl" value="@Model.UserLinksUpdateModel.LinkedInUrl" class="form-control form-control-sm" title="https://www.linkedin.com/in/UserName" />
+          <span asp-validation-for="UserLinksUpdateModel.LinkedInUrl" class="text-danger"></span>
+          <br />
+          <label class="font-weight-bold">Twitter</label>
+          <input type="text" asp-for="UserLinksUpdateModel.TwitterUrl" value="@Model.UserLinksUpdateModel.TwitterUrl" class="form-control form-control-sm" title="https://twitter.com/UserName" />
+          <span asp-validation-for="UserLinksUpdateModel.TwitterUrl" class="text-danger"></span>
+          <br />
+          <div class="form-group">
+            <label class="font-weight-bold">Twitch</label>
+            <input type="text" asp-for="UserLinksUpdateModel.TwitchUrl" value="@Model.UserLinksUpdateModel.TwitchUrl" class="form-control form-control-sm" title="https://www.twitch.tv/UserName" />
+            <span asp-validation-for="UserLinksUpdateModel.TwitchUrl" class="text-danger"></span>
+          </div>
+          <br />
+          <div class="form-group">
+            <label class="font-weight-bold">YouTube</label>
+            <input type="text" asp-for="UserLinksUpdateModel.YouTubeUrl" value="@Model.UserLinksUpdateModel.YouTubeUrl" class="form-control form-control-sm" title="https://www.youtube.com/channel/123456789" />
+            <span asp-validation-for="UserLinksUpdateModel.YouTubeUrl" class="text-danger"></span>
+          </div>
+          <br />
+          <div class="form-group">
+            <label class="font-weight-bold">Other</label>
+            <input type="text" asp-for="UserLinksUpdateModel.OtherUrl" value="@Model.UserLinksUpdateModel.OtherUrl" class="form-control form-control-sm" title="https://website.com" />
+            <span asp-validation-for="UserLinksUpdateModel.OtherUrl" class="text-danger"></span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 20px;">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <b>Transactions</b>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                Created
+              </th>
+              <th>
+                Card Holder
+              </th>
+              <th>
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var item in Model.Transactions)
+            {
+              <tr>
+                <td>
+                  @item.CreatedDate
+                </td>
+                <td>
+                  @item.CardHolder
+                </td>
+                <td>
+                  @item.Amount
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+      </div>
+    </div>
   </div>
 </div>
 

@@ -1,0 +1,53 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.User.MapModel
+
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration _configuration
+
+
+
+<div id="map"  class="col-sm-12"></div>
+
+<script type="text/javascript" 
+        src="https://maps.googleapis.com/maps/api/js?key=@_configuration["GoogleMapsAPIKey"]">
+</script>
+
+<script type="text/javascript">
+
+    var coordinatesCollection = @Json.Serialize(Model.MemberCoordinates);
+
+    window.onload = function () {
+
+        var mapOptions = {
+            center: new google.maps.LatLng(40.4173, -82.9071),
+            zoom: 2,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var memberInfoPopup = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        const image = "/images/map-marker.png"; 
+
+        for (i = 0; i < coordinatesCollection.length; i++) {
+            var coordinates = coordinatesCollection[i]
+            var myLatlng = new google.maps.LatLng(coordinates.latitude, coordinates.longitude);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: image,
+                title: coordinates.memberFullName,
+            });
+
+            (function (marker, coordinates) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    marker.setAnimation(null);
+                    memberInfoPopup.setContent(coordinates.memberFullName);
+                    memberInfoPopup.open(map, marker);
+                });
+            })(marker, coordinates);
+        }
+    }
+    
+</script>
