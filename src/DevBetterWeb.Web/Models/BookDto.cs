@@ -1,4 +1,6 @@
-﻿namespace DevBetterWeb.Web.Models;
+﻿using System.Collections.Generic;
+
+namespace DevBetterWeb.Web.Models;
 
 public class BookDto
 {
@@ -14,4 +16,5 @@ public class BookDto
 	public string? MemberWhoUploaded { get; set; }
 	public string? MemberWhoUploadedUserId { get; set; }
 	public int MembersWhoHaveReadCount { get; set; }
+	public List<MemberForBookDto> MembersWhoHaveRead { get; set; } = new List<MemberForBookDto>();
 }

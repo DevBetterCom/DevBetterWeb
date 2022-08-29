@@ -7,12 +7,10 @@ namespace DevBetterWeb.Tests.Services.RankingServiceTests;
 
 public class RankIntegers
 {
-  private readonly RankingService<int> _sut = new();
-
-  [Fact]
+	[Fact]
   public void EmptyReturnsEmptyDictionary()
   {
-    var actual = _sut.Rank(new List<int>());
+    var actual = RankingService<int>.Rank(new List<int>());
     Assert.False(actual.Any());
   }
 
@@ -22,7 +20,7 @@ public class RankIntegers
   [InlineData(3)]
   public void SingleIntegerHasRankOfOne(int value)
   {
-    var rankings = _sut.Rank(new List<int> { value });
+    var rankings = RankingService<int>.Rank(new List<int> { value });
     Assert.Equal(1, rankings[value]);
   }
 
@@ -30,7 +28,7 @@ public class RankIntegers
   public void ContiguousIntegersRankedProperly()
   {
     var numbersToRank = new List<int> { 1, 2, 3 };
-    var rankings = _sut.Rank(numbersToRank);
+    var rankings = RankingService<int>.Rank(numbersToRank);
     Assert.Equal(1, rankings[3]);
     Assert.Equal(2, rankings[2]);
     Assert.Equal(3, rankings[1]);
@@ -40,7 +38,7 @@ public class RankIntegers
   public void NonContiguousIntegersRankedProperly()
   {
     var numbersToRank = new List<int> { 1, 3, 5 };
-    var rankings = _sut.Rank(numbersToRank);
+    var rankings = RankingService<int>.Rank(numbersToRank);
     Assert.Equal(1, rankings[5]);
     Assert.Equal(2, rankings[3]);
     Assert.Equal(3, rankings[1]);
@@ -58,7 +56,7 @@ public class RankIntegers
     // 4      1
     // 4      1
     // 4      1
-    var rankings = _sut.Rank(numbersToRank);
+    var rankings = RankingService<int>.Rank(numbersToRank);
     Assert.Equal(1, rankings[3]);
     Assert.Equal(2, rankings[2]);
     Assert.Equal(3, rankings[1]);
