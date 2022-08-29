@@ -1,6 +1,6 @@
-﻿namespace DevBetterWeb.Web.Models;
+﻿namespace DevBetterWeb.Web.Endpoints;
 
-public class UpdateDescription
+public class UpdateDescriptionRequest
 {
   public string? VideoId { get; set; }
   public string? Description { get; set; }
