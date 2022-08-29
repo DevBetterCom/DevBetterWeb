@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/DevBetterWeb.Web/bin/Debug/netcoreapp2.1/DevBetterWeb.Web.dll",
+            "program": "${workspaceFolder}/src/DevBetterWeb.Web/bin/Debug/net6.0/DevBetterWeb.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/DevBetterWeb.Web",
             "stopAtEntry": false,

@@ -84,6 +84,7 @@ public class Startup
     services.Configure<StripeOptions>(Configuration.GetSection("StripeOptions"));
     services.Configure<SubscriptionPlanOptions>(Configuration.GetSection("SubscriptionPlanOptions"));
     services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+		services.Configure<TwitterSettings>(Configuration.GetSection("Twitter"));
 
     // TODO: Consider changing to check services collection for dbContext
     // See: https://stackoverflow.com/a/49377724/13729
