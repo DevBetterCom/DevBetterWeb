@@ -78,7 +78,9 @@ public class WebhookHandlerService : IWebhookHandlerService
 
     await _memberCancellationService.RemoveUserFromMemberRoleAsync(paymentHandlerCustomer.Email);
     await _memberCancellationService.SendCancellationEmailAsync(paymentHandlerCustomer.Email);
-    await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(paymentHandlerCustomer.Email);
+    var memberFullInfo = await _repository.GetByIdAsync(customerId);
+
+		await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(paymentHandlerCustomer.Email, memberFullInfo);
     var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
     var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
     await _memberAddBillingActivityService.AddMemberSubscriptionEndingBillingActivity(paymentHandlerCustomer.Email, subscriptionPlanName, billingPeriod);
