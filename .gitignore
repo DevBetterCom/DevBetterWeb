@@ -335,4 +335,5 @@ src/DevBetterWeb.Web/appsettings.development.json
 az-create.txt
 src/DevBetterWeb.Web/web.config
 **/wwwroot/lib
+lib/twitter/TwitterSDK.Examples/appsettings.Development.json
 
