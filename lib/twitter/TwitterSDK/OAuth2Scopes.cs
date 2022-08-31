@@ -12,7 +12,7 @@ public sealed class OAuth2Scope : SmartEnum<OAuth2Scope>
 	public static readonly OAuth2Scope FollowsWrite = new OAuth2Scope("follows.write", 6);
 	public static readonly OAuth2Scope OfflineAccess = new OAuth2Scope("offline.access", 7);
 	public static readonly OAuth2Scope SpaceRead = new OAuth2Scope("space.read", 8);
-	public static readonly OAuth2Scope MuteWrite = new OAuth2Scope("mute.read", 9);
+	public static readonly OAuth2Scope MuteRead = new OAuth2Scope("mute.read", 9);
 	public static readonly OAuth2Scope MuteWrite = new OAuth2Scope("mute.write", 10);
 	public static readonly OAuth2Scope LikeRead = new OAuth2Scope("like.read", 11);
 	public static readonly OAuth2Scope LikeWrite = new OAuth2Scope("like.write", 12);
