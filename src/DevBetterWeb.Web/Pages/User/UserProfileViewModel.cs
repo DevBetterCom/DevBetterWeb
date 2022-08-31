@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DevBetterWeb.Core.Entities;
 
@@ -14,8 +15,7 @@ public class UserProfileViewModel
   public string? Address { get; set; }
   [ValidUrl]
   public string? LinkedInUrl { get; set; }
-  [ValidUrl]
-  public string? TwitterUrl { get; set; }
+  public ConnectableSocial TwitterUrl { get; set; }
   [ValidUrl]
   public string? GithubUrl { get; set; }
   [ValidUrl]
@@ -39,7 +39,7 @@ public class UserProfileViewModel
 
   public UserProfileViewModel()
   {
-
+		TwitterUrl = new ConnectableSocial(null, false);
   }
 
   public UserProfileViewModel(Member member)
@@ -55,7 +55,7 @@ public class UserProfileViewModel
     CodinGameUrl = member.CodinGameUrl ?? valueToUseIfNull;
     TwitchUrl = member.TwitchUrl ?? valueToUseIfNull;
     YouTubeUrl = member.YouTubeUrl ?? valueToUseIfNull;
-    TwitterUrl = member.TwitterUrl ?? valueToUseIfNull;
+    TwitterUrl = new ConnectableSocial(member.TwitterUrl, false);
     GithubUrl = member.GitHubUrl ?? valueToUseIfNull;
     LinkedInUrl = member.LinkedInUrl ?? valueToUseIfNull;
     OtherUrl = member.OtherUrl ?? valueToUseIfNull;
@@ -67,4 +67,21 @@ public class UserProfileViewModel
 
   }
 
+	public class ConnectableSocial
+	{
+		private string? _url;
+		public string Url { get => _url ?? "none"; set => _url = value; }
+		public bool IsConnected { get; }
+		public bool ShowConnectButton { 
+			get {
+				return !IsConnected && !String.IsNullOrEmpty(_url);
+			}
+		}
+
+		public ConnectableSocial(string? url, bool isConnected)
+		{
+			_url = url;
+			IsConnected = isConnected;
+		}
+	}
 }
