@@ -6,6 +6,8 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.DomainEvents;
+using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Vimeo.Constants;
@@ -14,6 +16,8 @@ using DevBetterWeb.Vimeo.Services.UserServices;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
+using Stripe.Issuing;
+using CardService = Stripe.Issuing.CardService;
 
 namespace DevBetterWeb.Infrastructure;
 
@@ -39,7 +43,9 @@ public class DefaultInfrastructureModule : Module
     }
     RegisterCommonDependencies(builder);
     RegisterPaymentHandlerDependencies(builder);
-    AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
+    RegisterIssuingHandlerDependencies(builder);
+
+		AutofacExtensions.RegisterVimeoServicesDependencies(builder, _vimeoToken);
   }
 
   private void RegisterCommonDependencies(ContainerBuilder builder)
@@ -78,7 +84,15 @@ public class DefaultInfrastructureModule : Module
     builder.RegisterType<PaymentMethodService>();
   }
 
-  private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
+  private void RegisterIssuingHandlerDependencies(ContainerBuilder builder)
+  {
+	  builder.RegisterType<TransactionService>();
+	  builder.RegisterType<CardService>();
+	  builder.RegisterType<StripeIssuingHandlerCardListService>().As<IIssuingHandlerCardListService>();
+	  builder.RegisterType<StripeIssuingHandlerTransactionListService>().As<IIssuingHandlerTransactionListService>();
+  }
+
+	private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
   {
     builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
   }
