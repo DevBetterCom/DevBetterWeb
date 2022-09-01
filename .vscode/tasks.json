@@ -2,12 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build-web",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/src/DevBetterWeb.Web/DevBetterWeb.Web.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+		{
+            "label": "build-twitter",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/lib/twitter/TwitterSDK.Examples/TwitterSDK.Examples.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

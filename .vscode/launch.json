@@ -4,11 +4,31 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+	{
+		"name": "TitterSDK.Examples (web)",
+		"type": "coreclr",
+		"request": "launch",
+		"preLaunchTask": "build-twitter",
+		"program": "${workspaceFolder}/lib/twitter/TwitterSDK.Examples/bin/Debug/net6.0/TwitterSDK.Examples.dll",
+		"args": [],
+		"cwd": "${workspaceFolder}/lib/twitter/TwitterSDK.Examples",
+		"stopAtEntry": false,
+		"serverReadyAction": {
+			"action": "openExternally",
+			"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+		},
+		"env": {
+			"ASPNETCORE_ENVIRONMENT": "Development"
+		},
+		"sourceFileMap": {
+			"/Views": "${workspaceFolder}/Views"
+		}
+	},
         {
             "name": "DevBetter Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build-web",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/DevBetterWeb.Web/bin/Debug/net6.0/DevBetterWeb.Web.dll",
             "args": [],
