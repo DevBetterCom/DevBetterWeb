@@ -37,7 +37,7 @@ public class SendMemberSubscriptionEndedEmailAsync
       new List<ApplicationUser> { new Mock<ApplicationUser>().Object, new Mock<ApplicationUser>().Object });
 
     string testEmail = "TestEmail";
-    await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(testEmail);
+    await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(testEmail, null);
 
     _emailService.Verify(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
   }
