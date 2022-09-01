@@ -95,7 +95,7 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			var transactions = _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
+			var transactions = await _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
 			Transactions = _mapper.Map<List<StripeTransactionDto>>(transactions);
 
 			var roles = await _roleManager.Roles.ToListAsync();
