@@ -24,6 +24,19 @@
 	</div>
 }
 
+@if (Model.UsersFollowed.Any())
+{
+	<div class="text-center mt-5">
+		<h2 class="text-decoration-underline">Users you follow</h2>
+		@foreach(var item in Model.UsersFollowed.Select((user, i) => new { i, user}))
+		{
+			<p>@(item.i). @item.user.Name - @item.user.Username</p>
+		}
+	</div>
+}
+
+
+
 
 
 @ViewData["ErrorMessage"]

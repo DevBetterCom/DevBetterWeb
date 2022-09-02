@@ -20,6 +20,7 @@ public class IndexModel : PageModel
 	public string TwitterAuthURL { get; set; } = "";
 	public string? TwitterUserName { get; set; } = "";
 	public string? TwitterName { get; set; } = "";
+	public List<TwitterUser> UsersFollowed { get; set; } = new();
 
 	private readonly IOptions<TwitterSettings> _twitterSettings;
 	private readonly ILogger<IndexModel> _logger;
@@ -76,7 +77,12 @@ public class IndexModel : PageModel
 
 
 
-					// Get followings
+					// Get following
+					await foreach (var usersFollowed in UserIdFollowing(token.AccessToken, twitterUserId))
+					{
+						if (usersFollowed is not null)
+						UsersFollowed = UsersFollowed.Concat(usersFollowed).ToList();
+					};
 				}
 			}
 			catch (Exception e)
@@ -170,11 +176,40 @@ public class IndexModel : PageModel
 		return data;
 	}
 
+	private async IAsyncEnumerable<TwitterUser[]?> UserIdFollowing(string token, string id)
+	{
+		var headers = new Dictionary<string, string>()
+		{
+			["Authorization"] = "Bearer " + token
+		};
+
+		string? nextToken = null;
+
+		do
+		{
+			var query = HttpUtility.ParseQueryString(String.Empty);
+			if (!String.IsNullOrEmpty(nextToken))
+			{ 
+				query["pagination_token"] = nextToken;
+			}
+			JsonElement response = await Rest<dynamic>(
+				HttpMethod.Get, 
+				$"/2/users/{id}/following", 
+				query, 
+				headers,
+				3);
+			yield return response.GetProperty("data").Deserialize<TwitterUser[]>();
+			var hasNextToken = response.GetProperty("meta").TryGetProperty("next_token", out var nextTokenProperty);
+			nextToken = hasNextToken ? nextTokenProperty.GetString() : null;
+		} while (!String.IsNullOrEmpty(nextToken));
+	}
+
 	internal async Task<T?> Rest<T>(
 	HttpMethod method,
 	string endpoint,
 	NameValueCollection? queryParams,
-	Dictionary<string, string> headers)
+	Dictionary<string, string> headers,
+	int maxRetries = 0)
 	{
 		var response = await MakeRequest(method, endpoint, queryParams, headers);
 		string content = await response.Content.ReadAsStringAsync();
@@ -186,7 +221,8 @@ public class IndexModel : PageModel
 		HttpMethod method,
 		string endpoint,
 		NameValueCollection? queryParams,
-		Dictionary<string, string> headers)
+		Dictionary<string, string> headers,
+		int maxRetries = 0)
 	{
 		var baseUrl = "https://api.twitter.com";
 		var urlBuilder = new UriBuilder(baseUrl + endpoint);
@@ -204,8 +240,14 @@ public class IndexModel : PageModel
 		{
 			var error = await response.Content.ReadAsStringAsync();
 			var json = JsonDocument.Parse(error);
-			var description = json.RootElement.GetProperty("error_description").GetString();
-			throw new TwitterResponseException(response.StatusCode, response.ReasonPhrase, response.Headers, description);
+			
+			var hasDescription = json.RootElement.TryGetProperty("error_description", out var description);
+			var hasMessage = json.RootElement.TryGetProperty("message", out var message);
+			throw new TwitterResponseException(
+				response.StatusCode, 
+				response.ReasonPhrase, 
+				response.Headers, 
+				hasDescription ? description.GetString() : message.GetString());
 		}
 
 		return response;
@@ -275,4 +317,16 @@ internal class TwitterResponseException : Exception
 		Headers = headers;
 		ErrorDescription = errorDescription;
 	}
+}
+
+public class TwitterUser
+{
+	[JsonPropertyName("id")]
+	public string? Id { get; set; }
+
+	[JsonPropertyName("name")]	
+	public string? Name { get; set; }
+
+	[JsonPropertyName("username")]
+	public string? Username { get; set; }
 }
