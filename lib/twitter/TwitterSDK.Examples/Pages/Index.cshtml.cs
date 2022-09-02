@@ -18,10 +18,14 @@ public class IndexModel : PageModel
 	static private string? _codeChallenge;
 
 	public string TwitterAuthURL { get; set; } = "";
+	public string? TwitterUserName { get; set; } = "";
+	public string? TwitterName { get; set; } = "";
 
 	private readonly IOptions<TwitterSettings> _twitterSettings;
 	private readonly ILogger<IndexModel> _logger;
 	private readonly HttpClient _httpClient = new HttpClient();
+
+	private string? twitterUserId;
 
 
 	public IndexModel(ILogger<IndexModel> logger, IOptions<TwitterSettings> twitterSettings)
@@ -62,16 +66,15 @@ public class IndexModel : PageModel
 
 					Token token = await RequestAccessToken(code, clientId, clientSecret, callback, _codeVerifier);
 					Guard.Against.NullOrEmpty(token.AccessToken, nameof(token.AccessToken));
-					
+
 					// Get user info
-					var user = await FindMyUser(token.AccessToken);
-					if (user is not null)
-					{
-						user["id"]
-						user["name"]
-						user["username"]
-					}
-					
+					JsonElement user = await FindMyUser(token.AccessToken);
+					var data = user.GetProperty("data");
+					twitterUserId = data.GetProperty("id").GetString();
+					TwitterName = data.GetProperty("name").GetString();
+					TwitterUserName = data.GetProperty("username").GetString();
+
+
 
 					// Get followings
 				}

@@ -11,10 +11,18 @@
 
 @if (!String.IsNullOrEmpty(Model.TwitterAuthURL))
 {
-	<div class="text-center mt-2">
+	<div class="text-center mt-4">
 		<a href="@Model.TwitterAuthURL">Connect to your Twitter account</a>
 	</div>
 }
 
+@if (!String.IsNullOrEmpty(Model.TwitterName))
+{
+	<div class="text-center mt-4">
+		<h2>Hi @Model.TwitterName, you're connected to your @Model.TwitterUserName @@account</h2>
+	</div>
+}
+
+
+
 @ViewData["ErrorMessage"]
-@ViewData["Tweets"]
