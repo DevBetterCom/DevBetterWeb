@@ -29,7 +29,7 @@ public class UserModel : PageModel
 	[BindProperty] public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; } = new UserPersonalUpdateModel();
 	[BindProperty] public UserLinksUpdateModel UserLinksUpdateModel { get; set; } = new UserLinksUpdateModel();
 
-	public List<StripeTransactionDto> Transactions = new List<StripeTransactionDto>();
+	public List<StripeInvoiceDto> Invoices = new List<StripeInvoiceDto>();
 
 	private readonly ILogger<UserModel> _logger;
 	private readonly UserManager<ApplicationUser> _userManager;
@@ -40,7 +40,7 @@ public class UserModel : PageModel
 	private readonly IRepository<MemberSubscription> _subscriptionRepository;
 	private readonly IRepository<MemberSubscriptionPlan> _subscriptionPlanRepository;
 	private readonly IUserEmailConfirmationService _userEmailConfirmationService;
-	private readonly IIssuingHandlerTransactionListService _issuingHandlerTransactionListService;
+	private readonly IInvoiceHandlerListService _invoiceHandlerListService;
 	private readonly IMapper _mapper;
 
 	public UserModel(ILogger<UserModel> logger,
@@ -52,7 +52,7 @@ public class UserModel : PageModel
 			IRepository<MemberSubscription> subscriptionRepository,
 			IRepository<MemberSubscriptionPlan> subscriptionPlanRepository,
 			IUserEmailConfirmationService userEmailConfirmationService,
-			IIssuingHandlerTransactionListService issuingHandlerTransactionListService,
+			IInvoiceHandlerListService invoiceHandlerListService,
 			IMapper mapper)
 	{
 		_logger = logger;
@@ -64,7 +64,7 @@ public class UserModel : PageModel
 		_subscriptionRepository = subscriptionRepository;
 		_subscriptionPlanRepository = subscriptionPlanRepository;
 		_userEmailConfirmationService = userEmailConfirmationService;
-		_issuingHandlerTransactionListService = issuingHandlerTransactionListService;
+		_invoiceHandlerListService = invoiceHandlerListService;
 		_mapper = mapper;
 	}
 
@@ -95,16 +95,8 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			try
-			{
-				// TODO: Shady - fix issue #903 so this works
-				var transactions = await _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
-				Transactions = _mapper.Map<List<StripeTransactionDto>>(transactions);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Failed to load stripe transactions for ", currentUser.Email);
-			}
+			var invoices = await _invoiceHandlerListService.ListByEmailAsync(currentUser.Email);
+			Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
 
 			var roles = await _roleManager.Roles.ToListAsync();
 
