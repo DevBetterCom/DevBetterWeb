@@ -38,6 +38,10 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 - [Production Site](https://devbetter.com/)
 
+### Prerequisite
+
+- [The command-line interface (CLI) tools for Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
+
 ### Building and Running the App Locally
 
 - Clone (or Fork and Clone) the repository locally
@@ -50,8 +54,6 @@ dotnet ef database update -c appdbcontext -p ../DevBetterWeb.Infrastructure/DevB
 # RUN THIS FROM THE INFRASTRUCTURE PROJECT FOLDER
 dotnet ef database update -c IdentityDbContext -s ..\devbetterweb.web\DevBetterWeb.Web.csproj
 ```
-
-- Modify Program.cs so that it seeds the database the first time you run (uncomment [this line](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Web/Program.cs#L35))
 
 You should be able to run the application at this point. The default password for seeded accounts is [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Core/AuthConstants.cs#L13). The default users created are [here](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Infrastructure/Identity/Data/AppIdentityDbContextSeed.cs). Members are created [the first time they visit their edit profile page](https://github.com/DevBetterCom/DevBetterWeb/blob/master/src/DevBetterWeb.Web/Pages/User/MyProfile/Index.cshtml.cs#L64).
 
@@ -70,6 +72,7 @@ dotnet ef migrations add MIGRATIONNAME -c appdbcontext -p ../DevBetterWeb.Infras
 ```
 
 If changes on the Identity then you need to Add a new migration (from the DevBetter.Web folder):
+
 ```powershell
  dotnet ef migrations add MIGRATIONNAME -c IdentityDbContext -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj -o Identity/Data/Migrations
 ```
@@ -90,7 +93,7 @@ dotnet ef migrations script -c AppDbContext -i -o migrate.sql -p ../DevBetterWeb
 
 Put the video files and their associated markdown files in a folder you wish to upload from. Specify the Vimeo token and devBetter API key.
 
-For the API link, the production link should be the root web site, https://devbetter.com/ 
+For the API link, the production link should be the root web site, <https://devbetter.com/>
 
 ```powershell
 .\DevBetterWeb.UploaderApp.exe -d [folder] -t [Vimeo token] -a [api link] -akey [api key]
