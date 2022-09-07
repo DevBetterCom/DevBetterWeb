@@ -89,6 +89,7 @@ public class DefaultInfrastructureModule : Module
   {
 	  builder.RegisterType<TransactionService>();
 	  builder.RegisterType<CardService>();
+	  builder.RegisterType<InvoiceService>();
 	  builder.RegisterType<StripeIssuingHandlerCardListService>().As<IIssuingHandlerCardListService>();
 	  builder.RegisterType<StripeIssuingHandlerTransactionListService>().As<IIssuingHandlerTransactionListService>();
 	  builder.RegisterType<StripeInvoiceHandlerListService>().As<IInvoiceHandlerListService>();
