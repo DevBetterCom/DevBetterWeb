@@ -7,6 +7,7 @@ using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Infrastructure.InvoiceHandler.StripeInvoiceHandler;
 using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
@@ -90,6 +91,7 @@ public class DefaultInfrastructureModule : Module
 	  builder.RegisterType<CardService>();
 	  builder.RegisterType<StripeIssuingHandlerCardListService>().As<IIssuingHandlerCardListService>();
 	  builder.RegisterType<StripeIssuingHandlerTransactionListService>().As<IIssuingHandlerTransactionListService>();
+	  builder.RegisterType<StripeInvoiceHandlerListService>().As<IInvoiceHandlerListService>();
   }
 
 	private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
