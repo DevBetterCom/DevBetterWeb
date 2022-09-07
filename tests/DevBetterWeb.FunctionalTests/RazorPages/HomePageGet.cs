@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DevBetterWeb.Web;
 using Xunit;
@@ -21,6 +22,6 @@ public class HomePageGet : IClassFixture<CustomWebApplicationFactory<Startup>>
     response.EnsureSuccessStatusCode();
     string stringResponse = await response.Content.ReadAsStringAsync();
 
-    Assert.Contains("Steve has been a great coach and a source of precious practical advice and encouragement.", stringResponse);
+    Assert.Contains("Steve has been a great coach and a source of precious practical", stringResponse);
   }
 }
