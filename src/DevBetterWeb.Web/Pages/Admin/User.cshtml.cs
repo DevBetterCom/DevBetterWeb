@@ -95,8 +95,16 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			var transactions = await _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
-			Transactions = _mapper.Map<List<StripeTransactionDto>>(transactions);
+			try
+			{
+				// TODO: Shady - fix issue #903 so this works
+				var transactions = await _issuingHandlerTransactionListService.ListByEmailAsync(currentUser.Email);
+				Transactions = _mapper.Map<List<StripeTransactionDto>>(transactions);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Failed to load stripe transactions for ", currentUser.Email);
+			}
 
 			var roles = await _roleManager.Roles.ToListAsync();
 
