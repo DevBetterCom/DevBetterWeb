@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Infrastructure.Interfaces;
 using Stripe;
-using Stripe.Issuing;
 using Card = Stripe.Issuing.Card;
 using CardListOptions = Stripe.Issuing.CardListOptions;
 using CardService = Stripe.Issuing.CardService;
