@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Infrastructure.InvoiceHandler.StripeInvoiceHandler;
 using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 using DevBetterWeb.Infrastructure.Services;
@@ -25,6 +26,7 @@ public static class ConfigureServicesExtensions
     services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
     services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
     services.AddScoped<IIssuingHandlerCardListService, StripeIssuingHandlerCardListService>();
+    services.AddScoped<IInvoiceHandlerListService, StripeInvoiceHandlerListService>();
     services.AddScoped<IIssuingHandlerTransactionListService, StripeIssuingHandlerTransactionListService>();
   }
 
