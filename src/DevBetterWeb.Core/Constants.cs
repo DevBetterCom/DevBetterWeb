@@ -14,6 +14,7 @@ public static class Constants
   public const string VIMEO_ALLOWED_DOMAIN = "devbetter.com";
 
   public const string STRIPE_API_ENDPOINT = "api/stripecallback";
+  public const int MAX_BOOK_DESCRIPTION_LENGTH = 2000;
 
   public static class ConfigKeys
   {

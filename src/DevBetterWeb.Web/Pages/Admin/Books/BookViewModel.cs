@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static DevBetterWeb.Core.Constants;
 
 namespace DevBetterWeb.Web.Pages.Admin.Books;
 
@@ -19,7 +20,7 @@ public class BookViewModel
 	[Display(Name = "Book Category")]
 	public int? BookCategoryId { get; set; }
 
-	[StringLength(2000, ErrorMessage = "Details cannot be longer than 2000 characters.")]
+	[StringLength(MAX_BOOK_DESCRIPTION_LENGTH, ErrorMessage = "Details has exceede the maximum length of characters")]
 	public string? Details { get; set; }
 	public int? MemberWhoUploadId { get; set; }
 
