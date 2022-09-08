@@ -41,6 +41,7 @@ public class Member : BaseEntity, IAggregateRoot
   public string UserId { get; private set; }
   public string? FirstName { get; private set; }
   public string? LastName { get; private set; }
+  public Birthday? Birthday { get; private set; }
   public string? AboutInfo { get; private set; }
   public string? Address { get; private set; }
   public Address? ShippingAddress { get; private set; }
@@ -129,6 +130,20 @@ public class Member : BaseEntity, IAggregateRoot
     if (isEvent)
     {
 	    CreateOrUpdateAddressUpdateEvent(nameof(Address));
+		}
+  }
+
+  public void UpdateBirthday(int? day, int? month, bool isEvent = true)
+  { 
+    if (day == Birthday?.Day && month == Birthday?.Month) return;
+
+    var birthday = (month == null || day == null) ? null : new Birthday(day.Value, month.Value);
+
+    Birthday = birthday;
+
+    if (isEvent)
+    {
+	    CreateOrUpdateUpdateEvent(nameof(Birthday));
 		}
   }
 
