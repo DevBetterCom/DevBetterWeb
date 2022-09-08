@@ -308,52 +308,52 @@
 	                <a href="@item.InvoicePdf">@item.Id</a>
                 </td>
 	              <td>
-		              @item.Number
+		            @item.Number
 	              </td>
 	              <td>
-                  @item.IsPaid
+                    @item.IsPaid
 	              </td>
 	              <td>
-                  @item.IsPaidOutOfBand
+                    @item.IsPaidOutOfBand
 	              </td>
 	              <td>
-                  @item.Status
+                    @item.Status
 	              </td>
 	              <td>
-		              @(item.FinalizedAt == null ? "" : @item.FinalizedAt!.Value.ToShortDateString())
+		            @(item.FinalizedAt == null ? "" : @item.FinalizedAt!.Value.ToShortDateString())
 	              </td>
 	              <td>
-									@(item.PaidAt == null ? "" : @item.PaidAt!.Value.ToShortDateString())
+					@(item.PaidAt == null ? "" : @item.PaidAt!.Value.ToShortDateString())
 	              </td>
 	              <td>
-		              @item.AmountDue
+                    @(item.AmountDue == 0?"$0":$"${item.AmountDue/100}")
 	              </td>
 	              <td>
-		              @item.AmountPaid
+                  @(item.AmountPaid == 0?"$0":$"${item.AmountPaid/100}")
 	              </td>
 	              <td>
-		              @item.AmountRemaining
+                    @(item.AmountRemaining == 0?"$0":$"${item.AmountRemaining/100}")
 	              </td>
 	              <td>
-		              @item.Total
+		            @(item.Total == 0?"$0":$"${item.Total/100}")
 	              </td>
 	              <td>
-		              @item.AttemptCount
+		            @item.AttemptCount
 	              </td>
 	              <td>
-		              @item.Currency
+		            @item.Currency
 	              </td>
 	              <td>
-		              @item.CustomerId
+		            @item.CustomerId
 	              </td>
 	              <td>
-                  @item.CustomerName
+                    @item.CustomerName
 	              </td>
 	              <td>
-                  @item.CustomerEmail
+                    @item.CustomerEmail
 	              </td>
 	              <td>
-                  @item.CustomerPhone
+                    @item.CustomerPhone
 	              </td>
               </tr>
             }
