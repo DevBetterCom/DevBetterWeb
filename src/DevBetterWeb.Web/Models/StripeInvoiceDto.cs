@@ -12,10 +12,10 @@ public class StripeInvoiceDto
 	public string Status { get; set; } = string.Empty;
 	public DateTime? FinalizedAt { get; set; }
 	public DateTime? PaidAt { get; set; }
-	public long? AmountDue { get; set; }
-	public long? AmountPaid { get; set; }
-	public long? AmountRemaining { get; set; }
-	public long? Total { get; set; }
+	public long AmountDue { get; set; }
+	public long AmountPaid { get; set; }
+	public long AmountRemaining { get; set; }
+	public long Total { get; set; }
 	public int AttemptCount { get; set; }
 	public string Currency { get; set; } = string.Empty;
 	public string CustomerId { get; set; } = string.Empty;
