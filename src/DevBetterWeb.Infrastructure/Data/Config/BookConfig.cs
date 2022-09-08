@@ -19,7 +19,7 @@ public class BookConfig : IEntityTypeConfiguration<Book>
 
     builder
 	    .Property(x => x.Details)
-	    .HasMaxLength(1000);
+	    .HasMaxLength(2000);
 
     builder
 	    .Property(x => x.PurchaseUrl)
