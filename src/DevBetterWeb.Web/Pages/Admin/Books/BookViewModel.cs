@@ -19,6 +19,7 @@ public class BookViewModel
 	[Display(Name = "Book Category")]
 	public int? BookCategoryId { get; set; }
 
+	[StringLength(2000, ErrorMessage = "Details cannot be longer than 2000 characters.")]
 	public string? Details { get; set; }
 	public int? MemberWhoUploadId { get; set; }
 
