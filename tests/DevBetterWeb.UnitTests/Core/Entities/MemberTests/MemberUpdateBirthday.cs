@@ -9,8 +9,8 @@ namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
 
 public class MemberUpdateBirthday
 {
-  private int _initialDay = 1;
-  private int _initialMonth = 1;
+  private readonly int _initialDay = 1;
+  private readonly int _initialMonth = 1;
 
   private Member GetMemberWithDefaultBirthday()
   { 
@@ -38,7 +38,6 @@ public class MemberUpdateBirthday
   {
     var day = 3;
     var month = 3;
-    var newBirthday = new Birthday(day, month);
 
     var member = GetMemberWithDefaultBirthday();
     member.UpdateBirthday(day, month);
