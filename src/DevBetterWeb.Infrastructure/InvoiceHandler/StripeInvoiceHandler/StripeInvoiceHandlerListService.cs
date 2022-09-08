@@ -65,6 +65,7 @@ public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
 	  while (stripeSearchInvoices.HasMore)
 	  {
 		  stripeSearchInvoices = await _invoiceService.SearchAsync(invoiceSearchOptions, cancellationToken: cancellationToken);
+		  invoiceSearchOptions.Page = stripeSearchInvoices.NextPage;
 
 		  if (stripeSearchInvoices.Data.Count > 0)
 		  {
