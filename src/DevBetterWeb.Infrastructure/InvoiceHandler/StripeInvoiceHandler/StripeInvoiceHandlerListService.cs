@@ -11,10 +11,12 @@ namespace DevBetterWeb.Infrastructure.InvoiceHandler.StripeInvoiceHandler;
 public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
 {
 	private readonly InvoiceService _invoiceService;
+	private readonly IPaymentHandlerCustomerService _paymentHandlerCustomerService;
 
-	public StripeInvoiceHandlerListService(InvoiceService invoiceService)
+	public StripeInvoiceHandlerListService(InvoiceService invoiceService, IPaymentHandlerCustomerService paymentHandlerCustomerService)
 	{
 		_invoiceService = invoiceService;
+		_paymentHandlerCustomerService = paymentHandlerCustomerService;
 	}
 
   public async Task<List<Invoice>> ListAsync(CancellationToken cancellationToken = default)
@@ -55,13 +57,20 @@ public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
   
   public async Task<List<Invoice>> SearchByEmailAsync(string memberEmail, CancellationToken cancellationToken = default)
   {
-	  var invoiceSearchOptions = new InvoiceSearchOptions();
-	  invoiceSearchOptions.Query = $"metadata['customer_email']:'{memberEmail}'";
-	  invoiceSearchOptions.Limit = 100;
+		var invoices = new List<Invoice>();
+
+		var customer = _paymentHandlerCustomerService.GetCustomerByEmail(memberEmail);
+		if (customer == null)
+		{
+			return invoices;
+		}
+
+		var invoiceSearchOptions = new InvoiceSearchOptions();
+		invoiceSearchOptions.Query = $"customer:\"{customer.CustomerId}\"";
+		invoiceSearchOptions.Limit = 100;
 
 	  var stripeSearchInvoices = new StripeSearchResult<Invoice>{ HasMore = true };
-	  var invoices = new List<Invoice>();
-
+	  
 	  while (stripeSearchInvoices.HasMore)
 	  {
 		  stripeSearchInvoices = await _invoiceService.SearchAsync(invoiceSearchOptions, cancellationToken: cancellationToken);
@@ -75,4 +84,34 @@ public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
 
 	  return invoices;
   }
+
+	public List<Invoice> SearchByEmail(string memberEmail)
+	{
+		var invoices = new List<Invoice>();
+
+		var customer = _paymentHandlerCustomerService.GetCustomerByEmail(memberEmail);
+		if (customer == null)
+		{
+			return invoices;
+		}
+
+		var invoiceSearchOptions = new InvoiceSearchOptions();
+		invoiceSearchOptions.Query = $"customer:\"{customer.CustomerId}\"";
+		invoiceSearchOptions.Limit = 100;
+
+		var stripeSearchInvoices = new StripeSearchResult<Invoice> { HasMore = true };
+
+		while (stripeSearchInvoices.HasMore)
+		{
+			stripeSearchInvoices = _invoiceService.Search(invoiceSearchOptions);
+			invoiceSearchOptions.Page = stripeSearchInvoices.NextPage;
+
+			if (stripeSearchInvoices.Data.Count > 0)
+			{
+				invoices.AddRange(stripeSearchInvoices.Data);
+			}
+		}
+
+		return invoices;
+	}
 }

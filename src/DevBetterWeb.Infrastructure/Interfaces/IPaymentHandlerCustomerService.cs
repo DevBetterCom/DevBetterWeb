@@ -7,4 +7,5 @@ public interface IPaymentHandlerCustomerService
   PaymentHandlerCustomer GetCustomer(string customerId);
   PaymentHandlerCustomer CreateCustomer(string email);
   void SetPaymentMethodAsCustomerDefault(string customerId, string paymentMethodId);
+	PaymentHandlerCustomer? GetCustomerByEmail(string email);
 }
