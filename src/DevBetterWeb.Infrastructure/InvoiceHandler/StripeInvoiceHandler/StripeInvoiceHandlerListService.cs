@@ -56,7 +56,7 @@ public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
   public async Task<List<Invoice>> SearchByEmailAsync(string memberEmail, CancellationToken cancellationToken = default)
   {
 	  var invoiceSearchOptions = new InvoiceSearchOptions();
-	  invoiceSearchOptions.Query = $"metadata['customer_email']:{memberEmail}";
+	  invoiceSearchOptions.Query = $"metadata['customer_email']:'{memberEmail}'";
 	  invoiceSearchOptions.Limit = 100;
 
 	  var stripeSearchInvoices = new StripeSearchResult<Invoice>{ HasMore = true };
