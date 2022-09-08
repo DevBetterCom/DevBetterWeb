@@ -1,6 +1,7 @@
 ﻿using DevBetterWeb.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static DevBetterWeb.Core.Constants;
 
 namespace DevBetterWeb.Infrastructure.Data.Config;
 
@@ -19,7 +20,7 @@ public class BookConfig : IEntityTypeConfiguration<Book>
 
     builder
 	    .Property(x => x.Details)
-	    .HasMaxLength(1000);
+	    .HasMaxLength(MAX_BOOK_DESCRIPTION_LENGTH);
 
     builder
 	    .Property(x => x.PurchaseUrl)
