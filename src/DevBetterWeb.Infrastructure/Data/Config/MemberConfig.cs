@@ -40,6 +40,12 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
       cl.Property(p => p!.Longitude).HasDefaultValue(null);
     });
 
+    builder.OwnsOne(x => x.Birthday, bd =>
+    {
+      bd.Property(p => p!.Day).HasDefaultValue(null);
+      bd.Property(p => p!.Month).HasDefaultValue(null);
+    });
+
     builder.HasMany(x => x.FavoriteArchiveVideos);
   }
 }

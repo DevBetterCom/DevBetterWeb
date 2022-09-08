@@ -53,7 +53,7 @@ public class IndexModel : PageModel
     AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
 
     var spec = new MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec(applicationUser.Id);
-    var member = await _memberRepository.FirstOrDefaultAsync(spec);
+		Member? member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
     {
