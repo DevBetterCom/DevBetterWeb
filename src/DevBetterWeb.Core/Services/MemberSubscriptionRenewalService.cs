@@ -10,13 +10,16 @@ public class MemberSubscriptionRenewalService : IMemberSubscriptionRenewalServic
 {
   private readonly IUserLookupService _userLookup;
   private readonly IRepository<Member> _memberRepository;
+	private readonly IAppLogger<MemberSubscriptionRenewalService> _logger;
 
-  public MemberSubscriptionRenewalService(IUserLookupService userLookup,
-    IRepository<Member> memberRepository)
+	public MemberSubscriptionRenewalService(IUserLookupService userLookup,
+    IRepository<Member> memberRepository,
+		IAppLogger<MemberSubscriptionRenewalService> logger)
   {
     _userLookup = userLookup;
     _memberRepository = memberRepository;
-  }
+		_logger = logger;
+	}
 
   public async Task ExtendMemberSubscription(string email, System.DateTime subscriptionEndDate)
   {
@@ -26,5 +29,9 @@ public class MemberSubscriptionRenewalService : IMemberSubscriptionRenewalServic
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberWithEmailNotFoundException(email);
     member.ExtendCurrentSubscription(subscriptionEndDate);
+
+		await _memberRepository.SaveChangesAsync();
+
+		_logger.LogInformation($"Extended {member.UserFullName} subscription to {subscriptionEndDate.ToShortDateString}");
   }
 }
