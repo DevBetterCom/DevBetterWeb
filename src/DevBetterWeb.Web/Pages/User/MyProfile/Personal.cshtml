@@ -50,6 +50,7 @@
 								<input asp-for="UserPersonalUpdateModel.BirthdayDay" type="number" min="1" max="31"
 									value="@Model.UserPersonalUpdateModel.BirthdayDay" class="form-control form-control-sm"
 									placeholder="Day" />
+								<span asp-validation-for="UserPersonalUpdateModel.BirthdayDay" class="text-danger"></span>
 							</div>
 							<div class="col">
 								<input asp-for="UserPersonalUpdateModel.BirthdayMonth" type="number" min="1" max="12"
