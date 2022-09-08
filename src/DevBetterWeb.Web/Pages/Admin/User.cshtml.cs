@@ -95,7 +95,7 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			var invoices = await _invoiceHandlerListService.ListByEmailAsync(currentUser.Email);
+			var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser.Email);
 			Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
 
 			var roles = await _roleManager.Roles.ToListAsync();

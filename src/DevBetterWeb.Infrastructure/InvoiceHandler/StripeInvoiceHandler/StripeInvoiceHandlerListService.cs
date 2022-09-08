@@ -52,4 +52,27 @@ public class StripeInvoiceHandlerListService : IInvoiceHandlerListService
 
 	  return invoices;
   }
+  
+  public async Task<List<Invoice>> SearchByEmailAsync(string memberEmail, CancellationToken cancellationToken = default)
+  {
+	  var invoiceSearchOptions = new InvoiceSearchOptions();
+	  invoiceSearchOptions.Query = $"metadata['customer_email']:'{memberEmail}'";
+	  invoiceSearchOptions.Limit = 100;
+
+	  var stripeSearchInvoices = new StripeSearchResult<Invoice>{ HasMore = true };
+	  var invoices = new List<Invoice>();
+
+	  while (stripeSearchInvoices.HasMore)
+	  {
+		  stripeSearchInvoices = await _invoiceService.SearchAsync(invoiceSearchOptions, cancellationToken: cancellationToken);
+		  invoiceSearchOptions.Page = stripeSearchInvoices.NextPage;
+
+		  if (stripeSearchInvoices.Data.Count > 0)
+		  {
+			  invoices.AddRange(stripeSearchInvoices.Data);
+		  }
+	  }
+
+	  return invoices;
+  }
 }
