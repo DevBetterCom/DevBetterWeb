@@ -143,7 +143,7 @@ public class Member : BaseEntity, IAggregateRoot
 
     if (isEvent)
     {
-	    CreateOrUpdateAddressUpdateEvent(nameof(Birthday));
+	    CreateOrUpdateUpdateEvent(nameof(Birthday));
 		}
   }
 
