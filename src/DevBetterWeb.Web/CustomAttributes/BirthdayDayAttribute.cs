@@ -1,17 +1,11 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using DevBetterWeb.Web.Pages.User;
 
 namespace DevBetterWeb.Web;
 public class BirthdayDayAttribute : ValidationAttribute
 {
-	public BirthdayDayAttribute()
-	{
-
-	}
-
-
-	public string GetErrorMessage() =>
-			$"A birthday in February can't have a date of more than 29.";
 
 #pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
 	protected override ValidationResult IsValid(object value,
@@ -20,11 +14,19 @@ public class BirthdayDayAttribute : ValidationAttribute
 	{
 		var model = (UserPersonalUpdateModel)validationContext.ObjectInstance;
 
-		if (model.BirthdayMonth == 2 && (int)value > 29)
-		{
-			return new ValidationResult(GetErrorMessage());
-		}
+		if (value is null) return ValidationResult.Success;
+		if (model.BirthdayMonth is null) return ValidationResult.Success;
 
-		return ValidationResult.Success;
+		try
+		{
+			const int LEAP_YEAR = 2020;
+			new DateOnly(LEAP_YEAR, model.BirthdayMonth.Value, (int)value);
+			return ValidationResult.Success;
+		}
+		catch (ArgumentOutOfRangeException)
+		{
+			string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(model.BirthdayMonth.Value);
+			return new ValidationResult($"Invalid day for month of {monthName}");
+		}
 	}
 }
