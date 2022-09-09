@@ -1,10 +1,14 @@
 ﻿using System;
 using Ardalis.ApiEndpoints;
+using DevBetterWeb.Core;
 using DevBetterWeb.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevBetterWeb.Web.Endpoints;
 
+// TODO: we can use it to create customer by admin
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class CreateCustomer : EndpointBaseSync
 	.WithRequest<CustomerCreateRequest>
 	.WithResult<CustomerCreateResponse>
