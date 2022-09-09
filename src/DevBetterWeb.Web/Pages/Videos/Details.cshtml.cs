@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
@@ -22,6 +24,7 @@ public class DetailsModel : PageModel
 {
   [BindProperty]
   public OEmbedViewModel? OEmbedViewModel { get; set; }
+  public string? Transcript { get; set; }
 
   private readonly GetOEmbedVideoService _getOEmbedVideoService;
   private readonly GetVideoService _getVideoService;
@@ -30,10 +33,12 @@ public class DetailsModel : PageModel
   private readonly IMarkdownService _markdownService;
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
+	private readonly GetAllTextTracksService _getAllTextTracksService;
+	private readonly HttpClient _httpClient;
 
-  public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService, 
+	public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService, 
 	  GetVideoService getVideoService, IRepository<ArchiveVideo> repository, UserManager<ApplicationUser> userManager, 
-	  IRepository<Member> memberRepository)
+	  IRepository<Member> memberRepository, GetAllTextTracksService getAllTextTracksService, HttpClient httpClient)
   {
 	  _mapper = mapper;
 	  _markdownService = markdownService;
@@ -42,12 +47,25 @@ public class DetailsModel : PageModel
     _getOEmbedVideoService = getOEmbedVideoService;
     _userManager = userManager;
     _memberRepository = memberRepository;
-  }
+		_getAllTextTracksService = getAllTextTracksService;
+		_httpClient = httpClient;
+	}
 
   public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
   {
     var video = await _getVideoService.ExecuteAsync(videoId);
     if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
+
+    var textTracks = await _getAllTextTracksService.ExecuteAsync(videoId);
+    if (textTracks?.Data != null)
+    {
+      var textTrackUrl = textTracks.Data.Data.First().Link;
+      var textTrackResponse = (await _httpClient.GetAsync(textTrackUrl));
+      if (textTrackResponse.IsSuccessStatusCode)
+      {
+        Transcript = await textTrackResponse.Content.ReadAsStringAsync();
+      }
+    }
 
     var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
     if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
