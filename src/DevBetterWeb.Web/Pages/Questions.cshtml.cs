@@ -26,7 +26,7 @@ public class QuestionsModel : PageModel
 
   public async Task OnGetAsync()
   {
-	  var spec = new CoachingSessionsWithQuestionsSpec();
+	  var spec = new CoachingSessionsWithQuestionsSpec(5);
 	  var coachingSessionsEntity = await _coachingSessionRepository.ListAsync(spec);
 	  CoachingSessions = _mapper.Map<List<CoachingSessionDto>>(coachingSessionsEntity);
 	  foreach (var coachingSession in CoachingSessions)
