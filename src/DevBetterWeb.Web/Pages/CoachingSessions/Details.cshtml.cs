@@ -21,17 +21,20 @@ public class DetailsModel : PageModel
   private readonly IRepository<CoachingSession> _coachingSessionRepository;
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IRepository<Member> _memberRepository;
+  private readonly IMarkdownService _markdownService;
 
   public DetailsModel(
 	  IMapper mapper, 
 	  IRepository<CoachingSession> coachingSessionRepository,
 	  UserManager<ApplicationUser> userManager,
-	  IRepository<Member> memberRepository)
+	  IRepository<Member> memberRepository,
+	  IMarkdownService markdownService)
   {
 	  _mapper = mapper;
     _coachingSessionRepository = coachingSessionRepository;
     _userManager = userManager;
     _memberRepository = memberRepository;
+    _markdownService = markdownService;
   }
 
   public CoachingSessionDto CoachingSession { get; set; } = new CoachingSessionDto();
@@ -60,6 +63,7 @@ public class DetailsModel : PageModel
     foreach (var question in CoachingSession.Questions)
     {
 	    question.CanUpVote = coachingSessionEntity.Questions.First(x => x.Id == question.Id).MemberCanUpVote(member.Id);
+	    question.QuestionText = _markdownService.RenderHTMLFromMD(question.QuestionText);
     }
 
     return Page();
