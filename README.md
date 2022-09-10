@@ -113,6 +113,7 @@ Active the forword by running this command
 ngrok http 5010
 ```
 Save the link https://xxx-xxx-xxx-xxx.ngrok.io and create WebHook on your stripe account with this link. 
+You need to check which version is supported by Stripe .NET and choose it while you creating the WebHook on your account.  
 Copy the WebHook Secret from edit WebHook and insert it on `appsettings.json` -> `StripeOptions` -> `StripeWebHookSecretKey`.
 Make DevBetter application using http without redirect by comment this line `app.UseHttpsRedirection();` from `startup.cs`.  
 Open the application on `http://localhost:5010/`.
