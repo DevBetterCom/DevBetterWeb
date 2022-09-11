@@ -6,5 +6,6 @@ public class StripeOptions
   public string? stripeSecretKey { get; set; }
   public string? yearlyPlanId { get; set; }
   public string? monthlyPlanId { get; set; }
+  public string? StripeWebHookSecretKey { get; set; }
 
 }
