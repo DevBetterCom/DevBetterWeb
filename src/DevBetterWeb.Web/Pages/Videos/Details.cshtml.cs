@@ -53,10 +53,13 @@ public class DetailsModel : PageModel
 
   public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
   {
-    var video = await _getVideoService.ExecuteAsync(videoId);
+    var videoTask = _getVideoService.ExecuteAsync(videoId);
+    var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
+
+    var video = await videoTask;
     if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
 
-    var textTracks = await _getAllTextTracksService.ExecuteAsync(videoId);
+    var textTracks = await textTracksTask;
     if (textTracks?.Data != null)
     {
       var textTrackUrl = textTracks.Data.Data.First().Link;
