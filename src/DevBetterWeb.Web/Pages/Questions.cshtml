@@ -24,7 +24,7 @@
                 <div class="border bg-light p-2 mb-2 d-flex">
 
                     <div class="w-75">
-                        @Html.DisplayFor(modelItem => item.QuestionText)
+	                    @Html.Raw(item.QuestionText)
                     </div>
                 </div>
             }

@@ -5,11 +5,20 @@ namespace DevBetterWeb.Core.Specs;
 
 public sealed class CoachingSessionsWithQuestionsSpec : Specification<CoachingSession>
 {
-  public CoachingSessionsWithQuestionsSpec()
+  public CoachingSessionsWithQuestionsSpec(int? recentCount=null)
   {
 	  Query
-		  .Include(coachingSession => coachingSession.Questions)
-				.ThenInclude(question => question.QuestionVotes)
 		  .OrderByDescending(x => x.StartAt);
+
+
+	  if (recentCount != null)
+	  {
+		  Query
+			  .Take(recentCount.Value);
+		}
+
+	  Query
+		  .Include(coachingSession => coachingSession.Questions)
+				.ThenInclude(question => question.QuestionVotes);
   }
 }
