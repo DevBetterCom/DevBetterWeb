@@ -35,7 +35,7 @@ get people invited.
 <a href=""https://devbetter.com/Videos/Details/1234/16"">get people invited.</a>
 ";
 
-		var actual = new WebVTTParsingService().Parse(vtt, "1234");
+		var actual = new WebVTTParsingService().Parse(vtt, "https://devbetter.com/Videos/Details/1234");
 
 		actual.Should().Be(expected);
 	}
