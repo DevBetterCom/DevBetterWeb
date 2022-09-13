@@ -98,3 +98,23 @@ For the API link, the production link should be the root web site, <https://devb
 ```powershell
 .\DevBetterWeb.UploaderApp.exe -d [folder] -t [Vimeo token] -a [api link] -akey [api key]
 ```
+
+## Stripe WebHook Development
+Install ngrok for more information [here](https://ngrok.com) 
+```powershell
+	npm install ngrok -g 
+```
+If there is any security issue while you using it then run this command on pwoershell
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
+```
+Active the forword by running this command
+```powershell
+ngrok http 5010
+```
+Save the link https://xxx-xxx-xxx-xxx.ngrok.io and create WebHook on your stripe account with this link. 
+You need to check which version is supported by Stripe .NET and choose it while you creating the WebHook on your account.  
+Copy the WebHook Secret from edit WebHook and insert it on `appsettings.json` -> `StripeOptions` -> `StripeWebHookSecretKey`.
+Make DevBetter application using http without redirect by comment this line `app.UseHttpsRedirection();` from `startup.cs`.  
+Open the application on `http://localhost:5010/`.
+You can check PaymentIntentWebHook endpoint for more information.  
