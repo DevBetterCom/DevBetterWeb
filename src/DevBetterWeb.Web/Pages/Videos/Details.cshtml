@@ -28,6 +28,10 @@
   .comment-reply {
     padding: 20px 6px 7px 7px;
   }
+
+  .transcript > a {
+    color: #212529;
+  }
 </style>
 
 <div class="row">
@@ -97,7 +101,7 @@
 @if (!String.IsNullOrEmpty(@Model.Transcript))
 {
   <h2>Transcript</h2>
-  <p>@Html.Raw(@Model.Transcript)</p>
+  <p class="transcript">@Html.Raw(@Model.Transcript)</p>
 }
 
 <br />
