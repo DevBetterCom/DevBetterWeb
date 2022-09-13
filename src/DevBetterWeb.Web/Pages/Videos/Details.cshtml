@@ -94,7 +94,7 @@
 <br />
 <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
 
-@if (@Model.Transcript != null)
+@if (!String.IsNullOrEmpty(@Model.Transcript))
 {
   <h2>Transcript</h2>
   <p style="white-space: pre-line">@Model.Transcript</p>
