@@ -33,7 +33,7 @@
             @foreach (var question in Model.CoachingSession.Questions)
             {
               <tr>
-                <td>@question.QuestionText</td>
+                <td>@Html.Raw(@question.QuestionText)</td>
                 <td>@question.MemberName</td>
                 <td>@question.Votes</td>
                 <td>@question.CreatedAt</td>
