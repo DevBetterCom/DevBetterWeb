@@ -11,6 +11,7 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.Services;
 using DevBetterWeb.Web.Models;
+using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Builder;
@@ -114,6 +115,9 @@ public class Startup
 
     services.AddScoped<IVideosService, VideosService>();
     services.AddSingleton<IVideosCacheService, VideosCacheService>();
+
+    services.AddScoped<WebVTTParsingService>();
+    
     // list services
     services.Configure<ServiceConfig>(config =>
     {

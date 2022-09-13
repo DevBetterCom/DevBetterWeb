@@ -14,6 +14,7 @@ using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
+using DevBetterWeb.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,11 @@ public class DetailsModel : PageModel
 	private readonly IRepository<Member> _memberRepository;
 	private readonly GetAllTextTracksService _getAllTextTracksService;
 	private readonly HttpClient _httpClient;
+	private readonly WebVTTParsingService _vttService;
 
 	public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService,
 		GetVideoService getVideoService, IRepository<ArchiveVideo> repository, UserManager<ApplicationUser> userManager,
-		IRepository<Member> memberRepository, GetAllTextTracksService getAllTextTracksService, HttpClient httpClient)
+		IRepository<Member> memberRepository, GetAllTextTracksService getAllTextTracksService, HttpClient httpClient, WebVTTParsingService vttService)
 	{
 		_mapper = mapper;
 		_markdownService = markdownService;
@@ -51,6 +53,7 @@ public class DetailsModel : PageModel
 		_memberRepository = memberRepository;
 		_getAllTextTracksService = getAllTextTracksService;
 		_httpClient = httpClient;
+		_vttService = vttService;
 	}
 
 	public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
@@ -59,14 +62,14 @@ public class DetailsModel : PageModel
 		if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
 		if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
 
-    var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
-    if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
-    if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
+		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
+		if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
+		if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
 
 		if (textTracks?.Data != null)
 		{
 			await GetTranscript(textTracks);
-		}		
+		}
 
 		BuildOEmbedViewModel(startTime, video.Data, oEmbed.Data, archiveVideo, member);
 
@@ -103,13 +106,13 @@ public class DetailsModel : PageModel
 		return (videoTask.Result, textTracksTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
 	}
 
-  private async Task<(HttpResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
-  {
-    var oEmbedTask = _getOEmbedVideoService.ExecuteAsync(videoLink);
-    var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(userId);
-    var memberTask = _memberRepository.FirstOrDefaultAsync(memberSpec);
+	private async Task<(HttpResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
+	{
+		var oEmbedTask = _getOEmbedVideoService.ExecuteAsync(videoLink);
+		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(userId);
+		var memberTask = _memberRepository.FirstOrDefaultAsync(memberSpec);
 
-    var task = Task.WhenAll(oEmbedTask, memberTask);
+		var task = Task.WhenAll(oEmbedTask, memberTask);
 		try
 		{
 			await task;
@@ -125,7 +128,7 @@ public class DetailsModel : PageModel
 		}
 
 		return (oEmbedTask.Result, memberTask.Result);
-  }
+	}
 
 	private async Task GetTranscript(HttpResponse<GetAllTextTracksResponse> textTracks)
 	{
@@ -133,7 +136,9 @@ public class DetailsModel : PageModel
 		var textTrackResponse = (await _httpClient.GetAsync(textTrackUrl));
 		if (textTrackResponse.IsSuccessStatusCode)
 		{
-			Transcript = await textTrackResponse.Content.ReadAsStringAsync();
+			var vtt = await textTrackResponse.Content.ReadAsStringAsync();
+			var currentURL = Request.Scheme + "://" + Request.Host.Value + Request.Path.Value;
+			Transcript = _vttService.Parse(vtt, currentURL);
 		}
 	}
 
