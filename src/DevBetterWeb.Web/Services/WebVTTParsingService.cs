@@ -6,7 +6,7 @@ namespace DevBetterWeb.Web.Services;
 
 public  class WebVTTParsingService
 {
-	public string Parse(string vtt, string videoId)
+	public string Parse(string vtt, string linkToVideo)
 	{
 		string pattern = @"(?<start>\d{2,}:\d{2}:\d{2}\.\d{3})[ ]+-->[ ]+(?<end>\d{2,}:\d{2}:\d{2}\.\d{3})\s+(?<text>.+)";
 		var rg = new Regex(pattern);
@@ -20,7 +20,7 @@ public  class WebVTTParsingService
 
 			int seconds = (int)TimeSpan.Parse(start).TotalSeconds;
 
-			sb.AppendLine($"<a href=\"https://devbetter.com/Videos/Details/{videoId}/{seconds}\">{text}</a>");
+			sb.AppendLine($"<a href=\"{linkToVideo}/{seconds}\">{text}</a>");
 		}
 
 		return sb.ToString();

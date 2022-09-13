@@ -97,7 +97,7 @@
 @if (!String.IsNullOrEmpty(@Model.Transcript))
 {
   <h2>Transcript</h2>
-  <p style="white-space: pre-line">@Model.Transcript</p>
+  <p>@Html.Raw(@Model.Transcript)</p>
 }
 
 <br />
