@@ -7,34 +7,39 @@
 
 <style>
   textarea {
-      width: 100%;
-      max-width: 100%;
+    width: 100%;
+    max-width: 100%;
   }
 
   .post-signature {
-      text-align: left;
-      vertical-align: top;
-      width: 100%;
+    text-align: left;
+    vertical-align: top;
+    width: 100%;
   }
 
   .user-info {
-      box-sizing: border-box;
-      padding: 5px 6px 7px 7px;
-      font-size: 14px;
-      background-color: lightgray;
-      display: flow-root;
+    box-sizing: border-box;
+    padding: 5px 6px 7px 7px;
+    font-size: 14px;
+    background-color: lightgray;
+    display: flow-root;
   }
 
   .comment-reply {
-      padding: 20px 6px 7px 7px;
+    padding: 20px 6px 7px 7px;
   }
 </style>
 
 <div class="row">
   <span id="videoId" style="display:none">@Model!.OEmbedViewModel?.VideoId</span>
   <h3>@Model!.OEmbedViewModel?.Name</h3>
-  <span><button onClick="toggleFavorite()" class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")" id="icn-@Model!.OEmbedViewModel!.VideoId"></i></button><span id="memberFavoritesCount" class="pt-1">(@Model.OEmbedViewModel.MemberFavoritesCount)</span></span>
-  <button onclick="toggleWatched()" class="btn border-0"><i class="@(Model!.OEmbedViewModel!.IsMemberWatched ? "fa fa-eye-slash fa-lg" : "fa fa-eye fa-lg")" id="watched-@Model!.OEmbedViewModel!.VideoId" aria-hidden="true"></i></button>
+  <span><button onClick="toggleFavorite()" class="btn border-0"><i
+        class="@(Model!.OEmbedViewModel!.IsMemberFavorite ? "fas fa-star" : "far fa-star")"
+        id="icn-@Model!.OEmbedViewModel!.VideoId"></i></button><span id="memberFavoritesCount"
+      class="pt-1">(@Model.OEmbedViewModel.MemberFavoritesCount)</span></span>
+  <button onclick="toggleWatched()" class="btn border-0"><i
+      class="@(Model!.OEmbedViewModel!.IsMemberWatched ? "fa fa-eye-slash fa-lg" : "fa fa-eye fa-lg")"
+      id="watched-@Model!.OEmbedViewModel!.VideoId" aria-hidden="true"></i></button>
 </div>
 @Html.Raw(@Model!.OEmbedViewModel?.Html)
 
@@ -51,7 +56,8 @@
     </select>
   </div>
   <div class="col-auto">
-    <a id="uploadSubtitleBtn" class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="uploadSubtitleClick()"><i class="fa fa-save"></i> Upload Subtitle</a>
+    <a id="uploadSubtitleBtn" class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white"
+      onclick="uploadSubtitleClick()"><i class="fa fa-save"></i> Upload Subtitle</a>
   </div>
 </div>
 
@@ -64,7 +70,8 @@
 </div>
 
 <p asp-authorize asp-roles="Administrators">
-  <a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white" onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
+  <a class="btn btn-primary" style="margin-bottom: 10px; cursor:pointer; color: white"
+    onclick="saveDescriptionClick()"><i class="fa fa-save"></i> Save Description</a>
 </p>
 
 <br />
@@ -74,7 +81,8 @@
     <label for="isTimestamp"> With Timestamp</label><br>
   </div>
   <div class="col-auto">
-    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link" style="width: 500px;max-width: 500px;">
+    <input type="text" class="form-control" id="copiedLink" placeholder="Copied Link"
+      style="width: 500px;max-width: 500px;">
   </div>
   <div class="col-auto">
     <button id="copyLinkBtn" type="button" class="btn btn-primary" onclick="createAndCopyLink()">
@@ -85,6 +93,12 @@
 
 <br />
 <h1>@Html.Raw(@Model!.OEmbedViewModel?.DescriptionMd)</h1>
+
+@if (@Model.Transcript != null)
+{
+  <h2>Transcript</h2>
+  <p style="white-space: pre-line">@Model.Transcript</p>
+}
 
 <br />
 @foreach (var comment in Model!.OEmbedViewModel!.Comments)
@@ -98,6 +112,7 @@
   </div>
   <br />
 }
+
 <div class="comment-reply">
   <textarea id="commentReplyToSubmit" rows="5" cols="100"></textarea>
   <button type="button" onclick="submitReply()">
@@ -106,16 +121,18 @@
 </div>
 
 
+
+
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 <script>
   var isTimestamp = false;
   var copyLinkBtnLabel = 'Copy Link';
   var subtitleFile = null;
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     changeButtonEnable('uploadSubtitleBtn', false);
 
     isTimestamp = false;
@@ -130,7 +147,7 @@
       fileSelectorElement.addEventListener('change',
         (event) => {
           var fileReader = new FileReader();
-          fileReader.onload = function() {
+          fileReader.onload = function () {
             subtitleFile = fileReader.result;
           }
 
@@ -160,21 +177,21 @@
     var player = new Vimeo.Player(iframeElement);
 
     player.on('play',
-      function() {
-	      markAsInProgress(videoId);
+      function () {
+        markAsInProgress(videoId);
       });
 
     player.on('timeupdate',
-      function(getAll) {
+      function (getAll) {
         if (getAll.percent >= 1) {
-	        markAsWatched(videoId);
+          markAsWatched(videoId);
         } else if (getAll.percent < 1 && Math.floor(getAll.seconds) % 10 == 0) {
-	        markAsInProgress(videoId);
+          markAsInProgress(videoId);
         }
       });
     player.on('ended',
-      function() {
-	      markAsWatched(videoId);
+      function () {
+        markAsWatched(videoId);
       });
   });
 
@@ -209,28 +226,28 @@
   }
 
   function markAsInProgress(videoId) {
-	  if (window['is-member-watched'] == true) {
-		  return;
-	  }
-	  $.ajax({
-		  type: "GET",
-		  url: "/videos/inprogress/" + videoId,
-		  success: function(videosResponse) {
-		  },
-		  error: function(errMsg) {
-			  console.log(errMsg);
-		  }
-	  });
+    if (window['is-member-watched'] == true) {
+      return;
+    }
+    $.ajax({
+      type: "GET",
+      url: "/videos/inprogress/" + videoId,
+      success: function (videosResponse) {
+      },
+      error: function (errMsg) {
+        console.log(errMsg);
+      }
+    });
   }
 
   function markAsUnWatched(videoId) {
     $.ajax({
       type: "GET",
       url: "/videos/unwatched/" + videoId,
-      success: function(videosResponse) {
+      success: function (videosResponse) {
         toggleIcon(videoId);
       },
-      error: function(errMsg) {
+      error: function (errMsg) {
         console.log(errMsg);
       }
     });
@@ -240,10 +257,10 @@
     $.ajax({
       type: "GET",
       url: "/videos/watched/" + videoId,
-      success: function(videosResponse) {
+      success: function (videosResponse) {
         toggleIcon(videoId);
       },
-      error: function(errMsg) {
+      error: function (errMsg) {
         console.log(errMsg);
       }
     });
@@ -268,7 +285,7 @@
         data: JSON.stringify({ videoId: videoId, description: description }),
         dataType: "json",
         contentType: "application/json",
-        success: function(videosResponse) {
+        success: function (videosResponse) {
           var elementDescription = document.getElementById('Description');
           if (elementDescription) {
             elementDescription.value = videosResponse.Description;
@@ -279,7 +296,7 @@
             elementDescriptionMd.value = videosResponse.DescriptionMd;
           }
         },
-        error: function(errMsg) {
+        error: function (errMsg) {
           console.log(errMsg);
           alert(errMsg);
         }
@@ -302,11 +319,11 @@
       }
 
       var player = new Vimeo.Player(iframeElement);
-      player.getCurrentTime().then(function(seconds) {
+      player.getCurrentTime().then(function (seconds) {
         var link = location.protocol + '//' + location.host + "/Videos/Details/" + @Model!.OEmbedViewModel?.VideoId + "/" + seconds;
         var copiedLinkElement = document.getElementById("copiedLink");
         if (!copiedLinkElement) {
-            return;
+          return;
         }
         copiedLinkElement.value = link;
         navigator.clipboard.writeText(link);
@@ -324,9 +341,9 @@
 
 
     changeButtonText('copyLinkBtn', 'Copied!');
-    setTimeout(function() {
-        changeButtonText('copyLinkBtn', copyLinkBtnLabel);
-      },
+    setTimeout(function () {
+      changeButtonText('copyLinkBtn', copyLinkBtnLabel);
+    },
       2000);
   }
 
@@ -383,13 +400,13 @@
       data: JSON.stringify({ videoId: videoId, subtitle: subtitleFile, language: language }),
       dataType: "json",
       contentType: "application/json",
-      success: function() {
+      success: function () {
         var videoIframeElement = document.getElementById('videoIframe');
         if (videoIframeElement) {
           videoIframeElement.contentWindow.location.reload();
         }
       },
-      error: function(errMsg) {
+      error: function (errMsg) {
         console.log(errMsg);
         alert(errMsg);
       }
@@ -418,10 +435,10 @@
       data: JSON.stringify({ videoId: videoId, commentReplyToSubmit: commentReplyToSubmit }),
       dataType: "json",
       contentType: "application/json",
-      success: function(response) {
+      success: function (response) {
         location.reload(true);
       },
-      error: function(errMsg) {
+      error: function (errMsg) {
         console.log(errMsg);
         alert(errMsg);
       }
@@ -446,7 +463,7 @@
       url: "/videos/favorite-video/" + videoId,
       data: {},
       dataType: "json",
-      success: function() {
+      success: function () {
         var element = document.getElementById("icn-" + videoId);
         if (!element) {
           return;
@@ -458,7 +475,7 @@
         $("#memberFavoritesCount").text(`(${newMemberFavoriteCount})`);
         window['member-favorites-count'] = newMemberFavoriteCount;
       },
-      error: function(errMsg) {
+      error: function (errMsg) {
         console.log(errMsg);
         alert(errMsg);
       }
