@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
     <ProjectReference Include="..\..\src\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\DevBetterWeb.Web\DevBetterWeb.Web.csproj" />
   </ItemGroup>
 
 </Project>
