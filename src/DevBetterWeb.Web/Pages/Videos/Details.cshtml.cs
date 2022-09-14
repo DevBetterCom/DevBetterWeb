@@ -36,12 +36,12 @@ public class DetailsModel : PageModel
 	private readonly VideoDetailsService _videoDetailsService;
 
 	public DetailsModel(
-		IMapper mapper, 
-		IMarkdownService markdownService, 
+		IMapper mapper,
+		IMarkdownService markdownService,
 		GetOEmbedVideoService getOEmbedVideoService,
-		IRepository<Member> memberRepository, 
-		HttpClient httpClient, 
-		WebVTTParsingService vttService, 
+		IRepository<Member> memberRepository,
+		HttpClient httpClient,
+		WebVTTParsingService vttService,
 		VideoDetailsService videoDetailsService)
 	{
 		_mapper = mapper;
@@ -107,7 +107,7 @@ public class DetailsModel : PageModel
 		if (textTrackResponse.IsSuccessStatusCode)
 		{
 			var vtt = await textTrackResponse.Content.ReadAsStringAsync();
-			var currentURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}"; 
+			var currentURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
 			Transcript = _vttService.Parse(vtt, currentURL, paragraphSize: 4);
 		}
 	}
