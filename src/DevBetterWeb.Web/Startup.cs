@@ -117,6 +117,7 @@ public class Startup
     services.AddSingleton<IVideosCacheService, VideosCacheService>();
 
     services.AddScoped<WebVTTParsingService>();
+    services.AddScoped<VideoDetailsService>();
     
     // list services
     services.Configure<ServiceConfig>(config =>
