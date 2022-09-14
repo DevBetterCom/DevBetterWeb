@@ -4,6 +4,20 @@
 	ViewData["Title"] = "My Profile: Personal";
 }
 
+<style>
+	/* Chrome, Safari, Edge, Opera */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* Firefox */
+	input[type=number] {
+		-moz-appearance: textfield;
+	}
+</style>
+
 <h3>My Profile: Personal</h3>
 
 <form method="post">
@@ -45,18 +59,25 @@
 
 					<div class="form-group">
 						<label class="font-weight-bold">Birthday</label>
+						<p class="text-secondary small mb-1">If set, birthday will be visible to other devBetter members and may be used to celebrate your day via Discord, coaching sessions, etc.</p>
 						<div class="row">
 							<div class="col">
-								<input asp-for="UserPersonalUpdateModel.BirthdayDay" type="number" min="1" max="31"
+								<label>Day</label>
+								<input id="birthday" asp-for="UserPersonalUpdateModel.BirthdayDay" type="number" min="1" max="31"
 									value="@Model.UserPersonalUpdateModel.BirthdayDay" class="form-control form-control-sm"
-									placeholder="Day" />
+									placeholder="DD" />
 								<span asp-validation-for="UserPersonalUpdateModel.BirthdayDay" class="text-danger"></span>
 							</div>
 							<div class="col">
-								<input asp-for="UserPersonalUpdateModel.BirthdayMonth" type="number" min="1" max="12"
+								<label>Month</label>
+								<input id="birthmonth" asp-for="UserPersonalUpdateModel.BirthdayMonth" type="number" min="1" max="12"
 									value="@Model.UserPersonalUpdateModel.BirthdayMonth" class="form-control form-control-sm"
-									placeholder="Month" />
+									placeholder="MM" />
 							</div>
+							<div class="col d-flex align-items-end pl-0">
+								<button id="clear-birthday" type="button" class="btn btn-sm btn-default"><span class="fa fa-trash"></span></button>
+							</div>
+							
 						</div>
 					</div>
 
@@ -98,5 +119,13 @@
 
 	<a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
 
-
 </form>
+
+<script>
+	const birthdayInput = document.getElementById('birthday');
+	const birthmonthInput = document.getElementById('birthmonth');
+	document.getElementById("clear-birthday").addEventListener("click", function () {
+		birthdayInput.value = "";
+		birthmonthInput.value = "";
+	});
+</script>
