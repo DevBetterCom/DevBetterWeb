@@ -36,6 +36,15 @@
                     </div>
                 </div>
             </div>
+
+            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.Birthday))
+            {
+                <div class="card-body">
+                    <b>Birthday: </b>
+                    @Model.UserDetailsViewModel.Birthday
+                </div>
+            }
+
             @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.DiscordUsername))
             {
                 <div class="card-body">
