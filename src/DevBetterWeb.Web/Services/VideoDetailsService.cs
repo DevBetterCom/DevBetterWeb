@@ -7,11 +7,12 @@ using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Web.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Services;
 
-public class VideoDetailsService
+public class VideoDetailsService : IVideoDetailsService
 {
 	private readonly GetVideoService _getVideoService;
 	private readonly GetAllTextTracksService _getAllTextTracksService;
@@ -19,17 +20,17 @@ public class VideoDetailsService
 	private readonly UserManager<ApplicationUser> _userManager;
 
 	public VideoDetailsService(
-    GetVideoService getVideoService, 
-    GetAllTextTracksService getAllTextTracksService, 
-    IRepository<ArchiveVideo> archiveVideoRepository, 
-    UserManager<ApplicationUser> userManager)
+		GetVideoService getVideoService,
+		GetAllTextTracksService getAllTextTracksService,
+		IRepository<ArchiveVideo> archiveVideoRepository,
+		UserManager<ApplicationUser> userManager)
 	{
 		_getVideoService = getVideoService;
 		_getAllTextTracksService = getAllTextTracksService;
 		_archiveVideoRepository = archiveVideoRepository;
 		_userManager = userManager;
 	}
-  public async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId, string? currentUserName)
+	public async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId, string? currentUserName)
 	{
 		var videoTask = _getVideoService.ExecuteAsync(videoId);
 		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
@@ -55,9 +56,9 @@ public class VideoDetailsService
 		return (videoTask.Result, textTracksTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
 	}
 
-  public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)
-  {
-    archiveVideo.Views++;
+	public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)
+	{
+		archiveVideo.Views++;
 		await _archiveVideoRepository.UpdateAsync(archiveVideo);
-  }
+	}
 }

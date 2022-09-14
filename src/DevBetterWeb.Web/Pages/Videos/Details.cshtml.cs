@@ -11,9 +11,9 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
+using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
-using DevBetterWeb.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -32,8 +32,8 @@ public class DetailsModel : PageModel
 	private readonly IMarkdownService _markdownService;
 	private readonly IRepository<Member> _memberRepository;
 	private readonly HttpClient _httpClient;
-	private readonly WebVTTParsingService _vttService;
-	private readonly VideoDetailsService _videoDetailsService;
+	private readonly IWebVTTParsingService _vttService;
+	private readonly IVideoDetailsService _videoDetailsService;
 
 	public DetailsModel(
 		IMapper mapper,
@@ -41,8 +41,8 @@ public class DetailsModel : PageModel
 		GetOEmbedVideoService getOEmbedVideoService,
 		IRepository<Member> memberRepository,
 		HttpClient httpClient,
-		WebVTTParsingService vttService,
-		VideoDetailsService videoDetailsService)
+		IWebVTTParsingService vttService,
+		IVideoDetailsService videoDetailsService)
 	{
 		_mapper = mapper;
 		_markdownService = markdownService;

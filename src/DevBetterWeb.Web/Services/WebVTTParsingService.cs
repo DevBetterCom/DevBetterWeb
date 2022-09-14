@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using DevBetterWeb.Web.Interfaces;
 
 namespace DevBetterWeb.Web.Services;
 
-public class WebVTTParsingService
+public class WebVTTParsingService : IWebVTTParsingService
 {
 	private const string pattern = @"(?<start>\d{2,}:\d{2}:\d{2}\.\d{3})[ ]+-->[ ]+(?<end>\d{2,}:\d{2}:\d{2}\.\d{3})\s+(?<text>.+)";
 
