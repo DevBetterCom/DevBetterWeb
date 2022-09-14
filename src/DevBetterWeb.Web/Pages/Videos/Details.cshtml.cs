@@ -68,7 +68,7 @@ public class DetailsModel : PageModel
 
 		if (textTracks?.Data != null)
 		{
-			await GetTranscript(textTracks);
+			await GetTranscript(textTracks, videoId);
 		}
 
 		BuildOEmbedViewModel(startTime, video.Data, oEmbed.Data, archiveVideo, member);
@@ -130,14 +130,14 @@ public class DetailsModel : PageModel
 		return (oEmbedTask.Result, memberTask.Result);
 	}
 
-	private async Task GetTranscript(HttpResponse<GetAllTextTracksResponse> textTracks)
+	private async Task GetTranscript(HttpResponse<GetAllTextTracksResponse> textTracks, string videoId)
 	{
 		var textTrackUrl = textTracks.Data.Data.First().Link;
 		var textTrackResponse = (await _httpClient.GetAsync(textTrackUrl));
 		if (textTrackResponse.IsSuccessStatusCode)
 		{
 			var vtt = await textTrackResponse.Content.ReadAsStringAsync();
-			var currentURL = Request.Scheme + "://" + Request.Host.Value + Request.Path.Value;
+			var currentURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}"; 
 			Transcript = _vttService.Parse(vtt, currentURL, paragraphSize: 4);
 		}
 	}
