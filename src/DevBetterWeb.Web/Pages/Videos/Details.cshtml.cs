@@ -9,14 +9,12 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
 using DevBetterWeb.Web.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -30,35 +28,35 @@ public class DetailsModel : PageModel
 	public string? Transcript { get; set; }
 
 	private readonly GetOEmbedVideoService _getOEmbedVideoService;
-	private readonly GetVideoService _getVideoService;
-	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly IMapper _mapper;
 	private readonly IMarkdownService _markdownService;
-	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IRepository<Member> _memberRepository;
-	private readonly GetAllTextTracksService _getAllTextTracksService;
 	private readonly HttpClient _httpClient;
 	private readonly WebVTTParsingService _vttService;
+	private readonly VideoDetailsService _videoDetailsService;
 
-	public DetailsModel(IMapper mapper, IMarkdownService markdownService, GetOEmbedVideoService getOEmbedVideoService,
-		GetVideoService getVideoService, IRepository<ArchiveVideo> repository, UserManager<ApplicationUser> userManager,
-		IRepository<Member> memberRepository, GetAllTextTracksService getAllTextTracksService, HttpClient httpClient, WebVTTParsingService vttService)
+	public DetailsModel(
+		IMapper mapper, 
+		IMarkdownService markdownService, 
+		GetOEmbedVideoService getOEmbedVideoService,
+		IRepository<Member> memberRepository, 
+		HttpClient httpClient, 
+		WebVTTParsingService vttService, 
+		VideoDetailsService videoDetailsService)
 	{
 		_mapper = mapper;
 		_markdownService = markdownService;
-		_getVideoService = getVideoService;
-		_repository = repository;
 		_getOEmbedVideoService = getOEmbedVideoService;
-		_userManager = userManager;
 		_memberRepository = memberRepository;
-		_getAllTextTracksService = getAllTextTracksService;
 		_httpClient = httpClient;
 		_vttService = vttService;
+		_videoDetailsService = videoDetailsService;
 	}
 
 	public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
 	{
-		var (video, textTracks, archiveVideo, applicationUser) = await GetDataAsync(videoId);
+		var currentUserName = User.Identity!.Name;
+		var (video, textTracks, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName);
 		if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
 		if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
 
@@ -73,37 +71,9 @@ public class DetailsModel : PageModel
 
 		BuildOEmbedViewModel(startTime, video.Data, oEmbed.Data, archiveVideo, member);
 
-		archiveVideo.Views++;
-		await _repository.UpdateAsync(archiveVideo);
+		await _videoDetailsService.IncrementViewsAndUpdate(archiveVideo);
 
 		return Page();
-	}
-
-	private async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId)
-	{
-		var videoTask = _getVideoService.ExecuteAsync(videoId);
-		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
-		var videoSpec = new ArchiveVideoByVideoIdFullAggregateSpec(videoId);
-		var archiveVideoTask = _repository.FirstOrDefaultAsync(videoSpec);
-		var currentUserName = User.Identity!.Name;
-		var applicationUserTask = _userManager.FindByNameAsync(currentUserName);
-
-		var task = Task.WhenAll(videoTask, textTracksTask, archiveVideoTask, applicationUserTask);
-		try
-		{
-			await task;
-		}
-		catch (Exception)
-		{
-			if (task.Exception != null)
-			{
-				throw task.Exception;
-			}
-
-			throw;
-		}
-
-		return (videoTask.Result, textTracksTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
 	}
 
 	private async Task<(HttpResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
