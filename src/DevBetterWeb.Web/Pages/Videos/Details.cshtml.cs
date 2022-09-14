@@ -138,7 +138,7 @@ public class DetailsModel : PageModel
 		{
 			var vtt = await textTrackResponse.Content.ReadAsStringAsync();
 			var currentURL = Request.Scheme + "://" + Request.Host.Value + Request.Path.Value;
-			Transcript = _vttService.Parse(vtt, currentURL);
+			Transcript = _vttService.Parse(vtt, currentURL, paragraphSize: 4);
 		}
 	}
 

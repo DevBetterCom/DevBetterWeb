@@ -1,28 +1,44 @@
-using System.Text.RegularExpressions;
-using System.Text;
 using System;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DevBetterWeb.Web.Services;
 
-public  class WebVTTParsingService
+public class WebVTTParsingService
 {
-	public string Parse(string vtt, string linkToVideo)
+	private const string pattern = @"(?<start>\d{2,}:\d{2}:\d{2}\.\d{3})[ ]+-->[ ]+(?<end>\d{2,}:\d{2}:\d{2}\.\d{3})\s+(?<text>.+)";
+
+	public string Parse(string vtt, string linkToVideo, int paragraphSize = 4)
 	{
-		string pattern = @"(?<start>\d{2,}:\d{2}:\d{2}\.\d{3})[ ]+-->[ ]+(?<end>\d{2,}:\d{2}:\d{2}\.\d{3})\s+(?<text>.+)";
 		var rg = new Regex(pattern);
 		var matches = rg.Matches(vtt);
 
-		var sb = new StringBuilder();
-		foreach (Match match in matches)
-		{
-			var start = match.Groups["start"].Value;
-			var text = match.Groups["text"].Value.TrimEnd();
-
-			int seconds = (int)TimeSpan.Parse(start).TotalSeconds;
-
-			sb.AppendLine($"<a href=\"{linkToVideo}/{seconds}\">{text}</a>");
-		}
+		var (sb, _) = matches
+			.Select(m => RegExMatchToAnchorTag(m, linkToVideo))
+			.Aggregate((Markup: new StringBuilder(), EndsWithPeriodCount: 0), (acc, x) => AddParagraphsAndBuildMarkup(paragraphSize, acc, x));
 
 		return sb.ToString();
+	}
+
+	private static (string Markup, bool EndsWithPeriod) RegExMatchToAnchorTag(Match m, string linkToVideo)
+	{
+		var start = m.Groups["start"].Value;
+		int seconds = (int)TimeSpan.Parse(start).TotalSeconds;
+		var text = m.Groups["text"].Value.TrimEnd();
+		return (Markup: $"<a href=\"{linkToVideo}/{seconds}\">{text}</a>", EndsWithPeriod: text.EndsWith("."));
+	}
+
+	private static (StringBuilder Markup, int EndsWithPeriodCount) AddParagraphsAndBuildMarkup(
+		int paragraphSize, (StringBuilder Markup, int EndsWithPeriodCount) acc, (string Markup, bool EndsWithPeriod) x)
+	{
+		acc.Markup.AppendLine(x.Markup);
+		acc.EndsWithPeriodCount = x.EndsWithPeriod ? acc.EndsWithPeriodCount + 1 : acc.EndsWithPeriodCount;
+		if (acc.EndsWithPeriodCount == paragraphSize)
+		{
+			acc.Markup.AppendLine("<br><br>");
+			acc.EndsWithPeriodCount = 0;
+		}
+		return acc;
 	}
 }
