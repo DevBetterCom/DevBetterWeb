@@ -20,7 +20,9 @@ namespace DevBetterWeb.Web.Pages.User
 		private readonly IMemberRegistrationService _memberRegistrationService;
 		private readonly IRepository<Member> _memberRepository;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		public ShippingAddressModel(UserManager<ApplicationUser> userManager,
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 			IMemberRegistrationService memberRegistrationService,
 			IRepository<Member> memberRepository)
 		{
@@ -65,7 +67,9 @@ namespace DevBetterWeb.Web.Pages.User
 				UserShippingAddressUpdateModel.PostalCode,
 				UserShippingAddressUpdateModel.Country));
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
 			member.UpdateAddress(member.ShippingAddress.ToString());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
 			await _memberRepository.UpdateAsync(member);
 		}
