@@ -118,3 +118,8 @@ Copy the WebHook Secret from edit WebHook and insert it on `appsettings.json` ->
 Make DevBetter application using http without redirect by comment this line `app.UseHttpsRedirection();` from `startup.cs`.  
 Open the application on `http://localhost:5010/`.
 You can check PaymentIntentWebHook endpoint for more information.  
+![stripe-WebHook-1](https://user-images.githubusercontent.com/6225593/190837378-17d772ef-8669-41b8-bad0-ff24cffb6260.png)
+![stripe-WebHook-2](https://user-images.githubusercontent.com/6225593/190837386-3b29fdfc-0617-4a4a-a01b-c2b724628bef.png)
+![stripe-WebHook-3](https://user-images.githubusercontent.com/6225593/190837393-139eb304-5dd1-46bc-9f31-dd2e6d468118.png)
+![stripe-WebHook-4](https://user-images.githubusercontent.com/6225593/190837398-f90d1b46-c1b2-445d-b303-095733441500.png)
+![stripe-WebHook-5](https://user-images.githubusercontent.com/6225593/190837412-8e8e3106-4756-4428-84ea-41c09df0441b.png)
