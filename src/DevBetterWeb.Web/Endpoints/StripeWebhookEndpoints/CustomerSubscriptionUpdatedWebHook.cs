@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
@@ -47,7 +48,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 
 			if (stripeEvent.Type != Events.CustomerUpdated)
 			{
-				return Ok();
+				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
 			}
 
 			var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
