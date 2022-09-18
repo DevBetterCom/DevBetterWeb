@@ -17,10 +17,12 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 	.WithoutRequest
 	.WithActionResult
 {
+	private readonly IAppLogger<InvoicePaidWebHook> _logger;
 	private readonly IWebhookHandlerService _webHookHandlerService;
 	private readonly IPaymentHandlerInvoice _paymentHandlerInvoice;
 	private readonly string _stripeWebHookSecretKey;
 	public InvoicePaidWebHook(
+		IAppLogger<InvoicePaidWebHook> logger,
 		IOptions<StripeOptions> optionsAccessor,
 		IWebhookHandlerService webHookHandlerService,
 		IPaymentHandlerInvoice paymentHandlerInvoice)
@@ -28,6 +30,7 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
 		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
 
+		_logger = logger;
 		_webHookHandlerService = webHookHandlerService;
 		_paymentHandlerInvoice = paymentHandlerInvoice;
 		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
@@ -36,12 +39,16 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 	[HttpPost("stripe-invoice-paid-web-hook")]
 	public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
 	{
+		_logger.LogInformation("Start Stripe Endpoint: stripe-invoice-paid-web-hook");
+
+		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
 		try
 		{
-			var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
 			var stripeEvent = EventUtility.ConstructEvent(json,
 				Request.Headers["Stripe-Signature"], _stripeWebHookSecretKey);
+
+			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
 			// Was InvoicePaymentSucceeded changed to InvoicePaid
 			if (stripeEvent.Type != Events.InvoicePaid)
@@ -55,6 +62,7 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 		}
 		catch (StripeException exception)
 		{
+			_logger.LogError(exception, "Stripe callback error", json);
 			return BadRequest(exception.Message);
 		}
 	}
