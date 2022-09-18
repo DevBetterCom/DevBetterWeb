@@ -17,11 +17,13 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 	.WithoutRequest
 	.WithActionResult
 {
+	private readonly IAppLogger<CustomerSubscriptionDeletedWebHook> _logger;
 	private readonly IPaymentHandlerEventService _paymentHandlerEventService;
 	private readonly IPaymentHandlerSubscription _paymentHandlerSubscription;
 	private readonly IWebhookHandlerService _webHookHandlerService;
 	private readonly string _stripeWebHookSecretKey;
 	public CustomerSubscriptionUpdatedWebHook(
+		IAppLogger<CustomerSubscriptionDeletedWebHook> logger,
 		IOptions<StripeOptions> optionsAccessor, 
 		IPaymentHandlerEventService paymentHandlerEventService,
 		IPaymentHandlerSubscription paymentHandlerSubscription,
@@ -30,6 +32,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
 		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
 
+		_logger = logger;
 		_paymentHandlerEventService = paymentHandlerEventService;
 		_paymentHandlerSubscription = paymentHandlerSubscription;
 		_webHookHandlerService = webHookHandlerService;
@@ -39,12 +42,16 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 	[HttpPost("stripe-customer-subscription-updated-web-hook")]
 	public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
 	{
+		_logger.LogInformation("Start Stripe Endpoint: stripe-customer-subscription-deleted-web-hook");
+
+		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
 		try
 		{
-			var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
 			var stripeEvent = EventUtility.ConstructEvent(json,
 				Request.Headers["Stripe-Signature"], _stripeWebHookSecretKey);
+
+			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
 			if (stripeEvent.Type != Events.CustomerUpdated)
 			{
@@ -63,6 +70,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 		}
 		catch (StripeException exception)
 		{
+			_logger.LogError(exception, "Stripe callback error", json);
 			return BadRequest(exception.Message);
 		}
 	}
