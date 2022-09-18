@@ -35,7 +35,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
 	}
 
-	[HttpPost("stripe-customer-subscription-update-web-hook")]
+	[HttpPost("stripe-customer-subscription-updated-web-hook")]
 	public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
 	{
 		try
