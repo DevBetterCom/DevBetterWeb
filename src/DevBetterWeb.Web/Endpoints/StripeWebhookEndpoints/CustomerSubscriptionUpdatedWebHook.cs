@@ -42,7 +42,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 	[HttpPost("stripe-customer-subscription-updated-web-hook")]
 	public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
 	{
-		_logger.LogInformation("Start Stripe Endpoint: stripe-customer-subscription-deleted-web-hook");
+		_logger.LogInformation("Start Stripe Endpoint: stripe-customer-subscription-updated-web-hook");
 
 		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
