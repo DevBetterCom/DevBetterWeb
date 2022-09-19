@@ -58,19 +58,39 @@ var handleForm = function () {
 			submitted = true;
 			loading(true);
 
+			var customerEmail = document.querySelector('#email-field').value;
+
+			const { error: stripePaymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+				type: 'card',
+				card: card,
+				billing_details: {
+					email: customerEmail,
+				},
+			});
+
+			if (stripePaymentMethodError) {
+				showError(stripePaymentMethodError.message);
+
+				submitted = false;
+				loading(false);
+				return;
+			}
+
+			console.log(paymentMethod);
+
 			// Make a call to the server to create a new
 			// payment intent and store its client_secret.
 			const clientSecretResult = await fetch(
-				'/create-payment-intent',
+				'/create-subscription',
 				{
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify({
-						currency: 'usd',
-						paymentMethodType: 'card',
-						subscriptionPriceId: PriceId,
+						paymentMethodId: paymentMethod.id,
+						priceId: PriceId,
+						customerEmail: customerEmail,
 					}),
 				}
 			).then((r) => r.json());
@@ -82,15 +102,13 @@ var handleForm = function () {
 				submitted = false;
 				loading(false);
 				return;
-			}
-
-			var customerEmail = document.querySelector('#email-field').value;
+			}			
 
 			// Confirm the card payment given the clientSecret
 			// from the payment intent that was just created on
 			// the server.
 			const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-				clientSecretResult.clientSecret,
+				clientSecretResult.latestInvoicePaymentIntentClientSecret,
 				{
 					payment_method: {
 						type: 'card',
