@@ -31,8 +31,6 @@ public class DetailsModel : PageModel
 	private readonly IMapper _mapper;
 	private readonly IMarkdownService _markdownService;
 	private readonly IRepository<Member> _memberRepository;
-	private readonly HttpClient _httpClient;
-	private readonly IWebVTTParsingService _vttService;
 	private readonly IVideoDetailsService _videoDetailsService;
 
 	public DetailsModel(
@@ -40,16 +38,12 @@ public class DetailsModel : PageModel
 		IMarkdownService markdownService,
 		GetOEmbedVideoService getOEmbedVideoService,
 		IRepository<Member> memberRepository,
-		HttpClient httpClient,
-		IWebVTTParsingService vttService,
 		IVideoDetailsService videoDetailsService)
 	{
 		_mapper = mapper;
 		_markdownService = markdownService;
 		_getOEmbedVideoService = getOEmbedVideoService;
 		_memberRepository = memberRepository;
-		_httpClient = httpClient;
-		_vttService = vttService;
 		_videoDetailsService = videoDetailsService;
 	}
 
@@ -63,11 +57,9 @@ public class DetailsModel : PageModel
 		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
 		if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
 		if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
-
-		if (textTracks?.Data != null)
-		{
-			await GetTranscript(textTracks, videoId);
-		}
+		
+		var currentVideoURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
+		Transcript = await _videoDetailsService.GetTranscript(textTracks.Data.Data, currentVideoURL);
 
 		BuildOEmbedViewModel(startTime, video.Data, oEmbed.Data, archiveVideo, member);
 
@@ -98,18 +90,6 @@ public class DetailsModel : PageModel
 		}
 
 		return (oEmbedTask.Result, memberTask.Result);
-	}
-
-	private async Task GetTranscript(HttpResponse<GetAllTextTracksResponse> textTracks, string videoId)
-	{
-		var textTrackUrl = textTracks.Data.Data.First().Link;
-		var textTrackResponse = (await _httpClient.GetAsync(textTrackUrl));
-		if (textTrackResponse.IsSuccessStatusCode)
-		{
-			var vtt = await textTrackResponse.Content.ReadAsStringAsync();
-			var currentURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
-			Transcript = _vttService.Parse(vtt, currentURL, paragraphSize: 4);
-		}
 	}
 
 	private void BuildOEmbedViewModel(string? startTime, Video video, OEmbed oEmbed, ArchiveVideo archiveVideo, Member member)

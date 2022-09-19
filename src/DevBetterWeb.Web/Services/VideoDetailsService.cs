@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
@@ -8,6 +10,7 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Interfaces;
+using Flurl.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Services;
@@ -18,17 +21,20 @@ public class VideoDetailsService : IVideoDetailsService
 	private readonly GetAllTextTracksService _getAllTextTracksService;
 	private readonly IRepository<ArchiveVideo> _archiveVideoRepository;
 	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly IWebVTTParsingService _vttService;
 
 	public VideoDetailsService(
 		GetVideoService getVideoService,
 		GetAllTextTracksService getAllTextTracksService,
 		IRepository<ArchiveVideo> archiveVideoRepository,
-		UserManager<ApplicationUser> userManager)
+		UserManager<ApplicationUser> userManager,
+		IWebVTTParsingService vttService)
 	{
 		_getVideoService = getVideoService;
 		_getAllTextTracksService = getAllTextTracksService;
 		_archiveVideoRepository = archiveVideoRepository;
 		_userManager = userManager;
+		_vttService = vttService;
 	}
 	public async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId, string? currentUserName)
 	{
@@ -60,5 +66,24 @@ public class VideoDetailsService : IVideoDetailsService
 	{
 		archiveVideo.Views++;
 		await _archiveVideoRepository.UpdateAsync(archiveVideo);
+	}
+
+	public async Task<string> GetTranscript(IEnumerable<TextTrack> textTracks, string videoURL)
+	{
+		try
+		{
+			if (textTracks.Any())
+			{
+				string textTrackLink = textTracks.First().Link;
+				string vtt = await textTrackLink.GetStringAsync();
+				return _vttService.Parse(vtt, videoURL, paragraphSize: 4);
+			}
+
+			return String.Empty;
+		}
+		catch (Exception)
+		{
+			return String.Empty;
+		}
 	}
 }

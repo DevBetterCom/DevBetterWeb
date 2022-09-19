@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
@@ -14,4 +15,6 @@ public interface IVideoDetailsService
     string? currentUserName);
 
 	Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo);
+
+    Task<string> GetTranscript(IEnumerable<TextTrack> textTracks, string videoUrl);
 }
