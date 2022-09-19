@@ -36,7 +36,10 @@ public class VideoDetailsService : IVideoDetailsService
 		_userManager = userManager;
 		_vttService = vttService;
 	}
-	public async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId, string? currentUserName)
+	public async Task<(HttpResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
+		string videoId,
+		string? currentUserName,
+		string currentVideoURL)
 	{
 		var videoTask = _getVideoService.ExecuteAsync(videoId);
 		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
@@ -44,7 +47,9 @@ public class VideoDetailsService : IVideoDetailsService
 		var archiveVideoTask = _archiveVideoRepository.FirstOrDefaultAsync(videoSpec);
 		var applicationUserTask = _userManager.FindByNameAsync(currentUserName);
 
-		var task = Task.WhenAll(videoTask, textTracksTask, archiveVideoTask, applicationUserTask);
+		var transcriptTask = GetTranscriptAsync((await textTracksTask).Data.Data, currentVideoURL);
+
+		var task = Task.WhenAll(videoTask, transcriptTask, archiveVideoTask, applicationUserTask);
 		try
 		{
 			await task;
@@ -59,7 +64,7 @@ public class VideoDetailsService : IVideoDetailsService
 			throw;
 		}
 
-		return (videoTask.Result, textTracksTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
+		return (videoTask.Result, transcriptTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
 	}
 
 	public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)
@@ -68,7 +73,7 @@ public class VideoDetailsService : IVideoDetailsService
 		await _archiveVideoRepository.UpdateAsync(archiveVideo);
 	}
 
-	public async Task<string> GetTranscript(IEnumerable<TextTrack> textTracks, string videoURL)
+	public async Task<string> GetTranscriptAsync(IEnumerable<TextTrack> textTracks, string videoURL)
 	{
 		try
 		{

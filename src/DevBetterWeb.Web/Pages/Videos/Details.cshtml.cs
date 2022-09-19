@@ -50,16 +50,16 @@ public class DetailsModel : PageModel
 	public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
 	{
 		var currentUserName = User.Identity!.Name;
-		var (video, textTracks, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName);
+		var currentVideoURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
+		var (video, transcript, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName, currentVideoURL);
 		if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
 		if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
 
 		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
 		if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
 		if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
-		
-		var currentVideoURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
-		Transcript = await _videoDetailsService.GetTranscript(textTracks.Data.Data, currentVideoURL);
+	
+		Transcript = transcript;
 
 		BuildOEmbedViewModel(startTime, video.Data, oEmbed.Data, archiveVideo, member);
 
