@@ -35,7 +35,11 @@ public class PaymentIntentSucceededWebHook : EndpointBaseAsync
 	{
 		_logger.LogInformation("Start Stripe Endpoint: stripe-payment-intent-succeeded-web-hook");
 
-		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+		string json;
+		using (var streamReader = new StreamReader(HttpContext.Request.Body))
+		{
+			json = await streamReader.ReadToEndAsync();
+		}
 
 		try
 		{
@@ -49,7 +53,7 @@ public class PaymentIntentSucceededWebHook : EndpointBaseAsync
 				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
 			}
 
-			var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
+			_ = (PaymentIntent)stripeEvent.Data.Object;
 
 			return Ok();
 		}

@@ -41,7 +41,11 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 	{
 		_logger.LogInformation("Start Stripe Endpoint: stripe-invoice-paid-web-hook");
 
-		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+		string json;
+		using (var streamReader =  new StreamReader(HttpContext.Request.Body))
+		{
+			json = await streamReader.ReadToEndAsync();
+		}
 
 		try
 		{
