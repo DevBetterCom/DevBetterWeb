@@ -114,10 +114,10 @@ ngrok http 5010
 ```
 Save the link https://xxx-xxx-xxx-xxx.ngrok.io and create WebHook on your stripe account with this link. 
 You need to check which version is supported by Stripe .NET and choose it while you creating the WebHook on your account.  
-Copy the WebHook Secret from edit WebHook and insert it on `appsettings.json` -> `StripeOptions` -> `StripeWebHookSecretKey`.
-Make DevBetter application using http without redirect by comment this line `app.UseHttpsRedirection();` from `startup.cs`.  
-Open the application on `http://localhost:5010/`.
-You can check PaymentIntentWebHook endpoint for more information.  
+Copy the WebHook Secret from edit WebHook and insert it on `appsettings.json` -> `StripeOptions` -> `StripeWebHookSecretKey`.  
+Make DevBetter application using http without redirect by comment this line `app.UseHttpsRedirection();` from `startup.cs`.    
+Open the application on `http://localhost:5010/`.   
+You can check PaymentIntentWebHook endpoint for more information.    
 ![stripe-WebHook-1](https://user-images.githubusercontent.com/6225593/190837378-17d772ef-8669-41b8-bad0-ff24cffb6260.png)
 ![stripe-WebHook-2](https://user-images.githubusercontent.com/6225593/190837386-3b29fdfc-0617-4a4a-a01b-c2b724628bef.png)
 ![stripe-WebHook-3](https://user-images.githubusercontent.com/6225593/190837393-139eb304-5dd1-46bc-9f31-dd2e6d468118.png)
