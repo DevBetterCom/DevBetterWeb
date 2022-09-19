@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
 using Stripe;
@@ -39,6 +40,7 @@ public class StripePaymentHandlerSubscriptionCreationService : IPaymentHandlerSu
     var subscriptionOptions = new SubscriptionCreateOptions
     {
       Customer = customerId,
+			PaymentBehavior = StripeConstants.PAYMENT_BEHAVIOR_INCOMPLETE,
       Items = new List<SubscriptionItemOptions>
         {
           new SubscriptionItemOptions
@@ -47,6 +49,7 @@ public class StripePaymentHandlerSubscriptionCreationService : IPaymentHandlerSu
           },
         },
     };
+
     subscriptionOptions.AddExpand("latest_invoice.payment_intent");
 
     var subscription = _subscriptionService.Create(subscriptionOptions);
