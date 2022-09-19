@@ -16,6 +16,7 @@ public class UserDetailsViewModel
   public string? YouTubeUrl { get; set; }
   public string? OtherUrl { get; set; }
   public string? AboutInfo { get; set; }
+  public string? Birthday { get; set; }
   public string? Address { get; set; }
   public string? PEFriendCode { get; set; }
   public string? PEBadgeURL { get; set; }
@@ -48,6 +49,7 @@ public class UserDetailsViewModel
 
     OtherUrl = member.OtherUrl;
     AboutInfo = member.AboutInfo;
+    Birthday = member.Birthday?.ToString();
     Address = member.Address;
     Name = member.UserFullName();
     PEFriendCode = member.PEFriendCode;

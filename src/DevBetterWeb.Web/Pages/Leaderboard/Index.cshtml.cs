@@ -52,7 +52,7 @@ public class IndexModel : PageModel
 		UpdateRanksAndReadBooksCountForMember(alumniMembersIds);
 		UpdateMembersReadRank();
 		UpdateBooksRank();
-		OderByRankForMembersAndBooks();
+		OrderByRankForMembersAndBooks();
 	}
   private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
   {
@@ -143,11 +143,12 @@ public class IndexModel : PageModel
 	  books.ForEach(m => m.Rank = bookRanks[m.MembersWhoHaveReadCount]);
   }
 
-	private void OderByRankForMembersAndBooks()
+	private void OrderByRankForMembersAndBooks()
 	{
 		foreach (var bookCategory in BookCategories)
 		{
 			bookCategory.Members = bookCategory.Members.OrderBy(x => x.BooksRank).ToList();
+			bookCategory.Alumnus = bookCategory.Alumnus.OrderBy(x => x.BooksRank).ToList();
 			bookCategory.Books = bookCategory.Books!.OrderBy(x => x.Rank).ToList();
 		}
 	}

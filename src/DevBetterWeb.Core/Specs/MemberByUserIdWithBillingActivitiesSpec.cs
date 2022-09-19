@@ -3,11 +3,15 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class MemberByUserIdWithBillingActivitiesSpec : Specification<Member>, ISingleResultSpecification
+public sealed class MemberByUserIdWithBillingActivitiesSpec : Specification<Member>, ISingleResultSpecification
 {
-  public MemberByUserIdWithBillingActivitiesSpec(string userId)
-  {
-    Query.Where(member => member.UserId == userId);
-    Query.Include(member => member.BillingActivities);
-  }
+	public MemberByUserIdWithBillingActivitiesSpec(string userId)
+	{
+		Query
+			.AsNoTracking()
+			.Where(member => member.UserId == userId)
+			.Include(member => member.BillingActivities)
+			.Include(member => member.MemberSubscriptions);
+
+	}
 }
