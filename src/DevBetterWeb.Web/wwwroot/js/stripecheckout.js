@@ -76,8 +76,6 @@ var handleForm = function () {
 				return;
 			}
 
-			console.log(paymentMethod);
-
 			// Make a call to the server to create a new
 			// payment intent and store its client_secret.
 			const clientSecretResult = await fetch(
