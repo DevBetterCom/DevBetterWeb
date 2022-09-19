@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -20,18 +18,16 @@ public class PaymentIntentSucceededWebHook : EndpointBaseAsync
 {
 	private readonly string _stripeWebHookSecretKey;
 	private readonly IAppLogger<InvoicePaidWebHook> _logger;
-	private readonly IPaymentHandlerCustomerService _paymentHandlerCustomer;
+
 	public PaymentIntentSucceededWebHook(
 		IAppLogger<InvoicePaidWebHook> logger, 
-		IOptions<StripeOptions> optionsAccessor, 
-		IPaymentHandlerCustomerService paymentHandlerCustomer)
+		IOptions<StripeOptions> optionsAccessor)
 	{
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
-		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
+		Guard.Against.Null(optionsAccessor.Value?.StripePaymentIntentSucceededWebHookSecretKey, nameof(optionsAccessor.Value.StripePaymentIntentSucceededWebHookSecretKey));
 
-		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
+		_stripeWebHookSecretKey = optionsAccessor.Value.StripePaymentIntentSucceededWebHookSecretKey;
 		_logger = logger;
-		_paymentHandlerCustomer = paymentHandlerCustomer;
 	}
 
 	[HttpPost("stripe-payment-intent-succeeded-web-hook")]
@@ -54,15 +50,6 @@ public class PaymentIntentSucceededWebHook : EndpointBaseAsync
 			}
 
 			var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
-			var email = paymentIntent.Charges.Data.FirstOrDefault()?.BillingDetails.Email;
-			if (string.IsNullOrEmpty(email))
-			{
-				email = paymentIntent.Customer.Email;
-			}
-			if (!string.IsNullOrEmpty(email))
-			{
-				_ = _paymentHandlerCustomer.CreateCustomer(email);
-			}
 
 			return Ok();
 		}

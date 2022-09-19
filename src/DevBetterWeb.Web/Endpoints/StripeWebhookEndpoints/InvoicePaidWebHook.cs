@@ -28,12 +28,12 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 		IPaymentHandlerInvoice paymentHandlerInvoice)
 	{
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
-		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
+		Guard.Against.Null(optionsAccessor.Value?.StripeInvoicePaidWebHookSecretKey, nameof(optionsAccessor.Value.StripeInvoicePaidWebHookSecretKey));
 
 		_logger = logger;
 		_webHookHandlerService = webHookHandlerService;
 		_paymentHandlerInvoice = paymentHandlerInvoice;
-		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
+		_stripeWebHookSecretKey = optionsAccessor.Value.StripeInvoicePaidWebHookSecretKey;
 	}
 
 	[HttpPost("stripe-invoice-paid-web-hook")]

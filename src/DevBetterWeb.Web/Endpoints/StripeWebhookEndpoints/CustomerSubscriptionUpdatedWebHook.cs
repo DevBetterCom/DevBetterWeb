@@ -30,13 +30,13 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 		IWebhookHandlerService webHookHandlerService)
 	{
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
-		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
+		Guard.Against.Null(optionsAccessor.Value?.StripeCustomerSubscriptionUpdatedWebHookSecretKey, nameof(optionsAccessor.Value.StripeCustomerSubscriptionUpdatedWebHookSecretKey));
 
 		_logger = logger;
 		_paymentHandlerEventService = paymentHandlerEventService;
 		_paymentHandlerSubscription = paymentHandlerSubscription;
 		_webHookHandlerService = webHookHandlerService;
-		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
+		_stripeWebHookSecretKey = optionsAccessor.Value.StripeCustomerSubscriptionUpdatedWebHookSecretKey;
 	}
 
 	[HttpPost("stripe-customer-subscription-updated-web-hook")]

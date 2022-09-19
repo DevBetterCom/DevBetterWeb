@@ -6,7 +6,6 @@ using Ardalis.ApiEndpoints;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
@@ -26,11 +25,11 @@ public class CustomerSubscriptionDeletedWebHook : EndpointBaseAsync
 		IWebhookHandlerService webHookHandlerService)
 	{
 		Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
-		Guard.Against.Null(optionsAccessor.Value?.StripeWebHookSecretKey, nameof(optionsAccessor.Value.StripeWebHookSecretKey));
+		Guard.Against.Null(optionsAccessor.Value?.StripeCustomerSubscriptionDeletedWebHookSecretKey, nameof(optionsAccessor.Value.StripeCustomerSubscriptionDeletedWebHookSecretKey));
 
 		_logger = logger;
 		_webHookHandlerService = webHookHandlerService;
-		_stripeWebHookSecretKey = optionsAccessor.Value.StripeWebHookSecretKey;
+		_stripeWebHookSecretKey = optionsAccessor.Value.StripeCustomerSubscriptionDeletedWebHookSecretKey;
 	}
 
 	[HttpPost("stripe-customer-subscription-deleted-web-hook")]
