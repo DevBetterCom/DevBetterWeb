@@ -296,6 +296,7 @@ public class Member : BaseEntity, IAggregateRoot
 		if (!UploadedBooks!.Any())
 		{
 			UploadedBooks.Add(book);
+      AddBookRead(book);
 			var newBookAddedEvent = new MemberAddedBookAddEvent(this, book);
 			Events.Add(newBookAddedEvent);
 		}
