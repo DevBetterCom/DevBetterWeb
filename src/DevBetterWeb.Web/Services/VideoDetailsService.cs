@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
@@ -8,6 +10,7 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Interfaces;
+using Flurl.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Services;
@@ -18,19 +21,25 @@ public class VideoDetailsService : IVideoDetailsService
 	private readonly GetAllTextTracksService _getAllTextTracksService;
 	private readonly IRepository<ArchiveVideo> _archiveVideoRepository;
 	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly IWebVTTParsingService _vttService;
 
 	public VideoDetailsService(
 		GetVideoService getVideoService,
 		GetAllTextTracksService getAllTextTracksService,
 		IRepository<ArchiveVideo> archiveVideoRepository,
-		UserManager<ApplicationUser> userManager)
+		UserManager<ApplicationUser> userManager,
+		IWebVTTParsingService vttService)
 	{
 		_getVideoService = getVideoService;
 		_getAllTextTracksService = getAllTextTracksService;
 		_archiveVideoRepository = archiveVideoRepository;
 		_userManager = userManager;
+		_vttService = vttService;
 	}
-	public async Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(string videoId, string? currentUserName)
+	public async Task<(HttpResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
+		string videoId,
+		string? currentUserName,
+		string currentVideoURL)
 	{
 		var videoTask = _getVideoService.ExecuteAsync(videoId);
 		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
@@ -38,7 +47,9 @@ public class VideoDetailsService : IVideoDetailsService
 		var archiveVideoTask = _archiveVideoRepository.FirstOrDefaultAsync(videoSpec);
 		var applicationUserTask = _userManager.FindByNameAsync(currentUserName);
 
-		var task = Task.WhenAll(videoTask, textTracksTask, archiveVideoTask, applicationUserTask);
+		var transcriptTask = GetTranscriptAsync((await textTracksTask).Data.Data, currentVideoURL);
+
+		var task = Task.WhenAll(videoTask, transcriptTask, archiveVideoTask, applicationUserTask);
 		try
 		{
 			await task;
@@ -53,12 +64,31 @@ public class VideoDetailsService : IVideoDetailsService
 			throw;
 		}
 
-		return (videoTask.Result, textTracksTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
+		return (videoTask.Result, transcriptTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
 	}
 
 	public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)
 	{
 		archiveVideo.Views++;
 		await _archiveVideoRepository.UpdateAsync(archiveVideo);
+	}
+
+	public async Task<string> GetTranscriptAsync(IEnumerable<TextTrack> textTracks, string videoURL)
+	{
+		try
+		{
+			if (textTracks.Any())
+			{
+				string textTrackLink = textTracks.First().Link;
+				string vtt = await textTrackLink.GetStringAsync();
+				return _vttService.Parse(vtt, videoURL, paragraphSize: 4);
+			}
+
+			return String.Empty;
+		}
+		catch (Exception)
+		{
+			return String.Empty;
+		}
 	}
 }

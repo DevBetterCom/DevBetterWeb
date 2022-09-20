@@ -1,18 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-  	<Nullable>enable</Nullable>
-
+    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.7.0" />
-    <PackageReference Include="ILogger.Moq" Version="1.1.10" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="FluentAssertions" Version="6.7.0"/>
+    <PackageReference Include="ILogger.Moq" Version="1.1.10"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1"/>
+    <PackageReference Include="Moq" Version="4.18.2"/>
+    <PackageReference Include="xunit" Version="2.4.2"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -21,12 +18,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Flurl.Http" Version="3.2.4"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
-    <ProjectReference Include="..\..\src\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\DevBetterWeb.Web\DevBetterWeb.Web.csproj" />
+    <ProjectReference Include="..\..\src\DevBetterWeb.Core\DevBetterWeb.Core.csproj"/>
+    <ProjectReference Include="..\..\src\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj"/>
+    <ProjectReference Include="..\..\src\DevBetterWeb.Web\DevBetterWeb.Web.csproj"/>
   </ItemGroup>
-
 </Project>
