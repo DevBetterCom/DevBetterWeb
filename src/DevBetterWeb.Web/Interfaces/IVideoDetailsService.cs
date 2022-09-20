@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
@@ -9,9 +10,12 @@ namespace DevBetterWeb.Web.Interfaces;
 
 public interface IVideoDetailsService
 {
-	Task<(HttpResponse<Video>, HttpResponse<GetAllTextTracksResponse>, ArchiveVideo?, ApplicationUser)> GetDataAsync(
-    string videoId, 
-    string? currentUserName);
+	Task<(HttpResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
+		string videoId,
+		string? currentUserName,
+		string currentVideoURL);
 
 	Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo);
+
+	Task<string> GetTranscriptAsync(IEnumerable<TextTrack> textTracks, string videoUrl);
 }
