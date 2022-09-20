@@ -14,7 +14,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>@ViewData["Title"] - devBetter</title>
+
+    <partial name="_GoogleAnalyticsPartial" />
 
     <!-- Custom fonts for this template-->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,7 +26,7 @@
 
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
-
+    @await RenderSectionAsync("head", required: false).ConfigureAwait(false)
 </head>
 
 <body id="page-top">
@@ -36,16 +38,16 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">devBetter</div>
             </a>
-
+            
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
+@* 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">
@@ -137,7 +139,109 @@
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
+            </li> *@
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/Videos/Index">
+                    <i class="fas fa-fw fa-video"></i>
+                    <span>Videos</span></a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/CoachingSessions/Index">
+                    <i class="fas fa-fw fa-chalkboard"></i>
+                    <span>Sessions</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/Questions">
+                    <i class="fas fa-fw fa-question-circle"></i>
+                    <span>Recent Questions</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/User/Index">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Members</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/Leaderboard/Index">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Books Leaderboard</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/Resources/Index">
+                    <i class="fas fa-fw fa-link"></i>
+                    <span>Resources</span></a>
+            </li>
+
+            @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
+            {
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                        aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Admin</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" asp-page="/Admin/Users/Index">Manage Users</a>
+                            <a class="collapse-item" asp-page="/Admin/Members/Index">Manage Members</a>
+                            <a class="collapse-item" asp-page="/Admin/Invitations/Index">View Invitations</a>
+                            <a class="collapse-item" asp-page="/Admin/Books/Index">Manage Books</a>
+                            <a class="collapse-item" asp-page="/Admin/Videos/Index">Manage Videos</a>
+                            <a class="collapse-item" asp-page="/Admin/SubscriptionPlans/Index">Manage Subscription Plans</a>
+                            <a class="collapse-item" asp-page="/Admin/UserReports/Index">View Reports</a>
+                        </div>
+                    </div>
+                </li>
+
+                @* <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/Users/Index">
+                        <i class="fas fa-fw fa-users-cog"></i>
+                        <span>Manage Users</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/Members/Index">
+                        <i class="fas fa-fw fa-user-cog"></i>
+                        <span>Manage Members</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/Invitations/Index">
+                        <i class="fas fa-fw fa-envelope"></i>
+                        <span>View Invitations</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/Books/Index">
+                        <i class="fas fa-fw fa-book-open"></i>
+                        <span>Manage Books</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/Videos/Index">
+                        <i class="fas fa-fw fa-file-video"></i>
+                        <span>Manage Videos</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/SubscriptionPlans/Index">
+                        <i class="fas fa-fw fa-money-check-alt"></i>
+                        <span>Manage Subscription Plans</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/UserReports/Index">
+                        <i class="fas fa-fw fa-chart-bar"></i>
+                        <span>View Reports</span></a>
+                </li> *@
+            }
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -147,14 +251,14 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- Sidebar Message -->
+            @* <!-- Sidebar Message -->
             <div class="sidebar-card d-none d-lg-flex">
                 <img class="sidebar-card-illustration mb-2" src="~/img/undraw_rocket.svg" alt="...">
                 <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components,
                     and more!</p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to
                     Pro!</a>
-            </div>
+            </div> *@
 
         </ul>
         <!-- End of Sidebar -->
