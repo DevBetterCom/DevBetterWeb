@@ -88,34 +88,13 @@
         </button>
         <div class="collapse navbar-collapse" id="devBetterNavBar">
             <div class="navbar-nav">
-                @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-                {
-                }
-                @if (User.Identity!.IsAuthenticated)
-                {
-                    <a class="nav-item nav-link text-primary" asp-page="/Videos/Index">Videos</a>
-                    <a class="nav-item nav-link text-primary" asp-page="/CoachingSessions/Index">Sessions</a>
-                    <a class="nav-item nav-link text-primary" asp-page="/Questions">Recent Questions</a>
-                    <a class="nav-item nav-link text-primary" asp-page="/User/Index">Members</a>
-                    <a class="nav-item nav-link text-primary" asp-page="/Leaderboard/Index">Leaderboard</a>
-                    <a class="nav-item nav-link text-primary" asp-page="/Resources/Index">Resources</a>
-                }
-                @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
-                {
-                    <a class="nav-item nav-link text-primary" asp-page="/Admin/Index">Admin</a>
-                }
+                
             </div>
 
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link text-primary" asp-page="/FAQ">FAQ</a>
                 <a class="nav-item nav-link text-primary" id="githubNavLink" href="https://github.com/ardalis/devbetterweb"><i class="fab fa-github"></i></a>
                 <partial name="_LoginPartial" />
-
-                @if (!User!.IsInRole(AuthConstants.Roles.MEMBERS))
-                {
-                    <a class="btn btn-primary nav-item" href="/checkout" target="_blank">Join Now</a>
-
-                }
             </div>
             <div class="navbar-nav">
 
