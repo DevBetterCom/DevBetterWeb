@@ -79,7 +79,7 @@ public class LoginModel : PageModel
 
   public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
   {
-    returnUrl = returnUrl ?? Url.Content("~/");
+    returnUrl = returnUrl ?? Url.Content("/User/MyProfile/Index");
 
     if (ModelState.IsValid)
     {
