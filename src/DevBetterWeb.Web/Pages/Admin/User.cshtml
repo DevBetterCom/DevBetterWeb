@@ -451,6 +451,10 @@
               <option value="@plan">@plan.Details.Name</option>
             }
           </select>
+          @if(!Model.MemberSubscriptionPlans.Any())
+          {
+              <p>No plans found; probably no member record.</p>
+          }
 
         </div>
         <div class="modal-footer">
