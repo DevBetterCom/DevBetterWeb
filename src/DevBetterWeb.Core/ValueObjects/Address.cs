@@ -47,4 +47,9 @@ public class Address : ValueObject
 
     return string.Join(',', tokens);
   }
+
+	public override string ToString()
+	{
+		return $"{this.Street}, {this.City}, {this.State} {this.PostalCode}, {this.Country}";
+	}
 }

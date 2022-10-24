@@ -52,6 +52,33 @@
 
         <div class="card">
             <div class="card-header">
+                <b>Shipping Address</b>
+            </div>
+
+            <div class="card-body">
+                @if (@Model.UserProfileViewModel.Address != "none")
+                {
+                    <div>
+                        <strong>
+                            @Model.UserProfileViewModel.Address
+                        </strong>
+                    </div>
+                }
+
+                <span class="text-secondary small">
+                    City, State (optional), and Country are used for <a href="https://devbetter.com/user/map/60b5123e-5392-4b9a-b3bc-fd4a215d4252">map</a> location.
+                    <br />
+                    Full shipping address is only visible to admins and is used for shipping books and other packages to members from time to time.
+                </span>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/ShippingAddress">Edit</a>
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-header">
                 <b>Books You've Read</b>
             </div>
             @if (Model.UserProfileViewModel.BooksRead.Any())
@@ -95,8 +122,10 @@
                 }
                 else
                 {
-                    <div class="card-body">You haven't added any books yet. Alumni members can add one book to the devBetter reading list. 
-                        Add one below!</div>
+                    <div class="card-body">
+                        You haven't added any books yet. Alumni members can add one book to the devBetter reading list.
+                        Add one below!
+                    </div>
                     <div class="card-body">
                         <a class="btn btn-primary nav-item" href="/User/MyProfile/BooksAdd">Add</a>
                     </div>
@@ -153,13 +182,13 @@
         </div>
         <br />
 
-            <div class="card">
-                <div class="card-header">
-                    <b>Billing Information</b>
-                </div>
-                <div class="card-body">
-                    <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
-                </div>
+        <div class="card">
+            <div class="card-header">
+                <b>Billing Information</b>
             </div>
+            <div class="card-body">
+                <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
+            </div>
+        </div>
     </div>
 </div>
