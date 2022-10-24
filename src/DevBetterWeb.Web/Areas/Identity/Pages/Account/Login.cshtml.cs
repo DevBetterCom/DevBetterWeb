@@ -88,6 +88,7 @@ public class LoginModel : PageModel
       var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
       if (result.Succeeded)
       {
+				_logger.LogInformation($"LOGIN SUCCESS for {Input.Email}!");
         return LocalRedirect(returnUrl);
       }
       if (result.IsNotAllowed)

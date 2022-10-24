@@ -121,6 +121,10 @@ public class UserModel : PageModel
 
 			var memberByUserSpec = new MemberByUserIdSpec(userId);
 			var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec);
+			if (member is null)
+			{
+				_logger.LogWarning($"No member associated with userId {userId}");
+			}
 			if (member != null)
 			{
 				UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
