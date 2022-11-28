@@ -15,9 +15,9 @@ public class YearlyModel : PageModel
   public YearlyModel(IOptions<StripeOptions> optionsAccessor)
   {
     Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
-    Guard.Against.NullOrEmpty(optionsAccessor.Value.stripePublishableKey, nameof(optionsAccessor.Value.stripePublishableKey));
+    Guard.Against.NullOrEmpty(optionsAccessor.Value.StripePublishableKey, nameof(optionsAccessor.Value.StripePublishableKey));
     SubscriptionType = new SubscriptionTypeViewModel("Yearly", "year", 2000,
-      optionsAccessor.Value.stripePublishableKey, optionsAccessor.Value.yearlyPlanId!);
+      optionsAccessor.Value.StripePublishableKey, optionsAccessor.Value.YearlyPlanId!);
   }
 
   public void OnGet()

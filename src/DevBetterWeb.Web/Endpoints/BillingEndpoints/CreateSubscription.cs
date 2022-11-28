@@ -1,15 +1,11 @@
 ﻿using System;
 using Ardalis.ApiEndpoints;
-using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-// TODO: we can use it to create customer by admin
-[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class CreateSubscription : EndpointBaseSync
 	.WithRequest<SubscriptionCreateRequest>
 	.WithResult<SubscriptionCreateResponse>
@@ -34,9 +30,8 @@ public class CreateSubscription : EndpointBaseSync
 		try
 		{
 			var customer = _paymentHandlerCustomer.CreateCustomer(request.CustomerEmail!);
-			// var paymentMethodId = _paymentHandlerPaymentMethod.PaymentMethodCreateByCard(request.CustomerEmail!, request.CardNumber!, request.CardExpMonth, request.CardExpYear, request.CardCvc!);
 			var subscription = _paymentHandlerSubscription.CreateSubscription(customer.CustomerId, request.PriceId!, request.PaymentMethodId!);
-			var result = new SubscriptionCreateResponse(subscription._id, subscription._status, subscription._latestInvoicePaymentIntentStatus, subscription._errorMessage);
+			var result = new SubscriptionCreateResponse(subscription._id!, subscription._status!, subscription._latestInvoicePaymentIntentStatus!, subscription._latestInvoicePaymentIntentClientSecret!, subscription._errorMessage);
 
 			return result;
 		}

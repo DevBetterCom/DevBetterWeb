@@ -1,10 +1,15 @@
 ﻿using System;
 using Ardalis.ApiEndpoints;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static DevBetterWeb.Core.AuthConstants;
 
 namespace DevBetterWeb.Web.Endpoints;
 
+// TODO: we can use it later so it is disabled now.
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class CreatePaymentIntent : EndpointBaseSync
 	.WithRequest<PaymentIntentCreateRequest>
 	.WithActionResult<PaymentIntentCreateResponse>
