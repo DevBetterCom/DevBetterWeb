@@ -30,6 +30,7 @@ public class AppIdentityDbContextSeed
   {
     var user = new ApplicationUser { UserName = userName, Email = userName, EmailConfirmed = true, DateCreated = DateTime.UtcNow };
     await userManager.CreateAsync(user, AuthConstants.DEFAULT_PASSWORD);
-    return await userManager.FindByNameAsync(userName);
+		var newUser = await userManager.FindByNameAsync(userName!);
+		return newUser!;
   }
 }

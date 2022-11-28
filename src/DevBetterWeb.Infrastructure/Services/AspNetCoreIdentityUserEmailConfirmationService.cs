@@ -30,7 +30,7 @@ public class AspNetCoreIdentityUserEmailConfirmationService : IUserEmailConfirma
 
     await _userManager.UpdateAsync(user);
 
-    var userEmailConfirmedChangedEvent = new UserEmailConfirmedChangedEvent(user.Email, isEmailConfirmed);
+    var userEmailConfirmedChangedEvent = new UserEmailConfirmedChangedEvent(user!.Email!, isEmailConfirmed);
     await _dispatcher.Dispatch(userEmailConfirmedChangedEvent);
   }
 }

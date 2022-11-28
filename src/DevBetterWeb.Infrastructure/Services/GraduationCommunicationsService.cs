@@ -34,7 +34,7 @@ public class GraduationCommunicationsService : IGraduationCommunicationsService
 
     foreach (var emailAddress in usersInAdminRole.Select(user => user.Email))
     {
-      await _emailService.SendEmailAsync(emailAddress, adminSubject, adminText);
+      await _emailService.SendEmailAsync(emailAddress!, adminSubject, adminText);
     }
   }
 }
