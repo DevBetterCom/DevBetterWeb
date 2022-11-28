@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Events;
+using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,8 @@ public class NotifyOnNewMemberCreatedAndProfileUpdatedHandler : IHandle<NewMembe
     var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 
     var newMemberUser = await _userManager.FindByIdAsync(domainEvent.Member.UserId);
-    string newMemberEmail = await _userManager.GetEmailAsync(newMemberUser);
+		if (newMemberUser is null) throw new UserNotFoundException(domainEvent.Member.UserId);
+    string? newMemberEmail = await _userManager.GetEmailAsync(newMemberUser!);
 
     foreach (var emailAddress in usersInAdminRole.Select(user => user.Email))
     {
@@ -38,7 +40,7 @@ public class NotifyOnNewMemberCreatedAndProfileUpdatedHandler : IHandle<NewMembe
         message = message + $"\n    {subscription.Dates.StartDate} to {subscription.Dates.EndDate}";
       }
       message = message + $"\nView {domainEvent.Member.FirstName}'s profile at: https://devbetter.com/User/Details/ {domainEvent.Member.UserId}";
-      await _emailService.SendEmailAsync(emailAddress, subject, message);
+      await _emailService.SendEmailAsync(emailAddress!, subject, message);
     }
   }
 }

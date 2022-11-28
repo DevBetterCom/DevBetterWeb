@@ -36,7 +36,7 @@ public class MemberSubscriptionEndedAdminEmailService : IMemberSubscriptionEnded
 
     foreach (var emailAddress in usersInAdminRole.Select(user => user.Email))
     {
-      await _emailService.SendEmailAsync(emailAddress, subject, message);
+      await _emailService.SendEmailAsync(emailAddress!, subject, message);
     }
   }
 

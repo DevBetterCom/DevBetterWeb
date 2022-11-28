@@ -27,8 +27,8 @@ public class NotifyOnNewMemberCreatedHandler : IHandle<NewMemberCreatedEvent>
     foreach (var emailAddress in usersInAdminRole.Select(user => user.Email))
     {
       string subject = $"[devBetter] New Member {domainEvent.Member.UserFullName()}";
-      string message = $"A new Member with id {domainEvent.Member.UserId} has signed up and added their membership profile.";
-      await _emailService.SendEmailAsync(emailAddress, subject, message);
+      string message = $"A new Member with id {domainEvent.Member.UserId} and email address {emailAddress!} has signed up and added their membership profile.";
+      await _emailService.SendEmailAsync(emailAddress!, subject, message);
     }
   }
 }
