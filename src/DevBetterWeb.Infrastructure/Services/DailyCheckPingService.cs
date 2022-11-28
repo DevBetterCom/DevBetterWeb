@@ -117,7 +117,7 @@ public class DailyCheckPingService : IDailyCheckPingService
 
       foreach (var user in usersInAdminRole)
       {
-        await _emailService.SendEmailAsync(user.Email, "Upcoming DevBetter Graduation", $"Ensure that the following member(s)'s subscriptions are not renewed, as they will graduate to alumni status in {DAYS_BEFORE_GRADUATION_TO_PING} days:\n {listOfMembersToPingAdminsAbout}");
+        await _emailService.SendEmailAsync(user.Email!, "Upcoming DevBetter Graduation", $"Ensure that the following member(s)'s subscriptions are not renewed, as they will graduate to alumni status in {DAYS_BEFORE_GRADUATION_TO_PING} days:\n {listOfMembersToPingAdminsAbout}");
       }
 
       messages.Append($"Admins have been reminded not to renew the subscriptions of the following members about to graduate: {listOfMembersToPingAdminsAbout}");
@@ -202,7 +202,7 @@ public class DailyCheckPingService : IDailyCheckPingService
 
     foreach (var user in usersInAdminRole)
     {
-      await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+      await _emailService.SendEmailAsync(user!.Email!, emailSubject, emailBody);
       listOfEmailsAdminsWereRemindedAbout += $"{user.Email}\n";
     }
 

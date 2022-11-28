@@ -34,15 +34,16 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
     var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
     if (role == null) throw new RoleNotFoundException(roleId);
 
-    await _userManager.AddToRoleAsync(user, role.Name);
+    await _userManager.AddToRoleAsync(user, role.Name!);
 
-    var userAddedToRoleEvent = new UserAddedToRoleEvent(user.Email, role.Name);
+    var userAddedToRoleEvent = new UserAddedToRoleEvent(user!.Email!, role.Name!);
     await _dispatcher.Dispatch(userAddedToRoleEvent);
   }
 
   public async Task AddUserToRoleByRoleNameAsync(string userId, string roleName)
   {
     var role = await _roleManager.FindByNameAsync(roleName);
+		if (role is null) throw new RoleNotFoundException(roleName);
     var roleId = role.Id;
 
     await AddUserToRoleAsync(userId, roleId);
@@ -57,11 +58,11 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
     if (role == null) throw new RoleNotFoundException(roleId);
 
     // check if user is in role?
-    if (await _userManager.IsInRoleAsync(user, role.Name))
+    if (await _userManager.IsInRoleAsync(user, role.Name!))
     {
-      await _userManager.RemoveFromRoleAsync(user, role.Name);
+      await _userManager.RemoveFromRoleAsync(user, role!.Name!);
 
-      var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user.Email, role.Name);
+      var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user!.Email!, role.Name!);
       await _dispatcher.Dispatch(userRemovedFromRoleEvent);
     }
     else
@@ -73,6 +74,7 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
   public async Task RemoveUserFromRoleByRoleNameAsync(string userId, string roleName)
   {
     var role = await _roleManager.FindByNameAsync(roleName);
+		if (role is null) throw new RoleNotFoundException(roleName);
     var roleId = role.Id;
 
     await RemoveUserFromRoleAsync(userId, roleId);
