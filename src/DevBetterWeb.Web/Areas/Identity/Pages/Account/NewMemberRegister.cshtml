@@ -47,7 +47,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["googleReCaptcha:SiteKey"]"></script>
     <script>
-        // Key: @Configuration["googleReCaptcha:SecretKey"].Substring(0,10)
+        // Key: @Configuration!["googleReCaptcha:SecretKey"]!.Substring(0,10)
         grecaptcha.ready(function() {
             window.grecaptcha.execute('@Configuration["googleReCaptcha:SiteKey"]', { action: 'home' }).then(function (token) {
                 $("#captchaInput").val(token);

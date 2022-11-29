@@ -69,6 +69,6 @@ public class CancelModel : PageModel
     var user = await _userManager.FindByIdAsync(userId);
     var EmailToUnsubscribe = await _userManager.GetEmailAsync(user!);
 
-    return EmailToUnsubscribe;
+    return EmailToUnsubscribe!;
   }
 }
