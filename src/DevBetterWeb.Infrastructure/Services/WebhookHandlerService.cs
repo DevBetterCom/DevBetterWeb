@@ -72,6 +72,7 @@ public class WebhookHandlerService : IWebhookHandlerService
 
   public async Task HandleCustomerSubscriptionEndedAsync(string json)
   {
+		// TODO: Log all JSON from these webhooks to a db table - perhaps use a decorator on this service
     var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
