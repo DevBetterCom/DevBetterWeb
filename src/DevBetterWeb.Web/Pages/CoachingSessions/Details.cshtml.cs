@@ -42,9 +42,9 @@ public class DetailsModel : PageModel
   public async Task<IActionResult> OnGetAsync(int id)
   {
 	  var currentUserName = User.Identity!.Name;
-	  var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+	  var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-	  var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
+	  var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser!.Id);
 	  var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
 	  if (member is null)
 	  {

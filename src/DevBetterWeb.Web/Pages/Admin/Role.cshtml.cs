@@ -40,7 +40,7 @@ public class RoleModel : PageModel
       return BadRequest();
     }
 
-    var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
+    var usersInRole = await _userManager.GetUsersInRoleAsync(role!.Name!);
 
     var userIdsInRole = usersInRole.Select(X => X.Id).ToList();
     var usersNotInRole = _userManager.Users.Where(x => !userIdsInRole.Contains(x.Id)).ToList();

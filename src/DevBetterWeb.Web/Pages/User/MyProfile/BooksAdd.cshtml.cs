@@ -57,7 +57,7 @@ public class MyProfileBooksAddModel : PageModel
     var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName);
 
-    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
@@ -77,9 +77,9 @@ public class MyProfileBooksAddModel : PageModel
 		if (!ModelState.IsValid) return Page();
 
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 

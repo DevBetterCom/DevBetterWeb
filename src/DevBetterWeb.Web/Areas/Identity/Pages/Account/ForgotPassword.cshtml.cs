@@ -49,7 +49,7 @@ public class ForgotPasswordModel : PageModel
   {
     if (ModelState.IsValid)
     {
-      var user = await _userManager.FindByEmailAsync(Input!.Email);
+      var user = await _userManager.FindByEmailAsync(Input!.Email!);
       if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
       {
         _logger.LogWarning($"User {Input!.Email} does not exist or is not confirmed.");
@@ -75,7 +75,7 @@ public class ForgotPasswordModel : PageModel
       _logger.LogInformation("Sending password reset request with URL " + callbackUrl);
 
       await _emailSender.SendEmailAsync(
-          Input.Email,
+          Input!.Email!,
           "Reset Password",
           $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 

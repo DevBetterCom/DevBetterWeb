@@ -34,7 +34,7 @@ public class UnWatched : EndpointBaseAsync
 	public override async Task<ActionResult> HandleAsync(string videoId, CancellationToken cancellationToken = default)
 	{
 		var userId = _userManager.GetUserId(User);
-		var memberByUserSpec = new MemberByUserIdSpec(userId);
+		var memberByUserSpec = new MemberByUserIdSpec(userId!);
 		var member = await _memberRepository.FirstOrDefaultAsync(memberByUserSpec, cancellationToken);
 		if (member == null)
 		{

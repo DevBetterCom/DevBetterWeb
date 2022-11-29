@@ -62,9 +62,9 @@ public class CreateModel : PageModel
     if (Book == null) return Page();
 
 		var currentUserName = User.Identity!.Name;
-		var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+		var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-		var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+		var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
 		var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
 		var bookEntity = new Book

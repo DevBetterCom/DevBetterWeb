@@ -40,8 +40,8 @@ public class DeactivateModel : PageModel
 
 		try
     {
-      await _newMemberService.DeactivateInviteAsync(invitation);
-      Message = $"{inviteCode} [{invitation.Email}] has been deactivated from DevBetter.";
+      await _newMemberService.DeactivateInviteAsync(invitation!);
+      Message = $"{inviteCode} [{invitation!.Email}] has been deactivated from DevBetter.";
       return Page();
     }
     catch(Exception)

@@ -44,15 +44,15 @@ public class Startup
     if (!_isDbContextAdded)
     {
       services.AddDbContext<AppDbContext>(options =>
-          options.UseSqlServer(Configuration
+          options.UseSqlServer(Configuration!
               .GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
       _isDbContextAdded = true;
     }
 
     // configure Stripe
-    string stripeApiKey = Configuration
-      .GetSection("StripeOptions")
-      .GetSection("stripeSecretKey").Value;
+    string stripeApiKey = Configuration!
+      .GetSection("StripeOptions")!
+      .GetSection("StripeSecretKey")!.Value!;
     services.AddStripeServices(stripeApiKey);
 
     services.AddDailyCheckServices();
@@ -147,7 +147,7 @@ public class Startup
 
   public void ConfigureContainer(ContainerBuilder builder)
   {
-    string vimeoToken = Configuration[Constants.ConfigKeys.VimeoToken];
+    string vimeoToken = Configuration![Constants.ConfigKeys.VimeoToken]!;
     builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development", vimeoToken));
   }
 

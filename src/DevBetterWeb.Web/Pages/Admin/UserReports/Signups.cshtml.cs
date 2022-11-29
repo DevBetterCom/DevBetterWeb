@@ -22,8 +22,8 @@ public class SignupsModel : PageModel
   private readonly IRepository<BillingActivity> _repository;
   private readonly ICsvService _csvService;
 
-  [BindProperty]
-  public ReportsDatesModel SignupReportsDatesModel { get; set; }
+	[BindProperty]
+	public ReportsDatesModel SignupReportsDatesModel { get; set; } = new();
 
   public SignupsModel(IRepository<BillingActivity> repository,
     ICsvService csvService)

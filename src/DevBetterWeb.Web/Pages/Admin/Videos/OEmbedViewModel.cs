@@ -34,7 +34,7 @@ public class OEmbedViewModel
   public bool IsMemberFavorite { get; set; }
   public bool IsMemberWatched { get; set; }
   public int MemberFavoritesCount { get; set; }
-  public List<VideoCommentDto> Comments { get; set; }
+	public List<VideoCommentDto> Comments { get; set; } = new();
 
   public OEmbedViewModel(OEmbed oEmbed)
   {

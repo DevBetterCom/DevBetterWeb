@@ -95,7 +95,7 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser.Email);
+			var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser!.Email!);
 			Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
 
 			var roles = await _roleManager.Roles.ToListAsync();
@@ -105,7 +105,7 @@ public class UserModel : PageModel
 			// TODO: Fix this awful performing code
 			foreach (var role in roles)
 			{
-				if (!(await _userManager.GetUsersInRoleAsync(role.Name)).Contains(currentUser))
+				if (!(await _userManager.GetUsersInRoleAsync(role!.Name!)).Contains(currentUser))
 				{
 					unassignedRoles.Add(role);
 				}
@@ -280,7 +280,7 @@ public class UserModel : PageModel
 		if (!string.IsNullOrEmpty(UserPersonalUpdateModel.Email))
 		{
 			var user = await _userManager.FindByIdAsync(userId);
-			user.Email = UserPersonalUpdateModel.Email;
+			user!.Email = UserPersonalUpdateModel.Email;
 			await _userManager.UpdateAsync(user);
 		}
 

@@ -58,9 +58,9 @@ public class EditAvatarModel : PageModel
   public async Task OnGetAsync()
   {
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
+    AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser!.Id);
     _logger.LogInformation($"Setting AvatarUrl to {AvatarUrl}.");
   }
 
@@ -72,9 +72,9 @@ public class EditAvatarModel : PageModel
     }
 
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser.Id);
+    AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser!.Id);
 
     string fileName = applicationUser.Id + ".jpg";
 
@@ -103,7 +103,7 @@ public class EditAvatarModel : PageModel
   {
     _logger.LogInformation($"Uploading file to blob storage...");
 
-    string storageConnectionString = _configuration[Constants.ConfigKeys.FileStorageConnectionString];
+    string storageConnectionString = _configuration[Constants.ConfigKeys.FileStorageConnectionString]!;
 
     if (!CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
     {
