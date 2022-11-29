@@ -55,7 +55,7 @@ public class MyProfileBooksAddModel : PageModel
   public async Task OnGetAsync()
   {
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
     var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);

@@ -53,10 +53,10 @@
                         <div class="row">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group" style="width: 100%;">
-                                <label asp-for="UserBooksAddModel.AddedBook!.BookCategoryId" class="control-label"></label>
-                                <select asp-for="UserBooksAddModel.AddedBook.BookCategoryId" class="form-control"
+                                <label asp-for="UserBooksAddModel.AddedBook!.BookCategoryId!" class="control-label"></label>
+                                <select asp-for="UserBooksAddModel.AddedBook!.BookCategoryId!" class="form-control"
                                 id="bookCategory">
-                                    @foreach (var category in Model.BookCategories)
+                                    @foreach (var category in Model.BookCategories!)
                                     {
                                         <option value="@category.Id">@category.Title</option>
                                     }

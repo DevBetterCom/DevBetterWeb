@@ -64,7 +64,7 @@ public class VideoDetailsService : IVideoDetailsService
 			throw;
 		}
 
-		return (videoTask!.Result, transcriptTask!.Result, archiveVideoTask!.Result, applicationUserTask!.Result);
+		return (videoTask!.Result!, transcriptTask!.Result!, archiveVideoTask!.Result!, applicationUserTask!.Result!);
 	}
 
 	public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)

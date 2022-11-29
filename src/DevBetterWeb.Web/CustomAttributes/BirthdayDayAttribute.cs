@@ -21,7 +21,7 @@ public class BirthdayDayAttribute : ValidationAttribute
 		{
 			const int LEAP_YEAR = 2020;
 			new DateOnly(LEAP_YEAR, model.BirthdayMonth.Value, (int)value);
-			return ValidationResult.Success;
+			return ValidationResult.Success!;
 		}
 		catch (ArgumentOutOfRangeException)
 		{
