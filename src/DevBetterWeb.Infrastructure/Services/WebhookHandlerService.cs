@@ -91,7 +91,8 @@ public class WebhookHandlerService : IWebhookHandlerService
 
   public async Task HandleCustomerSubscriptionRenewedAsync(string json)
   {
-    var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
+		// TODO: Log all JSON from these webhooks to a db table - perhaps use a decorator on this service
+		var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
@@ -108,7 +109,8 @@ public class WebhookHandlerService : IWebhookHandlerService
 
   public async Task HandleNewCustomerSubscriptionAsync(string json)
   {
-    var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
+		// TODO: Log all JSON from these webhooks to a db table - perhaps use a decorator on this service
+		var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
     if (string.IsNullOrEmpty(paymentHandlerEvent.SubscriptionId))
     {
       _logger.LogWarning("Payment handler subscriptionId is null or empty", json);
