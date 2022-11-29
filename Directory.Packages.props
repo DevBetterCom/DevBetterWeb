@@ -38,7 +38,7 @@
 		<PackageVersion Include="Flurl.Http" Version="3.2.4" />
 		<PackageVersion Include="GoogleReCaptcha.V3" Version="1.3.1" />
 		<PackageVersion Include="ILogger.Moq" Version="1.1.10" />
-		<PackageVersion Include="Markdig" Version="0.30.3" />
+		<PackageVersion Include="Markdig" Version="0.30.4" />
 		<PackageVersion Include="MediaInfo.Wrapper.Core" Version="21.9.2" />
 		<PackageVersion Include="MediatR" Version="11.0.0" />
 		<PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
