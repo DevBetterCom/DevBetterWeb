@@ -23,6 +23,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C18577A9-A101-4654-89A2-CEC4D57B4D0C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Packages.props = Directory.Packages.props
 		efscripts.txt = efscripts.txt
 		global.json = global.json
 		README.md = README.md
