@@ -1,0 +1,105 @@
+<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageVersion Include="altcover" Version="8.3.839" />
+		<PackageVersion Include="Ardalis.ApiEndpoints" Version="4.0.1" />
+		<PackageVersion Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
+		<PackageVersion Include="Ardalis.GuardClauses" Version="4.0.1" />
+		<PackageVersion Include="Ardalis.HttpClientTestExtensions" Version="3.0.0" />
+		<PackageVersion Include="Ardalis.ListStartupServices" Version="1.1.4" />
+		<PackageVersion Include="Ardalis.Result" Version="4.1.0" />
+		<PackageVersion Include="Ardalis.Result.AspNetCore" Version="4.1.0" />
+		<PackageVersion Include="Ardalis.SmartEnum" Version="2.1.0" />
+		<PackageVersion Include="Ardalis.Specification" Version="6.1.0" />
+		<PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
+		<PackageVersion Include="Autofac" Version="6.4.0" />
+		<PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+
+		<PackageVersion Include="AutoMapper" Version="11.0.1"/>
+		<PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
+
+		<PackageVersion Include="BuildBundlerMinifier" Version="3.2.449"/>
+		<PackageVersion Include="coverlet.collector" Version="3.2.0" />
+		<PackageVersion Include="coverlet.msbuild" Version="3.2.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageVersion>
+		<PackageVersion Include="CSharpFunctionalExtensions" Version="2.34.0" />
+		<PackageVersion Include="Dapper" Version="2.0.123"/>
+		<PackageVersion Include="Discord.Net.Webhook" Version="3.8.0" />
+		<PackageVersion Include="FastEndpoints" Version="5.3.2" />
+		<PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.0.1" />
+		<PackageVersion Include="FastEndpoints.Swagger" Version="5.2.1" />
+		<PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.0.1" />
+		<PackageVersion Include="FluentAssertions" Version="6.7.0"/>
+
+		<PackageVersion Include="Flurl" Version="3.0.6"/>
+		<PackageVersion Include="Flurl.Http" Version="3.2.4"/>
+
+		<PackageVersion Include="GoogleReCaptcha.V3" Version="1.3.1"/>
+		<PackageVersion Include="ILogger.Moq" Version="1.1.10"/>
+		<PackageVersion Include="Markdig" Version="0.30.3" />
+		<PackageVersion Include="MediatR" Version="11.0.0" />
+		<PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0"/>
+
+		<PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.8"/>
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.0"/>
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
+
+		<PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.3.0"/>
+		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
+		<PackageVersion Include="Microsoft.CodeCoverage" Version="17.4.0" />
+
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="7.0.0" />
+
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
+		<PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.0" />
+		<PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.8"/>
+
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+		<PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175"/>
+		<PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0" />
+		<PackageVersion Include="Moq" Version="4.18.2" />
+		<PackageVersion Include="NETStandard.Library" Version="2.0.3" />
+
+		<PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageVersion Include="ReportGenerator" Version="5.1.12" />
+		<PackageVersion Include="Sendgrid" Version="9.28.1" />
+
+		<PackageVersion Include="Serilog.AspNetCore" Version="6.1.0-dev-00285" />
+		<PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.1-dev-00040" />
+
+		<PackageVersion Include="SixLabors.ImageSharp" Version="2.1.3"/>
+
+		<PackageVersion Include="SQLite" Version="3.13.0" />
+		<PackageVersion Include="Stripe.net" Version="40.8.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
+		<PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
+
+		<PackageVersion Include="TagHelperSamples.Authorization" Version="3.0.56"/>
+		<PackageVersion Include="Westwind.AspNetCore.Markdown" Version="3.9.0"/>
+		<PackageVersion Include="WindowsAzure.Storage" Version="9.3.3"/>
+
+		<PackageVersion Include="xunit" Version="2.4.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+		<PackageVersion Include="xunit.runner.console" Version="2.4.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageVersion>
+		<PackageVersion Include="xunit.runner.reporters" Version="2.4.2" />
+		<PackageVersion Include="XunitXml.TestLogger" Version="3.0.70" />
+
+	</ItemGroup>
+</Project>

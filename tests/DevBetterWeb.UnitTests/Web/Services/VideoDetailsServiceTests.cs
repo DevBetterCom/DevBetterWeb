@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using Flurl.Http.Testing;
 using Moq;
@@ -19,7 +19,7 @@ public class VideoDetailsServiceTests
 		List<TextTrack> textTracks = new();
 		var vttServiceMock = new Mock<IWebVTTParsingService>();
 		vttServiceMock.Setup(x => x.Parse(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns("test");
-		var videoDetailsService = new VideoDetailsService(null, null, null, null, vttServiceMock.Object);
+		var videoDetailsService = new VideoDetailsService(null!, null!, null!, null!, vttServiceMock.Object);
 
 		var result = await videoDetailsService.GetTranscriptAsync(textTracks, "https://it-does-not-matter-for-this-test.com");
 
@@ -33,7 +33,7 @@ public class VideoDetailsServiceTests
 		_httpTest.RespondWith("Me no findy", 404);
 		var vttServiceMock = new Mock<IWebVTTParsingService>();
 		vttServiceMock.Setup(x => x.Parse(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns("test");
-		var videoDetailsService = new VideoDetailsService(null, null, null, null, vttServiceMock.Object);
+		var videoDetailsService = new VideoDetailsService(null!, null!, null!, null!, vttServiceMock.Object);
 
 		var result = await videoDetailsService.GetTranscriptAsync(textTracks, "https://it-does-not-matter-for-this-test.com");
 

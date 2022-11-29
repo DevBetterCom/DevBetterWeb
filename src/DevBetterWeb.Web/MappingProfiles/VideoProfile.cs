@@ -8,9 +8,9 @@ namespace DevBetterWeb.Web.MappingProfiles;
 
 public class VideoProfile : Profile
 {
-  public VideoProfile()
-  {
-    CreateMap<Video, VideoModel>().ReverseMap();
-    CreateMap<ArchiveVideo, ArchiveVideoDto>().ReverseMap();
-  }
+	public VideoProfile()
+	{
+		CreateMap<Video, VideoModel>().ReverseMap();
+		CreateMap<ArchiveVideo, ArchiveVideoDto>().ReverseMap();
+	}
 }
