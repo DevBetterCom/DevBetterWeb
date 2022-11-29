@@ -41,9 +41,9 @@ public class MyProfilePersonalModel : PageModel
   public async Task OnGetAsync()
   {
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdSpec(applicationUser.Id);
+    var spec = new MemberByUserIdSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     //var books = await _appDbContext.Books
@@ -71,9 +71,9 @@ public class MyProfilePersonalModel : PageModel
     // TODO: assess risk of XSS attacks and how to mitigate
 
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdSpec(applicationUser.Id);
+    var spec = new MemberByUserIdSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 

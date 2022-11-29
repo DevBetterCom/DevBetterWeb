@@ -130,9 +130,9 @@ public class EditModel : PageModel
   public async Task<IActionResult> OnPostAddQuestion(int archiveVideoId, string questionText, int timestamp)
   {
 		var currentUserName = User.Identity!.Name;
-		var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+		var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
+		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser!.Id);
 		var member = await _memberRepository.FirstOrDefaultAsync(memberSpec);
 		if (member is null)
 		{

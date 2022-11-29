@@ -37,9 +37,9 @@ public class CreateQuestion : EndpointBaseAsync
 	public override async Task<ActionResult<NewQuestionRequestDto>> HandleAsync([FromBody] NewQuestionRequestDto request, CancellationToken cancellationToken = default)
 	{
 		var currentUserName = User.Identity!.Name;
-		var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+		var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser.Id);
+		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(applicationUser!.Id);
 		var member = await _memberRepository.FirstOrDefaultAsync(memberSpec, cancellationToken);
 		if (member is null)
 		{

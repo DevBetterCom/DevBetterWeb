@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DevBetterWeb.Web.Pages.User;
@@ -14,8 +14,8 @@ public class BirthdayDayAttribute : ValidationAttribute
 	{
 		var model = (UserPersonalUpdateModel)validationContext.ObjectInstance;
 
-		if (value is null) return ValidationResult.Success;
-		if (model.BirthdayMonth is null) return ValidationResult.Success;
+		if (value is null) return ValidationResult.Success!;
+		if (model.BirthdayMonth is null) return ValidationResult.Success!;
 
 		try
 		{

@@ -41,9 +41,9 @@ public class BillingModel : PageModel
   public async Task OnGetAsync()
   {
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdWithBillingActivitiesSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBillingActivitiesSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)

@@ -112,7 +112,7 @@ public class CreateModel : PageModel
   {
     CloudStorageAccount? storageAccount = null;
     CloudBlobContainer? cloudBlobContainer = null;
-    string storageConnectionString = _configuration[Constants.ConfigKeys.FileStorageConnectionString];
+    string storageConnectionString = _configuration[Constants.ConfigKeys.FileStorageConnectionString]!;
 
     // Check whether the connection string can be parsed.
     if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))

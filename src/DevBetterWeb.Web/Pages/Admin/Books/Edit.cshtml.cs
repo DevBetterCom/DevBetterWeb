@@ -78,12 +78,12 @@ public class EditModel : PageModel
       return Page();
     }
 
-		var spec = new BookByIdWithMembersSpec(id.Value);
+		var spec = new BookByIdWithMembersSpec(id!.Value);
 		var bookEntity = await _bookRepository.FirstOrDefaultAsync(spec);
 
 		if (bookEntity == null) return NotFound();
 
-		bookEntity.Title = Book.Title;
+		bookEntity.Title = Book!.Title;
 		bookEntity.BookCategoryId = Book.BookCategoryId;
 		bookEntity.Author = Book.Author;
 		bookEntity.Details = Book.Details;

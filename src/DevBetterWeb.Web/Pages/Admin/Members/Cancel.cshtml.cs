@@ -67,7 +67,7 @@ public class CancelModel : PageModel
   private async Task<string> GetEmail(string userId)
   {
     var user = await _userManager.FindByIdAsync(userId);
-    var EmailToUnsubscribe = await _userManager.GetEmailAsync(user);
+    var EmailToUnsubscribe = await _userManager.GetEmailAsync(user!);
 
     return EmailToUnsubscribe;
   }

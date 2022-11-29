@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ public class VideoDetailsService : IVideoDetailsService
 		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
 		var videoSpec = new ArchiveVideoByVideoIdFullAggregateSpec(videoId);
 		var archiveVideoTask = _archiveVideoRepository.FirstOrDefaultAsync(videoSpec);
-		var applicationUserTask = _userManager.FindByNameAsync(currentUserName);
+		var applicationUserTask = _userManager.FindByNameAsync(currentUserName!);
 
 		var transcriptTask = GetTranscriptAsync((await textTracksTask).Data.Data, currentVideoURL);
 
@@ -64,7 +64,7 @@ public class VideoDetailsService : IVideoDetailsService
 			throw;
 		}
 
-		return (videoTask.Result, transcriptTask.Result, archiveVideoTask.Result, applicationUserTask.Result);
+		return (videoTask!.Result, transcriptTask!.Result, archiveVideoTask!.Result, applicationUserTask!.Result);
 	}
 
 	public async Task IncrementViewsAndUpdate(ArchiveVideo archiveVideo)

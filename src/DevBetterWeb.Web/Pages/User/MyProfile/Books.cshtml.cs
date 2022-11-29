@@ -48,9 +48,9 @@ public class MyProfileBooksModel : PageModel
   public async Task OnGetAsync()
   {
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
 
     if (member == null)
@@ -70,9 +70,9 @@ public class MyProfileBooksModel : PageModel
     // TODO: assess risk of XSS attacks and how to mitigate
 
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
@@ -94,9 +94,9 @@ public class MyProfileBooksModel : PageModel
     // TODO: assess risk of XSS attacks and how to mitigate
 
     var currentUserName = User.Identity!.Name;
-    var applicationUser = await _userManager.FindByNameAsync(currentUserName);
+    var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
-    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser.Id);
+    var spec = new MemberByUserIdWithBooksReadSpec(applicationUser!.Id);
     var member = await _memberRepository.FirstOrDefaultAsync(spec);
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 

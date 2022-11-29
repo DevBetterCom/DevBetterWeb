@@ -38,7 +38,7 @@ public class IndexModel : PageModel
     {
       var roles = await _userManager.GetRolesAsync(user);
 
-      if (Role != null && roles.Contains(Role.Name))
+      if (Role != null && roles.Contains(Role!.Name!))
       {
         var userWithRoles = new UserWithRoles(user, roles.ToList());
         UsersWithRole.Add(userWithRoles);

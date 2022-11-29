@@ -27,11 +27,11 @@ public class CancelModel : PageModel
   {
     var user = await _userManager.GetUserAsync(User);
 
-    var email = user.Email;
+    var email = user!.Email;
 
     try
     {
-      await _paymentHandlerSubscription.CancelSubscriptionAtPeriodEnd(email);
+      await _paymentHandlerSubscription.CancelSubscriptionAtPeriodEnd(email!);
       Message = "You have been unsubscribed from DevBetter. You will retain access until the end of your subscription period.";
       return Page();
     }
