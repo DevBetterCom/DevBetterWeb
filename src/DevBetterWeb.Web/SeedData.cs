@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
