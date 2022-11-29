@@ -49,7 +49,7 @@
 		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.0" />
 		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.3.0" />
-		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
 		<PackageVersion Include="Microsoft.CodeCoverage" Version="17.4.0" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
