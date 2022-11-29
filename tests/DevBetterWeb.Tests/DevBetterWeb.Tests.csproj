@@ -44,7 +44,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeCoverage"  />
+    <!--<PackageReference Include="Microsoft.CodeCoverage"  />-->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"  />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"  />
     <PackageReference Include="Microsoft.NET.Test.Sdk"  />

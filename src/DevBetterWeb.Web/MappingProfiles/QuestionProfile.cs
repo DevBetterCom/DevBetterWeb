@@ -6,10 +6,10 @@ namespace DevBetterWeb.Web.MappingProfiles;
 
 public class QuestionProfile : Profile
 {
-  public QuestionProfile()
-  {
-	  CreateMap<Question, QuestionDto>()
-		  .ForPath(dest => dest.MemberName,
-			  opt => opt.MapFrom(source => source.MemberWhoCreate!.UserFullName()));
-  }
+	public QuestionProfile()
+	{
+		CreateMap<Question, QuestionDto>()
+			.ForPath(dest => dest.MemberName,
+				opt => opt.MapFrom(source => source.MemberWhoCreate!.UserFullName()));
+	}
 }
