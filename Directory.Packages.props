@@ -42,24 +42,24 @@
     <PackageVersion Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
     <PackageVersion Include="MediatR" Version="11.0.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
     <PackageVersion Include="Microsoft.CodeCoverage" Version="17.4.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="7.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0" />
