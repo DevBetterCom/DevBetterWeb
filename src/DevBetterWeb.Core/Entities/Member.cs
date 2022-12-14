@@ -23,6 +23,7 @@ public class Member : BaseEntity, IAggregateRoot
   /// This will fire off a NewMemberCreatedEvent
   /// TODO: It doesn't appear to fire off any event (see MemberRegistrationService.cs)
   /// TODO: Looks like new way is through NewMemberService.cs
+	/// TODO: Seems this is being fired on login sometimes.
   /// </summary>
   /// <param name="userId"></param>
   internal Member(string userId)
