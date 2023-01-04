@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
@@ -234,56 +235,35 @@ public class Member : BaseEntity, IAggregateRoot
 			string? mastodonUrl,
 			bool isEvent = true)
 	{
-		bool valueChanged = false;
-		if (BlogUrl != blogUrl)
+		HashSet<(PropertyInfo prop, string? paramValue)> propInfosAndParamValues = new()
 		{
-			BlogUrl = blogUrl;
-			valueChanged = true;
-		}
-		if (CodinGameUrl != codinGameUrl)
-		{
-			CodinGameUrl = codinGameUrl;
-			valueChanged = true;
-		}
-		if (GitHubUrl != gitHubUrl)
-		{
-			GitHubUrl = gitHubUrl;
-			valueChanged = true;
-		}
-		if (LinkedInUrl != linkedInUrl)
-		{
-			LinkedInUrl = linkedInUrl;
-			valueChanged = true;
-		}
-		if (MastodonUrl != mastodonUrl)
-		{
-			MastodonUrl = mastodonUrl;
-			valueChanged = true;
-		}
-		if (OtherUrl != otherUrl)
-		{
-			OtherUrl = otherUrl;
-			valueChanged = true;
-		}
-		if (TwitchUrl != twitchUrl)
-		{
-			TwitchUrl = twitchUrl;
-			valueChanged = true;
-		}
-		if (YouTubeUrl != youtubeUrl)
-		{
-			YouTubeUrl = youtubeUrl;
-			valueChanged = true;
-		}
-		if (TwitterUrl != twitterUrl)
-		{
-			TwitterUrl = twitterUrl;
-			valueChanged = true;
-		}
-		if (valueChanged && isEvent)
+			(GetProperty(nameof(BlogUrl)), blogUrl),
+			(GetProperty(nameof(CodinGameUrl)), codinGameUrl),
+			(GetProperty(nameof(GitHubUrl)), gitHubUrl),
+			(GetProperty(nameof(LinkedInUrl)), linkedInUrl),
+			(GetProperty(nameof(MastodonUrl)), mastodonUrl),
+			(GetProperty(nameof(OtherUrl)), otherUrl),
+			(GetProperty(nameof(TwitchUrl)), twitchUrl),
+			(GetProperty(nameof(TwitterUrl)), twitterUrl),
+			(GetProperty(nameof(YouTubeUrl)), youtubeUrl),
+		};
+
+		var valuesChanged = propInfosAndParamValues
+			.Where(IsValueDifferent)
+			.ToList();
+		valuesChanged.ForEach(pair => pair.prop.SetValue(this, pair.paramValue));
+
+		if (valuesChanged.Any() && isEvent)
 		{
 			CreateOrUpdateUpdateEvent("Links");
 		}
+	}
+
+	private PropertyInfo GetProperty(string propName) => this.GetType().GetProperty(propName)!;
+
+	private bool IsValueDifferent((PropertyInfo prop, string? valueToCompare) pair)
+	{
+		return (string?)pair.prop.GetValue(this) != pair.valueToCompare;
 	}
 
 	public void AddBookRead(Book book)
