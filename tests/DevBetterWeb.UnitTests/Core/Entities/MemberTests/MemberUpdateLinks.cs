@@ -12,6 +12,7 @@ public class MemberUpdateLinks
   private string _initialCodinGameUrl = "";
   private string _initialGitHubUrl = "";
   private string _initialLinkedInUrl = "";
+	private string _initialMastodonUrl = "";
   private string _initialOtherUrl = "";
   private string _initialTwitchUrl = "";
   private string _initialYouTubeUrl = "";
@@ -29,7 +30,8 @@ public class MemberUpdateLinks
       _initialOtherUrl,
       _initialTwitchUrl,
       _initialYouTubeUrl,
-      _initialTwitterUrl);
+      _initialTwitterUrl,
+			_initialMastodonUrl);
     member.Events.Clear();
 
     return member;
@@ -48,7 +50,8 @@ public class MemberUpdateLinks
       _initialOtherUrl,
       _initialTwitchUrl,
       _initialYouTubeUrl,
-      _initialTwitterUrl);
+      _initialTwitterUrl,
+			_initialMastodonUrl);
 
     Assert.Equal(newLink, member.BlogUrl);
   }
@@ -66,7 +69,8 @@ public class MemberUpdateLinks
       _initialOtherUrl,
       _initialTwitchUrl,
       _initialYouTubeUrl,
-      _initialTwitterUrl);
+      _initialTwitterUrl,
+			_initialMastodonUrl);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
@@ -84,7 +88,8 @@ public class MemberUpdateLinks
       _initialOtherUrl,
       _initialTwitchUrl,
       _initialYouTubeUrl,
-      _initialTwitterUrl);
+      _initialTwitterUrl,
+			_initialMastodonUrl);
 
     Assert.Empty(member.Events);
   }
@@ -104,7 +109,8 @@ public class MemberUpdateLinks
       _initialOtherUrl,
       _initialTwitchUrl,
       _initialYouTubeUrl,
-      _initialTwitterUrl);
+      _initialTwitterUrl,
+			_initialMastodonUrl);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);

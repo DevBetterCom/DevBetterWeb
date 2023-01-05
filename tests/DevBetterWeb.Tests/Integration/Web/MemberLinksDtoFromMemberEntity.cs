@@ -12,7 +12,7 @@ public class MemberLinksDtoFromMemberEntity
 
     string youtubeInput = "https://www.youtube.com/ardalis?";
 
-    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
+    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null, null);
 
     MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 
@@ -28,7 +28,7 @@ public class MemberLinksDtoFromMemberEntity
 
     string youtubeInput = "https://www.youtube.com/ardalis";
 
-    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null);
+    member.UpdateLinks(null, null, null, null, null, null, youtubeInput, null, null);
 
     MemberLinksDTO dto = MemberLinksDTO.FromMemberEntity(member);
 

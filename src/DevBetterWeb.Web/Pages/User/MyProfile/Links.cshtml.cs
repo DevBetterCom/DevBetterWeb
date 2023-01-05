@@ -4,7 +4,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -65,7 +64,7 @@ public class MyProfileLinksModel : PageModel
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
-              UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl);
+              UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl, UserLinksUpdateModel.MastodonUrl);
 
     await _memberRepository.UpdateAsync(member);
   }
