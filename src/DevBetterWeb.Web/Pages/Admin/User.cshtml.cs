@@ -293,7 +293,7 @@ public class UserModel : PageModel
 		if (member is null) throw new MemberNotFoundException(userId);
 
 		member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
-		UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl);
+		UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl, UserLinksUpdateModel.MastodonUrl);
 
 		await _memberRepository.UpdateAsync(member);
 

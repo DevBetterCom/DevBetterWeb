@@ -105,6 +105,12 @@
                         <a href="@Model.UserDetailsViewModel.LinkedInUrl" target="_blank">LinkedIn</a>
                     </div>
                 }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.MastodonUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.MastodonUrl" target="_blank">Mastodon</a>
+                    </div>
+                }
 
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitchUrl))
                 {
