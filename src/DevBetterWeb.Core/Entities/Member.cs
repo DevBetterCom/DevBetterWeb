@@ -61,7 +61,7 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? TwitterUrl { get; private set; }
 	public string? CodinGameUrl { get; private set; }
 	public string? DiscordUsername { get; private set; }
-	public string? MastodonUrl { get; private set; }
+	public string? MastodonUrl { get; private set; } // added and deployed 5 Jan 2022 but site broke
 
 	public List<Book> BooksRead { get; set; } = new List<Book>();
 	public List<Book> UploadedBooks { get; set; } = new List<Book>();
