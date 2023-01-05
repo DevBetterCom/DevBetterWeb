@@ -17,6 +17,7 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
     builder.Property(x => x.LinkedInUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.OtherUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.TwitchUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+		builder.Property(x => x.MastodonUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.TwitterUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.YouTubeUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.FirstName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);

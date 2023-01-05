@@ -31,6 +31,10 @@
                     <input type="text" asp-for="UserLinksUpdateModel.LinkedInUrl" value="@Model.UserLinksUpdateModel.LinkedInUrl" class="form-control form-control-sm" title="https://www.linkedin.com/in/UserName" />
                     <span asp-validation-for="UserLinksUpdateModel.LinkedInUrl" class="text-danger"></span>
                     <br />
+					<label class="font-weight-bold">Mastodon</label>
+					<input type="text" asp-for="UserLinksUpdateModel.MastodonUrl" value="@Model.UserLinksUpdateModel.MastodonUrl" class="form-control form-control-sm" title="https://servername/@@UserName" />
+					<span asp-validation-for="UserLinksUpdateModel.MastodonUrl" class="text-danger"></span>
+					<br />
                     <label class="font-weight-bold">Twitter</label>
                     <input type="text" asp-for="UserLinksUpdateModel.TwitterUrl" value="@Model.UserLinksUpdateModel.TwitterUrl" class="form-control form-control-sm" title="https://twitter.com/UserName" />
                     <span asp-validation-for="UserLinksUpdateModel.TwitterUrl" class="text-danger"></span>
