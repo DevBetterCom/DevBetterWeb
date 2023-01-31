@@ -39,7 +39,7 @@ public class NotifyOnNewMemberCreatedAndProfileUpdatedHandler : IHandle<NewMembe
       {
         message = message + $"\n    {subscription.Dates.StartDate} to {subscription.Dates.EndDate}";
       }
-      message = message + $"\nView {domainEvent.Member.FirstName}'s profile at: https://devbetter.com/User/Details/ {domainEvent.Member.UserId}";
+      message = message + $"\nView {domainEvent.Member.FirstName}'s profile at: https://devbetter.com/User/Details/{domainEvent.Member.UserId}";
       await _emailService.SendEmailAsync(emailAddress!, subject, message);
     }
   }
