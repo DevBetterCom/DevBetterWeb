@@ -336,3 +336,4 @@ az-create.txt
 src/DevBetterWeb.Web/web.config
 **/wwwroot/lib
 
+/src/DevBetterWeb.Web/migrate.sql
