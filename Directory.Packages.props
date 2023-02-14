@@ -29,7 +29,7 @@
     <PackageVersion Include="CSharpFunctionalExtensions" Version="2.37.0" />
     <PackageVersion Include="Dapper" Version="2.0.123" />
     <PackageVersion Include="Discord.Net.Webhook" Version="3.8.1" />
-    <PackageVersion Include="FastEndpoints" Version="5.3.2" />
+    <PackageVersion Include="FastEndpoints" Version="5.7.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.0.1" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.7.0" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.0.1" />
