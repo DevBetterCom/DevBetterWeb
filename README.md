@@ -40,6 +40,7 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 ### Prerequisite
 
+- [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download)
 - [The command-line interface (CLI) tools for Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 
 ### Building and Running the App Locally
@@ -61,7 +62,7 @@ Some actions, such as registering a member, send email notifications. You should
 
 You should create an **appsettings.development.json** file to hold your other connection strings such as for Azure Storage. You can use [Azurite](https://github.com/Azure/Azurite) as a local emulator for this.
 
-You will need to set up a Discord server - see [here](https://ardalis.com/add-discord-notifications-to-asp-net-core-apps/) for a walkthrough -  and add the url to  appsettings.development.json in the Discord Webhooks section that you can copy from appsettings.json. Alternatively you can create a mock server which will provide you with a url to use - an example is mocky.io
+For the Discord web hook integration, you can use the `dev-test` channel in devBetter's Discord server. The web hook url is in the channel description on Discord. You can use that in you appsettings.development.json. Alternatively, you can set up your own Discord server - see [here](https://ardalis.com/add-discord-notifications-to-asp-net-core-apps/) for a walkthrough -  and add the url to  appsettings.development.json in the Discord Webhooks section that you can copy from appsettings.json. You could also create a mock server which will provide you with a url to use - an example is mocky.io
 
 ## EF Migrations Commands
 
