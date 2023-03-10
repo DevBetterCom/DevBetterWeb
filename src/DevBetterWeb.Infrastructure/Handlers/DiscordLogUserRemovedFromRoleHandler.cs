@@ -16,7 +16,7 @@ public class DiscordLogUserRemovedFromRoleHandler : IHandle<UserRemovedFromRoleE
 
   public Task Handle(UserRemovedFromRoleEvent domainEvent)
   {
-    _webhook.Content = $"User {domainEvent.EmailAddress} removed from role {domainEvent.Role}.";
-    return _webhook.Send();
+    var message = $"User {domainEvent.EmailAddress} removed from role {domainEvent.Role}.";
+    return _webhook.SendAsync(message);
   }
 }

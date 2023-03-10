@@ -16,7 +16,7 @@ public class DiscordLogUserEmailConfirmedChangedHandler : IHandle<UserEmailConfi
 
   public Task Handle(UserEmailConfirmedChangedEvent domainEvent)
   {
-    _webhook.Content = $"For the user {domainEvent.EmailAddress} EmailConfirmed value has been changed to: {domainEvent.IsEmailConfirmed}";
-    return _webhook.Send();
+    var message = $"For the user {domainEvent.EmailAddress} EmailConfirmed value has been changed to: {domainEvent.IsEmailConfirmed}";
+    return _webhook.SendAsync(message);
   }
 }

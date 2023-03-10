@@ -16,7 +16,7 @@ public class DiscordLogSiteErrorOccurredHandler : IHandle<SiteErrorOccurredEvent
 
   public Task Handle(SiteErrorOccurredEvent domainEvent)
   {
-    _webhook.Content = $"Site error: {domainEvent.SiteException.ToString()}.";
-    return _webhook.Send();
+	  var message = $"Site error: {domainEvent.SiteException.ToString()}.";
+    return _webhook.SendAsync(message);
   }
 }

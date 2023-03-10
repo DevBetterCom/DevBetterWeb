@@ -66,8 +66,7 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
   {
     foreach (var message in messages)
     {
-      _webhook.Content = message;
-      await _webhook.Send();
+	    await _webhook.SendAsync(message);
     }
   }
 

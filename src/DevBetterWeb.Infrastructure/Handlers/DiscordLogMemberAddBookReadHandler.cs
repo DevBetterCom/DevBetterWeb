@@ -22,7 +22,7 @@ public class DiscordLogMemberAddBookReadHandler : IHandle<MemberAddedBookReadEve
 
   public Task Handle(MemberAddedBookReadEvent domainEvent)
   {
-    _webhook.Content = returnWebhookMessageString(domainEvent);
-    return _webhook.Send();
+    var message = returnWebhookMessageString(domainEvent);
+    return _webhook.SendAsync(message);
   }
 }

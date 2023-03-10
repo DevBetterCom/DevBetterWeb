@@ -143,7 +143,7 @@ public class WebhookHandlerService : IWebhookHandlerService
         Invitation invite = await _newMemberService.CreateInvitationAsync(paymentHandlerCustomer.Email, paymentHandlerEvent.SubscriptionId);
 
         var webhookMessage = $"A new customer with email {paymentHandlerCustomer.Email} has subscribed to DevBetter. They will be receiving a registration email.";
-        await _webhook.Send($"Webhook:\n{webhookMessage}");
+        await _webhook.SendAsync($"Webhook:\n{webhookMessage}");
 
         await _newMemberService.SendRegistrationEmailAsync(invite);
 

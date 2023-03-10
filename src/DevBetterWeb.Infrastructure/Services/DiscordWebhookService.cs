@@ -12,7 +12,7 @@ namespace DevBetterWeb.Infrastructure.Services;
 
 public class DiscordWebhookService : IDiscordWebhookService
 {
-	private readonly HttpClient _httpClient = new HttpClient();
+	private readonly HttpClient _httpClient = new();
 	private readonly IAppLogger<DiscordWebhookService> _logger;
 
 	public DiscordWebhookService(IAppLogger<DiscordWebhookService> logger)
