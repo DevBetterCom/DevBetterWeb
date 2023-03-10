@@ -32,7 +32,7 @@ public class DiscordWebhookService : IDiscordWebhookService
 		var request = new WebHookRequest(contentBody, username, avatarUrl, isTTS, embeds);
 		var json = JsonSerializer.Serialize(request);
 
-		var content = new StringContent(json, Encoding.UTF8, "application/json");
+		using var content = new StringContent(json, Encoding.UTF8, "application/json");
 		try
 		{
 			return await _httpClient.PostAsync(webhookUrl, content);
