@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
-    <PackageReference Include="Discord.Net.Webhook" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Sendgrid" />
     <PackageReference Include="Ardalis.EFCore.Extensions" />
