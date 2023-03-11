@@ -35,7 +35,10 @@ public class DiscordWebhookService : IDiscordWebhookService
 		using var content = new StringContent(json, Encoding.UTF8, "application/json");
 		try
 		{
-			return await _httpClient.PostAsync(webhookUrl, content);
+			var response = await _httpClient.PostAsync(webhookUrl, content);
+			response.EnsureSuccessStatusCode();
+
+			return response;
 		}
 		catch (Exception ex)
 		{
