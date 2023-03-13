@@ -16,7 +16,7 @@ public class DiscordLogForgotPasswordHandler : IHandle<PasswordResetEvent>
 
   public Task Handle(PasswordResetEvent domainEvent)
   {
-    _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress}.";
-    return _webhook.Send();
+    var message = $"Password reset requested by {domainEvent.EmailAddress}.";
+    return _webhook.SendAsync(message);
   }
 }

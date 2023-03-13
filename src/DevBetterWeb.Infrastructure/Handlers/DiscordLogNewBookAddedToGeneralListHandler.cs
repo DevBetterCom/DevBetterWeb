@@ -22,7 +22,7 @@ public class DiscordLogNewBookAddedToGeneralListHandler : IHandle<NewBookCreated
 
   public Task Handle(NewBookCreatedEvent domainEvent)
   {
-    _webhook.Content = returnWebhookMessageString(domainEvent);
-    return _webhook.Send();
+    var message = returnWebhookMessageString(domainEvent);
+    return _webhook.SendAsync(message);
   }
 }

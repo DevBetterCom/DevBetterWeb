@@ -55,8 +55,8 @@ public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
           _logger.LogInformation($"Set lat/long to {latitude}/{longitude}.");
         }
 
-        _webhook.Content = $"Member {member.UserFullName()} change the address to {member.Address}";
-        await _webhook.Send();
+        var message = $"Member {member.UserFullName()} change the address to {member.Address}";
+        await _webhook.SendAsync(message);
 
 				//await _repository.UpdateAsync(member);
 			}

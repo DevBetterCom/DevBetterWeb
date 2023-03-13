@@ -16,8 +16,8 @@ public class DiscordLogMemberUpdateHomeAddressHandler : IHandle<MemberHomeAddres
 
   public Task Handle(MemberHomeAddressUpdatedEvent memberHomeAddressUpdatedEvent)
   {
-    _webhook.Content = returnWebhookMessageString(memberHomeAddressUpdatedEvent);
-    return _webhook.Send();
+    var message = returnWebhookMessageString(memberHomeAddressUpdatedEvent);
+    return _webhook.SendAsync(message);
   }
 
   public static string returnWebhookMessageString(MemberHomeAddressUpdatedEvent memberHomeAddressUpdatedEvent)
