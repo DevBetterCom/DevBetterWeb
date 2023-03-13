@@ -59,7 +59,8 @@ public class DefaultInfrastructureModule : Module
         .As<IUserRoleMembershipService>();
     builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
         .As<IUserEmailConfirmationService>();
-    builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
+    builder.RegisterType<DiscordWebhookService>().As<IDiscordWebhookService>();
+		builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
     builder.RegisterType<CoachingSessionsWebhook>().InstancePerDependency();
     builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
     builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();

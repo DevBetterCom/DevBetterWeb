@@ -17,7 +17,7 @@ public class DiscordLogExceptionHandler : IHandle<ExceptionEvent>
 
   public Task Handle(ExceptionEvent domainEvent)
   {
-    _webhook.Content = $"Exception {DateTime.UtcNow}: {domainEvent.Exception}";
-    return _webhook.Send();
+    var message = $"Exception {DateTime.UtcNow}: {domainEvent.Exception}";
+    return _webhook.SendAsync(message);
   }
 }

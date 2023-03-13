@@ -16,7 +16,7 @@ public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
 
   public Task Handle(InvalidUserEvent domainEvent)
   {
-    _webhook.Content = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
-    return _webhook.Send();
+    var message = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
+    return _webhook.SendAsync(message);
   }
 }

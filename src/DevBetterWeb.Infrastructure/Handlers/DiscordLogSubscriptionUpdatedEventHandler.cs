@@ -16,7 +16,7 @@ public class DiscordLogSubscriptionUpdatedEventHandler : IHandle<SubscriptionUpd
   
   public Task Handle(SubscriptionUpdatedEvent domainEvent)
   {
-    _webhook.Content = $"Member {domainEvent.Member.UserFullName()} updated subscription {domainEvent.MemberSubscription.Id}";
-    return _webhook.Send();
+	  var message = $"Member {domainEvent.Member.UserFullName()} updated subscription {domainEvent.MemberSubscription.Id}";
+    return _webhook.SendAsync(message);
   }
 }

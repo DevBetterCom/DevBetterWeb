@@ -17,7 +17,6 @@ public class AppStartedEventHandler : IHandle<AppStartedEvent>
   public async Task Handle(AppStartedEvent domainEvent)
   {
     var message = $"DevBetter.com web app started at {domainEvent.StartDateTime}.";
-    _webhook.Content = message;
-    await _webhook.Send();
+    await _webhook.SendAsync(message);
   }
 }
