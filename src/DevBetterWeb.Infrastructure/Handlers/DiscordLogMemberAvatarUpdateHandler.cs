@@ -16,8 +16,8 @@ public class DiscordLogMemberAvatarUpdateHandler : IHandle<MemberAvatarUpdatedEv
 
   public Task Handle(MemberAvatarUpdatedEvent memberAvatarUpdatedEvent)
   {
-    _webhook.Content = returnWebhookMessageString(memberAvatarUpdatedEvent);
-    return _webhook.Send();
+    var message = returnWebhookMessageString(memberAvatarUpdatedEvent);
+    return _webhook.SendAsync(message);
   }
 
   public static string returnWebhookMessageString(MemberAvatarUpdatedEvent memberAvatarUpdatedEvent)

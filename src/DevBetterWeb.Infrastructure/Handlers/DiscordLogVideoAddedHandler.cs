@@ -26,7 +26,7 @@ public class DiscordLogVideoAddedHandler : IHandle<VideoAddedEvent>
   {
 	  _ = _videosCacheService.UpdateAllVideosAsync();
 
-		_webhook.Content = ReturnWebhookMessageString(domainEvent);
-    return _webhook.Send();
+		var message = ReturnWebhookMessageString(domainEvent);
+    return _webhook.SendAsync(message);
   }
 }
