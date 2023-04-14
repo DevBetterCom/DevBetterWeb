@@ -28,60 +28,58 @@ public class Program
 
   private static async Task SeedDatabase(IHost host)
   {
-    using (var scope = host.Services.CreateScope())
-    {
-      var services = scope.ServiceProvider;
-      var logger = services.GetRequiredService<ILogger<Program>>();
-      var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-      logger.LogInformation($"Current environment: {environment}");
+		using var scope = host.Services.CreateScope();
+		var services = scope.ServiceProvider;
+		var logger = services.GetRequiredService<ILogger<Program>>();
+		var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+		logger.LogInformation($"Current environment: {environment}");
 
-      var context = services.GetRequiredService<AppDbContext>();
-      var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-			SeedData.PopulateInitData(context, userManager);
+		var context = services.GetRequiredService<AppDbContext>();
+		var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+		SeedData.PopulateInitData(context, userManager);
 
-			//TODO: need to be checked without token.
-			var videosCacheService = services.GetRequiredService<IVideosCacheService>();
-			await videosCacheService.UpdateAllVideosAsync();
+		//TODO: need to be checked without token.
+		var videosCacheService = services.GetRequiredService<IVideosCacheService>();
+		await videosCacheService.UpdateAllVideosAsync();
 
-			if (environment == "Production")
-      {
-	      return;
-      }
+		if (environment == "Production")
+		{
+			return;
+		}
 
-      logger.LogInformation("Seeding database...");
-      try
-      {
-	      var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        if (userManager.Users.Any() || roleManager.Roles.Any())
-        {
-          logger.LogDebug("User/Role data already exists.");
-        }
-        else
-        {
-          await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
-          logger.LogDebug("Populated AppIdentityDbContext test data.");
-        }
-        //var context = services.GetRequiredService<AppDbContext>();
-        if (await context.Questions!.AnyAsync())
-        {
-          logger.LogDebug("Database already has data in it.");
-        }
-        else
-        {
-          SeedData.PopulateTestData(context, userManager);
-          logger.LogDebug("Populated AppDbContext test data.");
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.LogError(ex, "An error occurred while seeding the database.");
-      }
-      finally
-      {
-        logger.LogInformation("Finished seeding database...");
-      }
-    }
-  }
+		logger.LogInformation("Seeding database...");
+		try
+		{
+			var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+			if (userManager.Users.Any() || roleManager.Roles.Any())
+			{
+				logger.LogDebug("User/Role data already exists.");
+			}
+			else
+			{
+				await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
+				logger.LogDebug("Populated AppIdentityDbContext test data.");
+			}
+			//var context = services.GetRequiredService<AppDbContext>();
+			if (await context.Questions!.AnyAsync())
+			{
+				logger.LogDebug("Database already has data in it.");
+			}
+			else
+			{
+				SeedData.PopulateTestData(context, userManager);
+				logger.LogDebug("Populated AppDbContext test data.");
+			}
+		}
+		catch (Exception ex)
+		{
+			logger.LogError(ex, "An error occurred while seeding the database.");
+		}
+		finally
+		{
+			logger.LogInformation("Finished seeding database...");
+		}
+	}
 
   public static IHostBuilder CreateHostBuilder(string[] args) =>
       Host.CreateDefaultBuilder(args)

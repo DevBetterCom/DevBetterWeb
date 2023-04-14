@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace DevBetterWeb.Core.ValueObjects;
@@ -24,7 +25,7 @@ public class Address : ValueObject
     Country = country;
   }
 
-  protected override IEnumerable<object> GetEqualityComponents()
+  protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return Street;
     yield return City;

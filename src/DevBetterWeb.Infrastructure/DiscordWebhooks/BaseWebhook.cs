@@ -14,7 +14,6 @@ public abstract class BaseWebhook
 	  _webHookUrl = webHookUrl;
   }
 
-
   public virtual Task SendAsync(string message)
   {
 	  return _discordWebhookService.SendAsync(_webHookUrl, message);
