@@ -55,7 +55,7 @@ public class DateTimeRange : ValueObject
     return false;
   }
 
-  protected override IEnumerable<object> GetEqualityComponents()
+  protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return StartDate;
     yield return EndDate ?? DateTime.MaxValue;

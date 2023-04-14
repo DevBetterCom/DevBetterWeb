@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 using DevBetterWeb.Core.Enums;
 
@@ -24,7 +25,7 @@ public class MemberSubscriptionPlanDetails : ValueObject
     BillingPeriod = BillingPeriod.None;
   }
 
-  protected override IEnumerable<object> GetEqualityComponents()
+  protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return PricePerBillingPeriod;
     yield return BillingPeriod;

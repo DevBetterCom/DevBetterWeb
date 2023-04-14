@@ -105,7 +105,7 @@ public class NewMemberRegisterModel : PageModel
   {
 	  try
 	  {
-		  returnUrl = returnUrl ?? Url.Content("~/");
+		  returnUrl ??= Url.Content("~/");
 		  if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
 		  {
 			  ModelState.AddModelError("captcha", "Captcha validation failed");

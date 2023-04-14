@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace DevBetterWeb.Core.ValueObjects;
@@ -13,7 +14,7 @@ public class Geolocation : ValueObject
     Latitude = latitude;
     Longitude = longitude;
   }
-  protected override IEnumerable<object> GetEqualityComponents()
+  protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return Latitude;
     yield return Longitude;
