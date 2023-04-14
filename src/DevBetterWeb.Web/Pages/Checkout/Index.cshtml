@@ -1,4 +1,5 @@
 ﻿@page
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @model DevBetterWeb.Web.Pages.Checkout.IndexModel
 @{
 }
@@ -31,8 +32,27 @@
                 </div>
             </div>
             <br />
+            Before proceeding you must confirm you're not a bot:
+            <form id="account" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" name="captcha" id="captchaInput" />
+                <button type="submit" class="btn btn-primary">Let's Go!</button>
+            </form>
         </div>
     </div>
-    
+
 </body>
 </html>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["googleReCaptcha:SiteKey"]"></script>
+    <script>
+        // Key: @Configuration!["googleReCaptcha:SecretKey"]!.Substring(0,10)
+        grecaptcha.ready(function () {
+            window.grecaptcha.execute('@Configuration["googleReCaptcha:SiteKey"]', { action: 'home' }).then(function (token) {
+                $("#captchaInput").val(token);
+            });
+        });
+    </script>
+}
