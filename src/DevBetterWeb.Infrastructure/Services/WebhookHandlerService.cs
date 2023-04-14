@@ -183,10 +183,7 @@ public class WebhookHandlerService : IWebhookHandlerService
     var spec = new MemberByEmailSpec(paymentHandlerCustomer.Email);
     var member = await _repository.FirstOrDefaultAsync(spec);
 
-    if (member != null)
-    {
-      // TODO this should take in the subscription plan id - currently hard-coded to monthly
-      member.AddSubscription(subscriptionDateTimeRange, 1);
-    }
-  }
+		// TODO this should take in the subscription plan id - currently hard-coded to monthly
+		member?.AddSubscription(subscriptionDateTimeRange, 1);
+	}
 }

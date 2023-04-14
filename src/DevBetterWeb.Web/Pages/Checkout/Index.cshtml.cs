@@ -1,30 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
-using DevBetterWeb.Core;
-using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Web.Controllers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace DevBetterWeb.Web.Pages.Checkout;
 
 public class IndexModel : PageModel
 {
-  //public readonly IOptions<StripeOptions> options;
-  //public string? StripePublishableKey { get; private set; }
+	public bool IsReCaptchaValid { get; set; }
+	public bool HasCaptchaBeenCompleted { get; set; }
 
-  //public IndexModel(IOptions<StripeOptions> _options)
-  //{
-  //  options = _options;
-  //  StripePublishableKey = options.Value.stripePublishableKey;
-  //}
+	[FromServices]
+	public IConfiguration Configuration { get; set; }
 
   public void OnGet()
   {
   }
 
+	public async Task<IActionResult> OnPostAsync()
+	{
+		var recaptchaResponse = Request.Form["captchaInput"].ToString() ?? string.Empty;
+		IsReCaptchaValid = await ValidateReCaptchaAsync(recaptchaResponse);
+		HasCaptchaBeenCompleted = true;
+
+		return Page();
+	}
+
+	private async Task<bool> ValidateReCaptchaAsync(string recaptchaResponse)
+	{
+		if (string.IsNullOrEmpty(recaptchaResponse)) return false;
+
+		using var httpClient = new HttpClient();
+		string secretKey = Configuration["googleReCaptcha:SecretKey"];
+		var apiUrl = $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={recaptchaResponse}";
+
+		var httpResponse = await httpClient.GetAsync(apiUrl);
+		var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
+
+		var validationResult = JsonConvert.DeserializeObject<ReCaptchaValidationResult>(jsonResponse);
+
+		return validationResult.Success;
+	}
+
+}
+
+public class ReCaptchaValidationResult
+{
+	[JsonProperty("success")]
+	public bool Success { get; set; }
+
+	[JsonProperty("error-codes")]
+	public List<string> ErrorCodes { get; set; }
 }

@@ -21,7 +21,7 @@
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
 		<PackageReference Include="System.ComponentModel.Annotations" />
-		<PackageReference Include="NETStandard.Library"  />
+		<PackageReference Include="NETStandard.Library" />
 	</ItemGroup>
 
 	<ItemGroup>
