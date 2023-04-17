@@ -12,10 +12,11 @@ using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
+using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-[UploaderApiAuthorization]
+[UploaderApiOrRoleAuthorization(AuthConstants.Roles.ADMINISTRATORS)]
 public class UploadVideoCreateVimeoLink : EndpointBaseAsync
 	.WithRequest<UploadVideoResumableInfo>
 	.WithResult<ActionResult<UploadVideoResumableInfo>>
