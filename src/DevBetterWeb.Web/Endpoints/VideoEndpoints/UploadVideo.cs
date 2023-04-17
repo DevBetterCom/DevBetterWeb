@@ -11,10 +11,11 @@ using System.Net;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using DevBetterWeb.Core;
 
 namespace DevBetterWeb.Web.Endpoints;
 
-[UploaderApiAuthorization]
+[UploaderApiOrRoleAuthorization(AuthConstants.Roles.ADMINISTRATORS)]
 public class UploadVideo : EndpointBaseAsync
 	.WithRequest<UploadVideoResumableInfo>
 	.WithResult<ActionResult<UploadVideoResumableInfo>>

@@ -8,7 +8,8 @@
 <h3>Add Video</h3>
 
 <hr />
-<form method="post" enctype="multipart/form-data">
+
+<form method="post" enctype="multipart/form-data" onsubmit="return uploadVideo(event)">
 	<div class="row">
 		<div class="col-md-4">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -46,6 +47,19 @@
 		</div>
 
 	</div>
+
+	<div class="progress" style="margin-top: 10px; margin-bottom: 10px;">
+		<div id="uploadProgressBar"
+				 class="progress-bar"
+				 role="progressbar"
+				 style="width: 0%"
+				 aria-valuenow="0"
+				 aria-valuemin="0"
+				 aria-valuemax="100">
+			0%
+		</div>
+	</div>
+
 	<div class="form-group">
 		<input type="submit" value="Create" class="btn btn-success" />
 	</div>
@@ -57,31 +71,193 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 
-<script>
-	$( document ).ready(function() {
+	<script>
+		function arrayBufferToBase64(buffer) {
+			let binary = '';
+			const bytes = new Uint8Array(buffer);
+			for (let i = 0; i < bytes.byteLength; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			}
+			return window.btoa(binary);
+		}
 
-		if (window.FileReader) {
-			$('#videoFile').on('change', function (e) {
-				if (e.target.files == undefined || e.target.files.length <= 0) {
-					$('#name').val('');
-				} else {
-					var fileName = e.target.files[0].name;
-					$('#name').val(fileName.split('.')[0]);
-				}
-			});
-			$('#mdFile').on('change', function (e) {
-				var file = e.target.files[0];
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					var data = reader.result;
-					$('#description').val(data);
-				}
-				reader.readAsText(file);
+		async function uploadVideoFile(responseUpload) {
+			const videoFileInput = document.getElementById("videoFile");
+			const videoFile = videoFileInput.files[0];
+
+			// Initialize progress bar
+			const progressBar = document.getElementById("uploadProgressBar");
+			progressBar.style.width = "0%";
+			progressBar.innerText = "0%";
+
+			const chunkSize = 1024 * 1024;
+			const totalChunks = Math.ceil(videoFile.size / chunkSize);
+			let uploadedChunks = 0;
+
+			while (uploadedChunks < totalChunks) {
+				const chunkStart = uploadedChunks * chunkSize;
+				const chunkEnd = Math.min(chunkStart + chunkSize, videoFile.size);
+				const chunk = videoFile.slice(chunkStart, chunkEnd);
+
+				const filePartData = await chunk.arrayBuffer();
+				const base64Data = arrayBufferToBase64(filePartData);
+
+				const uploadInfo = {
+					...responseUpload,
+					FilePartData: base64Data,
+					PartSize: chunkEnd - chunkStart,
+					UploadOffset: chunkStart,
+				};
+
+				// Replace this with the actual endpoint to upload the video part
+				const uploadVideoEndpoint = "/videos/upload-video";
+
+				await fetch(uploadVideoEndpoint, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(uploadInfo),
+				});
+
+				uploadedChunks++;
+
+				// Update progress bar
+				const progressPercentage = Math.round((uploadedChunks / totalChunks) * 100);
+				progressBar.style.width = `${progressPercentage}%`;
+				progressBar.innerText = `${progressPercentage}%`;
+			}
+		}
+
+		async function uploadMdFile(responseUpload) {
+			const mdFileInput = document.getElementById("mdFile");
+			const mdFile = mdFileInput.files[0];
+			const mdFileReader = new FileReader();
+
+			return new Promise((resolve, reject) => {
+				mdFileReader.onload = async (e) => {
+					const mdFileContent = e.target.result;
+
+					const uploadMdRequest = {
+						VideoId: responseUpload.VideoId,
+						Md: mdFileContent,
+					};
+
+					// Replace this with the actual endpoint to upload the MD file
+					const uploadMdEndpoint = "/videos/upload-md";
+
+					try {
+						const responseMd = await fetch(uploadMdEndpoint, {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(uploadMdRequest),
+						});
+
+						if (responseMd.status === 401) {
+							alert("Unauthorized: You must be an admin.");
+							return reject();
+						}
+
+						if (!responseMd.ok) {
+							throw new Error("MD file upload failed.");
+						}
+
+						resolve();
+					} catch (error) {
+						console.error("MD file upload failed:", error);
+						reject(error);
+					}
+				};
+
+				mdFileReader.readAsText(mdFile);
 			});
 		}
-	});
 
-</script>
+		async function uploadVideo(event) {
+			event.preventDefault();
+
+			const videoFileInput = document.getElementById("videoFile");
+			if (!videoFileInput.files.length) {
+			  alert("Please select a video file.");
+			  return false;
+			}
+
+			const mdFileInput = document.getElementById("mdFile");
+			if (!mdFileInput.files.length) {
+			  alert("Please select an MD file.");
+			  return false;
+			}
+
+			const videoFile = videoFileInput.files[0];
+
+			// Get the references to the input elements
+			const videoNameInput = document.getElementById("name");
+			const descriptionInput = document.getElementById("description");
+
+			const videoName = videoNameInput.value;
+			const videoDescription = descriptionInput.value;
+
+			const uploadVideoResumableInfo = {
+				FileFullSize: videoFile.size,
+				FileName: videoName,
+				CreatedTime: new Date(videoFile.lastModified) || new Date(),
+			};
+
+			// Replace this with the actual endpoint to get the video upload URL
+			const createVideoUrlEndpoint = "/videos/upload-video-create-url";
+
+			try {
+				const responseUpload = await fetch(createVideoUrlEndpoint, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(uploadVideoResumableInfo),
+				});
+
+				if (!responseUpload.ok) {
+					throw new Error("Failed to create resumable video upload.");
+				}
+
+				const responseUploadJson = await responseUpload.json();
+
+				// Upload the video file
+				await uploadVideoFile(responseUploadJson);
+
+				// Upload the MD file
+				await uploadMdFile(responseUploadJson);
+
+				alert("Video and MD file uploaded successfully.");
+			} catch (error) {
+				console.error("Upload failed:", error);
+				alert("Video and MD file upload failed.");
+			}
+		}
+
+
+		$(document).ready(function () {
+
+			if (window.FileReader) {
+				$('#videoFile').on('change', function (e) {
+					if (e.target.files == undefined || e.target.files.length <= 0) {
+						$('#name').val('');
+					} else {
+						var fileName = e.target.files[0].name;
+						$('#name').val(fileName.split('.')[0]);
+					}
+				});
+				$('#mdFile').on('change', function (e) {
+					var file = e.target.files[0];
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						var data = reader.result;
+						$('#description').val(data);
+					}
+					reader.readAsText(file);
+				});
+			}
+		});
+
+
+	</script>
 }
