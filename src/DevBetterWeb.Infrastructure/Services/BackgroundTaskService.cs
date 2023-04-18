@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
@@ -27,9 +28,17 @@ public class BackgroundTaskService : BackgroundService
 			{
 				await workItem(stoppingToken);
 			}
+			catch (IOException ioException)
+			{
+				_logger.LogError(ioException, "An I/O error occurred.");
+			}
+			catch (ArgumentNullException argumentNullException)
+			{
+				_logger.LogError(argumentNullException, "A null argument was passed.");
+			}
 			catch (Exception exception)
 			{
-				_logger.LogError(exception.ToString());
+				_logger.LogError(exception, "An unexpected error occurred.");
 			}
 		}
 	}
