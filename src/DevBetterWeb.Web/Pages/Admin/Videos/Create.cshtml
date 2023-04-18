@@ -10,28 +10,49 @@
 <hr />
 
 <form method="post" enctype="multipart/form-data" onsubmit="return uploadVideo(event)">
-	<div class="row">
-		<div class="col-md-4">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="row mb-3">
+		<div class="col-md-6">
 			<div class="form-group">
-				<label asp-for="VideoModel.Name" class="control-label"></label>
+				<label asp-for="VideoModel.Name" class="form-label">Video Name</label>
 				<input id="name" asp-for="VideoModel.Name" class="form-control" />
 				<span asp-validation-for="VideoModel.Name" class="text-danger"></span>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="form-group">
-				<div class="col-md-10">
-					<label>Video File</label>
-					<input id="videoFile" type="file" name="videoFile" />
-				</div>
+				<label class="form-label">Video Creation Date</label>
+				<input id="videoCreationDate" type="date" class="form-control" />
 			</div>
 		</div>
-		<div class="col-md-4">
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-6">
 			<div class="form-group">
-				<div class="col-md-10">
-					<label>MD File</label>
-					<input id="mdFile" type="file" name="mdFile" />
+				<label class="form-label">Video File</label>
+				<input id="videoFile" type="file" name="videoFile" class="form-control-file" />
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="form-label">MD File</label>
+				<input id="mdFile" type="file" name="mdFile" class="form-control-file" />
+			</div>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12">
+			<div class="form-group">
+				<label asp-for="VideoModel.Description" class="form-label">Description</label>
+				<textarea id="description" asp-for="VideoModel.Description" class="form-control" rows="5" style="max-width: 100%;"></textarea>
+				<span asp-validation-for="VideoModel.Description" class="text-danger"></span>
+			</div>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12">
+			<div class="progress">
+				<div id="uploadProgressBar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+					0%
 				</div>
 			</div>
 		</div>
@@ -39,32 +60,13 @@
 	<div class="row">
 		<div class="col-12">
 			<div class="form-group">
-				<label asp-for="VideoModel.Description" class="control-label"></label>
-				<textarea id="description" asp-for="VideoModel.Description" class="form-control" rows="10" style="max-width:100%"></textarea>
-				<span asp-validation-for="VideoModel.Description" class="text-danger"></span>
+				<input type="submit" value="Create" class="btn btn-success" />
 			</div>
-
-		</div>
-
-	</div>
-
-	<div class="progress" style="margin-top: 10px; margin-bottom: 10px;">
-		<div id="uploadProgressBar"
-				 class="progress-bar"
-				 role="progressbar"
-				 style="width: 0%"
-				 aria-valuenow="0"
-				 aria-valuemin="0"
-				 aria-valuemax="100">
-			0%
 		</div>
 	</div>
-
-	<div class="form-group">
-		<input type="submit" value="Create" class="btn btn-success" />
-	</div>
-
 </form>
+
+
 
 <div>
 	<a asp-page="Index">Back to List</a>
@@ -195,14 +197,16 @@
 			// Get the references to the input elements
 			const videoNameInput = document.getElementById("name");
 			const descriptionInput = document.getElementById("description");
+			const videoCreationDateInput = document.getElementById("videoCreationDate");
 
 			const videoName = videoNameInput.value;
 			const videoDescription = descriptionInput.value;
+			const videoCreationDate = videoCreationDateInput.valueAsDate || new Date(videoFile.lastModified);
 
 			const uploadVideoResumableInfo = {
 				FileFullSize: videoFile.size,
 				FileName: videoName,
-				CreatedTime: new Date(videoFile.lastModified) || new Date(),
+				CreatedTime: videoCreationDate,
 			};
 
 			// Replace this with the actual endpoint to get the video upload URL
@@ -244,6 +248,9 @@
 					} else {
 						var fileName = e.target.files[0].name;
 						$('#name').val(fileName.split('.')[0]);
+						var creationDate = new Date(e.target.files[0].lastModified);
+						const formattedDate = creationDate.toISOString().slice(0, 10);
+						$('#videoCreationDate').val(formattedDate);
 					}
 				});
 				$('#mdFile').on('change', function (e) {
