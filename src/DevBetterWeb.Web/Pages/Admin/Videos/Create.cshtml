@@ -21,6 +21,13 @@
 		</div>
 		<div class="col-md-4">
 			<div class="form-group">
+				<label>Video Creation Date</label>
+				<input id="videoCreationDate" type="date" class="form-control" />
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="form-group">
 				<div class="col-md-10">
 					<label>Video File</label>
 					<input id="videoFile" type="file" name="videoFile" />
@@ -195,14 +202,16 @@
 			// Get the references to the input elements
 			const videoNameInput = document.getElementById("name");
 			const descriptionInput = document.getElementById("description");
+			const videoCreationDateInput = document.getElementById("videoCreationDate");
 
 			const videoName = videoNameInput.value;
 			const videoDescription = descriptionInput.value;
+			const videoCreationDate = videoCreationDateInput.valueAsDate || new Date(videoFile.lastModified);
 
 			const uploadVideoResumableInfo = {
 				FileFullSize: videoFile.size,
 				FileName: videoName,
-				CreatedTime: new Date(videoFile.lastModified) || new Date(),
+				CreatedTime: videoCreationDate,
 			};
 
 			// Replace this with the actual endpoint to get the video upload URL
@@ -244,6 +253,9 @@
 					} else {
 						var fileName = e.target.files[0].name;
 						$('#name').val(fileName.split('.')[0]);
+						var creationDate = new Date(e.target.files[0].lastModified);
+						const formattedDate = creationDate.toISOString().slice(0, 10);
+						$('#videoCreationDate').val(formattedDate);
 					}
 				});
 				$('#mdFile').on('change', function (e) {
