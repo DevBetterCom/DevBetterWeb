@@ -20,6 +20,7 @@ public class UploadVideo : EndpointBaseAsync
 	.WithRequest<UploadVideoResumableInfo>
 	.WithResult<ActionResult<UploadVideoResumableInfo>>
 {
+	private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 	private readonly UploadResumableVideoService _uploadResumableVideoService;
 	private readonly UpdateVideoDetailsService _updateVideoDetailsService;
 	private readonly AddDomainToVideoService _addDomainToVideoService;
@@ -27,12 +28,14 @@ public class UploadVideo : EndpointBaseAsync
 	private readonly IVideosService _videosService;
 
 	public UploadVideo(
+		IBackgroundTaskQueue backgroundTaskQueue,
 		UploadResumableVideoService uploadResumableVideoService, 
 		UpdateVideoDetailsService updateVideoDetailsService, 
 		AddDomainToVideoService addDomainToVideoService,
 		GetVideoService getVideoService,
 		IVideosService videosService)
 	{
+		_backgroundTaskQueue = backgroundTaskQueue;
 		_uploadResumableVideoService = uploadResumableVideoService;
 		_updateVideoDetailsService = updateVideoDetailsService;
 		_addDomainToVideoService = addDomainToVideoService;
@@ -47,9 +50,11 @@ public class UploadVideo : EndpointBaseAsync
 
 		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
-			var vimeoTask = AddVimeoVideoInfoAsync(request, cancellationToken);
-			var archiveTask = AddArchiveVideoInfoAsync(request, cancellationToken);
-			await Task.WhenAll(vimeoTask, archiveTask);
+			_backgroundTaskQueue.QueueBackgroundWorkItem(async token =>
+			{
+				await AddVimeoVideoInfoAsync(request, token);
+			});
+			await AddArchiveVideoInfoAsync(request, cancellationToken);
 		}
 
 		return Ok(result?.Data);
