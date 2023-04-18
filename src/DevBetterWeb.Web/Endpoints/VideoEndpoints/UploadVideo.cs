@@ -94,6 +94,6 @@ public class UploadVideo : EndpointBaseAsync
 			VideoUrl = request.VideoUrl
 		};
 
-		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
+		await _videosService.AddArchiveVideoInfo(archiveVideo, false, cancellationToken);
 	}
 }
