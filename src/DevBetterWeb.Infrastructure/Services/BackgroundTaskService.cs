@@ -3,15 +3,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Infrastructure.Services;
 public class BackgroundTaskService : BackgroundService
 {
 	private readonly IBackgroundTaskQueue _taskQueue;
+	private readonly ILogger<BackgroundTaskService> _logger;
 
-	public BackgroundTaskService(IBackgroundTaskQueue taskQueue)
+	public BackgroundTaskService(IBackgroundTaskQueue taskQueue, ILogger<BackgroundTaskService> logger)
 	{
 		_taskQueue = taskQueue;
+		_logger = logger;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -22,14 +25,11 @@ public class BackgroundTaskService : BackgroundService
 
 			try
 			{
-				if (workItem != null)
-				{
-					await workItem(stoppingToken);
-				}
+				await workItem(stoppingToken);
 			}
-			catch (Exception)
+			catch (Exception exception)
 			{
-				// ignored
+				_logger.LogError(exception.ToString());
 			}
 		}
 	}
