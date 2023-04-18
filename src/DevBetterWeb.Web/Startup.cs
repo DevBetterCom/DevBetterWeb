@@ -101,7 +101,10 @@ public class Startup
     var webProjectAssembly = typeof(Startup).Assembly;
     services.AddAutoMapper(webProjectAssembly);
 
-    services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
+    services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+    services.AddHostedService<BackgroundTaskService>();
+
+		services.AddScoped<IMapCoordinateService, GoogleMapCoordinateService>();
     services.AddScoped<IJsonParserService, JsonParserService>();
 
     services.AddMemberSubscriptionServices();
