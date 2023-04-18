@@ -47,11 +47,9 @@ public class UploadVideo : EndpointBaseAsync
 
 		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
-			_ = Task.Run(async () =>
-			{
-				await AddVimeoVideoInfoAsync(request, cancellationToken);
-			}, cancellationToken);
-			await AddArchiveVideoInfoAsync(request, cancellationToken);
+			var vimeoTask = AddVimeoVideoInfoAsync(request, cancellationToken);
+			var archiveTask = AddArchiveVideoInfoAsync(request, cancellationToken);
+			await Task.WhenAll(vimeoTask, archiveTask);
 		}
 
 		return Ok(result?.Data);
