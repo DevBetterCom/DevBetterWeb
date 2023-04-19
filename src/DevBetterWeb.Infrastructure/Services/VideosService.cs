@@ -136,8 +136,11 @@ public class VideosService : IVideosService
 	  }
 	  else
 	  {
-			if (isWithDescription)
-				existVideo.Description = archiveVideo.Description;
+		  if (isWithDescription)
+		  {
+			  existVideo.Description = archiveVideo.Description;
+			}
+				
 		  existVideo.Title = archiveVideo.Title;
 		  existVideo.Duration = archiveVideo.Duration;
 		  if (!string.IsNullOrEmpty(archiveVideo.AnimatedThumbnailUri))
