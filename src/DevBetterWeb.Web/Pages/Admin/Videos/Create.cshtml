@@ -90,6 +90,8 @@
 		async function uploadVideoFile(responseUpload) {
 			const videoFileInput = document.getElementById("videoFile");
 			const videoFile = videoFileInput.files[0];
+			const mdFileInput = document.getElementById("mdFile");
+			const mdFile = mdFileInput.files[0];
 
 			// Initialize progress bar
 			const progressBar = document.getElementById("uploadProgressBar");
@@ -99,6 +101,14 @@
 			const chunkSize = 1024 * 1024;
 			const totalChunks = Math.ceil(videoFile.size / chunkSize);
 			let uploadedChunks = 0;
+
+			const mdFileReader = new FileReader();
+			const mdFileContentPromise = new Promise((resolve) => {
+				mdFileReader.onload = (e) => {
+					resolve(e.target.result);
+				};
+				mdFileReader.readAsText(mdFile);
+			});
 
 			while (uploadedChunks < totalChunks) {
 				const chunkStart = uploadedChunks * chunkSize;
@@ -115,7 +125,11 @@
 					UploadOffset: chunkStart,
 				};
 
-				// Replace this with the actual endpoint to upload the video part
+				if (uploadedChunks === totalChunks - 1) {
+					const mdFileContent = await mdFileContentPromise;
+					uploadInfo.Description = mdFileContent;
+				}
+
 				const uploadVideoEndpoint = "/videos/upload-video";
 
 				await fetch(uploadVideoEndpoint, {
@@ -130,6 +144,11 @@
 				const progressPercentage = Math.round((uploadedChunks / totalChunks) * 100);
 				progressBar.style.width = `${progressPercentage}%`;
 				progressBar.innerText = `${progressPercentage}%`;
+
+				if (uploadedChunks === totalChunks) {
+					progressBar.style.width = "100%";
+					progressBar.innerText = "100%";
+				}
 			}
 		}
 
@@ -147,7 +166,6 @@
 						Md: mdFileContent,
 					};
 
-					// Replace this with the actual endpoint to upload the MD file
 					const uploadMdEndpoint = "/videos/upload-md";
 
 					try {
@@ -194,7 +212,6 @@
 
 			const videoFile = videoFileInput.files[0];
 
-			// Get the references to the input elements
 			const videoNameInput = document.getElementById("name");
 			const descriptionInput = document.getElementById("description");
 			const videoCreationDateInput = document.getElementById("videoCreationDate");
@@ -209,8 +226,10 @@
 				CreatedTime: videoCreationDate,
 			};
 
-			// Replace this with the actual endpoint to get the video upload URL
 			const createVideoUrlEndpoint = "/videos/upload-video-create-url";
+
+			const createButton = document.querySelector("input[type='submit']");
+			createButton.disabled = true;
 
 			try {
 				const responseUpload = await fetch(createVideoUrlEndpoint, {
@@ -228,13 +247,13 @@
 				// Upload the video file
 				await uploadVideoFile(responseUploadJson);
 
-				// Upload the MD file
-				await uploadMdFile(responseUploadJson);
-
 				alert("Video and MD file uploaded successfully.");
 			} catch (error) {
 				console.error("Upload failed:", error);
 				alert("Video and MD file upload failed.");
+			}
+			finally {
+				createButton.disabled = false;
 			}
 		}
 

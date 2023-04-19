@@ -13,6 +13,7 @@ public class UploadVideoResumableInfo
 	public DateTimeOffset CreatedTime { get; set; }
 	public string VideoName => Path.GetFileNameWithoutExtension(FileName);
 	public string FileName { get; set; }
+	public string Description { get; set; }
 	public int UploadOffset { get; set; }
 	public int PartSize { get; set; }
 }

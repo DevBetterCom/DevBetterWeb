@@ -12,6 +12,7 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using DevBetterWeb.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DevBetterWeb.Web.Endpoints;
 
@@ -22,25 +23,16 @@ public class UploadVideo : EndpointBaseAsync
 {
 	private readonly IBackgroundTaskQueue _backgroundTaskQueue;
 	private readonly UploadResumableVideoService _uploadResumableVideoService;
-	private readonly UpdateVideoDetailsService _updateVideoDetailsService;
-	private readonly AddDomainToVideoService _addDomainToVideoService;
-	private readonly GetVideoService _getVideoService;
-	private readonly IVideosService _videosService;
+	private readonly IServiceScopeFactory _serviceScopeFactory;
 
 	public UploadVideo(
 		IBackgroundTaskQueue backgroundTaskQueue,
-		UploadResumableVideoService uploadResumableVideoService, 
-		UpdateVideoDetailsService updateVideoDetailsService, 
-		AddDomainToVideoService addDomainToVideoService,
-		GetVideoService getVideoService,
-		IVideosService videosService)
+		UploadResumableVideoService uploadResumableVideoService,
+		IServiceScopeFactory serviceScopeFactory)
 	{
 		_backgroundTaskQueue = backgroundTaskQueue;
 		_uploadResumableVideoService = uploadResumableVideoService;
-		_updateVideoDetailsService = updateVideoDetailsService;
-		_addDomainToVideoService = addDomainToVideoService;
-		_getVideoService = getVideoService;
-		_videosService = videosService;
+		_serviceScopeFactory = serviceScopeFactory;
 	}
 
 	[HttpPost("videos/upload-video")]
@@ -50,17 +42,24 @@ public class UploadVideo : EndpointBaseAsync
 
 		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
+			var allowedDomain = Request.GetUri().Authority;
 			_backgroundTaskQueue.QueueBackgroundWorkItem(async token =>
 			{
-				await AddVimeoVideoInfoAsync(request, token);
+				using var scope = _serviceScopeFactory.CreateScope();
+				var updateVideoDetailsService = scope.ServiceProvider.GetRequiredService<UpdateVideoDetailsService>();
+				var addDomainToVideoService = scope.ServiceProvider.GetRequiredService<AddDomainToVideoService>();
+				var getVideoService = scope.ServiceProvider.GetRequiredService<GetVideoService>();
+				var videosService = scope.ServiceProvider.GetRequiredService<IVideosService>();
+
+				await AddVimeoVideoInfoAsync(request, updateVideoDetailsService, addDomainToVideoService, allowedDomain, token);
+				await AddArchiveVideoInfoAsync(request, getVideoService, videosService, token);
 			});
-			await AddArchiveVideoInfoAsync(request, cancellationToken);
 		}
 
 		return Ok(result?.Data);
 	}
 
-	private async Task AddVimeoVideoInfoAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
+	private async Task AddVimeoVideoInfoAsync(UploadVideoResumableInfo request, UpdateVideoDetailsService updateVideoDetailsService, AddDomainToVideoService addDomainToVideoService, string allowedDomain, CancellationToken cancellationToken = default)
 	{
 		var video = new Video();
 		video
@@ -70,16 +69,15 @@ public class UploadVideo : EndpointBaseAsync
 			.SetEmbed();
 
 		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(long.Parse(video.Id), video);
-		_ = await _updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
+		_ = await updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
 
-		var allowedDomain = Request.GetUri().Authority;
 		var addDomainRequest = new AddDomainToVideoRequest(long.Parse(video.Id), allowedDomain);
-		_ = await _addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
+		_ = await addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
 	}
 
-	private async Task AddArchiveVideoInfoAsync(UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
+	private async Task AddArchiveVideoInfoAsync(UploadVideoResumableInfo request, GetVideoService getVideoService, IVideosService videosService, CancellationToken cancellationToken = default)
 	{
-		var response = await _getVideoService.ExecuteAsync(request.VideoId, cancellationToken);
+		var response = await getVideoService.ExecuteAsync(request.VideoId, cancellationToken);
 		if (response.Code != HttpStatusCode.OK)
 		{
 			return;
@@ -91,9 +89,10 @@ public class UploadVideo : EndpointBaseAsync
 			DateUploaded = DateTimeOffset.UtcNow,
 			Duration = response.Data.Duration*1000,
 			VideoId = request.VideoId,
-			VideoUrl = request.VideoUrl
+			VideoUrl = request.VideoUrl,
+			Description = request.Description
 		};
 
-		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
+		await videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
 	}
 }
