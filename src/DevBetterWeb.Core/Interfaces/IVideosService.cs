@@ -10,6 +10,6 @@ public interface IVideosService
   Task UpdateVideosCache(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromVimeo(AppendOnlyStringList? messages);
-  Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, CancellationToken cancellationToken = default);
+  Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, bool isWithDescription = true, CancellationToken cancellationToken = default);
   Task<ArchiveVideo?> UpdateVideoThumbnailsAsync(long videoId, CancellationToken cancellationToken = default);
 }

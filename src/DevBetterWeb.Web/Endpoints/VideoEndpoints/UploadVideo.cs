@@ -53,8 +53,8 @@ public class UploadVideo : EndpointBaseAsync
 			_backgroundTaskQueue.QueueBackgroundWorkItem(async token =>
 			{
 				await AddVimeoVideoInfoAsync(request, token);
+				await AddArchiveVideoInfoAsync(request, cancellationToken);
 			});
-			await AddArchiveVideoInfoAsync(request, cancellationToken);
 		}
 
 		return Ok(result?.Data);
@@ -94,6 +94,6 @@ public class UploadVideo : EndpointBaseAsync
 			VideoUrl = request.VideoUrl
 		};
 
-		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
+		await _videosService.AddArchiveVideoInfo(archiveVideo, false, cancellationToken);
 	}
 }
