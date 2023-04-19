@@ -89,9 +89,10 @@ public class UploadVideo : EndpointBaseAsync
 			DateUploaded = DateTimeOffset.UtcNow,
 			Duration = response.Data.Duration*1000,
 			VideoId = request.VideoId,
-			VideoUrl = request.VideoUrl
+			VideoUrl = request.VideoUrl,
+			Description = request.Description
 		};
 
-		await videosService.AddArchiveVideoInfo(archiveVideo, false, cancellationToken);
+		await videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
 	}
 }
