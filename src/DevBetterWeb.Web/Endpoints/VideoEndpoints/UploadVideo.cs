@@ -42,6 +42,7 @@ public class UploadVideo : EndpointBaseAsync
 
 		if (result.Data.FileFullSize == result.Data.UploadOffset)
 		{
+			var allowedDomain = Request.GetUri().Authority;
 			_backgroundTaskQueue.QueueBackgroundWorkItem(async token =>
 			{
 				using var scope = _serviceScopeFactory.CreateScope();
@@ -50,7 +51,7 @@ public class UploadVideo : EndpointBaseAsync
 				var getVideoService = scope.ServiceProvider.GetRequiredService<GetVideoService>();
 				var videosService = scope.ServiceProvider.GetRequiredService<IVideosService>();
 
-				await AddVimeoVideoInfoAsync(request, updateVideoDetailsService, addDomainToVideoService, token);
+				await AddVimeoVideoInfoAsync(request, updateVideoDetailsService, addDomainToVideoService, allowedDomain, token);
 				await AddArchiveVideoInfoAsync(request, getVideoService, videosService, token);
 			});
 		}
@@ -58,7 +59,7 @@ public class UploadVideo : EndpointBaseAsync
 		return Ok(result?.Data);
 	}
 
-	private async Task AddVimeoVideoInfoAsync(UploadVideoResumableInfo request, UpdateVideoDetailsService updateVideoDetailsService, AddDomainToVideoService addDomainToVideoService, CancellationToken cancellationToken = default)
+	private async Task AddVimeoVideoInfoAsync(UploadVideoResumableInfo request, UpdateVideoDetailsService updateVideoDetailsService, AddDomainToVideoService addDomainToVideoService, string allowedDomain, CancellationToken cancellationToken = default)
 	{
 		var video = new Video();
 		video
@@ -70,7 +71,6 @@ public class UploadVideo : EndpointBaseAsync
 		var updateVideoDetailsRequest = new UpdateVideoDetailsRequest(long.Parse(video.Id), video);
 		_ = await updateVideoDetailsService.ExecuteAsync(updateVideoDetailsRequest, cancellationToken);
 
-		var allowedDomain = Request.GetUri().Authority;
 		var addDomainRequest = new AddDomainToVideoRequest(long.Parse(video.Id), allowedDomain);
 		_ = await addDomainToVideoService.ExecuteAsync(addDomainRequest, cancellationToken);
 	}
