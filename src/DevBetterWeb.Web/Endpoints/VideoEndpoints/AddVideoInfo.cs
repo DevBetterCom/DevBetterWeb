@@ -33,7 +33,7 @@ public class AddVideoInfo : EndpointBaseAsync
 	{
 		var archiveVideo = _mapper.Map<ArchiveVideo>(request);
 
-		await _videosService.AddArchiveVideoInfo(archiveVideo, true, cancellationToken);
+		await _videosService.AddArchiveVideoInfo(archiveVideo, cancellationToken);
 
 		return Ok(request);
 	}
