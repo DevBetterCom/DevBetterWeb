@@ -124,7 +124,7 @@ public class VideosService : IVideosService
     }
   }
 
-  public async Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, bool isWithDescription = true, CancellationToken cancellationToken = default)
+  public async Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, CancellationToken cancellationToken = default)
   {
 	  var spec = new ArchiveVideoByVideoIdSpec(archiveVideo.VideoId!);
 	  var existVideo = await _repositoryArchiveVideo.FirstOrDefaultAsync(spec, cancellationToken);
@@ -136,11 +136,7 @@ public class VideosService : IVideosService
 	  }
 	  else
 	  {
-		  if (isWithDescription)
-		  {
-			  existVideo.Description = archiveVideo.Description;
-			}
-				
+		  existVideo.Description = archiveVideo.Description;
 		  existVideo.Title = archiveVideo.Title;
 		  existVideo.Duration = archiveVideo.Duration;
 		  if (!string.IsNullOrEmpty(archiveVideo.AnimatedThumbnailUri))
