@@ -65,16 +65,12 @@ public class IndexModel : PageModel
 	private void FilterNonCurrentMembers()
 	{
 		var membersToRemove = new List<MemberForBookDto>();
-		foreach(var category in BookCategories)
+		foreach (var category in BookCategories)
 		{
-			foreach(var member in category.Members)
-			{
-				if (!MemberIds.Contains(member.Id))
-				{
-					membersToRemove.Add(member);
-				}
-			}
-			foreach(var memberToRemove in membersToRemove)
+			membersToRemove = category.Members
+				.Where(m => !MemberIds.Contains(m.Id)).ToList();
+
+			foreach (var memberToRemove in membersToRemove)
 			{
 				category.Members.Remove(memberToRemove);
 			}
