@@ -24,6 +24,5 @@ public sealed class MembersHavingUserIdsWithBooksSpec : Specification<Member>
 	{
 		Query
 			.Where(m => excludedAlumniMembersIds.All(alumni => alumni != m.Id));
-
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -24,6 +25,8 @@ public class IndexModel : PageModel
   private readonly IMapper _mapper;
 
   public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
+	public List<int> AlumniMemberIds { get; set; } = new List<int>();
+	public List<int> MemberIds { get; set; } = new List<int>();
 
   public IndexModel(UserManager<ApplicationUser> userManager,
       IRepository<Member> memberRepository,
@@ -39,22 +42,47 @@ public class IndexModel : PageModel
   public async Task OnGet()
   {
 		var alumniMembers = await GetAlumniMembersAsync();
-		var alumniMembersIds = alumniMembers.Select(x => x.Id).ToList();
-		await SetBookCategoriesAsync(alumniMembersIds);
+		AlumniMemberIds = alumniMembers.Select(x => x.Id).ToList();
+		var members = await GetMembersAsync();
+		MemberIds = members.Select(x => x.Id).ToList();
+		await SetBookCategoriesAsync();
   }
 
-  private async Task SetBookCategoriesAsync(List<int> alumniMembersIds)
+  private async Task SetBookCategoriesAsync()
   {
 		var spec = new BookCategoriesSpec();
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
 
-		UpdateRanksAndReadBooksCountForMember(alumniMembersIds);
+		FilterNonCurrentMembers();
+
+		UpdateRanksAndReadBooksCountForMember();
 		UpdateMembersReadRank();
 		UpdateBooksRank();
 		OrderByRankForMembersAndBooks();
 	}
-  private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
+
+	private void FilterNonCurrentMembers()
+	{
+		var membersToRemove = new List<MemberForBookDto>();
+		foreach(var category in BookCategories)
+		{
+			foreach(var member in category.Members)
+			{
+				if (!MemberIds.Contains(member.Id))
+				{
+					membersToRemove.Add(member);
+				}
+			}
+			foreach(var memberToRemove in membersToRemove)
+			{
+				category.Members.Remove(memberToRemove);
+			}
+			membersToRemove.Clear();
+		}
+	}
+
+	private void UpdateRanksAndReadBooksCountForMember(MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
   {
 	  var memberToAdd = new MemberForBookDto
 		  {
@@ -64,7 +92,7 @@ public class IndexModel : PageModel
 				UserId = memberWhoHaveRead.UserId,
 		  };
 
-	  var isAlumni = alumniMembersIds.Contains(memberWhoHaveRead.Id);
+	  var isAlumni = AlumniMemberIds.Contains(memberWhoHaveRead.Id);
 		if (isAlumni)
 		{
 			if (bookCategory.Alumnus.Any(m => m.Id == memberWhoHaveRead.Id))
@@ -87,26 +115,26 @@ public class IndexModel : PageModel
 		}
   }
 
-	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, BookDto book, BookCategoryDto bookCategory)
+	private void UpdateRanksAndReadBooksCountForMember(BookDto book, BookCategoryDto bookCategory)
   {
 	  foreach (var memberWhoHaveRead in book.MembersWhoHaveRead!)
 	  {
-		  UpdateRanksAndReadBooksCountForMember(alumniMembersIds, memberWhoHaveRead, bookCategory);
+		  UpdateRanksAndReadBooksCountForMember(memberWhoHaveRead, bookCategory);
 	  }
   }
-	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds, BookCategoryDto bookCategory)
+	private void UpdateRanksAndReadBooksCountForMember(BookCategoryDto bookCategory)
   {
 	  foreach (var book in bookCategory.Books!)
 	  {
-			UpdateRanksAndReadBooksCountForMember(alumniMembersIds, book, bookCategory);
+			UpdateRanksAndReadBooksCountForMember(book, bookCategory);
 	  }
   }
 
-	private void UpdateRanksAndReadBooksCountForMember(List<int> alumniMembersIds)
+	private void UpdateRanksAndReadBooksCountForMember()
   {
 	  foreach (var bookCategory in BookCategories)
 	  {
-			UpdateRanksAndReadBooksCountForMember(alumniMembersIds, bookCategory);
+			UpdateRanksAndReadBooksCountForMember(bookCategory);
 	  }
   }
 
@@ -154,13 +182,24 @@ public class IndexModel : PageModel
 	}
 
 	private async Task<List<Member>> GetAlumniMembersAsync()
-  {
-	  var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
-	  var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
+	{
+		var usersInAlumniRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ALUMNI);
+		var alumniUserIds = usersInAlumniRole.Select(x => x.Id).ToList();
 
 		var alumniSpec = new MembersHavingUserIdsWithBooksSpec(alumniUserIds);
-	  var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
+		var alumniMembers = await _memberRepository.ListAsync(alumniSpec);
 
-	  return alumniMembers;
-  }
+		return alumniMembers;
+	}
+
+	private async Task<List<Member>> GetMembersAsync()
+	{
+		var usersInMemberRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.MEMBERS);
+		var memberUserIds = usersInMemberRole.Select(x => x.Id).ToList();
+
+		var memberSpec = new MembersHavingUserIdsWithBooksSpec(memberUserIds);
+		var members = await _memberRepository.ListAsync(memberSpec);
+
+		return members;
+	}
 }
