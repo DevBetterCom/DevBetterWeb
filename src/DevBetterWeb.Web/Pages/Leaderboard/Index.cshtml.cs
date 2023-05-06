@@ -90,8 +90,10 @@ public class IndexModel : PageModel
 		}
 	  else
 		{
-			if (bookCategory.Members.Any(m => m.Id == memberWhoHaveRead.Id))
+			var member = bookCategory.Members.FirstOrDefault(m => m.Id == memberWhoHaveRead.Id);
+			if (member != null)
 			{
+				member.RoleName = AuthConstants.Roles.MEMBERS;
 				return;
 			}
 
@@ -105,6 +107,7 @@ public class IndexModel : PageModel
 	  foreach (var memberWhoHaveRead in book.MembersWhoHaveRead!)
 	  {
 		  UpdateRanksAndReadBooksCountForMember(memberWhoHaveRead, bookCategory);
+		  book.MembersWhoHaveReadCount = book.MembersWhoHaveRead.Count;
 	  }
   }
 	private void UpdateRanksAndReadBooksCountForMember(BookCategoryDto bookCategory)

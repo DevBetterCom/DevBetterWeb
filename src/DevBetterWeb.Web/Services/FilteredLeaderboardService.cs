@@ -42,13 +42,19 @@ public class FilteredLeaderboardService : IFilteredLeaderboardService
 
 	private BookCategoryDto CreateBookCategoryDtoWithoutNonMembers(BookCategoryDto bookCategory, List<int> nonMembersId)
 	{
+		var filteredBooks = CreateBookDtosWithoutNonMembers(bookCategory.Books!, nonMembersId);
+
+		var membersFromBooks = filteredBooks
+			.SelectMany(book => book.MembersWhoHaveRead)
+			.Distinct()
+			.ToList();
+
 		var bookCategoryToAdd = new BookCategoryDto
 		{
 			Id = bookCategory.Id,
 			Title = bookCategory.Title,
-			Members = RemoveNonMembersFromList(bookCategory.Members, nonMembersId),
-			Alumnus = RemoveNonMembersFromList(bookCategory.Alumnus, nonMembersId),
-			Books = CreateBookDtosWithoutNonMembers(bookCategory.Books!, nonMembersId)
+			Members = membersFromBooks,
+			Books = filteredBooks
 		};
 
 		return bookCategoryToAdd;
