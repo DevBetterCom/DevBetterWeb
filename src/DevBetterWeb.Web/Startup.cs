@@ -122,6 +122,7 @@ public class Startup
 
     services.AddScoped<IWebVTTParsingService, WebVTTParsingService>();
     services.AddScoped<IVideoDetailsService, VideoDetailsService>();
+    services.AddScoped<IFilteredLeaderboardService, FilteredLeaderboardService>();
     
     // list services
     services.Configure<ServiceConfig>(config =>

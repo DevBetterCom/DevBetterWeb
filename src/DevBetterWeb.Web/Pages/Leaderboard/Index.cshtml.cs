@@ -9,7 +9,9 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
+using DevBetterWeb.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,6 +25,7 @@ public class IndexModel : PageModel
   private readonly IRepository<Member> _memberRepository;
   private readonly IRepository<BookCategory> _bookCategoryRepository;
   private readonly IMapper _mapper;
+  private readonly IFilteredLeaderboardService _filteredLeaderboardService;
 
   public List<BookCategoryDto> BookCategories { get; set; } = new List<BookCategoryDto>();
 	public List<int> AlumniMemberIds { get; set; } = new List<int>();
@@ -31,12 +34,14 @@ public class IndexModel : PageModel
   public IndexModel(UserManager<ApplicationUser> userManager,
       IRepository<Member> memberRepository,
       IRepository<BookCategory> bookCategoryRepository,
-      IMapper mapper)
+      IMapper mapper,
+      IFilteredLeaderboardService filteredLeaderboardService)
   {
     _userManager = userManager;
     _memberRepository = memberRepository;
     _bookCategoryRepository = bookCategoryRepository;
     _mapper = mapper;
+    _filteredLeaderboardService = filteredLeaderboardService;
   }
 
   public async Task OnGet()
@@ -54,31 +59,15 @@ public class IndexModel : PageModel
 		var bookCategoriesEntity = await _bookCategoryRepository.ListAsync(spec);
 		BookCategories = _mapper.Map<List<BookCategoryDto>>(bookCategoriesEntity);
 
-		FilterNonCurrentMembers();
+		BookCategories = await _filteredLeaderboardService.RemoveNonCurrentMembersFromLeaderBoardAsync(BookCategories);
 
 		UpdateRanksAndReadBooksCountForMember();
 		UpdateMembersReadRank();
 		UpdateBooksRank();
 		OrderByRankForMembersAndBooks();
-	}
+  }
 
-	private void FilterNonCurrentMembers()
-	{
-		var membersToRemove = new List<MemberForBookDto>();
-		foreach (var category in BookCategories)
-		{
-			membersToRemove = category.Members
-				.Where(m => !MemberIds.Contains(m.Id)).ToList();
-
-			foreach (var memberToRemove in membersToRemove)
-			{
-				category.Members.Remove(memberToRemove);
-			}
-			membersToRemove.Clear();
-		}
-	}
-
-	private void UpdateRanksAndReadBooksCountForMember(MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
+  private void UpdateRanksAndReadBooksCountForMember(MemberForBookDto memberWhoHaveRead, BookCategoryDto bookCategory)
   {
 	  var memberToAdd = new MemberForBookDto
 		  {
