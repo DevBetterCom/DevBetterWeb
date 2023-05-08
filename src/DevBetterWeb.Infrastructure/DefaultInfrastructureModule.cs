@@ -74,7 +74,9 @@ public class DefaultInfrastructureModule : Module
 
     builder.RegisterAssemblyTypes(this.ThisAssembly)
         .AsClosedTypesOf(typeof(IHandle<>));
-  }
+
+    builder.RegisterType<NonCurrentMembersService>().As<INonCurrentMembersService>();
+	}
 
   private void RegisterPaymentHandlerDependencies(ContainerBuilder builder)
   {
