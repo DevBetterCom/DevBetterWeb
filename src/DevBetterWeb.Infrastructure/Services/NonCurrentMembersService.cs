@@ -83,4 +83,22 @@ public class NonCurrentMembersService : INonCurrentMembersService
 
 		return nonMembers.Select(member => member.Id).ToList();
 	}
+
+	/// <summary>
+	/// Removes non-current members from the provided list.
+	/// </summary>
+	/// <param name="members">The list of members to filter.</param>
+	/// <returns>A filtered list of members that only includes current members.</returns>
+	/// <remarks>
+	/// This method first retrieves the IDs of non-current users from the `_nonCurrentMembersService`.
+	/// Then, it retrieves the IDs of non-current members.
+	/// Finally, it filters out any members from the provided list whose IDs are in the non-current members list.
+	/// </remarks>
+	public async Task<List<Member>> RemoveNonCurrentMembersAsync(List<Member> members)
+	{
+		var nonUsersId = await GetUsersIdsWithoutRolesAsync();
+		var nonMembersId = await GetNonCurrentMembersAsync(nonUsersId);
+
+		return members.Where(member => !nonMembersId.Contains(member.Id)).ToList();
+	}
 }
