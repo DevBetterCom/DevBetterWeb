@@ -16,6 +16,11 @@ public class RankAndOrderService : IRankAndOrderService
 	private readonly IRankingService _rankingService;
 	private readonly IMemberService _memberService;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="RankAndOrderService"/> class.
+	/// </summary>
+	/// <param name="rankingService">The ranking service.</param>
+	/// <param name="memberService">The member service.</param>
 	public RankAndOrderService(IRankingService rankingService, IMemberService memberService)
 	{
 		_rankingService = rankingService;
