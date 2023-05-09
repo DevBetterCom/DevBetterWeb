@@ -4,6 +4,9 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Web.Interfaces;
 
+/// <summary>
+/// Interface for the MemberService, providing methods for managing members.
+/// </summary>
 public interface IMemberService
 {
 	/// <summary>

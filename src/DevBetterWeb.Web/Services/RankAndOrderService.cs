@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 
@@ -80,8 +81,8 @@ namespace DevBetterWeb.Web.Services
 				UserId = memberWhoHaveRead.UserId,
 			};
 
-			var alumniMembers = await _memberService.GetActiveAlumniMembersAsync();
-			var alumniMemberIds = alumniMembers.Select(x => x.Id).ToList();
+			List<Member> alumniMembers = await _memberService.GetActiveAlumniMembersAsync();
+			List<int> alumniMemberIds = alumniMembers.Select(x => x.Id).ToList();
 
 			var isAlumni = alumniMemberIds.Contains(memberWhoHaveRead.Id);
 			if (isAlumni)
