@@ -11,15 +11,14 @@ namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class UpdateMembersReadRankTests
 {
-	private readonly Mock<IMemberService> _mockMemberService;
 	private readonly Mock<IRankingService> _mockRankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public UpdateMembersReadRankTests()
 	{
 		_mockRankingService = new Mock<IRankingService>();
-		_mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, _mockMemberService.Object);
+		var mockMemberService = new Mock<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, mockMemberService.Object);
 	}
 
 	private List<BookCategoryDto> GetTestBookCategories()
