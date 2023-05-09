@@ -5,16 +5,16 @@ using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
 using Moq;
-using System.Linq;
+using System;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
-public class UpdateBooksRankTests
+public class OrderByRankForMembersAndBooks
 {
 	private readonly Mock<IRankingService> _mockRankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
-	public UpdateBooksRankTests()
+	public OrderByRankForMembersAndBooks()
 	{
 		_mockRankingService = new Mock<IRankingService>();
 		var mockMemberService = new Mock<IMemberService>();
@@ -46,43 +46,51 @@ public class UpdateBooksRankTests
 	}
 
 	[Fact]
-	public void UpdateBooksRank_CallsCalculateBookRankForEachCategory()
+	public void OrderMembersAndBooksGivenBookCategories()
 	{
 		// Arrange
 		var bookCategories = GetTestBookCategories();
 
 		// Act
-		_rankAndOrderService.UpdateBooksRank(bookCategories);
+		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
+		_mockRankingService.Verify(rs => rs.OrderMembersByRank(It.IsAny<List<MemberForBookDto>>()), Times.Exactly(bookCategories.Count * 2));
+		_mockRankingService.Verify(rs => rs.OrderBooksByRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
 	}
 
 	[Fact]
-	public void UpdateBooksRank_NoBooksInCategory_DoesNotCallCalculateBookRank()
+	public void NotCallRankingServiceMethodsGivenEmptyList()
 	{
 		// Arrange
-		var bookCategories = new List<BookCategoryDto> { new BookCategoryDto() };
+		var bookCategories = new List<BookCategoryDto>();
 
 		// Act
-		_rankAndOrderService.UpdateBooksRank(bookCategories);
+		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Never());
+		_mockRankingService.Verify(rs => rs.OrderMembersByRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
+		_mockRankingService.Verify(rs => rs.OrderBooksByRank(It.IsAny<List<BookDto>>()), Times.Never());
 	}
 
 	[Fact]
-	public void UpdateBooksRank_MultipleCategories_CallsCalculateBookRankForEachCategory()
+	public void ThrowsNullReferenceExceptionGivenNullList()
 	{
 		// Arrange
-		var bookCategories = GetTestBookCategories();
-		bookCategories.Add(GetTestBookCategories().First()); // add another category
+		List<BookCategoryDto> bookCategories = null!;
 
-		// Act
-		_rankAndOrderService.UpdateBooksRank(bookCategories);
-
-		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
+		// Act & Assert
+		Assert.Throws<NullReferenceException>(() => _rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories));
 	}
+
+	[Fact]
+	public void ThrowsArgumentExceptionGivenListContainsNull()
+	{
+		// Arrange
+		var bookCategories = new List<BookCategoryDto> { null! };
+
+		// Act & Assert
+		Assert.Throws<NullReferenceException>(() => _rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories));
+	}
+
 }
-

@@ -134,6 +134,12 @@ public class RankAndOrderService : IRankAndOrderService
 
 			memberToAdd.RoleName = AuthConstants.Roles.ALUMNI;
 			bookCategory.Alumnus.Add(memberToAdd);
+
+			var existingMemberInMembers = bookCategory.Members.FirstOrDefault(m => m.Id == memberWhoHaveRead.Id);
+			if (existingMemberInMembers != null)
+			{
+				bookCategory.Members.Remove(existingMemberInMembers);
+			}
 		}
 		else
 		{
