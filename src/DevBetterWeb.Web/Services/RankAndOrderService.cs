@@ -31,6 +31,10 @@ namespace DevBetterWeb.Web.Services
 		{
 			foreach (var category in bookCategories)
 			{
+				if (category.Books.Count <= 0)
+				{
+					continue;
+				}
 				_rankingService.CalculateMemberRank(category.Members);
 				_rankingService.CalculateMemberRank(category.Alumnus);
 			}
