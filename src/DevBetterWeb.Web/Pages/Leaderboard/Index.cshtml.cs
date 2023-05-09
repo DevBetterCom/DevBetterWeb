@@ -11,36 +11,17 @@ namespace DevBetterWeb.Web.Pages.Leaderboard;
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
 public class IndexModel : PageModel
 {
-	private readonly IRankAndOrderService _rankAndOrderService;
-	private readonly IBookCategoryService _bookCategoryService;
-	private readonly IFilteredLeaderboardService _filteredLeaderboardService;
+	private readonly ILeaderboardService _leaderboardService;
 
   public List<BookCategoryDto> BookCategories { get; set; } = new ();
 
-  public IndexModel(
-	  IRankAndOrderService rankAndOrderService,
-		IBookCategoryService bookCategoryService,
-	  IFilteredLeaderboardService filteredLeaderboardService)
+  public IndexModel(ILeaderboardService leaderboardService)
   {
-	  _rankAndOrderService = rankAndOrderService;
-	  _bookCategoryService = bookCategoryService;
-	  _filteredLeaderboardService = filteredLeaderboardService;
+	  _leaderboardService = leaderboardService;
   }
 
   public async Task OnGet()
   {
-	  await SetBookCategoriesAsync();
-  }
-
-  private async Task SetBookCategoriesAsync()
-  {
-	  BookCategories = await _bookCategoryService.GetBookCategoriesAsync();
-
-		BookCategories = await _filteredLeaderboardService.RemoveNonCurrentMembersFromLeaderBoardAsync(BookCategories);
-
-		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(BookCategories);
-		_rankAndOrderService.UpdateMembersReadRank(BookCategories);
-		_rankAndOrderService.UpdateBooksRank(BookCategories);
-	  _rankAndOrderService.OrderByRankForMembersAndBooks(BookCategories);
+	  BookCategories = await _leaderboardService.SetBookCategoriesAsync();
   }
 }

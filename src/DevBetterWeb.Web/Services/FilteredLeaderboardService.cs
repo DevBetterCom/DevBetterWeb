@@ -32,6 +32,10 @@ public class FilteredLeaderboardService : IFilteredLeaderboardService
 	/// <returns>A new list of book categories with non-current members removed.</returns>
 	public async Task<List<BookCategoryDto>> RemoveNonCurrentMembersFromLeaderBoardAsync(List<BookCategoryDto> bookCategories, CancellationToken cancellationToken = default)
 	{
+		if (bookCategories.Count <= 0)
+		{
+			return bookCategories;
+		}
 		var nonUsersId = await _nonCurrentMembersService.GetUsersIdsWithoutRolesAsync();
 		var nonMembersId = await _nonCurrentMembersService.GetNonCurrentMembersAsync(nonUsersId, cancellationToken);
 
