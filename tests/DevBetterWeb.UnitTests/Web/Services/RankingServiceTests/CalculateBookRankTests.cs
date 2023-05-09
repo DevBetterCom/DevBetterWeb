@@ -71,8 +71,8 @@ public class CalculateBookRankTests
 		_rankingService.CalculateBookRank(books);
 
 		// Assert
-		Assert.Equal(1, books.Single(b => b.MembersWhoHaveReadCount == 3).Rank);
-		Assert.Equal(1, books.Single(b => b.MembersWhoHaveReadCount == 3).Rank);
-		Assert.Equal(2, books.Single(b => b.MembersWhoHaveReadCount == 2).Rank);
+		Assert.Equal(1, books.First(b => b.MembersWhoHaveReadCount == 3).Rank);
+		Assert.Equal(1, books.First(b => b.MembersWhoHaveReadCount == 3).Rank);
+		Assert.Equal(2, books.First(b => b.MembersWhoHaveReadCount == 2).Rank);
 	}
 }
