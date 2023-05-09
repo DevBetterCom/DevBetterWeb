@@ -29,6 +29,10 @@ namespace DevBetterWeb.Web.Services
 
 		public void UpdateMembersReadRank(List<BookCategoryDto> bookCategories)
 		{
+			if (bookCategories.Count <= 0)
+			{
+				return;
+			}
 			foreach (var category in bookCategories)
 			{
 				if (category.Books.Count <= 0)
@@ -42,8 +46,16 @@ namespace DevBetterWeb.Web.Services
 
 		public void UpdateBooksRank(List<BookCategoryDto> bookCategories)
 		{
+			if (bookCategories.Count <= 0)
+			{
+				return;
+			}
 			foreach (var category in bookCategories)
 			{
+				if (category.Books.Count <= 0)
+				{
+					continue;
+				}
 				_rankingService.CalculateBookRank(category.Books!);
 			}
 		}
