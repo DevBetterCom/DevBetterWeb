@@ -5,17 +5,17 @@ using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankingServiceTests;
 
-public class OrderBooksByRankTests
+public class OrderBooksByRank
 {
 	private readonly RankingService _rankingService;
 
-	public OrderBooksByRankTests()
+	public OrderBooksByRank()
 	{
 		_rankingService = new RankingService();
 	}
 
 	[Fact]
-	public void WhenBooksAreNotOrderedByRank_OrdersByRank()
+	public void OrderByRankGivenBooksAreNotOrderedByRank()
 	{
 		// Arrange
 		var books = new List<BookDto>
@@ -35,7 +35,7 @@ public class OrderBooksByRankTests
 	}
 
 	[Fact]
-	public void WhenBooksAreAlreadyOrderedByRank_KeepsOrder()
+	public void KeepOrderGivenBooksAreAlreadyOrderedByRank()
 	{
 		// Arrange
 		var books = new List<BookDto>
@@ -55,7 +55,7 @@ public class OrderBooksByRankTests
 	}
 
 	[Fact]
-	public void WhenBooksHaveSameRank_KeepsOriginalOrder()
+	public void KeepOriginalOrderGivenBooksHaveSameRank()
 	{
 		// Arrange
 		var books = new List<BookDto>
@@ -74,7 +74,7 @@ public class OrderBooksByRankTests
 	}
 
 	[Fact]
-	public void WhenBookListIsEmpty_ReturnsEmptyList()
+	public void ReturnEmptyListGivenBookListIsEmpty()
 	{
 		// Arrange
 		var books = new List<BookDto>();

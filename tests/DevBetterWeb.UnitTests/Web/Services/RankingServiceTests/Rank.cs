@@ -4,17 +4,17 @@ using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankingServiceTests;
 
-public class RankTests
+public class Rank
 {
 	private readonly RankingService _rankingService;
 
-	public RankTests()
+	public Rank()
 	{
 		_rankingService = new RankingService();
 	}
 
 	[Fact]
-	public void ReturnsCorrectRanking()
+	public void ReturnCorrectRankingGivenItems()
 	{
 		// Arrange
 		var items = new List<int> { 3, 1, 2 };
@@ -29,7 +29,7 @@ public class RankTests
 	}
 
 	[Fact]
-	public void ReturnsCorrectRankingWhenDuplicatesPresent()
+	public void ReturnCorrectRankingGivenDuplicatesPresent()
 	{
 		// Arrange
 		var items = new List<int> { 3, 3, 1, 2, 2, 2 };
@@ -44,7 +44,7 @@ public class RankTests
 	}
 
 	[Fact]
-	public void ReturnsCorrectRankingWhenAllSame()
+	public void ReturnCorrectRankingGivenAllSameItems()
 	{
 		// Arrange
 		var items = new List<int> { 3, 3, 3 };
@@ -57,7 +57,7 @@ public class RankTests
 	}
 
 	[Fact]
-	public void ReturnsEmptyRankingWhenNoItems()
+	public void ReturnEmptyRankingGivenNoItems()
 	{
 		// Arrange
 		var items = new List<int>();

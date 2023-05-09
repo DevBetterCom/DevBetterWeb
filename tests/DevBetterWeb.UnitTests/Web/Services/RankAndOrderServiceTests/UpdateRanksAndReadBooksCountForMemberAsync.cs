@@ -11,12 +11,12 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
-public class UpdateRanksAndReadBooksCountForMemberAsyncTests
+public class UpdateRanksAndReadBooksCountForMemberAsync
 {
 	private readonly Mock<IMemberService> _mockMemberService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
-	public UpdateRanksAndReadBooksCountForMemberAsyncTests()
+	public UpdateRanksAndReadBooksCountForMemberAsync()
 	{
 		var mockRankingService = new Mock<IRankingService>();
 		_mockMemberService = new Mock<IMemberService>();
@@ -24,7 +24,7 @@ public class UpdateRanksAndReadBooksCountForMemberAsyncTests
 	}
 
 	[Fact]
-	public async Task UpdateRanksAndReadBooksCountForMemberAsync_UpdatesMembersWhoHaveReadCount()
+	public async Task UpdateMembersWhoHaveReadCountGivenBookCategories()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
@@ -64,7 +64,7 @@ public class UpdateRanksAndReadBooksCountForMemberAsyncTests
 	}
 
 	[Fact]
-	public async Task UpdateRanksAndReadBooksCountForMemberAsync_UpdatesAlumniMembers()
+	public async Task UpdateAlumniMembersGivenBookCategoriesAndActiveAlumniMembers()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
@@ -107,7 +107,7 @@ public class UpdateRanksAndReadBooksCountForMemberAsyncTests
 	}
 
 	[Fact]
-	public async Task UpdateRanksAndReadBooksCountForMemberAsync_UpdatesMemberRole()
+	public async Task UpdateMemberRoleGivenBookCategoriesAndActiveAlumniMembers()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>

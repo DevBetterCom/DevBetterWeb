@@ -6,17 +6,17 @@ using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankingServiceTests;
 
-public class CalculateMemberRankTests
+public class CalculateMemberRank
 {
 	private readonly RankingService _rankingService;
 
-	public CalculateMemberRankTests()
+	public CalculateMemberRank()
 	{
 		_rankingService = new RankingService();
 	}
 
 	[Fact]
-	public void SetsCorrectBookRankForMembers()
+	public void SetCorrectBookRankForMembersGivenMembersAndBooksReadCount()
 	{
 		// Arrange
 		var members = new List<MemberForBookDto>
@@ -40,7 +40,7 @@ public class CalculateMemberRankTests
 	}
 
 	[Fact]
-	public void WhenAllMembersHaveReadSameNumberOfBooks_SetsSameRankForAll()
+	public void SetSameRankForAllGivenAllMembersHaveReadSameNumberOfBooks()
 	{
 		// Arrange
 		var members = new List<MemberForBookDto>
@@ -61,7 +61,7 @@ public class CalculateMemberRankTests
 	}
 
 	[Fact]
-	public void WhenSomeMembersHaveReadSameNumberOfBooks_SetsCorrectRankForAll()
+	public void SetCorrectRankForAllGivenSomeMembersHaveReadSameNumberOfBooks()
 	{
 		// Arrange
 		var members = new List<MemberForBookDto>
