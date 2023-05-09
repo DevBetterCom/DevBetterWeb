@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web;
 
@@ -69,24 +72,93 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
       Details = "A classic."
     });
     dbContext.SaveChanges();
+
+    dbContext.Books!.Add(new Book
+    {
+	    Author = "Test 2",
+	    Title = "Test 2",
+	    PurchaseUrl = "https://ardalis.com",
+	    Details = "B classic."
+    });
+    dbContext.SaveChanges();
+
+    dbContext.Books!.Add(new Book
+    {
+	    Author = "Test 3",
+	    Title = "Test 3",
+	    PurchaseUrl = "https://ardalis.com",
+	    Details = "C classic."
+    });
+    dbContext.SaveChanges();
+
+    dbContext.Books!.Add(new Book
+    {
+	    Author = "Test 4",
+	    Title = "Test 4",
+	    PurchaseUrl = "https://ardalis.com",
+	    Details = "D classic."
+    });
+    dbContext.SaveChanges();
+
+		AssignBooksToCategories(dbContext);
+		AddReadBooks(dbContext);
+
+		_ = AppIdentityDbContextSeed.RemoveUserFromRoleAsync(userManager, "non-member@microsoft.com", Constants.MEMBER_ROLE_NAME).Result;
   }
 
-  private static void AddMembers(AppDbContext dbContext,
+	private static void AddReadBooks(AppDbContext dbContext)
+	{
+		var members = dbContext.Members!;
+		var books = dbContext.Books!;
+
+		foreach (var member in members)
+		{
+			foreach (var book in books)
+			{
+				member.AddBookRead(book);
+			}
+			dbContext.Members!.Update(member);
+		}
+
+		dbContext.SaveChanges();
+	}
+
+	private static void AddMembers(AppDbContext dbContext,
     UserManager<ApplicationUser> userManager)
   {
     var regularUser = userManager.FindByNameAsync("demouser@microsoft.com").GetAwaiter().GetResult();
     var regularMember = Member.SeedData(regularUser!.Id, "Demo", "User");
     dbContext.Members?.Add(regularMember);
 
-	var adminUser = userManager.FindByNameAsync("admin@test.com").GetAwaiter().GetResult();
+    var regularUser2 = userManager.FindByNameAsync("demouser2@microsoft.com").GetAwaiter().GetResult();
+    var regularMember2 = Member.SeedData(regularUser2!.Id, "Demo2", "User2");
+    dbContext.Members?.Add(regularMember2);
+
+    var regularUser3 = userManager.FindByNameAsync("demouser3@microsoft.com").GetAwaiter().GetResult();
+    var regularMember3 = Member.SeedData(regularUser3!.Id, "Demo3", "User3");
+    dbContext.Members?.Add(regularMember3);
+
+    var regularUser4 = userManager.FindByNameAsync("demouser4@microsoft.com").GetAwaiter().GetResult();
+    var regularMember4 = Member.SeedData(regularUser4!.Id, "Demo4", "User4");
+    dbContext.Members?.Add(regularMember4);
+
+    var nonMember = userManager.FindByNameAsync("non-member@microsoft.com").GetAwaiter().GetResult();
+    var nonMemberUser = Member.SeedData(nonMember!.Id, "non-member", "non-member");
+    dbContext.Members?.Add(nonMemberUser);
+
+		var adminUser = userManager.FindByNameAsync("admin@test.com").GetAwaiter().GetResult();
     var adminMember = Member.SeedData(adminUser!.Id, "Admin", "User");
     dbContext.Members?.Add(adminMember);
 
-	var alumniUser = userManager.FindByNameAsync("alumni@test.com").GetAwaiter().GetResult();
+		var alumniUser = userManager.FindByNameAsync("alumni@test.com").GetAwaiter().GetResult();
     var alumniMember = Member.SeedData(alumniUser!.Id, "Alumni", "User");
     dbContext.Members?.Add(alumniMember);
 
-    dbContext.SaveChanges();
+    var alumniUser2 = userManager.FindByNameAsync("alumni2@test.com").GetAwaiter().GetResult();
+    var alumniMember2 = Member.SeedData(alumniUser2!.Id, "Alumni2", "User2");
+    dbContext.Members?.Add(alumniMember2);
+
+		dbContext.SaveChanges();
   }
 
   private static void PopulateMembersInitData(AppDbContext dbContext, UserManager<ApplicationUser> userManager)
@@ -137,13 +209,24 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 	  dbContext.BookCategories!.Add(personalCareerCategory);
 	  dbContext.SaveChanges();
 
+	  AssignBooksToCategories(dbContext);
+  }
+
+	private static void AssignBooksToCategories(AppDbContext dbContext)
+	{
 		var books = dbContext.Books!;
+		var cnt = 0;
 		foreach (var book in books)
 		{
 			book.BookCategoryId = 1;
+			if (cnt > 1)
+			{
+				book.BookCategoryId = 2;
+			}
 			dbContext.Books!.Update(book);
+			cnt++;
 		}
-		
+
 		dbContext.SaveChanges();
-  }
+	}
 }
