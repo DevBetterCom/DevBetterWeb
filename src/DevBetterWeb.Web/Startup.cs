@@ -123,7 +123,12 @@ public class Startup
     services.AddScoped<IWebVTTParsingService, WebVTTParsingService>();
     services.AddScoped<IVideoDetailsService, VideoDetailsService>();
     services.AddScoped<IFilteredLeaderboardService, FilteredLeaderboardService>();
-    
+    services.AddScoped<IBookCategoryService, BookCategoryService>();
+    services.AddScoped<IMemberService, MemberService>();
+    services.AddScoped<IRankAndOrderService, RankAndOrderService>();
+    services.AddScoped<IRankingService, RankingService>();
+    services.AddScoped<ILeaderboardService, LeaderboardService>();
+
     // list services
     services.Configure<ServiceConfig>(config =>
     {

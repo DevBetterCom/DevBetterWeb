@@ -9,5 +9,5 @@ public class BookCategoryDto
 
 	public List<MemberForBookDto> Members { get; set; } = new List<MemberForBookDto>();
 	public List<MemberForBookDto> Alumnus { get; set; } = new List<MemberForBookDto>();
-	public List<BookDto>? Books { get; set; } = new List<BookDto>();
+	public List<BookDto> Books { get; set; } = new List<BookDto>();
 }
