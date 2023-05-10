@@ -11,14 +11,14 @@ using System.Linq;
 
 namespace DevBetterWeb.UnitTests.Web.Services.LeaderboardServiceTests;
 
-public class SetBookCategoriesAsyncTests
+public class SetBookCategoriesAsync
 {
-	private Mock<IRankAndOrderService> _rankAndOrderServiceMock;
-	private Mock<IBookCategoryService> _bookCategoryServiceMock;
-	private Mock<IFilteredLeaderboardService> _filteredLeaderboardServiceMock;
-	private LeaderboardService _leaderboardService;
+	private readonly Mock<IRankAndOrderService> _rankAndOrderServiceMock;
+	private readonly Mock<IBookCategoryService> _bookCategoryServiceMock;
+	private readonly Mock<IFilteredLeaderboardService> _filteredLeaderboardServiceMock;
+	private readonly LeaderboardService _leaderboardService;
 
-	public SetBookCategoriesAsyncTests()
+	public SetBookCategoriesAsync()
 	{
 		_rankAndOrderServiceMock = new Mock<IRankAndOrderService>();
 		_bookCategoryServiceMock = new Mock<IBookCategoryService>();
@@ -27,7 +27,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task UpdatesRanksAndOrders()
+	public async Task UpdateRanksAndOrdersGivenBookCategories()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
@@ -56,7 +56,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task WithNonActiveMember_DoesNotIncludeInRank()
+	public async Task NotIncludeNonActiveMemberInRankGivenNonActiveMember()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
@@ -93,7 +93,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task WithNoBookCategories_ReturnsEmptyList()
+	public async Task ReturnsEmptyListGivenNoBookCategories()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>();
@@ -109,7 +109,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task WhenGetBookCategoriesAsyncFails_ThrowsException()
+	public async Task ThrowsExceptionGivenGetBookCategoriesAsyncFails()
 	{
 		// Arrange
 		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ThrowsAsync(new ArgumentNullException());
@@ -119,7 +119,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task MemberRanksAreOrderedCorrectly()
+	public async Task OrdersMemberRanksCorrectlyGivenUnorderedRanks()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
@@ -156,7 +156,7 @@ public class SetBookCategoriesAsyncTests
 	}
 
 	[Fact]
-	public async Task MembersAreOrderedCorrectly_ByBooksReadCount()
+	public async Task OrdersMembersCorrectlyByBooksReadCountGivenUnorderedMembers()
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>

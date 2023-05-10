@@ -7,7 +7,7 @@ using DevBetterWeb.Web.Services;
 using Moq;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Web.Services;
+namespace DevBetterWeb.UnitTests.Web.Services.FilteredLeaderboardTests;
 
 public class FilteredLeaderboardServiceTests
 {
@@ -19,7 +19,7 @@ public class FilteredLeaderboardServiceTests
 	}
 
 	[Fact]
-	public async Task RemoveNonCurrentMembersFromLeaderBoardAsync_RemovesNonCurrentMembers()
+	public async Task RemovesNonCurrentMembersGivenBookCategories()
 	{
 		// Arrange
 		var bookCategories = CreateSampleBookCategories();
