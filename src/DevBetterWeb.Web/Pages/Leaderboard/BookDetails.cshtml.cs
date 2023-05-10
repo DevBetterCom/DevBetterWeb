@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
+using DevBetterWeb.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,22 +9,18 @@ namespace DevBetterWeb.Web.Pages.Leaderboard;
 [Authorize]
 public class BookDetailsModel : PageModel
 {
-  public BookDetailsViewModel? BookDetailsViewModel { get; set; }
-  private readonly IRepository<Book> _bookRepository;
+	private readonly ILeaderboardService _leaderboardService;
+	public BookDetailsViewModel? BookDetailsViewModel { get; set; }
 
-  public BookDetailsModel(IRepository<Book> bookRepository)
+	public BookDetailsModel(ILeaderboardService leaderboardService)
   {
-    _bookRepository = bookRepository;
+	  _leaderboardService = leaderboardService;
   }
 
   public async Task<IActionResult> OnGet(string bookId)
   {
-    var spec = new BookByIdWithMembersSpec(int.Parse(bookId));
-    var book = await _bookRepository.FirstOrDefaultAsync(spec);
+    BookDetailsViewModel = await _leaderboardService.GetBookDetailsAsync(bookId);
 
-    if (book == null) return NotFound(bookId);
-
-    BookDetailsViewModel = new BookDetailsViewModel(book!);
-    return Page();
+		return Page();
   }
 }
