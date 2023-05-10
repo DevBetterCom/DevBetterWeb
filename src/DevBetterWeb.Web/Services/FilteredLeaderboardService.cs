@@ -5,6 +5,7 @@ using DevBetterWeb.Web.Models;
 using System.Linq;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Web.Pages.Leaderboard;
 
 namespace DevBetterWeb.Web.Services;
 
@@ -42,6 +43,24 @@ public class FilteredLeaderboardService : IFilteredLeaderboardService
 		return bookCategories
 				.Select(bookCategory => CreateBookCategoryDtoWithoutNonMembers(bookCategory, nonMembersId))
 				.ToList();
+	}
+
+	/// <summary>
+	/// Removes non-current members from the book details view model.
+	/// </summary>
+	/// <param name="bookDetailsViewModel">A book in the book details.</param>
+	/// <param name="cancellationToken">An optional token to cancel the operation.</param>
+	/// <returns>A book details with non-current members removed.</returns>
+	public async Task<BookDetailsViewModel> RemoveNonCurrentMembersFromBookDetailsAsync(BookDetailsViewModel bookDetailsViewModel, CancellationToken cancellationToken = default)
+	{
+		var nonUsersId = await _nonCurrentMembersService.GetUsersIdsWithoutRolesAsync();
+		var nonMembersId = await _nonCurrentMembersService.GetNonCurrentMembersAsync(nonUsersId, cancellationToken);
+
+		bookDetailsViewModel.MembersWhoHaveRead = bookDetailsViewModel.MembersWhoHaveRead
+			.Where(member => !nonMembersId.Contains(member.Id))
+			.ToList();
+
+		return bookDetailsViewModel;
 	}
 
 	private BookCategoryDto CreateBookCategoryDtoWithoutNonMembers(BookCategoryDto bookCategory, List<int> nonMembersId)
