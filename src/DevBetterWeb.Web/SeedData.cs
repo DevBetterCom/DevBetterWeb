@@ -6,7 +6,6 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevBetterWeb.Web;
 
@@ -16,7 +15,7 @@ public static class SeedData
 	{
 		PopulateBookCategoriesInitData(dbContext);
 		PopulateMembersInitData(dbContext, userManager);
-		PopulateBookUploaderMemberInitData(dbContext, userManager);
+		PopulateBookUploaderMemberInitData(dbContext);
 	}
 
 	public static void PopulateTestData(AppDbContext dbContext,
@@ -103,7 +102,7 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 		AssignBooksToCategories(dbContext);
 		AddReadBooks(dbContext);
 
-		_ = AppIdentityDbContextSeed.RemoveUserFromRoleAsync(userManager, "non-member@microsoft.com", Constants.MEMBER_ROLE_NAME).Result;
+		_ = AppIdentityDbContextSeed.RemoveUserFromRoleAsync(userManager, AuthConstants.Users.NonMember.EMAIL, Constants.MEMBER_ROLE_NAME).Result;
   }
 
 	private static void AddReadBooks(AppDbContext dbContext)
@@ -126,36 +125,36 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 	private static void AddMembers(AppDbContext dbContext,
     UserManager<ApplicationUser> userManager)
   {
-    var regularUser = userManager.FindByNameAsync("demouser@microsoft.com").GetAwaiter().GetResult();
-    var regularMember = Member.SeedData(regularUser!.Id, "Demo", "User");
+    var regularUser = userManager.FindByNameAsync(AuthConstants.Users.Demo.EMAIL).GetAwaiter().GetResult();
+    var regularMember = Member.SeedData(regularUser!.Id, AuthConstants.Users.Demo.FIRST_NAME, AuthConstants.Users.Demo.LAST_NAME);
     dbContext.Members?.Add(regularMember);
 
-    var regularUser2 = userManager.FindByNameAsync("demouser2@microsoft.com").GetAwaiter().GetResult();
-    var regularMember2 = Member.SeedData(regularUser2!.Id, "Demo2", "User2");
+    var regularUser2 = userManager.FindByNameAsync(AuthConstants.Users.Demo2.EMAIL).GetAwaiter().GetResult();
+    var regularMember2 = Member.SeedData(regularUser2!.Id, AuthConstants.Users.Demo2.FIRST_NAME, AuthConstants.Users.Demo2.LAST_NAME);
     dbContext.Members?.Add(regularMember2);
 
-    var regularUser3 = userManager.FindByNameAsync("demouser3@microsoft.com").GetAwaiter().GetResult();
-    var regularMember3 = Member.SeedData(regularUser3!.Id, "Demo3", "User3");
+    var regularUser3 = userManager.FindByNameAsync(AuthConstants.Users.Demo3.EMAIL).GetAwaiter().GetResult();
+    var regularMember3 = Member.SeedData(regularUser3!.Id, AuthConstants.Users.Demo3.FIRST_NAME, AuthConstants.Users.Demo3.LAST_NAME);
     dbContext.Members?.Add(regularMember3);
 
-    var regularUser4 = userManager.FindByNameAsync("demouser4@microsoft.com").GetAwaiter().GetResult();
-    var regularMember4 = Member.SeedData(regularUser4!.Id, "Demo4", "User4");
+    var regularUser4 = userManager.FindByNameAsync(AuthConstants.Users.Demo4.EMAIL).GetAwaiter().GetResult();
+    var regularMember4 = Member.SeedData(regularUser4!.Id, AuthConstants.Users.Demo4.FIRST_NAME, AuthConstants.Users.Demo4.LAST_NAME);
     dbContext.Members?.Add(regularMember4);
 
-    var nonMember = userManager.FindByNameAsync("non-member@microsoft.com").GetAwaiter().GetResult();
-    var nonMemberUser = Member.SeedData(nonMember!.Id, "non-member", "non-member");
+    var nonMember = userManager.FindByNameAsync(AuthConstants.Users.NonMember.EMAIL).GetAwaiter().GetResult();
+    var nonMemberUser = Member.SeedData(nonMember!.Id, AuthConstants.Users.NonMember.FIRST_NAME, AuthConstants.Users.NonMember.LAST_NAME);
     dbContext.Members?.Add(nonMemberUser);
 
-		var adminUser = userManager.FindByNameAsync("admin@test.com").GetAwaiter().GetResult();
-    var adminMember = Member.SeedData(adminUser!.Id, "Admin", "User");
+		var adminUser = userManager.FindByNameAsync(AuthConstants.Users.Admin.EMAIL).GetAwaiter().GetResult();
+    var adminMember = Member.SeedData(adminUser!.Id, AuthConstants.Users.Admin.FIRST_NAME, AuthConstants.Users.Admin.LAST_NAME);
     dbContext.Members?.Add(adminMember);
 
-		var alumniUser = userManager.FindByNameAsync("alumni@test.com").GetAwaiter().GetResult();
-    var alumniMember = Member.SeedData(alumniUser!.Id, "Alumni", "User");
+		var alumniUser = userManager.FindByNameAsync(AuthConstants.Users.Alumni.EMAIL).GetAwaiter().GetResult();
+    var alumniMember = Member.SeedData(alumniUser!.Id, AuthConstants.Users.Alumni.FIRST_NAME, AuthConstants.Users.Alumni.LAST_NAME);
     dbContext.Members?.Add(alumniMember);
 
-    var alumniUser2 = userManager.FindByNameAsync("alumni2@test.com").GetAwaiter().GetResult();
-    var alumniMember2 = Member.SeedData(alumniUser2!.Id, "Alumni2", "User2");
+    var alumniUser2 = userManager.FindByNameAsync(AuthConstants.Users.Alumni2.EMAIL).GetAwaiter().GetResult();
+    var alumniMember2 = Member.SeedData(alumniUser2!.Id, AuthConstants.Users.Alumni2.FIRST_NAME, AuthConstants.Users.Alumni2.LAST_NAME);
     dbContext.Members?.Add(alumniMember2);
 
 		dbContext.SaveChanges();
@@ -181,7 +180,7 @@ In this video we talk about some stuff. In this video we talk about some stuff. 
 	  dbContext.SaveChanges();
   }
 	
-	private static void PopulateBookUploaderMemberInitData(AppDbContext dbContext, UserManager<ApplicationUser> userManager)
+	private static void PopulateBookUploaderMemberInitData(AppDbContext dbContext)
   {
 	  if (!dbContext.Books!.Any()) return;
 
