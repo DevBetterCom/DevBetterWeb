@@ -4,22 +4,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Interfaces;
+using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Pages.Leaderboard;
 using DevBetterWeb.Web.Services;
 using Moq;
 using Xunit;
 
-namespace DevBetterWeb.UnitTests.Web.Services.FilteredLeaderboardTests;
+namespace DevBetterWeb.UnitTests.Web.Services.FilteredBookDetailsTests;
 
 public class RemoveNonCurrentMembersFromBookDetailsAsync
 {
 	private readonly Mock<INonCurrentMembersService> _mockNonCurrentMembersService;
-	private readonly FilteredLeaderboardService _yourService;
+	private readonly FilteredBookDetailsService _filteredBookDetailsService;
 
 	public RemoveNonCurrentMembersFromBookDetailsAsync()
 	{
 		_mockNonCurrentMembersService = new Mock<INonCurrentMembersService>();
-		_yourService = new FilteredLeaderboardService(_mockNonCurrentMembersService.Object);
+		var bookService = new Mock<IBookService>();
+		_filteredBookDetailsService = new FilteredBookDetailsService(_mockNonCurrentMembersService.Object, bookService.Object);
 	}
 
 	[Fact]
@@ -37,7 +39,7 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 			.ReturnsAsync(new List<int> { 1, 2 });
 
 		// Act
-		var result = await _yourService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
+		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
 
 		// Assert
 		Assert.Single(result.MembersWhoHaveRead);
@@ -59,7 +61,7 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 			.ReturnsAsync(new List<int> { 4, 5 });
 
 		// Act
-		var result = await _yourService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
+		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
 
 		// Assert
 		Assert.Equal(3, result.MembersWhoHaveRead.Count);
@@ -79,7 +81,7 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 			.ReturnsAsync(new List<int> { });
 
 		// Act
-		var result = await _yourService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
+		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
 
 		// Assert
 		Assert.Equal(3, result.MembersWhoHaveRead.Count);
@@ -94,7 +96,7 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		_mockNonCurrentMembersService.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<int> { 1, 2 });
 
 		// Act
-		var result = await _yourService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
+		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
 
 		// Assert
 		Assert.Empty(result.MembersWhoHaveRead);
@@ -112,7 +114,7 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		_mockNonCurrentMembersService.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<int> { 1, 2, 3 });
 
 		// Act
-		var result = await _yourService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
+		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
 
 		// Assert
 		Assert.Empty(result.MembersWhoHaveRead);

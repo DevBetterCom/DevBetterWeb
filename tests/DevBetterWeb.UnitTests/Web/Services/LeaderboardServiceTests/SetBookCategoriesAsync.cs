@@ -16,7 +16,6 @@ public class SetBookCategoriesAsync
 	private readonly Mock<IRankAndOrderService> _rankAndOrderServiceMock;
 	private readonly Mock<IBookCategoryService> _bookCategoryServiceMock;
 	private readonly Mock<IFilteredLeaderboardService> _filteredLeaderboardServiceMock;
-	private readonly Mock<IBookService> _bookServiceMock;
 	private readonly LeaderboardService _leaderboardService;
 
 	public SetBookCategoriesAsync()
@@ -24,8 +23,7 @@ public class SetBookCategoriesAsync
 		_rankAndOrderServiceMock = new Mock<IRankAndOrderService>();
 		_bookCategoryServiceMock = new Mock<IBookCategoryService>();
 		_filteredLeaderboardServiceMock = new Mock<IFilteredLeaderboardService>();
-		_bookServiceMock = new Mock<IBookService>();
-		_leaderboardService = new LeaderboardService(_rankAndOrderServiceMock.Object, _bookCategoryServiceMock.Object, _bookServiceMock.Object, _filteredLeaderboardServiceMock.Object);
+		_leaderboardService = new LeaderboardService(_rankAndOrderServiceMock.Object, _bookCategoryServiceMock.Object, _filteredLeaderboardServiceMock.Object);
 	}
 
 	[Fact]
