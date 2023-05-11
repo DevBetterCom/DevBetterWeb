@@ -128,6 +128,7 @@ public class Startup
     services.AddScoped<IRankAndOrderService, RankAndOrderService>();
     services.AddScoped<IRankingService, RankingService>();
     services.AddScoped<IBookService, BookService>();
+    services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsService>();
     services.AddScoped<ILeaderboardService, LeaderboardService>();
 
     // list services

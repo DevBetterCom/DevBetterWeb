@@ -11,5 +11,4 @@ namespace DevBetterWeb.Web.Interfaces;
 public interface ILeaderboardService
 {
 	Task<List<BookCategoryDto>> SetBookCategoriesAsync();
-	Task<BookDetailsViewModel?> GetBookDetailsAsync(string bookId);
 }
