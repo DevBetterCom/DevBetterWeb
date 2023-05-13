@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Web.Interfaces;
+﻿using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
