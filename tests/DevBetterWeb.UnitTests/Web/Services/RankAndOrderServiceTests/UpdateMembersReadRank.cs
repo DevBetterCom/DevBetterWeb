@@ -98,10 +98,10 @@ public class UpdateMembersReadRank
 		var rankingService = new RankingService();
 		var members = new List<MemberForBookDto>
 		{
-			new MemberForBookDto { Id = 1, UserId = "User1", BooksReadCount = 5 },
-			new MemberForBookDto { Id = 2, UserId = "User2", BooksReadCount = 6 },
-			new MemberForBookDto { Id = 3, UserId = "User3", BooksReadCount = 7 },
-			new MemberForBookDto { Id = 4, UserId = "User4", BooksReadCount = 8 },
+			new MemberForBookDto { Id = 1, UserId = "User1", BooksReadCountByCategory = 5 },
+			new MemberForBookDto { Id = 2, UserId = "User2", BooksReadCountByCategory = 6 },
+			new MemberForBookDto { Id = 3, UserId = "User3", BooksReadCountByCategory = 7 },
+			new MemberForBookDto { Id = 4, UserId = "User4", BooksReadCountByCategory = 8 },
 		};
 
 		// Act
@@ -121,10 +121,10 @@ public class UpdateMembersReadRank
 		var rankingService = new RankingService();
 		var members = new List<MemberForBookDto>
 		{
-			new MemberForBookDto { Id = 1, UserId = "User1", BooksReadCount = 5 },
-			new MemberForBookDto { Id = 2, UserId = "User2", BooksReadCount = 6 },
-			new MemberForBookDto { Id = 3, UserId = "User3", BooksReadCount = 8 },
-			new MemberForBookDto { Id = 4, UserId = "User4", BooksReadCount = 8 },
+			new MemberForBookDto { Id = 1, UserId = "User1", BooksReadCountByCategory = 5 },
+			new MemberForBookDto { Id = 2, UserId = "User2", BooksReadCountByCategory = 6 },
+			new MemberForBookDto { Id = 3, UserId = "User3", BooksReadCountByCategory = 8 },
+			new MemberForBookDto { Id = 4, UserId = "User4", BooksReadCountByCategory = 8 },
 		};
 
 		// Act

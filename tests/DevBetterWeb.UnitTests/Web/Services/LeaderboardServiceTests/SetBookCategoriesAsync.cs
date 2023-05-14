@@ -49,7 +49,7 @@ public class SetBookCategoriesAsync
 		await _leaderboardService.SetBookCategoriesAsync();
 
 		// Assert
-		_rankAndOrderServiceMock.Verify(rs => rs.UpdateRanksAndReadBooksCountForMemberAsync(It.IsAny<List<BookCategoryDto>>()), Times.Once);
+		_rankAndOrderServiceMock.Verify(rs => rs.UpdateRanksAndReadBooksCountForMemberAsync(It.IsAny<List<BookCategoryDto>>()), Times.Never);
 		_rankAndOrderServiceMock.Verify(rs => rs.UpdateMembersReadRank(It.IsAny<List<BookCategoryDto>>()), Times.Once);
 		_rankAndOrderServiceMock.Verify(rs => rs.UpdateBooksRank(It.IsAny<List<BookCategoryDto>>()), Times.Once);
 		_rankAndOrderServiceMock.Verify(rs => rs.OrderByRankForMembersAndBooks(It.IsAny<List<BookCategoryDto>>()), Times.Once);

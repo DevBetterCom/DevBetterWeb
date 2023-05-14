@@ -21,9 +21,9 @@ public class CalculateMemberRank
 		// Arrange
 		var members = new List<MemberForBookDto>
 		{
-			new MemberForBookDto { FullName = "Alice", BooksReadCount = 3 },
-			new MemberForBookDto { FullName = "Bob", BooksReadCount = 2 },
-			new MemberForBookDto { FullName = "Charlie", BooksReadCount = 1 }
+			new MemberForBookDto { FullName = "Alice", BooksReadCountByCategory = 3 },
+			new MemberForBookDto { FullName = "Bob", BooksReadCountByCategory = 2 },
+			new MemberForBookDto { FullName = "Charlie", BooksReadCountByCategory = 1 }
 		};
 
 		// Act
@@ -66,9 +66,9 @@ public class CalculateMemberRank
 		// Arrange
 		var members = new List<MemberForBookDto>
 		{
-			new MemberForBookDto { FullName = "Alice", BooksReadCount = 3 },
-			new MemberForBookDto { FullName = "Bob", BooksReadCount = 3 },
-			new MemberForBookDto { FullName = "Charlie", BooksReadCount = 2 }
+			new MemberForBookDto { FullName = "Alice", BooksReadCountByCategory = 3 },
+			new MemberForBookDto { FullName = "Bob", BooksReadCountByCategory = 3 },
+			new MemberForBookDto { FullName = "Charlie", BooksReadCountByCategory = 2 }
 		};
 
 		// Act
