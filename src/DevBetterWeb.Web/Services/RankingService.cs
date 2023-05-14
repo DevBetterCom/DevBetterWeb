@@ -41,12 +41,12 @@ public class RankingService : IRankingService
 	/// <param name="members">The list of members for which to calculate the book reading rank.</param>
 	public void CalculateMemberRank(List<MemberForBookDto> members)
 	{
-		var bookCounts = members.Select(m => m.BooksReadCount).ToList();
+		var bookCounts = members.Select(m => m.BooksReadCountByCategory).ToList();
 
 		var memberRanks = Rank(bookCounts);
 		foreach (var member in members)
 		{
-			member.BooksRank = memberRanks[member.BooksReadCount];
+			member.BooksRank = memberRanks[member.BooksReadCountByCategory];
 		}
 	}
 

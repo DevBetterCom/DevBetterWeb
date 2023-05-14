@@ -26,7 +26,6 @@ public class LeaderboardService : ILeaderboardService
 
 		bookCategories = await _filteredLeaderboardService.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories);
 
-		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(bookCategories);
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
