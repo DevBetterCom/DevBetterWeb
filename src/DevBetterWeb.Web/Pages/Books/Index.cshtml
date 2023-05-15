@@ -1,0 +1,47 @@
+﻿@page
+@model DevBetterWeb.Web.Pages.Books.IndexModel
+@{
+  ViewData["Title"] = "Books";
+}
+
+<h3>Books</h3>
+
+<p>
+  Welcome to Infinite Pages, your personal haven for book recommendations!
+</p>
+<div class="row">
+	<div class="col-12">
+		<table class="table table-sm table-striped" id="leaderboardTable">
+			<thead>
+			<tr>
+				<th>Title</th>
+        <th>Author</th>
+        <th>Reads Count</th>                
+        <th>Member Who Upload</th>                
+        <th>Category</th>
+        <th>Url</th>
+        <th>Details</th>
+			</tr>
+			</thead>
+			<tbody>
+      @foreach (var book in @Model.Books)
+			{
+				<tr>
+					<td>@book.Title</td>
+					<td>@book.Author</td>
+          <td>@book.ReadsCount</td>
+					<td>@book.MemberWhoUploadName</td>
+					<td>@book.BookCategoryName</td>
+          <td><a href="@book.PurchaseUrl" target="_blank">@book.PurchaseUrl</a></td>
+					<td>@book.Details</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@section scripts{
+<script src="~/js/members.js" asp-append-version="true"></script>
+    }
+
