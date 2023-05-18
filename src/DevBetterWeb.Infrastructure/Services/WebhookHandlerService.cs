@@ -64,6 +64,12 @@ public class WebhookHandlerService : IWebhookHandlerService
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
+		var isAlumni = await _userLookupService.FindUserIsAlumniByEmailAsync(paymentHandlerCustomer.Email);
+		if (isAlumni)
+		{
+			return;
+		}
+
     await _memberCancellationService.SendFutureCancellationEmailAsync(paymentHandlerCustomer.Email);
     var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
     var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
