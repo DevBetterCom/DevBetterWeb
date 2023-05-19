@@ -64,13 +64,12 @@ public class WebhookHandlerService : IWebhookHandlerService
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
-		var isAlumni = await _userLookupService.FindUserIsAlumniByEmailAsync(paymentHandlerCustomer.Email);
-		if (isAlumni)
-		{
-			return;
-		}
+    if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+    {
+	    return;
+    }
 
-    await _memberCancellationService.SendFutureCancellationEmailAsync(paymentHandlerCustomer.Email);
+		await _memberCancellationService.SendFutureCancellationEmailAsync(paymentHandlerCustomer.Email);
     var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
     var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
     await _memberAddBillingActivityService.AddMemberSubscriptionCancellationBillingActivity(paymentHandlerCustomer.Email, subscriptionPlanName, billingPeriod);
@@ -83,7 +82,12 @@ public class WebhookHandlerService : IWebhookHandlerService
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
-    await _memberCancellationService.RemoveUserFromMemberRoleAsync(paymentHandlerCustomer.Email);
+		if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+		{
+			return;
+		}
+
+		await _memberCancellationService.RemoveUserFromMemberRoleAsync(paymentHandlerCustomer.Email);
     await _memberCancellationService.SendCancellationEmailAsync(paymentHandlerCustomer.Email);
 
     var memberByEmailSpec = new MemberByEmailSpec(paymentHandlerCustomer.Email);
@@ -101,6 +105,11 @@ public class WebhookHandlerService : IWebhookHandlerService
 		var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
+
+    if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+    {
+	    return;
+    }
 
     var subscriptionEndDate = _paymentHandlerSubscription.GetEndDate(paymentHandlerEvent.SubscriptionId);
 
@@ -157,6 +166,13 @@ public class WebhookHandlerService : IWebhookHandlerService
         //await AddNewSubscriberBillingActivity(paymentHandlerSubscriptionId, email, paymentAmount);
       }
     }
+  }
+
+  private async Task<bool> IsAlumniAsync(string email)
+  {
+	  var isAlumni = await _userLookupService.FindUserIsAlumniByEmailAsync(email);
+
+	  return isAlumni;
   }
 
   private Task AddNewSubscriberBillingActivity(string subscriptionId, string email, decimal paymentAmount)
