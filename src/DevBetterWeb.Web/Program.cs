@@ -87,7 +87,7 @@ if (!builder.Services.Any(x => x.ServiceType == typeof(AppDbContext)))
 }
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-var webProjectAssembly = typeof(Startup).Assembly;
+var webProjectAssembly = typeof(Program).Assembly;
 builder.Services.AddAutoMapper(webProjectAssembly);
 
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
