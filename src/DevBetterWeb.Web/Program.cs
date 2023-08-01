@@ -52,6 +52,33 @@ builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stri
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
+
+// PRODUCTION SERVICES
+if (builder.Environment.EnvironmentName.ToLower() == "production")
+{
+	builder.Services.AddDbContext<AppDbContext>(options =>
+			options.UseSqlServer(builder.Configuration!
+					.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+
+	// configure Stripe
+	string stripeApiKey = builder.Configuration!
+		.GetSection("StripeOptions")!
+		.GetSection("StripeSecretKey")!.Value!;
+	builder.Services.AddStripeServices(stripeApiKey);
+
+	builder.Services.AddDailyCheckServices();
+	builder.Services.AddStartupNotificationService();
+}
+
+// TEST SERVICES
+//if (builder.Environment.EnvironmentName.ToLower() == "testing")
+//{
+//	string dbName = Guid.NewGuid().ToString();
+
+//	builder.Services.AddDbContext<AppDbContext>(options =>
+//		options.UseInMemoryDatabase(dbName));
+//}
+
 if (!builder.Services.Any(x => x.ServiceType == typeof(AppDbContext)))
 {
 	builder.Services.AddDbContext<AppDbContext>(options =>
