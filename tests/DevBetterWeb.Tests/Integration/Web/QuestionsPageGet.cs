@@ -5,11 +5,11 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Integration.Web;
 
-public class QuestionsPageGet : IClassFixture<CustomWebApplicationFactory<Startup>>
+public class QuestionsPageGet : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client;
 
-  public QuestionsPageGet(CustomWebApplicationFactory<Startup> factory)
+  public QuestionsPageGet(CustomWebApplicationFactory<Program> factory)
   {
     _client = factory.CreateClient();
   }

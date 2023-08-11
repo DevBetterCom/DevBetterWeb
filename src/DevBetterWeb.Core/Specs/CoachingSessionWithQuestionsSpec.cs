@@ -3,7 +3,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public sealed class CoachingSessionWithQuestionsSpec : Specification<CoachingSession>, ISingleResultSpecification
+public sealed class CoachingSessionWithQuestionsSpec : Specification<CoachingSession>, 
+	ISingleResultSpecification<CoachingSession>
 {
   public CoachingSessionWithQuestionsSpec(int coachingSessionId)
   {
