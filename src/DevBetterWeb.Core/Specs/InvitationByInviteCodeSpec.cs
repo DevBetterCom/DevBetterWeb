@@ -3,7 +3,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class InvitationByInviteCodeSpec : Specification<Invitation>, ISingleResultSpecification
+public class InvitationByInviteCodeSpec : Specification<Invitation>, 
+	ISingleResultSpecification<Invitation>
 {
   public InvitationByInviteCodeSpec(string inviteCode)
   {
