@@ -338,4 +338,4 @@ src/DevBetterWeb.Web/web.config
 
 /src/DevBetterWeb.Web/migrate.sql
 /NDependOut
-/src/DevBetterWeb.Web/log20230811.txt
+/src/DevBetterWeb.Web/log*.*
