@@ -14,7 +14,9 @@ public class BillingDetails : ValueObject
   public BillingPeriod BillingPeriod { get; }
   public DateTime Date { get; }
 
-  public BillingDetails(string memberName, string subscriptionPlanName, BillingActivityVerb actionVerbPastTense, BillingPeriod billingPeriod, DateTime date, decimal amount = 0)
+  public BillingDetails(string memberName, string subscriptionPlanName, 
+		BillingActivityVerb actionVerbPastTense, BillingPeriod billingPeriod, 
+		DateTime date, decimal amount = 0)
   {
     Amount = amount;
     MemberName = memberName;
