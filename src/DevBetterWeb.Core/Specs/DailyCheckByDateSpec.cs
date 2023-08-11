@@ -4,7 +4,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class DailyCheckByDateSpec : Specification<DailyCheck>, ISingleResultSpecification
+public class DailyCheckByDateSpec : Specification<DailyCheck>, 
+	ISingleResultSpecification<DailyCheck>
 {
   public DailyCheckByDateSpec(DateTime date)
   {

@@ -3,7 +3,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public sealed class QuestionWithVotesSpec : Specification<Question>, ISingleResultSpecification
+public sealed class QuestionWithVotesSpec : Specification<Question>, 
+	ISingleResultSpecification<Question>
 {
   public QuestionWithVotesSpec(int questionId)
   {
