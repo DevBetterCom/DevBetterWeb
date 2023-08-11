@@ -9,11 +9,11 @@ using Xunit;
 
 namespace DevBetterWeb.Tests.Integration.Web;
 
-public class ApiToDoItemsControllerList : IClassFixture<CustomWebApplicationFactory<Startup>>
+public class ApiToDoItemsControllerList : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client;
 
-  public ApiToDoItemsControllerList(CustomWebApplicationFactory<Startup> factory)
+  public ApiToDoItemsControllerList(CustomWebApplicationFactory<Program> factory)
   {
     _client = factory.CreateClient();
   }

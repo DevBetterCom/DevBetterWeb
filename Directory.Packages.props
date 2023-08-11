@@ -39,7 +39,7 @@
     <PackageVersion Include="ILogger.Moq" Version="1.1.10" />
     <PackageVersion Include="Markdig" Version="0.31.0" />
     <PackageVersion Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
-    <PackageVersion Include="MediatR" Version="11.0.0" />
+    <PackageVersion Include="MediatR" Version="12.1.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
@@ -65,8 +65,10 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="ReportGenerator" Version="5.1.19" />
     <PackageVersion Include="Sendgrid" Version="9.28.1" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageVersion Include="Serilog" Version="3.0.1" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.1-dev-00040" />
+    <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageVersion Include="SQLite" Version="3.13.0" />

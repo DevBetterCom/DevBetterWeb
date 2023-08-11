@@ -5,11 +5,11 @@ using Xunit;
 
 namespace DevBetterWeb.FunctionalTests.RazorPages;
 
-public class FaqPageGet : IClassFixture<CustomWebApplicationFactory<Startup>>
+public class FaqPageGet : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client;
 
-  public FaqPageGet(CustomWebApplicationFactory<Startup> factory)
+  public FaqPageGet(CustomWebApplicationFactory<Program> factory)
   {
     _client = factory.CreateClient();
   }
