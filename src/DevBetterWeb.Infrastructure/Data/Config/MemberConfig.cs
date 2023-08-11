@@ -37,8 +37,8 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
 
     builder.OwnsOne(x => x.CityLocation, cl =>
     {
-      cl.Property(p => p!.Latitude).HasDefaultValue(null);
-      cl.Property(p => p!.Longitude).HasDefaultValue(null);
+      cl.Property(p => p!.Latitude).HasDefaultValue(null).HasColumnType("decimal(18,4)");
+      cl.Property(p => p!.Longitude).HasDefaultValue(null).HasColumnType("decimal(18,4)");
     });
 
     builder.OwnsOne(x => x.Birthday, bd =>
