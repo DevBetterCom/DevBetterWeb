@@ -185,14 +185,11 @@ if (app.Environment.IsDevelopment())
 	});
 }
 
-app.UseEndpoints(endpoints =>
-{
-	endpoints.MapRazorPages();
-	endpoints.MapDefaultControllerRoute();
-});
+app.MapRazorPages();
+app.MapDefaultControllerRoute();
 
 // seed database
-SeedDatabase(app);
+await SeedDatabase(app);
 
 app.Run();
 
