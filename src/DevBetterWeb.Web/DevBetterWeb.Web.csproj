@@ -49,6 +49,7 @@
 		<PackageReference Include="Sendgrid" />
 		<PackageReference Include="Serilog" />
 		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog.Sinks.MSSqlServer" />
 		<PackageReference Include="SixLabors.ImageSharp" />
 		<PackageReference Include="Stripe.net" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
