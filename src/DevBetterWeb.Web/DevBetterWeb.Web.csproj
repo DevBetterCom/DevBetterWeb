@@ -31,6 +31,7 @@
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="GoogleReCaptcha.V3" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+		<PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
