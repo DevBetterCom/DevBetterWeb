@@ -16,7 +16,7 @@ using Moq;
 
 namespace DevBetterWeb.Tests.Integration.Web;
 
-public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
+public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Program>
 {
   protected override void ConfigureWebHost(IWebHostBuilder builder)
   {
