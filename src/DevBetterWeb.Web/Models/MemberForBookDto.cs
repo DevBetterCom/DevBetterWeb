@@ -10,5 +10,6 @@ public class MemberForBookDto
 	public List<BookDto> BooksRead { get; set; } = new ();
 	public int BooksRank { get; set; }
 	public int BooksReadCount { get; set; }
+	public int BooksReadCountByCategory { get; set; }
 	public string? RoleName { get; set; }
 }

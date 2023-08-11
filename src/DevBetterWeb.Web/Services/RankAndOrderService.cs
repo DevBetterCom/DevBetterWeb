@@ -117,7 +117,7 @@ public class RankAndOrderService : IRankAndOrderService
 		{
 			Id = memberWhoHaveRead.Id,
 			FullName = memberWhoHaveRead.FullName,
-			BooksReadCount = memberWhoHaveRead.BooksRead!.Count(x => x.BookCategoryId == bookCategory.Id),
+			BooksReadCount = memberWhoHaveRead.BooksRead!.Count(x => x.BookCategoryId == bookCategory.Id && x.BookCategoryId == bookCategory.Id),
 			UserId = memberWhoHaveRead.UserId,
 		};
 
@@ -134,13 +134,20 @@ public class RankAndOrderService : IRankAndOrderService
 
 			memberToAdd.RoleName = AuthConstants.Roles.ALUMNI;
 			bookCategory.Alumnus.Add(memberToAdd);
+
+			var existingMemberInMembers = bookCategory.Members.FirstOrDefault(m => m.Id == memberWhoHaveRead.Id);
+			if (existingMemberInMembers != null)
+			{
+				bookCategory.Members.Remove(existingMemberInMembers);
+			}
 		}
 		else
 		{
-			var member = bookCategory.Members.FirstOrDefault(m => m.Id == memberWhoHaveRead.Id);
-			if (member != null)
+			var memberIndex = bookCategory.Members.FindIndex(m => m.Id == memberWhoHaveRead.Id);
+			if (memberIndex >= 0)
 			{
-				member.RoleName = AuthConstants.Roles.MEMBERS;
+				bookCategory.Members[memberIndex] = memberToAdd;
+				bookCategory.Members[memberIndex].RoleName = AuthConstants.Roles.MEMBERS;
 				return;
 			}
 

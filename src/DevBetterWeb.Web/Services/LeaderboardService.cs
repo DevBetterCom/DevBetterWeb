@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Web.Interfaces;
+﻿using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,7 +26,6 @@ public class LeaderboardService : ILeaderboardService
 
 		bookCategories = await _filteredLeaderboardService.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories);
 
-		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(bookCategories);
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
