@@ -18,7 +18,7 @@
             <br />
             <p>Members of this channel will fast-track their careers through professional group mentorship. This program is focused exclusively on software developers seeking to maximize their career growth and will cover critical technical and non-technical topics.</p>
             <br />
-            @if (Model.IsReCaptchaValid)
+            @if (Model.IsReCaptchaValid || Model.HasCaptchaBeenCompleted)
             {
                 <h3>Choose between two subscription plans:</h3>
                 <div class="row">
