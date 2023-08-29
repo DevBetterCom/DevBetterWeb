@@ -32,6 +32,8 @@ using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
+// 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
