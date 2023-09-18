@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Moq;
+﻿using System.Threading.Tasks;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests;
@@ -14,7 +13,7 @@ public class SendCancellationEmailAsync : MemberSubscriptionCancellationServiceT
   {
     await _memberCancellationService.SendCancellationEmailAsync(_email);
 
-    _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()));
+    await _emailService.Received().SendEmailAsync(_email, Arg.Any<string>(), Arg.Any<string>());
   }
 }
 

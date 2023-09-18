@@ -4,97 +4,117 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.Specs;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests;
 
 public class VerifyValidEmailAndInviteCode
 {
-  private readonly Mock<IRepository<Member>> _memberRepository = new();
-  private readonly Mock<IRepository<Invitation>> _invitationRepository = new();
-  private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService = new();
-  private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription = new();
-  private readonly Mock<IEmailService> _emailService = new();
-  private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
-  private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
+	private readonly IRepository<Member> _memberRepository = Substitute.For<IRepository<Member>>();
+	private readonly IRepository<Invitation> _invitationRepository = Substitute.For<IRepository<Invitation>>();
+	private readonly IUserRoleMembershipService _userRoleMembershipService = Substitute.For<IUserRoleMembershipService>();
+	private readonly IPaymentHandlerSubscription _paymentHandlerSubscription =
+		Substitute.For<IPaymentHandlerSubscription>();
+	private readonly IEmailService _emailService = Substitute.For<IEmailService>();
+	private readonly IMemberRegistrationService _memberRegistrationService = Substitute.For<IMemberRegistrationService>();
+	private readonly IAppLogger<NewMemberService> _logger = Substitute.For<IAppLogger<NewMemberService>>();
+	private readonly MemberAddBillingActivityService _memberAddBillingActivityService =
+		Substitute.For<MemberAddBillingActivityService>();
 
-  private readonly INewMemberService _newMemberService;
+	private readonly INewMemberService _newMemberService;
 
-  private readonly string _email = "TestEmail";
-  private readonly string _inviteCode = "TestInviteCode";
-  private readonly string _subscriptionId = "TestSubscriptionId";
+	private readonly string _email = "TestEmail";
+	private readonly string _inviteCode = "TestInviteCode";
+	private readonly string _subscriptionId = "TestSubscriptionId";
 
-  private readonly string _validEmailAndInviteCodeString = "success";
-  private readonly string _invalidEmailString = "Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvalidEmailException";
-  private readonly string _invalidInviteCodeString = "Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvitationNotFoundException";
-  private readonly string _inactiveInviteString = "Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvitationNotActiveException";
+	private readonly string _validEmailAndInviteCodeString = "success";
 
-  public VerifyValidEmailAndInviteCode()
-  {
-    _newMemberService = new NewMemberService(_invitationRepository.Object,
-      _userRoleMembershipService.Object,
-      _paymentHandlerSubscription.Object,
-      _emailService.Object,
-      _memberRegistrationService.Object,
-      _logger.Object,
-              null!); // TODO: Add dependency
-  }
+	private readonly string _invalidEmailString =
+		"Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvalidEmailException";
 
-  [Fact]
-  public async Task ReturnsSuccessGivenValidEmailAndInviteCode()
-  {
-    var invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+	private readonly string _invalidInviteCodeString =
+		"Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvitationNotFoundException";
 
-    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
+	private readonly string _inactiveInviteString =
+		"Invalid email or invite code: DevBetterWeb.Core.Exceptions.InvitationNotActiveException";
 
-    var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
+	public VerifyValidEmailAndInviteCode()
+	{
+		_newMemberService = new NewMemberService(_invitationRepository,
+			_userRoleMembershipService,
+			_paymentHandlerSubscription,
+			_emailService,
+			_memberRegistrationService,
+			_logger,
+			_memberAddBillingActivityService);
+	}
 
-    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
-    Assert.Equal(_validEmailAndInviteCodeString, result.Value);
-  }
+	[Fact]
+	public async Task ReturnsSuccessGivenValidEmailAndInviteCode()
+	{
+		var invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-  [Fact]
-  public async Task ReturnsExceptionMessageGivenInvalidEmail()
-  {
-    var invitation = new Invitation("", _inviteCode, _subscriptionId);
+		_invitationRepository
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None)!
+			.Returns(Task.FromResult(invitation));
 
-    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(invitation);
+		var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
+		await _invitationRepository.Received(1)
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+		Assert.Equal(_validEmailAndInviteCodeString, result.Value);
+	}
 
-    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
-    Assert.Equal(_invalidEmailString, result.Value);
-  }
+	[Fact]
+	public async Task ReturnsExceptionMessageGivenInvalidEmail()
+	{
+		var invitation = new Invitation("", _inviteCode, _subscriptionId);
 
-  [Fact]
-  public async Task ReturnsExceptionMessageGivenInvalidInviteCode()
-  {
+		_invitationRepository
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None)!
+			.Returns(Task.FromResult(invitation) );
 
+		var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
+
+		await _invitationRepository.Received(1)
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+		Assert.Equal(_invalidEmailString, result.Value);
+	}
+
+	[Fact]
+	public async Task ReturnsExceptionMessageGivenInvalidInviteCode()
+	{
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-    _ = _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync((Invitation)null);
+		_ = _invitationRepository
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None)
+			.Returns( Task.FromResult((Invitation)null));
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
-    var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
+		var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
-    Assert.Equal(_invalidInviteCodeString, result.Value);
-  }
+		await _invitationRepository.Received(1)
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+		Assert.Equal(_invalidInviteCodeString, result.Value);
+	}
 
-  [Fact]
-  public async Task ReturnsExceptionMessageGivenInactiveInviteCode()
-  {
-    Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+	[Fact]
+	public async Task ReturnsExceptionMessageGivenInactiveInviteCode()
+	{
+		Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-    _invitation.Deactivate();
+		_invitation.Deactivate();
 
-    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
+		_invitationRepository
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None)
+			.Returns(Task.FromResult(_invitation));
 
-    var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
+		var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Verify(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None), Times.Once);
-    Assert.Equal(_inactiveInviteString, result.Value);
-  }
+		await _invitationRepository.Received(1)
+			.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+		Assert.Equal(_inactiveInviteString, result.Value);
+	}
 }

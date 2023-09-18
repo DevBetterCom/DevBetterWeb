@@ -10,12 +10,19 @@ public class MemberAddBillingActivityService : IMemberAddBillingActivityService
 {
   private readonly IRepository<Member> _memberRepository;
   private readonly IMemberLookupService _memberLookupService;
-
+  
   public MemberAddBillingActivityService(IRepository<Member> memberRepository,
     IMemberLookupService memberLookup)
   {
     _memberRepository = memberRepository;
     _memberLookupService = memberLookup;
+  }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+  public MemberAddBillingActivityService()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+  {
+	  
   }
 
   /// <summary>
