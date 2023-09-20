@@ -36,7 +36,6 @@
     <PackageVersion Include="Flurl" Version="3.0.7" />
     <PackageVersion Include="Flurl.Http" Version="3.2.4" />
     <PackageVersion Include="GoogleReCaptcha.V3" Version="1.3.1" />
-    <PackageVersion Include="ILogger.Moq" Version="1.1.10" />
     <PackageVersion Include="Markdig" Version="0.33.0" />
     <PackageVersion Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
     <PackageVersion Include="MediatR" Version="12.1.1" />

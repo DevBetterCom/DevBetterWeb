@@ -5,45 +5,53 @@ using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
-using System.Linq;
+using NSubstitute;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class UpdateBooksRank
 {
-	private readonly Mock<IRankingService> _mockRankingService;
+	private readonly IRankingService _mockRankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public UpdateBooksRank()
 	{
-		_mockRankingService = new Mock<IRankingService>();
-		var mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, mockMemberService.Object);
+		_mockRankingService = Substitute.For<IRankingService>();
+		var mockMemberService = Substitute.For<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(_mockRankingService, mockMemberService);
 	}
 
 	private List<BookCategoryDto> GetTestBookCategories()
 	{
 		return new List<BookCategoryDto>
+		{
+			new BookCategoryDto
+			{
+				Id = 1,
+				Books = new List<BookDto>
 				{
-						new BookCategoryDto
+					new BookDto
+					{
+						Id = 1,
+						MembersWhoHaveRead = new List<MemberForBookDto>
 						{
-								Id = 1,
-								Books = new List<BookDto>
-								{
-										new BookDto
-										{
-												Id = 1,
-												MembersWhoHaveRead = new List<MemberForBookDto>
-												{
-														new MemberForBookDto { Id = 1, RoleName = AuthConstants.Roles.ALUMNI, UserId = "1", FullName = "Alumni1" },
-														new MemberForBookDto { Id = 2, RoleName = AuthConstants.Roles.MEMBERS, UserId = "2", FullName = "Member1" },
-														new MemberForBookDto { Id = 3, RoleName = AuthConstants.Roles.ALUMNI, UserId = "3", FullName = "Alumni2" }
-												}
-										}
-								}
+							new MemberForBookDto
+							{
+								Id = 1, RoleName = AuthConstants.Roles.ALUMNI, UserId = "1", FullName = "Alumni1"
+							},
+							new MemberForBookDto
+							{
+								Id = 2, RoleName = AuthConstants.Roles.MEMBERS, UserId = "2", FullName = "Member1"
+							},
+							new MemberForBookDto
+							{
+								Id = 3, RoleName = AuthConstants.Roles.ALUMNI, UserId = "3", FullName = "Alumni2"
+							}
 						}
-				};
+					}
+				}
+			}
+		};
 	}
 
 	[Fact]
@@ -56,7 +64,7 @@ public class UpdateBooksRank
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
+		_mockRankingService.Received(bookCategories.Count).CalculateBookRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
@@ -69,7 +77,7 @@ public class UpdateBooksRank
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Never());
+		_mockRankingService.DidNotReceive().CalculateBookRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
@@ -77,13 +85,13 @@ public class UpdateBooksRank
 	{
 		// Arrange
 		var bookCategories = GetTestBookCategories();
-		bookCategories.Add(GetTestBookCategories().First());
+		bookCategories.Add(GetTestBookCategories()[0]);
 
 		// Act
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
+		_mockRankingService.Received(bookCategories.Count).CalculateBookRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
@@ -106,7 +114,7 @@ public class UpdateBooksRank
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Never());
+		_mockRankingService.DidNotReceive().CalculateBookRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
@@ -114,7 +122,7 @@ public class UpdateBooksRank
 	{
 		// Arrange
 		var bookCategories = GetTestBookCategories();
-		bookCategories.First().Books.Add(new BookDto
+		bookCategories[0].Books.Add(new BookDto
 		{
 			Id = 2,
 			MembersWhoHaveRead = new List<MemberForBookDto>
@@ -124,23 +132,20 @@ public class UpdateBooksRank
 			}
 		});
 
-		_mockRankingService.Setup(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()))
-			.Callback((List<BookDto> books) =>
+		_mockRankingService.CalculateBookRank(Arg.Do<List<BookDto>>(books =>
+		{
+			foreach (var book in books)
 			{
-				foreach (var book in books)
-				{
-					book.Rank = book.Id!.Value;
-				}
-			});
+				book.Rank = book.Id!.Value;
+			}
+		}));
 
 		// Act
 		_rankAndOrderService.UpdateBooksRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateBookRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
-		Assert.Equal(1, bookCategories.First().Books.First().Rank);
-		Assert.Equal(2, bookCategories.First().Books.Last().Rank);
+		_mockRankingService.Received(bookCategories.Count).CalculateBookRank(Arg.Any<List<BookDto>>());
+		Assert.Equal(1, bookCategories[0].Books[0].Rank);
+		Assert.Equal(2, bookCategories[0].Books[1].Rank);
 	}
-
 }
-

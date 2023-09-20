@@ -1,25 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DevBetterWeb.Core;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
-using System.Linq;
-using System;
+using NSubstitute;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class UpdateMembersReadRank
 {
-	private readonly Mock<IRankingService> _mockRankingService;
+	private readonly IRankingService _rankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public UpdateMembersReadRank()
 	{
-		_mockRankingService = new Mock<IRankingService>();
-		var mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, mockMemberService.Object);
+		_rankingService = Substitute.For<IRankingService>();
+		var mockMemberService = Substitute.For<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(_rankingService, mockMemberService);
 	}
 
 	private List<BookCategoryDto> GetTestBookCategories()
@@ -36,9 +36,18 @@ public class UpdateMembersReadRank
 						Id = 1,
 						MembersWhoHaveRead = new List<MemberForBookDto>
 						{
-							new MemberForBookDto { Id = 1, RoleName = AuthConstants.Roles.ALUMNI, UserId = "1", FullName = "Alumni1" },
-							new MemberForBookDto { Id = 2, RoleName = AuthConstants.Roles.MEMBERS, UserId = "2", FullName = "Member1" },
-							new MemberForBookDto { Id = 3, RoleName = AuthConstants.Roles.ALUMNI, UserId = "3", FullName = "Alumni2" }
+							new MemberForBookDto
+							{
+								Id = 1, RoleName = AuthConstants.Roles.ALUMNI, UserId = "1", FullName = "Alumni1"
+							},
+							new MemberForBookDto
+							{
+								Id = 2, RoleName = AuthConstants.Roles.MEMBERS, UserId = "2", FullName = "Member1"
+							},
+							new MemberForBookDto
+							{
+								Id = 3, RoleName = AuthConstants.Roles.ALUMNI, UserId = "3", FullName = "Alumni2"
+							}
 						}
 					}
 				}
@@ -58,8 +67,8 @@ public class UpdateMembersReadRank
 		// Assert
 		foreach (var category in bookCategories)
 		{
-			_mockRankingService.Verify(rs => rs.CalculateMemberRank(category.Members), Times.AtLeastOnce());
-			_mockRankingService.Verify(rs => rs.CalculateMemberRank(category.Alumnus), Times.AtLeastOnce());
+			_rankingService.Received(1).CalculateMemberRank(category.Members);
+			_rankingService.Received(1).CalculateMemberRank(category.Alumnus);
 		}
 	}
 
@@ -73,9 +82,8 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
+		_rankingService.DidNotReceive().CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
-
 
 	[Fact]
 	public void CalculateMemberRankForEachCategoryGivenMultipleBookCategories()
@@ -88,7 +96,7 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Exactly(bookCategories.Count * 2));
+		_rankingService.Received(bookCategories.Count * 2).CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
 
 	[Fact]
@@ -157,6 +165,6 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
+		_rankingService.DidNotReceive().CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
 }

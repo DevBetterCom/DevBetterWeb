@@ -6,20 +6,20 @@ using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.FilteredLeaderboardTests;
 
 public class FilteredLeaderboardServiceTests
 {
-	private readonly Mock<INonCurrentMembersService> _nonCurrentMembersServiceMock;
-	private readonly Mock<IMemberService> _memberServiceMock;
+	private readonly INonCurrentMembersService _nonCurrentMembersServiceMock;
+	private readonly IMemberService _memberServiceMock;
 
 	public FilteredLeaderboardServiceTests()
 	{
-		_nonCurrentMembersServiceMock = new Mock<INonCurrentMembersService>();
-		_memberServiceMock = new Mock<IMemberService>();
+		_nonCurrentMembersServiceMock = Substitute.For<INonCurrentMembersService>();
+		_memberServiceMock = Substitute.For<IMemberService>();
 	}
 
 	[Fact]
@@ -30,15 +30,15 @@ public class FilteredLeaderboardServiceTests
 		List<string> nonUsersId = new List<string> { "3" };
 		List<int> nonMembersId = new List<int> { 3 };
 
-		_nonCurrentMembersServiceMock.Setup(service => service.GetUsersIdsWithoutRolesAsync())
-				.ReturnsAsync(nonUsersId);
-		_nonCurrentMembersServiceMock.Setup(service => service.GetNonCurrentMembersAsync(nonUsersId, CancellationToken.None))
-				.ReturnsAsync(nonMembersId);
+		_nonCurrentMembersServiceMock.GetUsersIdsWithoutRolesAsync()
+			.Returns(nonUsersId);
+		_nonCurrentMembersServiceMock.GetNonCurrentMembersAsync(nonUsersId, CancellationToken.None)
+			.Returns(nonMembersId);
 
-		_memberServiceMock.Setup(service => service.GetActiveAlumniMembersAsync())
-				.ReturnsAsync(new List<Member>());
+		_memberServiceMock.GetActiveAlumniMembersAsync()
+			.Returns(new List<Member>());
 
-		var service = new FilteredLeaderboardService(_nonCurrentMembersServiceMock.Object, _memberServiceMock.Object);
+		var service = new FilteredLeaderboardService(_nonCurrentMembersServiceMock, _memberServiceMock);
 
 		// Act
 		var filteredBookCategories = await service.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories);
@@ -57,34 +57,34 @@ public class FilteredLeaderboardServiceTests
 	private List<BookCategoryDto> CreateSampleBookCategories()
 	{
 		return new List<BookCategoryDto>
+		{
+			new()
+			{
+				Id = 1,
+				Title = "Category 1",
+				Members = new List<MemberForBookDto>
+				{
+					new() { Id = 1, FullName = "Member 1", BooksReadCountByCategory = 1 },
+					new() { Id = 2, FullName = "Member 2", BooksReadCountByCategory = 1 },
+					new() { Id = 3, FullName = "Non-Member", BooksReadCountByCategory = 1 }
+				},
+				Books = new List<BookDto>
+				{
+					new BookDto
 					{
-							new()
-							{
-									Id = 1,
-									Title = "Category 1",
-									Members = new List<MemberForBookDto>
-									{
-											new() { Id = 1, FullName = "Member 1", BooksReadCountByCategory = 1 },
-											new() { Id = 2, FullName = "Member 2", BooksReadCountByCategory = 1 },
-											new() { Id = 3, FullName = "Non-Member", BooksReadCountByCategory = 1 }
-									},
-									Books = new List<BookDto>
-									{
-											new BookDto
-											{
-													Id = 1,
-													Title = "Book 1",
-													Author = "Author 1",
-													MembersWhoHaveReadCount = 3,
-													MembersWhoHaveRead = new List<MemberForBookDto>
-													{
-															new() { Id = 1, FullName = "Member 1" },
-															new() { Id = 2, FullName = "Member 2" },
-															new() { Id = 3, FullName = "Non-Member" }
-													}
-											}
-									}
-							}
-					};
+						Id = 1,
+						Title = "Book 1",
+						Author = "Author 1",
+						MembersWhoHaveReadCount = 3,
+						MembersWhoHaveRead = new List<MemberForBookDto>
+						{
+							new() { Id = 1, FullName = "Member 1" },
+							new() { Id = 2, FullName = "Member 2" },
+							new() { Id = 3, FullName = "Non-Member" }
+						}
+					}
+				}
+			}
+		};
 	}
 }
