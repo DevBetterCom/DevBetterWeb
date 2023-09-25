@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;

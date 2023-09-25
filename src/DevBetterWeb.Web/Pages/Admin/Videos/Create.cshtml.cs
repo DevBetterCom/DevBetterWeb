@@ -3,8 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

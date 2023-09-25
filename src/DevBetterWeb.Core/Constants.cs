@@ -19,7 +19,7 @@ public static class Constants
   public static class ConfigKeys
   {
     public const string FileStorageConnectionString = "storageconnectionstring";
-    public const string VimeoToken = "VIMEO_TOKEN";
     public const string ApiKey = "API_KEY";
+    public const string VimeoSettings = "VimeoSettings";
   }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.Extensions.Logging;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Infrastructure.Services;
 

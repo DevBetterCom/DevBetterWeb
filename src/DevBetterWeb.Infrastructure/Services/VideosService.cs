@@ -7,7 +7,6 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Infrastructure.Services;
 

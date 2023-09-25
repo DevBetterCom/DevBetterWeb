@@ -1,9 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
 using DevBetterWeb.Web.Models;

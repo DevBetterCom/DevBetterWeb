@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
 
 namespace DevBetterWeb.Core.Services;
 

@@ -1,15 +1,6 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using Ardalis.ApiEndpoints;
-using AutoMapper;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Core.Events;
-using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Services.VideoServices;
-using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
 using DevBetterWeb.Core;

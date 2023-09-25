@@ -122,6 +122,10 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 
+VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
+builder.Services.AddSingleton(vimeoSettings);
+builder.Services.AddVimeoServices(vimeoSettings.Token);
+
 // list services
 builder.Services.Configure<ServiceConfig>(config =>
 {

@@ -64,6 +64,7 @@
     <PackageVersion Include="Moq" Version="4.18.4" />
     <PackageVersion Include="NETStandard.Library" Version="2.0.3" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="NimblePros.Vimeo" Version="1.0.2" />
     <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="ReportGenerator" Version="5.1.25" />
     <PackageVersion Include="Sendgrid" Version="9.28.1" />

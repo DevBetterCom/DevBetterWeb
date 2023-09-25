@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevBetterWeb.Vimeo.Models;
+using NimblePros.Vimeo.Models;
 
 namespace DevBetterWeb.Core.Interfaces;
 
