@@ -6,6 +6,7 @@ using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Pages.Admin.Videos;
 
@@ -30,12 +31,11 @@ public class DetailsModel : PageModel
 
   public async Task<IActionResult> OnGet(string videoId, string? startTime = null)
   {
-    var video = await _getVideoService.ExecuteAsync(videoId);
+    var video = await _getVideoService.ExecuteAsync(long.Parse(videoId));
     if (video?.Data == null) return NotFound(videoId);
 
     var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link);
     if (oEmbed?.Data == null) return NotFound(videoId);
-
     var spec = new ArchiveVideoByVideoIdSpec(videoId);
     var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo == null) return NotFound(videoId);

@@ -8,6 +8,7 @@ using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Pages.Admin.Videos;
 
@@ -37,10 +38,13 @@ public class DeleteModel : PageModel
       return NotFound();
     }
 
-    var video = await _getVideoService.ExecuteAsync(id);
+		var videoId = long.Parse(id);
+
+		var video = await _getVideoService.ExecuteAsync(videoId);
     if (video?.Data == null)
     {
-      await _deleteVideoService.ExecuteAsync(id);
+			var videoDeleteRequest = new DeleteVideoRequest(videoId);
+			await _deleteVideoService.ExecuteAsync(videoDeleteRequest);
 
       return RedirectToPage("./Index");
     }
@@ -51,20 +55,24 @@ public class DeleteModel : PageModel
 
   public async Task<IActionResult> OnPostAsync(string id)
   {
-    if (id == null)
+    if (string.IsNullOrEmpty(id))
     {
       return NotFound();
     }
 
-    var video = await _getVideoService.ExecuteAsync(id);
+		var videoId = long.Parse(id);
+
+
+		var video = await _getVideoService.ExecuteAsync(videoId);
     if (video?.Data == null)
     {
       return NotFound();
     }
 
-    await _deleteVideoService.ExecuteAsync(id);
+		var videoDeleteRequest = new DeleteVideoRequest(videoId);
+    await _deleteVideoService.ExecuteAsync(videoDeleteRequest);
 
-    var spec = new ArchiveVideoByVideoIdSpec(id);
+    var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
     var archiveVideo = await _repository.FirstOrDefaultAsync(spec);
     if (archiveVideo != null)
     {

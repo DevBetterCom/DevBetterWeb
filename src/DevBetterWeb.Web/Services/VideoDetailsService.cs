@@ -9,20 +9,24 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Interfaces;
 using Flurl.Http;
 using Microsoft.AspNetCore.Identity;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.TextTrackServices;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Services;
 
 public class VideoDetailsService : IVideoDetailsService
 {
 	private readonly GetVideoService _getVideoService;
-	private readonly GetAllTextTracksService _getAllTextTracksService;
+	private readonly GetAllTextTracksForVideoService _getAllTextTracksService;
 	private readonly IRepository<ArchiveVideo> _archiveVideoRepository;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IWebVTTParsingService _vttService;
 
 	public VideoDetailsService(
 		GetVideoService getVideoService,
-		GetAllTextTracksService getAllTextTracksService,
+		GetAllTextTracksForVideoService getAllTextTracksService,
 		IRepository<ArchiveVideo> archiveVideoRepository,
 		UserManager<ApplicationUser> userManager,
 		IWebVTTParsingService vttService)
@@ -33,13 +37,14 @@ public class VideoDetailsService : IVideoDetailsService
 		_userManager = userManager;
 		_vttService = vttService;
 	}
-	public async Task<(HttpResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
+	public async Task<(IApiResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
 		string videoId,
 		string? currentUserName,
 		string currentVideoURL)
 	{
-		var videoTask = _getVideoService.ExecuteAsync(videoId);
-		var textTracksTask = _getAllTextTracksService.ExecuteAsync(videoId);
+		var videoTask = _getVideoService.ExecuteAsync(long.Parse(videoId));
+		var getAllTextTracksForVideoRequest = new GetAllTextTracksForVideoRequest(long.Parse(videoId));
+		var textTracksTask = _getAllTextTracksService.ExecuteAsync(getAllTextTracksForVideoRequest);
 		var videoSpec = new ArchiveVideoByVideoIdFullAggregateSpec(videoId);
 		var archiveVideoTask = _archiveVideoRepository.FirstOrDefaultAsync(videoSpec);
 		var applicationUserTask = _userManager.FindByNameAsync(currentUserName!);

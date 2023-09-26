@@ -6,6 +6,7 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Endpoints;
 
@@ -35,7 +36,8 @@ public class DeleteVideo : EndpointBaseAsync
 			await _repository.DeleteAsync(existVideo, cancellationToken);
 		}
 
-		var deleteResponse = await _deleteVideoService.ExecuteAsync(vimeoVideoId, cancellationToken);
+		var deleteVideoRequest = new DeleteVideoRequest(long.Parse(vimeoVideoId));
+		var deleteResponse = await _deleteVideoService.ExecuteAsync(deleteVideoRequest, cancellationToken);
 		_ = _videosCacheService.UpdateAllVideosAsync();
 
 		return (ActionResult)deleteResponse.ActionResult;

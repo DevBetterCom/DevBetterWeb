@@ -8,6 +8,7 @@ using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Endpoints;
 
@@ -32,12 +33,13 @@ public class UpdateDescription : EndpointBaseAsync
 	[HttpPost("videos/update-description")]
 	public override async Task<ActionResult> HandleAsync([FromBody] UpdateDescriptionRequest updateDescription, CancellationToken cancellationToken = default)
 	{
-		var video = await _getVideoService.ExecuteAsync(updateDescription.VideoId, cancellationToken);
+		if (string.IsNullOrEmpty(updateDescription.VideoId)) return NotFound($"Video Id is Empty");
+
+		var video = await _getVideoService.ExecuteAsync(long.Parse(updateDescription.VideoId), cancellationToken);
 		if (video?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
 
 		var oEmbed = await _getOEmbedVideoService.ExecuteAsync(video.Data.Link, cancellationToken);
 		if (oEmbed?.Data == null) return NotFound($"Video Not Found {updateDescription.VideoId}");
-
 		var spec = new ArchiveVideoByVideoIdSpec(updateDescription.VideoId!);
 		var archiveVideo = await _archiveVideoRepository.FirstOrDefaultAsync(spec, cancellationToken);
 		if (archiveVideo == null)
@@ -49,7 +51,7 @@ public class UpdateDescription : EndpointBaseAsync
 		await _archiveVideoRepository.UpdateAsync(archiveVideo, cancellationToken);
 		await _archiveVideoRepository.SaveChangesAsync(cancellationToken);
 
-		var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data);
+		var oEmbedViewModel = new OEmbedViewModel(oEmbed.Data!);
 		oEmbedViewModel.VideoId = int.Parse(archiveVideo.VideoId!);
 		oEmbedViewModel.DescriptionMd = _markdownService.RenderHTMLFromMD(archiveVideo.Description);
 		oEmbedViewModel.Description = archiveVideo.Description;

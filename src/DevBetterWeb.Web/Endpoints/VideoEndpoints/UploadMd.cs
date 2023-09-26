@@ -9,13 +9,15 @@ using DevBetterWeb.Core.Specs;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
 using DevBetterWeb.Web.Models;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.ApiClient.Models;
 
 namespace DevBetterWeb.Web.Endpoints;
 
 [UploaderApiOrRoleAuthorization(AuthConstants.Roles.ADMINISTRATORS)]
 public class UploadMd : EndpointBaseAsync
 	.WithRequest<UploadMdRequest>
-	.WithResult<HttpResponse<bool>>
+	.WithResult<IApiResponse<bool>>
 {
 	private readonly IRepository<ArchiveVideo> _archiveVideoRepository;
 
@@ -25,18 +27,18 @@ public class UploadMd : EndpointBaseAsync
 	}
 
 	[HttpPost("videos/upload-md")]
-	public override async Task<HttpResponse<bool>> HandleAsync([FromBody] UploadMdRequest request, CancellationToken cancellationToken = default)
+	public override async Task<IApiResponse<bool>> HandleAsync([FromBody] UploadMdRequest request, CancellationToken cancellationToken = default)
 	{
 		var spec = new ArchiveVideoByVideoIdSpec(request.VideoId!);
 		var existVideo = await _archiveVideoRepository.FirstOrDefaultAsync(spec, cancellationToken);
 		if (existVideo == null)
 		{
-			return new HttpResponse<bool>(false, HttpStatusCode.NotFound);
+			return new ApiResponse<bool>(false, HttpStatusCode.NotFound);
 		}
 
 		existVideo.Description = request.Md;
 		await _archiveVideoRepository.UpdateAsync(existVideo, cancellationToken);
 
-		return new HttpResponse<bool>(true, HttpStatusCode.OK);
+		return new ApiResponse<bool>(true, HttpStatusCode.OK);
 	}
 }

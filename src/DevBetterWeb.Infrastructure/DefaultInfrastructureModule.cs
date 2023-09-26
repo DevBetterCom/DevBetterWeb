@@ -9,6 +9,7 @@ using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using NimblePros.Vimeo.Extensions;
 using Stripe;
 using Stripe.Issuing;
 using CardService = Stripe.Issuing.CardService;

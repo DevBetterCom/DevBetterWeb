@@ -11,6 +11,8 @@ using DevBetterWeb.Core.Interfaces;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using DevBetterWeb.Core;
 using Microsoft.Extensions.DependencyInjection;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Endpoints;
 

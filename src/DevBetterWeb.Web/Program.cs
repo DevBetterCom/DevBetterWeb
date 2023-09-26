@@ -31,6 +31,7 @@ using Serilog;
 using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using NimblePros.Vimeo.Extensions;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -152,10 +153,9 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
 	//	containerBuilder.RegisterModule(new DefaultCoreModule());
-	string vimeoToken = builder.Configuration![Constants.ConfigKeys.VimeoToken]!;
 	bool isDevelopment = builder.Environment.EnvironmentName == "Development";
 	containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDevelopment,
-		vimeoToken));
+		vimeoSettings.Token));
 });
 
 // TODO: Configure Testing and Production Services from Startup
