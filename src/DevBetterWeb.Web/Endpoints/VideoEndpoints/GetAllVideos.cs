@@ -59,7 +59,7 @@ public class GetAllVideos : EndpointBaseAsync
 			{
 				var videosDtoToAdd = new ArchiveVideoDto();
 				videosDtoToAdd.Title = vimeoVideo.Name;
-				videosDtoToAdd.VideoId = vimeoVideo.Id;
+				videosDtoToAdd.VideoId = vimeoVideo.Id.ToString();
 				videosDtoToAdd.VideoUrl = vimeoVideo.Uri;
 				videosDtoToAdd.DateUploaded = vimeoVideo.CreatedTime;
 				videosDtoToAdd.IsUploaded = true;
