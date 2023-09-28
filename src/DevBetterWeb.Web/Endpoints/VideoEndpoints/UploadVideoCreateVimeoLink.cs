@@ -19,7 +19,7 @@ public class UploadVideoCreateVimeoLink : EndpointBaseAsync
 		_uploadResumableCreateVideoLinkService = uploadResumableCreateVideoLinkService;
 	}
 
-	[HttpPost("videos/upload-video-create-url")]
+	[HttpPost("videos/upload-video-create-url-old")]
 	public override async Task<ActionResult<UploadVideoResumableInfo>> HandleAsync([FromBody] UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
 	{
 		var result = await _uploadResumableCreateVideoLinkService.ExecuteAsync(request, cancellationToken);

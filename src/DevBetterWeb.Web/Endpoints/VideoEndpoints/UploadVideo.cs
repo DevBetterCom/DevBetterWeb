@@ -35,7 +35,7 @@ public class UploadVideo : EndpointBaseAsync
 		_serviceScopeFactory = serviceScopeFactory;
 	}
 
-	[HttpPost("videos/upload-video")]
+	[HttpPost("videos/upload-video-old")]
 	public override async Task<ActionResult<UploadVideoResumableInfo>> HandleAsync([FromBody] UploadVideoResumableInfo request, CancellationToken cancellationToken = default)
 	{
 		var result = await _uploadResumableVideoService.ExecuteAsync(request, cancellationToken);
