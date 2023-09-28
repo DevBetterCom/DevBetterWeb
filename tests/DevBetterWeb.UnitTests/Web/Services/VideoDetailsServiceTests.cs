@@ -5,6 +5,7 @@ using Moq;
 using Xunit;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Services;
+using NimblePros.Vimeo.Models;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 
