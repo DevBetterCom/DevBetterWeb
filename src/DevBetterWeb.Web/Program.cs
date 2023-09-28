@@ -122,6 +122,8 @@ builder.Services.AddScoped<IRankingService, RankingService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
+builder.Services.AddScoped<IAddCreatedVideoToFolderService, AddCreatedVideoToFolderService>();
+builder.Services.AddScoped<ICreateVideoService, CreateVideoService>();
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
