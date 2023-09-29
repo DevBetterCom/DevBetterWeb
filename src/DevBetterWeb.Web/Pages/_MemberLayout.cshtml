@@ -93,6 +93,12 @@
                     <span>Resources</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/Calendar/Index">
+                    <i class="fas fa-fw fa-link"></i>
+                    <span>Live Meetings Calendar</span></a>
+            </li>
+
             @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
             {
                 <hr class="sidebar-divider">
