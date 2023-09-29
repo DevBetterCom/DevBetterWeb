@@ -1,5 +1,4 @@
 ﻿using DevBetterWeb.Core;
-using DevBetterWeb.Web.Models.Vimeo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,7 +13,4 @@ public class CreateModel : PageModel
   {
     return Page();
   }
-
-  [BindProperty]
-  public VideoModel VideoModel { get; set; } = new VideoModel();
 }
