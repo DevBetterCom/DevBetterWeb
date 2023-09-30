@@ -22,11 +22,10 @@ public class VideosService : IVideosService
   private readonly DeleteVideoService _deleteVideoService;
   private readonly GetVideoService _getVideoService;
   private readonly GetVideosUserAppearsService _getVideosUserAppearsService;
-  public readonly IVideosCacheService _videosCacheService;
 
   public VideosService(IAppLogger<VideosService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo,
 		CreateSetAnimatedThumbnailsForVideoService createAnimatedThumbnailsService, GetAllSetAnimatedThumbnailsForVideoService getAllAnimatedThumbnailService,
-    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetVideosUserAppearsService getVideosUserAppearsService, IVideosCacheService videosCacheService)
+    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetVideosUserAppearsService getVideosUserAppearsService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
@@ -35,7 +34,6 @@ public class VideosService : IVideosService
     _deleteVideoService = deleteVideoService;
     _getVideoService = getVideoService;
 		_getVideosUserAppearsService = getVideosUserAppearsService;
-    _videosCacheService = videosCacheService;
 
   }
 
@@ -59,20 +57,7 @@ public class VideosService : IVideosService
     }
   }
 
-  public async Task UpdateVideosCache(AppendOnlyStringList? messages)
-  {
-	  try
-	  {
-		  await _videosCacheService.UpdateAllVideosAsync();
-		  messages?.Append("Videos Cache Updated.");
-	  }
-	  catch (Exception ex)
-	  {
-		  _logger.LogError(ex, $"Error on Videos Cache Updated: {ex.Message}");
-	  }
-	}
-
-	public async Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages)
+  public async Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages)
   {
     var spec = new ArchiveVideoWithoutThumbnailSpec();
     var videos = await _repositoryArchiveVideo.ListAsync(spec);

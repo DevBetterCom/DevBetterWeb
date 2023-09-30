@@ -17,13 +17,11 @@ public class DeleteVideo : EndpointBaseAsync
 {
 	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly DeleteVideoService _deleteVideoService;
-	private readonly IVideosCacheService _videosCacheService;
 
-	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService, IVideosCacheService videosCacheService)
+	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService)
 	{
 		_repository = repository;
 		_deleteVideoService = deleteVideoService;
-		_videosCacheService = videosCacheService;
 	}
 
 	[HttpDelete("videos/uploader/delete-video/{vimeoVideoId}")]
@@ -38,7 +36,6 @@ public class DeleteVideo : EndpointBaseAsync
 
 		var deleteVideoRequest = new DeleteVideoRequest(long.Parse(vimeoVideoId));
 		var deleteResponse = await _deleteVideoService.ExecuteAsync(deleteVideoRequest, cancellationToken);
-		_ = _videosCacheService.UpdateAllVideosAsync();
 
 		return (ActionResult)deleteResponse.ActionResult;
 	}

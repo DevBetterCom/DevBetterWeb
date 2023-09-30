@@ -110,7 +110,6 @@ builder.Services.AddScoped<IUserLookupService, UserLookupService>();
 builder.Services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
 builder.Services.AddScoped<IVideosService, VideosService>();
-builder.Services.AddSingleton<IVideosCacheService, VideosCacheService>();
 
 builder.Services.AddScoped<IWebVTTParsingService, WebVTTParsingService>();
 builder.Services.AddScoped<IVideoDetailsService, VideoDetailsService>();
@@ -213,10 +212,6 @@ static async Task SeedDatabase(IHost host)
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
-
-	//TODO: need to be checked without token.
-	var videosCacheService = services.GetRequiredService<IVideosCacheService>();
-	await videosCacheService.UpdateAllVideosAsync();
 
 	if (environment == "Production")
 	{
