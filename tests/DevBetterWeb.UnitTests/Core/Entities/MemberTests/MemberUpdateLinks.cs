@@ -17,6 +17,7 @@ public class MemberUpdateLinks
   private string _initialTwitchUrl = "";
   private string _initialYouTubeUrl = "";
   private string _initialTwitterUrl = "";
+  private string _initialBlueskyUrl = "";
 
   private Member GetMemberWithDefaultLinks()
   {
@@ -31,6 +32,7 @@ public class MemberUpdateLinks
       _initialTwitchUrl,
       _initialYouTubeUrl,
       _initialTwitterUrl,
+      _initialBlueskyUrl,
 			_initialMastodonUrl);
     member.Events.Clear();
 
@@ -51,6 +53,7 @@ public class MemberUpdateLinks
       _initialTwitchUrl,
       _initialYouTubeUrl,
       _initialTwitterUrl,
+      _initialBlueskyUrl,
 			_initialMastodonUrl);
 
     Assert.Equal(newLink, member.BlogUrl);
@@ -70,6 +73,7 @@ public class MemberUpdateLinks
       _initialTwitchUrl,
       _initialYouTubeUrl,
       _initialTwitterUrl,
+      _initialBlueskyUrl,
 			_initialMastodonUrl);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
@@ -89,6 +93,7 @@ public class MemberUpdateLinks
       _initialTwitchUrl,
       _initialYouTubeUrl,
       _initialTwitterUrl,
+      _initialBlueskyUrl,
 			_initialMastodonUrl);
 
     Assert.Empty(member.Events);
@@ -110,6 +115,7 @@ public class MemberUpdateLinks
       _initialTwitchUrl,
       _initialYouTubeUrl,
       _initialTwitterUrl,
+      _initialBlueskyUrl,
 			_initialMastodonUrl);
     var eventCreated = (MemberUpdatedEvent)member.Events.First();
 
