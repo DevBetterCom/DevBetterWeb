@@ -4,7 +4,6 @@ using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Web.Interfaces;
 

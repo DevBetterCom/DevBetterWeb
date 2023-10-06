@@ -19,7 +19,6 @@ using DevBetterWeb.Web.Services;
 using GoogleReCaptcha.V3.Interface;
 using GoogleReCaptcha.V3;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiClient;
 using DevBetterWeb.Vimeo.Extensions;
-using DevBetterWeb.Vimeo.Models;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices;

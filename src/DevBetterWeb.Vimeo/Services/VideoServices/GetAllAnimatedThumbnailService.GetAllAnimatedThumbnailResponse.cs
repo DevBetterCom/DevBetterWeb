@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DevBetterWeb.Vimeo.Models;
 
 namespace DevBetterWeb.Vimeo.Services.VideoServices;
 

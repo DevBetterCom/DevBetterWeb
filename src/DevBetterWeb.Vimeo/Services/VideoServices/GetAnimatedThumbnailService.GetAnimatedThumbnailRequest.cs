@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace DevBetterWeb.Vimeo.Services.VideoServices;
+﻿namespace DevBetterWeb.Vimeo.Services.VideoServices;
 
 public class GetAnimatedThumbnailRequest
 {
