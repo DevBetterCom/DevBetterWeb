@@ -6,7 +6,6 @@ using System.Linq;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.Pages.Leaderboard;
-using System.Collections;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core;
 

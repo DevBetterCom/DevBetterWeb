@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.SharedKernel;
 
 namespace DevBetterWeb.Core.Entities;
