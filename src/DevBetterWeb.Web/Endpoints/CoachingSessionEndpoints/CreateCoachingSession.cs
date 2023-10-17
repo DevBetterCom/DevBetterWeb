@@ -6,12 +6,9 @@ using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace DevBetterWeb.Web.Endpoints;
 

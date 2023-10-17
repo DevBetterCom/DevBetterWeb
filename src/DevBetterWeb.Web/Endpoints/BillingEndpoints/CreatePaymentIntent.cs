@@ -4,7 +4,6 @@ using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static DevBetterWeb.Core.AuthConstants;
 
 namespace DevBetterWeb.Web.Endpoints;
 
