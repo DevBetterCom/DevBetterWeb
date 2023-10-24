@@ -3,9 +3,9 @@ using FluentAssertions;
 using Flurl.Http.Testing;
 using Moq;
 using Xunit;
-using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Services;
+using NimblePros.Vimeo.Models;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 
