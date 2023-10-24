@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Identity.Data;
-using DevBetterWeb.Vimeo.Models;
 using NimblePros.ApiClient.Interfaces;
 using NimblePros.Vimeo.Models;
 
