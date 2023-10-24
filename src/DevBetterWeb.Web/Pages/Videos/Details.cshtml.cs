@@ -68,7 +68,8 @@ public class DetailsModel : PageModel
 			return NotFound($"Video Not Found {videoId}");
 		}
 
-		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
+		var videoLink = $"https://vimeo.com/{videoId}";
+		var (oEmbed, member) = await GetMoreDataAsync(videoLink, applicationUser.Id);
 		if (oEmbed?.Data == null)
 		{
 			_logger.LogError($"oEmbed Data Not found Message: {oEmbed?.Exception.Message}");
