@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Pages.Videos;
 
@@ -67,7 +67,7 @@ public class DetailsModel : PageModel
 		return Page();
 	}
 
-	private async Task<(HttpResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
+	private async Task<(IApiResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
 	{
 		var oEmbedTask = _getOEmbedVideoService.ExecuteAsync(videoLink);
 		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(userId);

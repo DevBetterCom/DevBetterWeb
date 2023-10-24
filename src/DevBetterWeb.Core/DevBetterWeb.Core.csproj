@@ -20,12 +20,9 @@
 		<PackageReference Include="Ardalis.Specification" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="System.ComponentModel.Annotations" />
 		<PackageReference Include="NETStandard.Library" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
 	</ItemGroup>
 
 </Project>

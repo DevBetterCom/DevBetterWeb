@@ -30,6 +30,7 @@ using Serilog;
 using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using NimblePros.Vimeo.Extensions;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -108,7 +109,6 @@ builder.Services.AddScoped<IUserLookupService, UserLookupService>();
 builder.Services.AddScoped<IUserRoleManager, DefaultUserRoleManagerService>();
 
 builder.Services.AddScoped<IVideosService, VideosService>();
-builder.Services.AddSingleton<IVideosCacheService, VideosCacheService>();
 
 builder.Services.AddScoped<IWebVTTParsingService, WebVTTParsingService>();
 builder.Services.AddScoped<IVideoDetailsService, VideoDetailsService>();
@@ -120,6 +120,12 @@ builder.Services.AddScoped<IRankingService, RankingService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
+builder.Services.AddScoped<IAddCreatedVideoToFolderService, AddCreatedVideoToFolderService>();
+builder.Services.AddScoped<ICreateVideoService, CreateVideoService>();
+
+VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
+builder.Services.AddSingleton(vimeoSettings);
+builder.Services.AddVimeoServices(vimeoSettings.Token);
 
 // list services
 builder.Services.Configure<ServiceConfig>(config =>
@@ -147,10 +153,9 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
 	//	containerBuilder.RegisterModule(new DefaultCoreModule());
-	string vimeoToken = builder.Configuration![Constants.ConfigKeys.VimeoToken]!;
 	bool isDevelopment = builder.Environment.EnvironmentName == "Development";
 	containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDevelopment,
-		vimeoToken));
+		vimeoSettings.Token));
 });
 
 // TODO: Configure Testing and Production Services from Startup
@@ -206,10 +211,6 @@ static async Task SeedDatabase(IHost host)
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
-
-	//TODO: need to be checked without token.
-	var videosCacheService = services.GetRequiredService<IVideosCacheService>();
-	await videosCacheService.UpdateAllVideosAsync();
 
 	if (environment == "Production")
 	{

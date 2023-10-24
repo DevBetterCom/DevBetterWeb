@@ -47,6 +47,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="Sendgrid" />
 		<PackageReference Include="Serilog" />
 		<PackageReference Include="Serilog.AspNetCore" />
@@ -66,7 +67,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
 		<ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
-		<ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="Pages\_ViewImports.cshtml">

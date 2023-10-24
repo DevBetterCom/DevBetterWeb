@@ -7,7 +7,9 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Services.VideoServices;
+using NimblePros.Vimeo.AnimatedThumbnailsServices;
+using NimblePros.Vimeo.Services.VideoServices;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Infrastructure.Services;
 
@@ -15,16 +17,15 @@ public class VideosService : IVideosService
 {
   private readonly IAppLogger<VideosService> _logger;
   private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
-  private readonly CreateAnimatedThumbnailsService _createAnimatedThumbnailsService;
-  private readonly GetAllAnimatedThumbnailService _getAllAnimatedThumbnailService;
+  private readonly CreateSetAnimatedThumbnailsForVideoService _createAnimatedThumbnailsService;
+  private readonly GetAllSetAnimatedThumbnailsForVideoService _getAllAnimatedThumbnailService;
   private readonly DeleteVideoService _deleteVideoService;
   private readonly GetVideoService _getVideoService;
-  private readonly GetPagedVideosService _getPagedVideosService;
-  public readonly IVideosCacheService _videosCacheService;
+  private readonly GetVideosUserAppearsService _getVideosUserAppearsService;
 
   public VideosService(IAppLogger<VideosService> logger, IRepository<ArchiveVideo> repositoryArchiveVideo,
-    CreateAnimatedThumbnailsService createAnimatedThumbnailsService, GetAllAnimatedThumbnailService getAllAnimatedThumbnailService,
-    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetPagedVideosService getPagedVideosService, IVideosCacheService videosCacheService)
+		CreateSetAnimatedThumbnailsForVideoService createAnimatedThumbnailsService, GetAllSetAnimatedThumbnailsForVideoService getAllAnimatedThumbnailService,
+    DeleteVideoService deleteVideoService, GetVideoService getVideoService, GetVideosUserAppearsService getVideosUserAppearsService)
   {
     _logger = logger;
     _repositoryArchiveVideo = repositoryArchiveVideo;
@@ -32,8 +33,7 @@ public class VideosService : IVideosService
     _getAllAnimatedThumbnailService = getAllAnimatedThumbnailService;
     _deleteVideoService = deleteVideoService;
     _getVideoService = getVideoService;
-    _getPagedVideosService = getPagedVideosService;
-    _videosCacheService = videosCacheService;
+		_getVideosUserAppearsService = getVideosUserAppearsService;
 
   }
 
@@ -57,31 +57,23 @@ public class VideosService : IVideosService
     }
   }
 
-  public async Task UpdateVideosCache(AppendOnlyStringList? messages)
-  {
-	  try
-	  {
-		  await _videosCacheService.UpdateAllVideosAsync();
-		  messages?.Append("Videos Cache Updated.");
-	  }
-	  catch (Exception ex)
-	  {
-		  _logger.LogError(ex, $"Error on Videos Cache Updated: {ex.Message}");
-	  }
-	}
-
-	public async Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages)
+  public async Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages)
   {
     var spec = new ArchiveVideoWithoutThumbnailSpec();
     var videos = await _repositoryArchiveVideo.ListAsync(spec);
     foreach (var video in videos)
     {
+			if (string.IsNullOrEmpty(video.VideoId))
+			{
+				continue;
+			}
       try
       {
-        var response = await _getVideoService.ExecuteAsync(video.VideoId);
+        var response = await _getVideoService.ExecuteAsync(long.Parse(video.VideoId));
         if (response?.Data != null && response.Data.IsPlayable == false)
         {
-          await _deleteVideoService.ExecuteAsync(video.VideoId);
+					var deleteDequest = new DeleteVideoRequest(long.Parse(video.VideoId));
+          await _deleteVideoService.ExecuteAsync(deleteDequest);
           messages?.Append($"Video {video.Id} deleted from vimeo as it does not exist on vimeo.");
         }
         if (response?.Data == null || response?.Data.IsPlayable == false)
@@ -99,8 +91,8 @@ public class VideosService : IVideosService
 
   public async Task DeleteVideosNotExistOnVimeoFromVimeo(AppendOnlyStringList? messages)
   {
-    var request = new GetAllVideosRequest("me");
-    var videosResponse = await _getPagedVideosService.ExecuteAsync(request);
+    var request = new GetVideosUserAppearsRequest();
+    var videosResponse = await _getVideosUserAppearsService.ExecuteAsync(request);
     if (videosResponse?.Data?.Data == null)
     {
       return;
@@ -113,7 +105,8 @@ public class VideosService : IVideosService
       {
         if (video is { IsPlayable: false })
         {
-          await _deleteVideoService.ExecuteAsync(video.Id);
+					var deleteVideoRequest = new DeleteVideoRequest(video.Id);
+          await _deleteVideoService.ExecuteAsync(deleteVideoRequest);
           messages?.Append($"Video {video.Id} deleted from vimeo as it does not exist on vimeo.");
         }
       }
@@ -155,27 +148,29 @@ public class VideosService : IVideosService
 		  return null;
 	  }
 
-	  var response = await _getVideoService.ExecuteAsync(videoId.ToString(), cancellationToken);
+	  var response = await _getVideoService.ExecuteAsync(videoId, cancellationToken);
 	  if (response?.Data == null)
 	  {
 			return null;
 		}
 
-	  var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAnimatedThumbnailRequest(videoId, null), cancellationToken);
+	  var existThumbsResponse = await _getAllAnimatedThumbnailService.ExecuteAsync(new GetAllSetAnimatedThumbnailsForVideoRequest(videoId, null), cancellationToken);
 	  var animatedThumbnailUri = string.Empty;
 
 		if (existThumbsResponse.Data.Total <= 0)
 	  {
-		  var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(videoId, cancellationToken);
+			var createSetAnimatedThumbnailsForVideoRequest = new CreateSetAnimatedThumbnailsForVideoRequest(videoId, 4);
+
+			var getAnimatedThumbnailResult = await _createAnimatedThumbnailsService.ExecuteAsync(createSetAnimatedThumbnailsForVideoRequest, cancellationToken);
 		  if (getAnimatedThumbnailResult == null)
 		  {
 				return null;
 			}
-		  animatedThumbnailUri = getAnimatedThumbnailResult.AnimatedThumbnailUri;
+			animatedThumbnailUri = getAnimatedThumbnailResult.Data.AnimatedThumbsetUri;
 	  }
 	  else
 	  {
-		  animatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbnailUri;
+		  animatedThumbnailUri = existThumbsResponse.Data.Data.FirstOrDefault()?.AnimatedThumbsetUri;
 	  }
 		var spec = new ArchiveVideoByVideoIdSpec(videoId.ToString());
 	  var existVideo = await _repositoryArchiveVideo.FirstOrDefaultAsync(spec, cancellationToken);

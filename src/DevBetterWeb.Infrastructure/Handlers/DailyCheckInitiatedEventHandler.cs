@@ -41,7 +41,6 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
     await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(messages);
     await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(messages);
     await _videosService.UpdateVideosThumbnail(messages);
-    await _videosService.UpdateVideosCache(messages);
 
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
