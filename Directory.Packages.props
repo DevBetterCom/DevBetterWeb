@@ -54,7 +54,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="7.0.10" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="7.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="7.0.10" />
