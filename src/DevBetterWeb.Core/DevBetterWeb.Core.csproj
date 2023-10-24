@@ -20,6 +20,7 @@
 		<PackageReference Include="Ardalis.Specification" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" />
 		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="System.ComponentModel.Annotations" />
 		<PackageReference Include="NETStandard.Library" />
