@@ -113,7 +113,7 @@ jobs:
 
       - name: Azure webapp deploy with Publish Profile
         id: azure_webapp_deploy_with_publish_profile
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}

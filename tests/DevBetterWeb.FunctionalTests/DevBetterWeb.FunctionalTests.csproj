@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.runner.visualstudio">

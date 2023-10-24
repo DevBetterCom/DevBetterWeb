@@ -13,12 +13,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
-    <ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
     <PackageReference Include="Markdig" />
+    <PackageReference Include="NimblePros.Vimeo" />
     <PackageReference Include="Sendgrid" />
     <PackageReference Include="Ardalis.EFCore.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
