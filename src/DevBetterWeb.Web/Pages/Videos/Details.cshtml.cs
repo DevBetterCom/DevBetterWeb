@@ -57,8 +57,8 @@ public class DetailsModel : PageModel
 		var (video, transcript, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName, currentVideoURL);
 		if (video?.Data == null)
 		{
-			_logger.LogError($"Video Data Not found Message: {video.Exception.Message}");
-			_logger.LogError($"Video Data Not found Json: {video.Json}");
+			_logger.LogError($"Video Data Not found Message: {video?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {video?.Json}");
 			return NotFound($"Video Not Found {videoId}");
 		}
 
@@ -71,8 +71,8 @@ public class DetailsModel : PageModel
 		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
 		if (oEmbed?.Data == null)
 		{
-			_logger.LogError($"oEmbed Data Not found Message: {oEmbed.Exception.Message}");
-			_logger.LogError($"Video Data Not found Json: {oEmbed.Json}");
+			_logger.LogError($"oEmbed Data Not found Message: {oEmbed?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {oEmbed?.Json}");
 			return NotFound($"Video Not Found {videoId}");
 		}
 
