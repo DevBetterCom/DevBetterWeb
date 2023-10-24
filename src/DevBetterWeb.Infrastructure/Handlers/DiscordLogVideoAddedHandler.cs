@@ -8,12 +8,10 @@ namespace DevBetterWeb.Core.Handlers;
 public class DiscordLogVideoAddedHandler : IHandle<VideoAddedEvent>
 {
   private readonly CoachingSessionsWebhook _webhook;
-  private readonly IVideosCacheService _videosCacheService;
 
-  public DiscordLogVideoAddedHandler(CoachingSessionsWebhook webhook, IVideosCacheService videosCacheService)
+  public DiscordLogVideoAddedHandler(CoachingSessionsWebhook webhook)
   {
 	  _webhook = webhook;
-	  _videosCacheService = videosCacheService;
   }
 
   public static string ReturnWebhookMessageString(VideoAddedEvent domainEvent)
@@ -24,8 +22,6 @@ public class DiscordLogVideoAddedHandler : IHandle<VideoAddedEvent>
 
   public Task Handle(VideoAddedEvent domainEvent)
   {
-	  _ = _videosCacheService.UpdateAllVideosAsync();
-
 		var message = ReturnWebhookMessageString(domainEvent);
     return _webhook.SendAsync(message);
   }
