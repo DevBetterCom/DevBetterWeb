@@ -2,74 +2,99 @@
 @model DevBetterWeb.Web.Pages.Admin.Videos.CreateModel
 
 @{
-	ViewData["Title"] = "Create";
+  ViewData["Title"] = "Create";
 }
+
+<style>
+	.progress {
+    position: relative;
+  }
+
+    .progress span {
+      position: absolute;
+      color: black;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+</style>
 
 <h3>Add Video</h3>
 
 <hr />
 
 <form method="post" enctype="multipart/form-data" onsubmit="return uploadVideo(event)">
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="videoName" class="form-label">Video Name</label>
+	      <input id="videoName" name="videoName" class="form-control" />
+	      <span class="text-danger"></span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Video Creation Date</label>
+        <input id="videoCreationDate" type="date" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Video File</label>
+        <input id="videoFile" type="file" name="videoFile" class="form-control-file" />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">MD File</label>
+        <input id="mdFile" type="file" name="mdFile" class="form-control-file" />
+      </div>
+    </div>
+  </div>
 	<div class="row mb-3">
-		<div class="col-md-6">
+		<div class="col-12">
 			<div class="form-group">
-				<label asp-for="VideoModel.Name" class="form-label">Video Name</label>
-				<input id="name" asp-for="VideoModel.Name" class="form-control" />
-				<span asp-validation-for="VideoModel.Name" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group">
-				<label class="form-label">Video Creation Date</label>
-				<input id="videoCreationDate" type="date" class="form-control" />
-			</div>
-		</div>
-	</div>
-	<div class="row mb-3">
-		<div class="col-md-6">
-			<div class="form-group">
-				<label class="form-label">Video File</label>
-				<input id="videoFile" type="file" name="videoFile" class="form-control-file" />
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group">
-				<label class="form-label">MD File</label>
-				<input id="mdFile" type="file" name="mdFile" class="form-control-file" />
+				<label for="description" class="form-label">Description</label>
+				<textarea id="description" name="description" class="form-control" rows="5" style="max-width: 100%;"></textarea>
+				<span class="text-danger"></span>
 			</div>
 		</div>
 	</div>
 	<div class="row mb-3">
 		<div class="col-12">
 			<div class="form-group">
-				<label asp-for="VideoModel.Description" class="form-label">Description</label>
-				<textarea id="description" asp-for="VideoModel.Description" class="form-control" rows="5" style="max-width: 100%;"></textarea>
-				<span asp-validation-for="VideoModel.Description" class="text-danger"></span>
+				<label for="mdPreview" class="form-label">MD Preview</label>
+				<div id="mdPreview" name="mdPreview" class="form-control border rounded p-2" style="overflow: auto; height: 200px; max-width: 100%;background: #f8f9fa; color: #333;" readonly=""></div>
 			</div>
 		</div>
 	</div>
-	<div class="row mb-3">
-		<div class="col-12">
-			<div class="progress">
-				<div id="uploadProgressBar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-					0%
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-success" />
-			</div>
-		</div>
-	</div>
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="progress">
+	      <div id="uploadProgressBar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+	      </div>
+	      <span id="progressText" class="justify-content-center d-flex position-absolute w-100">
+		      0%
+	      </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+	      <button type="button" class="btn btn-primary" id="confirmCreate">Upload</button>
+      </div>
+    </div>
+  </div>
 </form>
 
 
 
 <div>
-	<a asp-page="Index">Back to List</a>
+  <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
@@ -78,212 +103,212 @@
 	}
 
 	<script>
-		function arrayBufferToBase64(buffer) {
-			let binary = '';
-			const bytes = new Uint8Array(buffer);
-			for (let i = 0; i < bytes.byteLength; i++) {
-				binary += String.fromCharCode(bytes[i]);
-			}
-			return window.btoa(binary);
-		}
+    const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
 
-		async function uploadVideoFile(responseUpload) {
-			const videoFileInput = document.getElementById("videoFile");
-			const videoFile = videoFileInput.files[0];
-			const mdFileInput = document.getElementById("mdFile");
-			const mdFile = mdFileInput.files[0];
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
 
-			// Initialize progress bar
-			const progressBar = document.getElementById("uploadProgressBar");
-			progressBar.style.width = "0%";
-			progressBar.innerText = "0%";
+    $(document).ready(function () {
 
-			const chunkSize = 1024 * 1024;
-			const totalChunks = Math.ceil(videoFile.size / chunkSize);
-			let uploadedChunks = 0;
+      if (window.FileReader) {
+        $('#videoFile').on('change', function (e) {
+          if (e.target.files == undefined || e.target.files.length <= 0) {
+            $('#videoName').val('');
+          } else {
+            var fileName = e.target.files[0].name;
+            $('#videoName').val(fileName.split('.')[0]);
+            var creationDate = new Date(e.target.files[0].lastModified);
+            const formattedDate = creationDate.toISOString().slice(0, 10);
+            $('#videoCreationDate').val(formattedDate);
+          }
+        });
+        $('#mdFile').on('change', function (e) {
+          var file = e.target.files[0];
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            var data = reader.result;
+            $('#description').val(data);
+            updateMdPreview(data);
+          }
+          reader.readAsText(file);
+        });
+      }
 
-			const mdFileReader = new FileReader();
-			const mdFileContentPromise = new Promise((resolve) => {
-				mdFileReader.onload = (e) => {
-					resolve(e.target.result);
-				};
-				mdFileReader.readAsText(mdFile);
-			});
+      document.querySelector("#confirmCreate").addEventListener("click", function (e) {
+        var videoFileInput = document.getElementById("videoFile");
+        if (!videoFileInput.files.length) {
+          alert("Please select a video file.");
+          return false;
+        }
 
-			while (uploadedChunks < totalChunks) {
-				const chunkStart = uploadedChunks * chunkSize;
-				const chunkEnd = Math.min(chunkStart + chunkSize, videoFile.size);
-				const chunk = videoFile.slice(chunkStart, chunkEnd);
+        const mdFileInput = document.getElementById("mdFile");
+        if (!mdFileInput.files.length) {
+          alert("Please select an MD file.");
+          return false;
+        }
 
-				const filePartData = await chunk.arrayBuffer();
-				const base64Data = arrayBufferToBase64(filePartData);
+        const videoCreationDateInput = document.getElementById("videoCreationDate");
+        const file = videoFileInput.files[0];
+        const videoCreationDate = videoCreationDateInput.valueAsDate || new Date(file.lastModified);
 
-				const uploadInfo = {
-					...responseUpload,
-					FilePartData: base64Data,
-					PartSize: chunkEnd - chunkStart,
-					UploadOffset: chunkStart,
-				};
+        const videoNameInput = document.getElementById("videoName");
+        const videoName = videoNameInput.value || file.name;
 
-				if (uploadedChunks === totalChunks - 1) {
-					const mdFileContent = await mdFileContentPromise;
-					uploadInfo.Description = mdFileContent;
-				}
+        if (file) {
+          startUpload(file, videoName, videoCreationDate);
+        }
+      });
+    });
+    function startUpload(file, videoName, videoCreationDate) {
+      const videoSize = file.size;
 
-				const uploadVideoEndpoint = "/videos/upload-video";
+      const uploadVideoStartRequest = {
+        videoSize: videoSize,
+        videoName: videoName,
+        createdTime: videoCreationDate,
+      };
 
-				await fetch(uploadVideoEndpoint, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(uploadInfo),
-				});
+      fetch('/videos/start', {
+        method: 'POST',
+        body: JSON.stringify(uploadVideoStartRequest),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            document.getElementById('confirmCreate').disabled = false;
+            throw new Error(`HTTP error! status: ${response.status}`);
+          } else {
+            return response.text();
+          }
+        })
+        .then(data => {
+          try {
+            let jsonData = JSON.parse(data);
+            uploadChunks(jsonData.sessionId, file, null);
+          } catch (e) {
+            document.getElementById('confirmCreate').disabled = false;
+            console.log("The server's response wasn't valid JSON. It was:", data);
+            console.log("The server's response wasn't valid JSON. It was:", e);
 
-				uploadedChunks++;
+          }
+        })
+        .catch(error => {
+          document.getElementById('confirmCreate').disabled = false;
+          console.error('Request failed', error);
+          alert(error.message);
+        });
+    }
 
-				// Update progress bar
-				const progressPercentage = Math.round((uploadedChunks / totalChunks) * 100);
-				progressBar.style.width = `${progressPercentage}%`;
-				progressBar.innerText = `${progressPercentage}%`;
+    function uploadChunks(sessionId, file, folderId) {
+      let offset = 0;
 
-				if (uploadedChunks === totalChunks) {
-					progressBar.style.width = "100%";
-					progressBar.innerText = "100%";
-				}
-			}
-		}
+      function nextChunk() {
+        if (offset < file.size) {
+          const chunk = file.slice(offset, offset + CHUNK_SIZE);
+          let isLastChunk = offset + CHUNK_SIZE >= file.size;
+          uploadChunk(sessionId, chunk, isLastChunk, isLastChunk ? folderId : null)
+            .then(data => {
+              if (data == 2) { //uploadComplete
+                document.getElementById('confirmCreate').disabled = false;
+              }
+              offset += CHUNK_SIZE;
 
-		async function uploadMdFile(responseUpload) {
-			const mdFileInput = document.getElementById("mdFile");
-			const mdFile = mdFileInput.files[0];
-			const mdFileReader = new FileReader();
+              let progress = Math.min(100, (offset / file.size) * 100).toFixed(2);
+              updateProgressBar(progress);
 
-			return new Promise((resolve, reject) => {
-				mdFileReader.onload = async (e) => {
-					const mdFileContent = e.target.result;
+              nextChunk();
+            })
+            .catch(error => {
+              console.error('Request failed', error);
+              document.getElementById('confirmCreate').disabled = false;
+              alert(error.message);
+            });
+        } else {
+        }
+      }
 
-					const uploadMdRequest = {
-						VideoId: responseUpload.VideoId,
-						Md: mdFileContent,
-					};
+      nextChunk();
+    }
 
-					const uploadMdEndpoint = "/videos/upload-md";
+    function updateProgressBar(progress) {
+      let progressBar = document.getElementById("uploadProgressBar");
+      let progressText = document.getElementById("progressText");
+      progressBar.style.width = progress + "%";
+      progressBar.setAttribute("aria-valuenow", progress);
+      progressText.innerText = progress + "%";
+    }
 
-					try {
-						const responseMd = await fetch(uploadMdEndpoint, {
-							method: "POST",
-							headers: { "Content-Type": "application/json" },
-							body: JSON.stringify(uploadMdRequest),
-						});
+    function uploadChunk(sessionId, chunk, isLastChunk, folderId) {
+      return new Promise((resolve, reject) => {
+        mdFileContentPromise = readMdFilePromise();
 
-						if (responseMd.status === 401) {
-							alert("Unauthorized: You must be an admin.");
-							return reject();
-						}
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          const base64Chunk = btoa(
+            new Uint8Array(e.target.result)
+              .reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+          let body = { sessionId, chunk: base64Chunk };
+          if (folderId !== null) {
+            body.folderId = folderId;
+          }
+          if (isLastChunk) {
+            const mdFileContent = await mdFileContentPromise;
+            body.description = mdFileContent;
+          }
+          fetch('/videos/upload', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Upload chunk failed');
+              }
+              resolve(response.json());
+            })
+            .catch(reject);
+        };
 
-						if (!responseMd.ok) {
-							throw new Error("MD file upload failed.");
-						}
+        reader.onerror = function () {
+          reject(new Error('Failed to read file'));
+        };
 
-						resolve();
-					} catch (error) {
-						console.error("MD file upload failed:", error);
-						reject(error);
-					}
-				};
+        reader.readAsArrayBuffer(chunk);
+      });
+    }
 
-				mdFileReader.readAsText(mdFile);
-			});
-		}
+    function updateMdPreview(descriptionContent) {
+      var converter = new showdown.Converter();
+      var htmlContent = converter.makeHtml(descriptionContent);
 
-		async function uploadVideo(event) {
-			event.preventDefault();
+      $('#mdPreview').html(htmlContent);
+    }
 
-			const videoFileInput = document.getElementById("videoFile");
-			if (!videoFileInput.files.length) {
-			  alert("Please select a video file.");
-			  return false;
-			}
+    function readMdFilePromise() {
+      const mdFileInput = document.getElementById("mdFile");
+      const mdFile = mdFileInput.files[0];
+      const mdFileReader = new FileReader();
+      const mdFileContentPromise = new Promise((resolve) => {
+        mdFileReader.onload = (e) => {
+          resolve(e.target.result);
+        };
+        mdFileReader.readAsText(mdFile);
+      });
 
-			const mdFileInput = document.getElementById("mdFile");
-			if (!mdFileInput.files.length) {
-			  alert("Please select an MD file.");
-			  return false;
-			}
-
-			const videoFile = videoFileInput.files[0];
-
-			const videoNameInput = document.getElementById("name");
-			const descriptionInput = document.getElementById("description");
-			const videoCreationDateInput = document.getElementById("videoCreationDate");
-
-			const videoName = videoNameInput.value;
-			const videoDescription = descriptionInput.value;
-			const videoCreationDate = videoCreationDateInput.valueAsDate || new Date(videoFile.lastModified);
-
-			const uploadVideoResumableInfo = {
-				FileFullSize: videoFile.size,
-				FileName: videoName,
-				CreatedTime: videoCreationDate,
-			};
-
-			const createVideoUrlEndpoint = "/videos/upload-video-create-url";
-
-			const createButton = document.querySelector("input[type='submit']");
-			createButton.disabled = true;
-
-			try {
-				const responseUpload = await fetch(createVideoUrlEndpoint, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(uploadVideoResumableInfo),
-				});
-
-				if (!responseUpload.ok) {
-					throw new Error("Failed to create resumable video upload.");
-				}
-
-				const responseUploadJson = await responseUpload.json();
-
-				// Upload the video file
-				await uploadVideoFile(responseUploadJson);
-
-				alert("Video and MD file uploaded successfully.");
-			} catch (error) {
-				console.error("Upload failed:", error);
-				alert("Video and MD file upload failed.");
-			}
-			finally {
-				createButton.disabled = false;
-			}
-		}
-
-
-		$(document).ready(function () {
-
-			if (window.FileReader) {
-				$('#videoFile').on('change', function (e) {
-					if (e.target.files == undefined || e.target.files.length <= 0) {
-						$('#name').val('');
-					} else {
-						var fileName = e.target.files[0].name;
-						$('#name').val(fileName.split('.')[0]);
-						var creationDate = new Date(e.target.files[0].lastModified);
-						const formattedDate = creationDate.toISOString().slice(0, 10);
-						$('#videoCreationDate').val(formattedDate);
-					}
-				});
-				$('#mdFile').on('change', function (e) {
-					var file = e.target.files[0];
-					var reader = new FileReader();
-					reader.onload = function (e) {
-						var data = reader.result;
-						$('#description').val(data);
-					}
-					reader.readAsText(file);
-				});
-			}
-		});
+      return mdFileContentPromise;
+    }
 
 
-	</script>
+  </script>
 }

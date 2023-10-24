@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using DevBetterWeb.Core;
+﻿using DevBetterWeb.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

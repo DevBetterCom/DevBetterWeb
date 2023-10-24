@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

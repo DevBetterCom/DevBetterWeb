@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 
 namespace DevBetterWeb.Core.Handlers;
 
@@ -43,7 +41,6 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
     await _videosService.DeleteVideosNotExistOnVimeoFromVimeo(messages);
     await _videosService.DeleteVideosNotExistOnVimeoFromDatabase(messages);
     await _videosService.UpdateVideosThumbnail(messages);
-    await _videosService.UpdateVideosCache(messages);
 
     await _dailyCheckPingService.PingAdminsAboutAlmostAlumsIfNeeded(messages);
 
