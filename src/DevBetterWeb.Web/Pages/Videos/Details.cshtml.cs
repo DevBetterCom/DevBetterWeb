@@ -13,6 +13,7 @@ using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using NimblePros.ApiClient.Interfaces;
 using NimblePros.Vimeo.Models;
 using NimblePros.Vimeo.VideoServices;
@@ -27,18 +28,21 @@ public class DetailsModel : PageModel
 	public string? Transcript { get; set; }
 
 	private readonly GetOEmbedVideoService _getOEmbedVideoService;
+	private readonly ILogger<DetailsModel> _logger;
 	private readonly IMapper _mapper;
 	private readonly IMarkdownService _markdownService;
 	private readonly IRepository<Member> _memberRepository;
 	private readonly IVideoDetailsService _videoDetailsService;
 
 	public DetailsModel(
+		ILogger<DetailsModel> logger,
 		IMapper mapper,
 		IMarkdownService markdownService,
 		GetOEmbedVideoService getOEmbedVideoService,
 		IRepository<Member> memberRepository,
 		IVideoDetailsService videoDetailsService)
 	{
+		_logger = logger;
 		_mapper = mapper;
 		_markdownService = markdownService;
 		_getOEmbedVideoService = getOEmbedVideoService;
@@ -51,12 +55,33 @@ public class DetailsModel : PageModel
 		var currentUserName = User.Identity!.Name;
 		var currentVideoURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
 		var (video, transcript, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName, currentVideoURL);
-		if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
-		if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
+		if (video?.Data == null)
+		{
+			_logger.LogError($"Video Data Not found Message: {video?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {video?.Json}");
+			return NotFound($"Video Not Found {videoId}");
+		}
 
-		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
-		if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
-		if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
+		if (archiveVideo == null)
+		{
+			_logger.LogError("archiveVideo Not found");
+			return NotFound($"Video Not Found {videoId}");
+		}
+
+		var videoLink = $"https://vimeo.com/{videoId}";
+		var (oEmbed, member) = await GetMoreDataAsync(videoLink, applicationUser.Id);
+		if (oEmbed?.Data == null)
+		{
+			_logger.LogError($"oEmbed Data Not found Message: {oEmbed?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {oEmbed?.Json}");
+			return NotFound($"Video Not Found {videoId}");
+		}
+
+		if (member == null)
+		{
+			_logger.LogError("member Not found");
+			return NotFound($"Member Not Found {applicationUser.Id}");
+		}
 	
 		Transcript = transcript;
 
