@@ -2,10 +2,8 @@
 using FluentAssertions;
 using Flurl.Http.Testing;
 using Xunit;
-using DevBetterWeb.Vimeo.Models;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Services;
-using NSubstitute;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 

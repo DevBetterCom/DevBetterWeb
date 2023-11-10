@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DevBetterWeb.Web.Models;
+﻿namespace DevBetterWeb.Web.Models;
 
 public class VoteQuestionRequestDto
 {

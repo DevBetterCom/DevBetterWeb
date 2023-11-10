@@ -1,16 +1,15 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Identity.Data;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.Vimeo.Models;
 
 namespace DevBetterWeb.Web.Interfaces;
 
 public interface IVideoDetailsService
 {
-	Task<(HttpResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
+	Task<(IApiResponse<Video>, string, ArchiveVideo?, ApplicationUser)> GetDataAsync(
 		string videoId,
 		string? currentUserName,
 		string currentVideoURL);

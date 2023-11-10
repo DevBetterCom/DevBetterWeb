@@ -29,6 +29,8 @@ public class UserProfileViewModel
 	[ValidUrl]
 	public string? TwitterUrl { get; set; }
 	[ValidUrl]
+	public string? BlueskyUrl { get; set; }
+	[ValidUrl]
 	public string? TwitchUrl { get; set; }
 	[ValidUrl]
 	public string? YouTubeUrl { get; set; }
@@ -69,6 +71,7 @@ public class UserProfileViewModel
 		PEUsername = member.PEUsername ?? valueToUseIfNull;
 		TwitchUrl = member.TwitchUrl ?? valueToUseIfNull;
 		TwitterUrl = member.TwitterUrl ?? valueToUseIfNull;
+		BlueskyUrl = member.BlueskyUrl ?? valueToUseIfNull;
 		YouTubeUrl = member.YouTubeUrl ?? valueToUseIfNull;
 	}
 }

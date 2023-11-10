@@ -17,6 +17,7 @@ public class UserDetailsViewModel
   public string? OtherUrl { get; set; }
   public string? TwitchUrl { get; set; }
   public string? TwitterUrl { get; set; }
+  public string? BlueskyUrl { get; set; }
   public string? YouTubeUrl { get; set; }
 
   public string? Name { get; set; }
@@ -43,6 +44,7 @@ public class UserDetailsViewModel
 		MastodonUrl = member.MastodonUrl;
     TwitchUrl = member.TwitchUrl;
     TwitterUrl = member.TwitterUrl;
+    BlueskyUrl = member.BlueskyUrl;
     YouTubeUrl = member.YouTubeUrl;
 
     if (!(string.IsNullOrEmpty(YouTubeUrl)) && !(YouTubeUrl.Contains("?")))

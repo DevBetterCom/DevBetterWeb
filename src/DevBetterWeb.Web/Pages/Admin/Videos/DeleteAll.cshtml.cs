@@ -1,28 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Constants;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.Services.VideoServices;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Pages.Admin.Videos;
 
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class DeleteAllModel : PageModel
 {
-  private readonly GetPagedVideosService _getPagedVideosService;
+  private readonly GetVideosUserAppearsService _getPagedVideosService;
   private readonly GetVideoService _getVideoService;
   private readonly DeleteVideoService _deleteVideoService;
   private readonly IRepository<ArchiveVideo> _repository;
 
-  public DeleteAllModel(GetPagedVideosService getPagedVideosService, GetVideoService getVideoService, DeleteVideoService deleteVideoService, IRepository<ArchiveVideo> repository)
+  public DeleteAllModel(GetVideosUserAppearsService getPagedVideosService, GetVideoService getVideoService, DeleteVideoService deleteVideoService, IRepository<ArchiveVideo> repository)
   {
     _getPagedVideosService = getPagedVideosService;
     _getVideoService = getVideoService;
@@ -46,13 +45,14 @@ public class DeleteAllModel : PageModel
 
   private async Task DeleteAllVimeoVideosAsync()
   {
-    HttpResponse<DataPaged<Video>> allVideos;
+    IApiResponse<DataPaged<Video>> allVideos;
     var videosToDelete = new List<Video>();
     var pageNumber = 1;
     do
     {
-      var getAllRequest = new GetAllVideosRequest(ServiceConstants.ME, pageNumber);
-      allVideos = await _getPagedVideosService.ExecuteAsync(getAllRequest);
+      var getAllRequest = new GetVideosUserAppearsRequest();
+			getAllRequest.Page = pageNumber;
+			allVideos = await _getPagedVideosService.ExecuteAsync(getAllRequest);
       if (allVideos != null && allVideos.Data != null)
       {
         videosToDelete.AddRange(allVideos.Data.Data);
@@ -62,7 +62,8 @@ public class DeleteAllModel : PageModel
 
     foreach (var video in videosToDelete)
     {
-      await _deleteVideoService.ExecuteAsync(video.Id);
+			var deleteVideoRequest = new DeleteVideoRequest(video.Id);
+      await _deleteVideoService.ExecuteAsync(deleteVideoRequest);
     }
   }
 

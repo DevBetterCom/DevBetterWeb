@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Ardalis.ApiClient;
 using AutoMapper;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Models;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Pages.Admin.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using NimblePros.ApiClient.Interfaces;
+using NimblePros.Vimeo.Models;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Pages.Videos;
 
@@ -28,18 +28,21 @@ public class DetailsModel : PageModel
 	public string? Transcript { get; set; }
 
 	private readonly GetOEmbedVideoService _getOEmbedVideoService;
+	private readonly ILogger<DetailsModel> _logger;
 	private readonly IMapper _mapper;
 	private readonly IMarkdownService _markdownService;
 	private readonly IRepository<Member> _memberRepository;
 	private readonly IVideoDetailsService _videoDetailsService;
 
 	public DetailsModel(
+		ILogger<DetailsModel> logger,
 		IMapper mapper,
 		IMarkdownService markdownService,
 		GetOEmbedVideoService getOEmbedVideoService,
 		IRepository<Member> memberRepository,
 		IVideoDetailsService videoDetailsService)
 	{
+		_logger = logger;
 		_mapper = mapper;
 		_markdownService = markdownService;
 		_getOEmbedVideoService = getOEmbedVideoService;
@@ -52,12 +55,33 @@ public class DetailsModel : PageModel
 		var currentUserName = User.Identity!.Name;
 		var currentVideoURL = $"{Request.Scheme}://{Request.Host.Value}/Videos/Details/{videoId}";
 		var (video, transcript, archiveVideo, applicationUser) = await _videoDetailsService.GetDataAsync(videoId, currentUserName, currentVideoURL);
-		if (video?.Data == null) return NotFound($"Video Not Found {videoId}");
-		if (archiveVideo == null) return NotFound($"Video Not Found {videoId}");
+		if (video?.Data == null)
+		{
+			_logger.LogError($"Video Data Not found Message: {video?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {video?.Json}");
+			return NotFound($"Video Not Found {videoId}");
+		}
 
-		var (oEmbed, member) = await GetMoreDataAsync(video.Data.Link, applicationUser.Id);
-		if (oEmbed?.Data == null) return NotFound($"Video Not Found {videoId}");
-		if (member == null) return NotFound($"Member Not Found {applicationUser.Id}");
+		if (archiveVideo == null)
+		{
+			_logger.LogError("archiveVideo Not found");
+			return NotFound($"Video Not Found {videoId}");
+		}
+
+		var videoLink = $"https://vimeo.com/{videoId}";
+		var (oEmbed, member) = await GetMoreDataAsync(videoLink, applicationUser.Id);
+		if (oEmbed?.Data == null)
+		{
+			_logger.LogError($"oEmbed Data Not found Message: {oEmbed?.Exception.Message}");
+			_logger.LogError($"Video Data Not found Json: {oEmbed?.Json}");
+			return NotFound($"Video Not Found {videoId}");
+		}
+
+		if (member == null)
+		{
+			_logger.LogError("member Not found");
+			return NotFound($"Member Not Found {applicationUser.Id}");
+		}
 	
 		Transcript = transcript;
 
@@ -68,7 +92,7 @@ public class DetailsModel : PageModel
 		return Page();
 	}
 
-	private async Task<(HttpResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
+	private async Task<(IApiResponse<OEmbed>, Member?)> GetMoreDataAsync(string videoLink, string userId)
 	{
 		var oEmbedTask = _getOEmbedVideoService.ExecuteAsync(videoLink);
 		var memberSpec = new MemberByUserIdWithFavoriteArchiveVideosSpec(userId);
