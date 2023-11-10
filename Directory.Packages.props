@@ -8,7 +8,7 @@
     <PackageVersion Include="Ardalis.ApiClient" Version="0.2.3" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
-    <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1" />
+    <PackageVersion Include="Ardalis.GuardClauses" Version="4.2.0" />
     <PackageVersion Include="Ardalis.HttpClientTestExtensions" Version="4.2.0" />
     <PackageVersion Include="Ardalis.ListStartupServices" Version="1.1.4" />
     <PackageVersion Include="Ardalis.Result" Version="7.1.0" />
