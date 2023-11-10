@@ -30,14 +30,20 @@ public class UploaderApiAuthorizationFilter : IAuthorizationFilter
 		}
 
 		var user = context.HttpContext.User;
-		string? userRole = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+		List<string> userRoles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
 
 		var result = false;
-		if (!string.IsNullOrEmpty(userRole))
+		if (userRoles.Any())
 		{
-			foreach (var role in _allowedRoles)
+			foreach (var userRole in userRoles)
 			{
-				result = result || IsValidRole(userRole, role);
+				if (!string.IsNullOrEmpty(userRole))
+				{
+					foreach (var role in _allowedRoles)
+					{
+						result = result || IsValidRole(userRole, role);
+					}
+				}
 			}
 		}
 

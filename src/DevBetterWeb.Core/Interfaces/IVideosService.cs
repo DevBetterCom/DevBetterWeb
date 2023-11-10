@@ -7,7 +7,6 @@ namespace DevBetterWeb.Core.Interfaces;
 public interface IVideosService
 { 
   Task UpdateVideosThumbnail(AppendOnlyStringList? messages, CancellationToken cancellationToken = default);
-  Task UpdateVideosCache(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromDatabase(AppendOnlyStringList? messages);
   Task DeleteVideosNotExistOnVimeoFromVimeo(AppendOnlyStringList? messages);
   Task AddArchiveVideoInfo(ArchiveVideo archiveVideo, CancellationToken cancellationToken = default);

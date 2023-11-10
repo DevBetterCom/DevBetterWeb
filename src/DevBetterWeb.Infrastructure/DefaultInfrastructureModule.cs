@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using Autofac;
-using DevBetterWeb.Core;
+﻿using Autofac;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -11,11 +8,8 @@ using DevBetterWeb.Infrastructure.InvoiceHandler.StripeInvoiceHandler;
 using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
-using DevBetterWeb.Vimeo.Constants;
-using DevBetterWeb.Vimeo.Extensions;
-using DevBetterWeb.Vimeo.Services.UserServices;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using NimblePros.Vimeo.Extensions;
 using Stripe;
 using Stripe.Issuing;
 using CardService = Stripe.Issuing.CardService;
@@ -59,7 +53,8 @@ public class DefaultInfrastructureModule : Module
         .As<IUserRoleMembershipService>();
     builder.RegisterType<AspNetCoreIdentityUserEmailConfirmationService>()
         .As<IUserEmailConfirmationService>();
-    builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
+    builder.RegisterType<DiscordWebhookService>().As<IDiscordWebhookService>();
+		builder.RegisterType<AdminUpdatesWebhook>().InstancePerDependency();
     builder.RegisterType<CoachingSessionsWebhook>().InstancePerDependency();
     builder.RegisterType<BookDiscussionWebhook>().InstancePerDependency();
     builder.RegisterType<DevBetterComNotificationsWebhook>().InstancePerDependency();
@@ -73,7 +68,9 @@ public class DefaultInfrastructureModule : Module
 
     builder.RegisterAssemblyTypes(this.ThisAssembly)
         .AsClosedTypesOf(typeof(IHandle<>));
-  }
+
+    builder.RegisterType<NonCurrentMembersService>().As<INonCurrentMembersService>();
+	}
 
   private void RegisterPaymentHandlerDependencies(ContainerBuilder builder)
   {

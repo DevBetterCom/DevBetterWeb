@@ -1,15 +1,14 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using DevBetterWeb.Web;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Integration.Web;
 
-public class HomeControllerIndex : IClassFixture<CustomWebApplicationFactory<Startup>>
+public class HomeControllerIndex : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client;
 
-  public HomeControllerIndex(CustomWebApplicationFactory<Startup> factory)
+  public HomeControllerIndex(CustomWebApplicationFactory<Program> factory)
   {
     _client = factory.CreateClient();
   }

@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public class MemberByUserIdWithFavoriteArchiveVideosSpec : Specification<Member>, ISingleResultSpecification
+public class MemberByUserIdWithFavoriteArchiveVideosSpec : Specification<Member>, 
+	ISingleResultSpecification<Member>
 {
   public MemberByUserIdWithFavoriteArchiveVideosSpec(string userId)
   {

@@ -4,9 +4,9 @@ using Ardalis.ApiEndpoints;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using DevBetterWeb.Vimeo.Services.VideoServices;
 using Microsoft.AspNetCore.Mvc;
 using DevBetterWeb.Web.CustomAttributes;
+using NimblePros.Vimeo.VideoServices;
 
 namespace DevBetterWeb.Web.Endpoints;
 
@@ -17,13 +17,11 @@ public class DeleteVideo : EndpointBaseAsync
 {
 	private readonly IRepository<ArchiveVideo> _repository;
 	private readonly DeleteVideoService _deleteVideoService;
-	private readonly IVideosCacheService _videosCacheService;
 
-	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService, IVideosCacheService videosCacheService)
+	public DeleteVideo(IRepository<ArchiveVideo> repository, DeleteVideoService deleteVideoService)
 	{
 		_repository = repository;
 		_deleteVideoService = deleteVideoService;
-		_videosCacheService = videosCacheService;
 	}
 
 	[HttpDelete("videos/uploader/delete-video/{vimeoVideoId}")]
@@ -36,8 +34,8 @@ public class DeleteVideo : EndpointBaseAsync
 			await _repository.DeleteAsync(existVideo, cancellationToken);
 		}
 
-		var deleteResponse = await _deleteVideoService.ExecuteAsync(vimeoVideoId, cancellationToken);
-		_ = _videosCacheService.UpdateAllVideosAsync();
+		var deleteVideoRequest = new DeleteVideoRequest(long.Parse(vimeoVideoId));
+		var deleteResponse = await _deleteVideoService.ExecuteAsync(deleteVideoRequest, cancellationToken);
 
 		return (ActionResult)deleteResponse.ActionResult;
 	}

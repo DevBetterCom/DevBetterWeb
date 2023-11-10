@@ -14,7 +14,9 @@ public class BillingDetails : ValueObject
   public BillingPeriod BillingPeriod { get; }
   public DateTime Date { get; }
 
-  public BillingDetails(string memberName, string subscriptionPlanName, BillingActivityVerb actionVerbPastTense, BillingPeriod billingPeriod, DateTime date, decimal amount = 0)
+  public BillingDetails(string memberName, string subscriptionPlanName, 
+		BillingActivityVerb actionVerbPastTense, BillingPeriod billingPeriod, 
+		DateTime date, decimal amount = 0)
   {
     Amount = amount;
     MemberName = memberName;
@@ -53,42 +55,29 @@ public class BillingDetails : ValueObject
         break;
     }
 
-    switch (ActionVerbPastTense)
-    {
-      case BillingActivityVerb.Subscribed:
-        message += $" {ActionVerbPastTense.ToString()} to {SubscriptionPlanName} for ${Amount}";
-        break;
-      case BillingActivityVerb.Ended:
-        message += $"{GetPossessiveEnding(viewer)} {SubscriptionPlanName} {ActionVerbPastTense.ToString()}";
-        break;
-      case BillingActivityVerb.Renewed:
-        message += $" {ActionVerbPastTense.ToString()} {SubscriptionPlanName} for ${Amount}";
-        break;
-      case BillingActivityVerb.Cancelled:
-      default:
-        message += $" {ActionVerbPastTense.ToString()} {SubscriptionPlanName}";
-        break;
-    }
-
-    message += $" on {Date.ToLongDateString()}.";
+		message += ActionVerbPastTense switch
+		{
+			BillingActivityVerb.Subscribed => $" {ActionVerbPastTense} to {SubscriptionPlanName} for ${Amount}",
+			BillingActivityVerb.Ended => $"{GetPossessiveEnding(viewer)} {SubscriptionPlanName} {ActionVerbPastTense}",
+			BillingActivityVerb.Renewed => $" {ActionVerbPastTense} {SubscriptionPlanName} for ${Amount}",
+			_ => $" {ActionVerbPastTense} {SubscriptionPlanName}",
+		};
+		message += $" on {Date.ToLongDateString()}.";
 
     return message;
   }
 
-  private string GetPossessiveEnding(Viewer viewer)
+  private static string GetPossessiveEnding(Viewer viewer)
   {
-    switch (viewer)
-    {
-      case Viewer.Admin:
-        return "'s";
-      case Viewer.Member:
-        return "r";
-      default:
-        return "";
-    }
-  }
+		return viewer switch
+		{
+			Viewer.Admin => "'s",
+			Viewer.Member => "r",
+			_ => "",
+		};
+	}
 
-  protected override IEnumerable<object> GetEqualityComponents()
+  protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return Amount;
     yield return SubscriptionPlanName;

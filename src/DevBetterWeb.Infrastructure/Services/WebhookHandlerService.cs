@@ -64,7 +64,12 @@ public class WebhookHandlerService : IWebhookHandlerService
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
-    await _memberCancellationService.SendFutureCancellationEmailAsync(paymentHandlerCustomer.Email);
+    if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+    {
+	    return;
+    }
+
+		await _memberCancellationService.SendFutureCancellationEmailAsync(paymentHandlerCustomer.Email);
     var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
     var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
     await _memberAddBillingActivityService.AddMemberSubscriptionCancellationBillingActivity(paymentHandlerCustomer.Email, subscriptionPlanName, billingPeriod);
@@ -77,7 +82,12 @@ public class WebhookHandlerService : IWebhookHandlerService
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
-    await _memberCancellationService.RemoveUserFromMemberRoleAsync(paymentHandlerCustomer.Email);
+		if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+		{
+			return;
+		}
+
+		await _memberCancellationService.RemoveUserFromMemberRoleAsync(paymentHandlerCustomer.Email);
     await _memberCancellationService.SendCancellationEmailAsync(paymentHandlerCustomer.Email);
 
     var memberByEmailSpec = new MemberByEmailSpec(paymentHandlerCustomer.Email);
@@ -95,6 +105,11 @@ public class WebhookHandlerService : IWebhookHandlerService
 		var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
     var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
+
+    if (await IsAlumniAsync(paymentHandlerCustomer.Email))
+    {
+	    return;
+    }
 
     var subscriptionEndDate = _paymentHandlerSubscription.GetEndDate(paymentHandlerEvent.SubscriptionId);
 
@@ -143,7 +158,7 @@ public class WebhookHandlerService : IWebhookHandlerService
         Invitation invite = await _newMemberService.CreateInvitationAsync(paymentHandlerCustomer.Email, paymentHandlerEvent.SubscriptionId);
 
         var webhookMessage = $"A new customer with email {paymentHandlerCustomer.Email} has subscribed to DevBetter. They will be receiving a registration email.";
-        await _webhook.Send($"Webhook:\n{webhookMessage}");
+        await _webhook.SendAsync($"Webhook:\n{webhookMessage}");
 
         await _newMemberService.SendRegistrationEmailAsync(invite);
 
@@ -151,6 +166,13 @@ public class WebhookHandlerService : IWebhookHandlerService
         //await AddNewSubscriberBillingActivity(paymentHandlerSubscriptionId, email, paymentAmount);
       }
     }
+  }
+
+  private async Task<bool> IsAlumniAsync(string email)
+  {
+	  var isAlumni = await _userLookupService.FindUserIsAlumniByEmailAsync(email);
+
+	  return isAlumni;
   }
 
   private Task AddNewSubscriberBillingActivity(string subscriptionId, string email, decimal paymentAmount)
@@ -183,10 +205,7 @@ public class WebhookHandlerService : IWebhookHandlerService
     var spec = new MemberByEmailSpec(paymentHandlerCustomer.Email);
     var member = await _repository.FirstOrDefaultAsync(spec);
 
-    if (member != null)
-    {
-      // TODO this should take in the subscription plan id - currently hard-coded to monthly
-      member.AddSubscription(subscriptionDateTimeRange, 1);
-    }
-  }
+		// TODO this should take in the subscription plan id - currently hard-coded to monthly
+		member?.AddSubscription(subscriptionDateTimeRange, 1);
+	}
 }

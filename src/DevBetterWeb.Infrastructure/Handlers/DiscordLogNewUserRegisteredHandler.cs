@@ -16,7 +16,7 @@ public class DiscordLogNewUserRegisteredHandler : IHandle<NewUserRegisteredEvent
 
   public Task Handle(NewUserRegisteredEvent domainEvent)
   {
-    _webhook.Content = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
-    return _webhook.Send();
+	  var message = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
+    return _webhook.SendAsync(message);
   }
 }

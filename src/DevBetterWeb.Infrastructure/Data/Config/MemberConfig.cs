@@ -19,6 +19,7 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
     builder.Property(x => x.TwitchUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
 		builder.Property(x => x.MastodonUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.TwitterUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
+    builder.Property(x => x.BlueskyUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.YouTubeUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.FirstName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
     builder.Property(x => x.LastName).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
@@ -37,8 +38,8 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
 
     builder.OwnsOne(x => x.CityLocation, cl =>
     {
-      cl.Property(p => p!.Latitude).HasDefaultValue(null);
-      cl.Property(p => p!.Longitude).HasDefaultValue(null);
+      cl.Property(p => p!.Latitude).HasDefaultValue(null).HasColumnType("decimal(18,4)");
+      cl.Property(p => p!.Longitude).HasDefaultValue(null).HasColumnType("decimal(18,4)");
     });
 
     builder.OwnsOne(x => x.Birthday, bd =>

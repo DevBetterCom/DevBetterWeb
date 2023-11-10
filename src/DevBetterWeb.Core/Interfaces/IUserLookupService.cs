@@ -7,4 +7,5 @@ public interface IUserLookupService
   Task<string> FindUserIdByEmailAsync(string email);
   Task<bool> FindUserIsMemberByEmailAsync(string email);
   Task<bool> FindUserIsAlumniByUserIdAsync(string userId);
+  Task<bool> FindUserIsAlumniByEmailAsync(string userId);
 }

@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<WarningsAsErrors/>
+		<WarningsAsErrors />
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">
@@ -29,26 +29,30 @@
 		<PackageReference Include="BuildBundlerMinifier" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Dapper" />
-		<PackageReference Include="GoogleReCaptcha.V3"/>
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore"/>
+		<PackageReference Include="GoogleReCaptcha.V3" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+		<PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Common" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
-		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices"/>
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" />
+		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" >
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="Sendgrid" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog.Sinks.MSSqlServer" />
 		<PackageReference Include="SixLabors.ImageSharp" />
 		<PackageReference Include="Stripe.net" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
@@ -62,9 +66,8 @@
 		<PackageReference Include="Flurl.Http" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj"/>
-		<ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj"/>
-		<ProjectReference Include="..\DevBetterWeb.Vimeo\DevBetterWeb.Vimeo.csproj"/>
+		<ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
+		<ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="Pages\_ViewImports.cshtml">

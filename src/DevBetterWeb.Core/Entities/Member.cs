@@ -59,6 +59,7 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? TwitchUrl { get; private set; }
 	public string? YouTubeUrl { get; private set; }
 	public string? TwitterUrl { get; private set; }
+	public string? BlueskyUrl { get; private set; }
 	public string? CodinGameUrl { get; private set; }
 	public string? DiscordUsername { get; private set; }
 	public string? MastodonUrl { get; private set; } // added and deployed 5 Jan 2022 but site broke
@@ -225,19 +226,21 @@ public class Member : BaseEntity, IAggregateRoot
 	}
 
 	public void UpdateLinks(string? blogUrl,
-		string? codinGameUrl,
+			string? codinGameUrl,
 			string? gitHubUrl,
 			string? linkedInUrl,
 			string? otherUrl,
 			string? twitchUrl,
 			string? youtubeUrl,
 			string? twitterUrl,
+			string? blueskyUrl,
 			string? mastodonUrl,
 			bool isEvent = true)
 	{
 		HashSet<(PropertyInfo prop, string? paramValue)> propInfosAndParamValues = new()
 		{
 			(GetProperty(nameof(BlogUrl)), blogUrl),
+			(GetProperty(nameof(BlueskyUrl)), blueskyUrl),
 			(GetProperty(nameof(CodinGameUrl)), codinGameUrl),
 			(GetProperty(nameof(GitHubUrl)), gitHubUrl),
 			(GetProperty(nameof(LinkedInUrl)), linkedInUrl),
@@ -245,7 +248,7 @@ public class Member : BaseEntity, IAggregateRoot
 			(GetProperty(nameof(OtherUrl)), otherUrl),
 			(GetProperty(nameof(TwitchUrl)), twitchUrl),
 			(GetProperty(nameof(TwitterUrl)), twitterUrl),
-			(GetProperty(nameof(YouTubeUrl)), youtubeUrl),
+			(GetProperty(nameof(YouTubeUrl)), youtubeUrl)
 		};
 
 		var valuesChanged = propInfosAndParamValues

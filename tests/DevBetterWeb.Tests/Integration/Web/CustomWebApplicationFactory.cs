@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web;
-using DevBetterWeb.Web.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace DevBetterWeb.Tests.Integration.Web;
 
-public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
+public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Program>
 {
   protected override void ConfigureWebHost(IWebHostBuilder builder)
   {

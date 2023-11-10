@@ -7,22 +7,23 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="ILogger.Moq" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" >
+    <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" >
+    <PackageReference Include="coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Flurl.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DevBetterWeb.Core\DevBetterWeb.Core.csproj"/>
-    <ProjectReference Include="..\..\src\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj"/>
-    <ProjectReference Include="..\..\src\DevBetterWeb.Web\DevBetterWeb.Web.csproj"/>
+    <ProjectReference Include="..\..\src\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
+    <ProjectReference Include="..\..\src\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\DevBetterWeb.Web\DevBetterWeb.Web.csproj" />
   </ItemGroup>
 </Project>

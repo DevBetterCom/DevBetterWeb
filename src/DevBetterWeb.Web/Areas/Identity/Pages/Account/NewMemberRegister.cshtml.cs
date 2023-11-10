@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
-using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -105,7 +103,7 @@ public class NewMemberRegisterModel : PageModel
   {
 	  try
 	  {
-		  returnUrl = returnUrl ?? Url.Content("~/");
+		  returnUrl ??= Url.Content("~/");
 		  if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
 		  {
 			  ModelState.AddModelError("captcha", "Captcha validation failed");

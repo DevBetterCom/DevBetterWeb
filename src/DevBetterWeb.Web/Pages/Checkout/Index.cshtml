@@ -1,16 +1,10 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.Checkout.IndexModel
-@{
-}
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @*<link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/global.css" />*@
-    <!-- Load Stripe.js on your website. -->
-    @*<script src="https://js.stripe.com/v3/"></script>*@
-    <!--<script src="./../script.js" defer></script>-->
 </head>
 
 <body>
@@ -24,88 +18,44 @@
             <br />
             <p>Members of this channel will fast-track their careers through professional group mentorship. This program is focused exclusively on software developers seeking to maximize their career growth and will cover critical technical and non-technical topics.</p>
             <br />
-            <h3>Choose between two subscription plans:</h3>
-            <div class="row">
-                <div class="col-5">
-                    <a class="btn btn-primary" href="/checkout/monthly" role="button"><strong>Monthly Plan: $200 per month</strong></a>
-                </div>
-                <div class="col-5">
-                    <a class="btn btn-primary" href="/checkout/yearly" role="button"><strong>Yearly Plan: $2000 per year</strong></a>
-                </div>
-            </div>
-            <br />
-
-
-            @*<div class="row">
-                <div class="col-5">
-                    <form asp-controller="Payment" asp-action="subscribe" method="post" id="payment-form">
-                        <div class="container">
-                            <div class="form-row">
-                                <label for="card-element">
-                                    Card number
-                                </label>
-                                <div id="card-element">
-
-                                </div>
-
-                                <div id="card-errors" role="alert"></div>
-                            </div>
-                            <div class="form-row">
-                                <label for="email">
-                                    Email
-                                </label>
-                                <div>
-                                    <input name="email" id="email" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <label for="plan">
-                                    Plan
-                                </label>
-                                <div>
-                                    <input type="radio" name="plan" id="planMonthly" value="Monthly" />
-                                    <label for="planMonthly">Monthly - $200 USD per month</label>
-                                    <br />
-                                    <input type="radio" name="plan" id="planYearly" value="Yearly" />
-                                    <label for="planYearly">Yearly - $2,000 USD per year</label>
-                                </div>
-                            </div>
-                            <button>Subscribe</button>
-                        </div>
-                    </form>
-                </div>
-
-
-                <div class="col-5">
-                    <div>
-                        Monthly plan: $200 per month
+            @if (Model.IsReCaptchaValid || Model.HasCaptchaBeenCompleted)
+            {
+                <h3>Choose between two subscription plans:</h3>
+                <div class="row">
+                    <div class="col-5">
+                        <a class="btn btn-primary" href="https://buy.stripe.com/3cs00s41Ha7q0PC6oo" role="button"><strong>Monthly Plan: $200 per month</strong></a>
                     </div>
-                    <form method="post" asp-page-handler="Monthly">
-                        <script src="https://checkout.stripe.com/checkout.js"
-                                class="stripe-button"
-                                data-keyboard="@Model.StripePublishableKey"
-                                data-amount="20000"
-                                data-name="Monthly Subscription"
-                                data-description="Fast-track your career!">
-                        </script>
-                    </form>
-
-                    <div>
-                        Yearly plan: $2,000 per year
+                    <div class="col-5">
+                        <a class="btn btn-primary" href="https://buy.stripe.com/7sI8wYeGla7q41ObIJ" role="button"><strong>Yearly Plan: $2000 per year</strong></a>
                     </div>
-                    <form method="post" asp-page-handler="Yearly">
-                        <script src="https://checkout.stripe.com/checkout.js"
-                                class="stripe-button"
-                                data-keyboard="@Model.StripePublishableKey"
-                                data-amount="200000"
-                                data-name="Yearly Subscription"
-                                data-description="Fast-track your career!">
-                        </script>
+                </div>
+            }
+            @if (!Model.HasCaptchaBeenCompleted)
+            {
+                <div>
+                    Before proceeding you must confirm you're not a bot:
+                    <form id="account" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <input type="hidden" name="captcha" id="captchaInput" />
+                        <button type="submit" class="btn btn-primary">Let's Go!</button>
                     </form>
                 </div>
-            </div>*@
+            }
         </div>
     </div>
-    
+
 </body>
 </html>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js?render=@Model.Configuration["googleReCaptcha:SiteKey"]"></script>
+    <script>
+        //// Key: @Model.Configuration!["googleReCaptcha:SecretKey"]!.Substring(0,10)
+        grecaptcha.ready(function () {
+            window.grecaptcha.execute('@Model.Configuration["googleReCaptcha:SiteKey"]', { action: 'home' }).then(function (token) {
+                $("#captchaInput").val(token);
+            });
+        });
+    </script>
+}

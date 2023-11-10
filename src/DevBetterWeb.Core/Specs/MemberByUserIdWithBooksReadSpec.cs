@@ -3,7 +3,8 @@ using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;
 
-public sealed class MemberByUserIdWithBooksReadSpec : Specification<Member>, ISingleResultSpecification
+public sealed class MemberByUserIdWithBooksReadSpec : Specification<Member>, 
+	ISingleResultSpecification<Member>
 {
   public MemberByUserIdWithBooksReadSpec(string userId)
   {

@@ -1790,7 +1790,30 @@ pre code {
   }
 }
 
+@media (max-width:1100px){
+	.calendar-agenda{
+		display:block;
+	}
+	.calendar-full {
+		display:none;
+	}
+}
+
+@media (min-width:1100px) {
+	.calendar-agenda {
+		display: none;
+	}
+
+	.calendar-full {
+		display: block;
+	}
+}
+
 @media (max-width: 991.98px) {
+	.row {
+		display: flex;
+		flex-direction: column;
+	}
   .table-responsive-lg {
     display: block;
     width: 100%;

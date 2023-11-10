@@ -126,6 +126,13 @@
                     </div>
                 }
 
+                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlueskyUrl))
+                {
+                    <div class="mb-2">
+                        <a href="@Model.UserDetailsViewModel.BlueskyUrl" target="_blank">Bluesky</a>
+                    </div>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
                 {
                     <div class="mb-2">

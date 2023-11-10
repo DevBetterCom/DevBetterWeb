@@ -16,8 +16,8 @@ public class DiscordLogMemberUpdateHandler : IHandle<MemberUpdatedEvent>
 
   public Task Handle(MemberUpdatedEvent memberUpdatedEvent)
   {
-    _webhook.Content = returnWebhookMessageString(memberUpdatedEvent);
-    return _webhook.Send();
+    var message = returnWebhookMessageString(memberUpdatedEvent);
+    return _webhook.SendAsync(message);
   }
 
   public static string returnWebhookMessageString(MemberUpdatedEvent memberUpdatedEvent)

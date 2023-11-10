@@ -40,23 +40,25 @@
 
   <ItemGroup>
     <PackageReference Include="altcover" />
-    <PackageReference Include="coverlet.msbuild" >
+    <PackageReference Include="coverlet.msbuild">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <!--<PackageReference Include="Microsoft.CodeCoverage"  />-->
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"  />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"  />
-    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
-    <PackageReference Include="Moq"  />
-    <PackageReference Include="ReportGenerator"  />
-    <PackageReference Include="xunit"  />
-    <PackageReference Include="xunit.runner.console" >
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="ReportGenerator" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.console">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="xunit.runner.reporters" />
-    <PackageReference Include="xunit.runner.visualstudio" >
+    <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
