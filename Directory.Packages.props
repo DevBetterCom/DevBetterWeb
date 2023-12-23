@@ -89,7 +89,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="xunit.runner.reporters" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.reporters" Version="2.6.4" />
     <PackageVersion Include="XunitXml.TestLogger" Version="3.1.17" />
   </ItemGroup>
 </Project>
