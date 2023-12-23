@@ -54,7 +54,7 @@ jobs:
 
       - name: Setup .NET Core
         id: setup_dotnet_core
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '7.0.x'
           include-prerelease: true
