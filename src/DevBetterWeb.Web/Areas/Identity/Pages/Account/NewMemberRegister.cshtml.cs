@@ -142,7 +142,7 @@ public class NewMemberRegisterModel : PageModel
 					  await _userRoleMembershipService.AddUserToRoleAsync(userId, memberRole.Id);
 				  }
 
-				  return RedirectToRoute("/User/MyProfile");
+				  return Redirect("/User/MyProfile");
 			  }
 
 			  foreach (var error in result.Errors)
