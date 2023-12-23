@@ -8,7 +8,7 @@
     <PackageVersion Include="Ardalis.ApiClient" Version="0.2.3" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
-    <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1" />
+    <PackageVersion Include="Ardalis.GuardClauses" Version="4.2.0" />
     <PackageVersion Include="Ardalis.HttpClientTestExtensions" Version="4.2.0" />
     <PackageVersion Include="Ardalis.ListStartupServices" Version="1.1.4" />
     <PackageVersion Include="Ardalis.Result" Version="7.1.0" />
@@ -27,7 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="2.40.3" />
-    <PackageVersion Include="Dapper" Version="2.0.151" />
+    <PackageVersion Include="Dapper" Version="2.1.15" />
     <PackageVersion Include="FastEndpoints" Version="5.18.0" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.18.0" />
@@ -83,11 +83,11 @@
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageVersion Include="xunit" Version="2.6.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
-    <PackageVersion Include="xunit.runner.console" Version="2.5.0">
+    <PackageVersion Include="xunit.runner.console" Version="2.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="xunit.runner.reporters" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.reporters" Version="2.6.4" />
     <PackageVersion Include="XunitXml.TestLogger" Version="3.1.17" />
   </ItemGroup>
 </Project>
