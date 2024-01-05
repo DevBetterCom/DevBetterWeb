@@ -85,14 +85,12 @@ jobs:
           dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --self-contained -r win-x86 --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
 
       - name: Upload build artifacts
-        id: upload_build_artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Build artifacts
           path: Artifacts/
 
       - name: Upload publish artifacts
-        id: upload_publish_artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Publish artifacts
@@ -105,7 +103,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Download publish artifacts
-        id: dl_publish_artifacts
         uses: actions/download-artifact@v4
         with:
           name: Publish artifacts
