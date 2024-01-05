@@ -85,15 +85,17 @@ jobs:
           dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --configuration Release --self-contained -r win-x86 --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp
 
       - name: Upload build artifacts
+        id: upload_build_artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Build artifacts
+          name: Build artifacts-${{ matrix.os }}-${{ github.run_number }}
           path: Artifacts/
 
       - name: Upload publish artifacts
+        id: upload_publish_artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Publish artifacts
+          name: Publish artifacts-${{ matrix.os }}-${{ github.run_number }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp/
 
   cd:
@@ -103,9 +105,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Download publish artifacts
+        id: dl_publish_artifacts
         uses: actions/download-artifact@v4
         with:
-          name: Publish artifacts
+          name: Publish artifacts-${{ matrix.os }}-${{ github.run_number }}
           path: WebApp/
 
       - name: Azure webapp deploy with Publish Profile
