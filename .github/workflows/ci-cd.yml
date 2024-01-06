@@ -108,7 +108,7 @@ jobs:
         id: dl_publish_artifacts
         uses: actions/download-artifact@v4
         with:
-          name: Publish artifacts-${{ matrix.os }}-${{ github.run_number }}
+          name: Publish artifacts
           path: WebApp/
 
       - name: Azure webapp deploy with Publish Profile
