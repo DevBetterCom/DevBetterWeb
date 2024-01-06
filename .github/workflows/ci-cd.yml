@@ -16,8 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     outputs:
       is_push_to_default_branch: ${{ steps.conditionals_handler.outputs.is_push_to_default_branch }}
-      os: ${{ steps.set_cd_outputs.outputs.os }}
-      run_number: ${{ steps.set_cd_outputs.outputs.run_number }}
+      os: ${{ matrix.os }}
+      run_number: ${{ github.run_number }}
     steps:
       - name: Data gatherer
         id: data_gatherer
@@ -99,14 +99,6 @@ jobs:
         with:
           name: Publish artifacts-${{ matrix.os }}-${{ github.run_number }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp/
-
-      - name: Set outputs for CD job
-        id: set_cd_outputs
-        run: |
-          $os = "${{ matrix.os }}"
-          $run_number = "${{ github.run_number }}"
-          Write-Output "::set-output name=os::${{ $(echo $os) }}"
-          Write-Output "::set-output name=run_number::${{ $(echo $run_number) }}"
 
   cd:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
