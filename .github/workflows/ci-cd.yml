@@ -105,8 +105,8 @@ jobs:
         run: |
           $os = "${{ matrix.os }}"
           $runNumber = "${{ github.run_number }}"
-          Write-Output "::set-output name=os::$(echo $os)"
-          Write-Output "::set-output name=run_number::$(echo $runNumber)"
+          Write-Output "::set-output name=os::$os"
+          Write-Output "::set-output name=run_number::$runNumber"
 
   cd:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
