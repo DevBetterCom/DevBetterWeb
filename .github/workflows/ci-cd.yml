@@ -103,8 +103,10 @@ jobs:
       - name: Set outputs for CD job
         id: set_cd_outputs
         run: |
-          Write-Output "::set-output name=os::${{ matrix.os }}"
-          Write-Output "::set-output name=run_number::${{ github.run_number }}"
+          $os = "${{ matrix.os }}"
+          $run_number = "${{ github.run_number }}"
+          Write-Output "::set-output name=os::${{ $(echo $os) }}"
+          Write-Output "::set-output name=run_number::${{ $(echo $run_number) }}"
 
   cd:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
