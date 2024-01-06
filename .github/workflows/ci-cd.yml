@@ -98,6 +98,13 @@ jobs:
           name: Publish artifacts-${{ matrix.os }}-${{ github.run_number }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp/
 
+      - name: Set outputs for CD job
+        id: set_outputs_for_cd
+        run: |
+          echo "::set-output name=os::${{ matrix.os }}"
+          echo "::set-output name=run_number::${{ github.run_number }}"
+
+
   cd:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
     name: Continuous Deployment
@@ -108,7 +115,7 @@ jobs:
         id: dl_publish_artifacts
         uses: actions/download-artifact@v4
         with:
-          name: Publish artifacts
+          name: Publish artifacts-${{ needs.ci.outputs.os }}-${{ needs.ci.outputs.run_number }}
           path: WebApp/
 
       - name: Azure webapp deploy with Publish Profile
