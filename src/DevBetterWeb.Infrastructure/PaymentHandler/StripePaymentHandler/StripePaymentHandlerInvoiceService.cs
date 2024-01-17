@@ -1,5 +1,4 @@
-﻿using System;
-using DevBetterWeb.Core.Interfaces;
+﻿using DevBetterWeb.Core.Interfaces;
 using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;

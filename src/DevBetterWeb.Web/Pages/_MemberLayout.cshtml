@@ -156,7 +156,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@UserManager.GetUserName(User)</span>
-                                <img class="img-profile rounded-circle" src="~/img/undraw_profile.svg">
+																<img class="img-profile rounded-circle" id="userAvatar" alt="Profile picture" onerror='epic(this)' />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -259,10 +259,25 @@
     </environment>
     <script src="~/js/jquery.twbsPagination.min.js" asp-append-version="true"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-    <script src="https://player.vimeo.com/api/player.js"></script>
+		<script src="https://player.vimeo.com/api/player.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://launchpass.com/p/devbetter/embed.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+			document.addEventListener('DOMContentLoaded', function () {
+			  fetch('/users/avatar-url')
+			    .then(response => {
+			      if (!response.ok) {
+			        throw new Error('Network response was not ok');
+			      }
+			      return response.text();
+			    })
+			    .then(avatarUrl => {
+			      document.getElementById('userAvatar').src = avatarUrl;
+			    })
+			    .catch(error => console.error('Error fetching avatar URL:', error));
+			});
+		</script>
     @await RenderSectionAsync("scripts", required: false).ConfigureAwait(false)
 </body>
 

@@ -64,7 +64,7 @@ public class MyProfileLinksModel : PageModel
     if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
     member.UpdateLinks(UserLinksUpdateModel.BlogUrl, UserLinksUpdateModel.CodinGameUrl, UserLinksUpdateModel.GithubUrl, UserLinksUpdateModel.LinkedInUrl,
-              UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl, UserLinksUpdateModel.MastodonUrl);
+              UserLinksUpdateModel.OtherUrl, UserLinksUpdateModel.TwitchUrl, UserLinksUpdateModel.YouTubeUrl, UserLinksUpdateModel.TwitterUrl, UserLinksUpdateModel.BlueskyUrl,UserLinksUpdateModel.MastodonUrl);
 
     await _memberRepository.UpdateAsync(member);
   }

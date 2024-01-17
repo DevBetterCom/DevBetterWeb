@@ -17,7 +17,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -251,6 +251,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("BlogUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("BlueskyUrl")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -593,7 +597,7 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
                             b1.Property<decimal>("Amount")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("decimal(18,2)")
+                                .HasColumnType("decimal(18,4)")
                                 .HasDefaultValue(0m);
 
                             b1.Property<int>("BillingPeriod")
@@ -715,10 +719,10 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<decimal>("Latitude")
-                                .HasColumnType("decimal(18,2)");
+                                .HasColumnType("decimal(18,4)");
 
                             b1.Property<decimal>("Longitude")
-                                .HasColumnType("decimal(18,2)");
+                                .HasColumnType("decimal(18,4)");
 
                             b1.HasKey("MemberId");
 

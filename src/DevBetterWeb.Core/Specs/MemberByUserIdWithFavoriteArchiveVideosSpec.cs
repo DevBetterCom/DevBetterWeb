@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Core.Specs;

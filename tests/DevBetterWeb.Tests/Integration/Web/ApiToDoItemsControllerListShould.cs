@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using DevBetterWeb.Core.Entities;
-using DevBetterWeb.Web;
-using Newtonsoft.Json;
+﻿using System.Net.Http;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Integration.Web;

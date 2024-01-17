@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DevBetterWeb.Core.Entities;
+﻿using DevBetterWeb.Core.Entities;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.ArchiveVideoTests;
