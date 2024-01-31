@@ -35,7 +35,7 @@ public class CreateVideoService : ICreateVideoService
 		{
 			Name = videoName,
 			Upload = { Size = videoSize },
-			Embed = new Embed { Title = new Title { Owner = EmbedOwnerTitle.Hide } },
+			Embed = new Embed { Title = new Title { Owner = EmbedOwnerTitle.Hide }, Speed = true, Volume = true, Playbar = true, Buttons = new Buttons { Embed = true, Hd = true, Fullscreen = true } },
 			Privacy = new Privacy { Embed = EmbedPrivacy.Whitelist, View = PrivacyView.Disable, Download = false },
 			EmbedDomains = new List<string> { domain },
 			HideFromVimeo = true
