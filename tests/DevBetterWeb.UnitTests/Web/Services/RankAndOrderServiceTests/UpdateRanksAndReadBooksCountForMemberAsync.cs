@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
+using NSubstitute;
 using System.Linq;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
@@ -13,14 +13,14 @@ namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class UpdateRanksAndReadBooksCountForMemberAsync
 {
-	private readonly Mock<IMemberService> _mockMemberService;
+	private readonly IMemberService _memberService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public UpdateRanksAndReadBooksCountForMemberAsync()
 	{
-		var mockRankingService = new Mock<IRankingService>();
-		_mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(mockRankingService.Object, _mockMemberService.Object);
+		var mockRankingService = Substitute.For<IRankingService>();
+		_memberService = Substitute.For<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(mockRankingService, _memberService);
 	}
 
 	[Fact]
@@ -28,32 +28,26 @@ public class UpdateRanksAndReadBooksCountForMemberAsync
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
+		{
+			new BookCategoryDto
+			{
+				Books = new List<BookDto>
 				{
-						new BookCategoryDto
+					new BookDto
+					{
+						MembersWhoHaveRead = new List<MemberForBookDto> { new MemberForBookDto(), new MemberForBookDto() }
+					},
+					new BookDto
+					{
+						MembersWhoHaveRead = new List<MemberForBookDto>
 						{
-								Books = new List<BookDto>
-								{
-										new BookDto
-										{
-												MembersWhoHaveRead = new List<MemberForBookDto>
-												{
-														new MemberForBookDto(),
-														new MemberForBookDto()
-												}
-										},
-										new BookDto
-										{
-												MembersWhoHaveRead = new List<MemberForBookDto>
-												{
-														new MemberForBookDto(),
-														new MemberForBookDto(),
-														new MemberForBookDto()
-												}
-										}
-								}
+							new MemberForBookDto(), new MemberForBookDto(), new MemberForBookDto()
 						}
-				};
-		_mockMemberService.Setup(x => x.GetActiveAlumniMembersAsync()).ReturnsAsync(new List<Member> { });
+					}
+				}
+			}
+		};
+		_memberService.GetActiveAlumniMembersAsync().Returns(new List<Member> { });
 
 		// Act
 		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(bookCategories);
@@ -68,32 +62,32 @@ public class UpdateRanksAndReadBooksCountForMemberAsync
 	{
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>
+		{
+			new BookCategoryDto
+			{
+				Books = new List<BookDto>
 				{
-						new BookCategoryDto
+					new BookDto
+					{
+						MembersWhoHaveRead = new List<MemberForBookDto>
 						{
-								Books = new List<BookDto>
-								{
-										new BookDto
-										{
-												MembersWhoHaveRead = new List<MemberForBookDto>
-												{
-														new MemberForBookDto { Id = 1 },
-														new MemberForBookDto { Id = 2 }
-												}
-										},
-										new BookDto
-										{
-												MembersWhoHaveRead = new List<MemberForBookDto>
-												{
-														new MemberForBookDto { Id = 3 },
-														new MemberForBookDto { Id = 4 },
-														new MemberForBookDto { Id = 1 }
-												}
-										}
-								}
+							new MemberForBookDto { Id = 1 }, new MemberForBookDto { Id = 2 }
 						}
-				};
-		_mockMemberService.Setup(x => x.GetActiveAlumniMembersAsync()).ReturnsAsync(new List<Member> { new Member { Id = 1 }, new Member { Id = 2 } });
+					},
+					new BookDto
+					{
+						MembersWhoHaveRead = new List<MemberForBookDto>
+						{
+							new MemberForBookDto { Id = 3 },
+							new MemberForBookDto { Id = 4 },
+							new MemberForBookDto { Id = 1 }
+						}
+					}
+				}
+			}
+		};
+		_memberService.GetActiveAlumniMembersAsync()
+			.Returns(new List<Member> { new Member { Id = 1 }, new Member { Id = 2 } });
 
 		// Act
 		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(bookCategories);
@@ -120,8 +114,7 @@ public class UpdateRanksAndReadBooksCountForMemberAsync
 					{
 						MembersWhoHaveRead = new List<MemberForBookDto>
 						{
-							new MemberForBookDto { Id = 1 },
-							new MemberForBookDto { Id = 2 }
+							new MemberForBookDto { Id = 1 }, new MemberForBookDto { Id = 2 }
 						}
 					},
 					new BookDto
@@ -136,7 +129,8 @@ public class UpdateRanksAndReadBooksCountForMemberAsync
 				}
 			}
 		};
-		_mockMemberService.Setup(x => x.GetActiveAlumniMembersAsync()).ReturnsAsync(new List<Member> { new Member { Id = 5 }, new Member { Id = 6 } });
+		_memberService.GetActiveAlumniMembersAsync()
+			.Returns(new List<Member> { new Member { Id = 5 }, new Member { Id = 6 } });
 
 		// Act
 		await _rankAndOrderService.UpdateRanksAndReadBooksCountForMemberAsync(bookCategories);

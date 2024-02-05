@@ -2,19 +2,20 @@
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 using FluentAssertions;
+using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 
 namespace DevBetterWeb.UnitTests.Infrastructure.Services;
 public class JsonParserServiceTests
 {
 	private readonly IJsonParserService _jsonParserService;
-	private readonly Mock<ILogger<JsonParserService>> _logger = new Mock<ILogger<JsonParserService>>();
+	private readonly ILogger<JsonParserService> _logger = Substitute.For<ILogger<JsonParserService>>();
 
 	public JsonParserServiceTests()
 	{
-		this._jsonParserService = new JsonParserService(this._logger.Object);
+		this._jsonParserService = new JsonParserService(this._logger);
 	}
 
 	[Fact]
@@ -51,8 +52,9 @@ public class JsonParserServiceTests
 			Assert.NotNull(ex);
 		}
 
-		this._logger.VerifyLog(l => l.LogError($"Failed JSON parsing for: {invlaidJson}"));
-		this._logger.VerifyLog(l => l.LogInformation("JSON parsing has failed"));
+		this._logger.Received().LogError(Arg.Any<JsonException>() ,$"Failed JSON parsing for: {invlaidJson}");
+		// this._logger.VerifyLog(l => l.LogInformation("JSON parsing has failed"));
+		this._logger.Received().LogInformation("JSON parsing has failed");
 	}
 
 	[Fact]
@@ -63,6 +65,8 @@ public class JsonParserServiceTests
 
 		var actualResult = this._jsonParserService.Parse(vlaidJson);
 
-		this._logger.VerifyLog(l => l.LogInformation("JSON parsing is successful"));
+		// this._logger.VerifyLog(l => l.LogInformation("JSON parsing is successful"));
+		this._logger.Received().LogInformation("JSON parsing is successful");
+
 	}
 }

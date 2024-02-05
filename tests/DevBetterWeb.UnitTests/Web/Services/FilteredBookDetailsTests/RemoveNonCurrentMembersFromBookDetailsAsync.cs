@@ -7,21 +7,21 @@ using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Pages.Leaderboard;
 using DevBetterWeb.Web.Services;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.FilteredBookDetailsTests;
 
 public class RemoveNonCurrentMembersFromBookDetailsAsync
 {
-	private readonly Mock<INonCurrentMembersService> _mockNonCurrentMembersService;
+	private readonly INonCurrentMembersService _mockNonCurrentMembersService;
 	private readonly FilteredBookDetailsService _filteredBookDetailsService;
 
 	public RemoveNonCurrentMembersFromBookDetailsAsync()
 	{
-		_mockNonCurrentMembersService = new Mock<INonCurrentMembersService>();
-		var bookService = new Mock<IBookService>();
-		_filteredBookDetailsService = new FilteredBookDetailsService(_mockNonCurrentMembersService.Object, bookService.Object);
+		_mockNonCurrentMembersService = Substitute.For<INonCurrentMembersService>();
+		var bookService = Substitute.For<IBookService>();
+		_filteredBookDetailsService = new FilteredBookDetailsService(_mockNonCurrentMembersService, bookService);
 	}
 
 	[Fact]
@@ -32,11 +32,11 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		{
 			MembersWhoHaveRead = new List<Member> { new Member { Id = 1 }, new Member { Id = 2 }, new Member { Id = 3 } }
 		};
-		_mockNonCurrentMembersService.Setup(s => s.GetUsersIdsWithoutRolesAsync())
-			.ReturnsAsync(new List<string> { "1", "2" });
+		_mockNonCurrentMembersService.GetUsersIdsWithoutRolesAsync()
+			.Returns(new List<string> { "1", "2" });
 		_mockNonCurrentMembersService
-			.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>()))
-			.ReturnsAsync(new List<int> { 1, 2 });
+			.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { 1, 2 });
 
 		// Act
 		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
@@ -54,11 +54,11 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		{
 			MembersWhoHaveRead = new List<Member> { new Member { Id = 1 }, new Member { Id = 2 }, new Member { Id = 3 } }
 		};
-		_mockNonCurrentMembersService.Setup(s => s.GetUsersIdsWithoutRolesAsync())
-			.ReturnsAsync(new List<string> { "4", "5" });
+		_mockNonCurrentMembersService.GetUsersIdsWithoutRolesAsync()
+			.Returns(new List<string> { "4", "5" });
 		_mockNonCurrentMembersService
-			.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>()))
-			.ReturnsAsync(new List<int> { 4, 5 });
+			.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { 4, 5 });
 
 		// Act
 		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
@@ -75,10 +75,10 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		{
 			MembersWhoHaveRead = new List<Member> { new Member { Id = 1 }, new Member { Id = 2 }, new Member { Id = 3 } }
 		};
-		_mockNonCurrentMembersService.Setup(s => s.GetUsersIdsWithoutRolesAsync()).ReturnsAsync(new List<string> { });
+		_mockNonCurrentMembersService.GetUsersIdsWithoutRolesAsync().Returns(new List<string> { });
 		_mockNonCurrentMembersService
-			.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>()))
-			.ReturnsAsync(new List<int> { });
+			.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { });
 
 		// Act
 		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
@@ -92,8 +92,11 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 	{
 		// Arrange
 		var bookDetailsViewModel = new BookDetailsViewModel { MembersWhoHaveRead = new List<Member> { } };
-		_mockNonCurrentMembersService.Setup(s => s.GetUsersIdsWithoutRolesAsync()).ReturnsAsync(new List<string> { "1", "2" });
-		_mockNonCurrentMembersService.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<int> { 1, 2 });
+		_mockNonCurrentMembersService.GetUsersIdsWithoutRolesAsync()
+			.Returns(new List<string> { "1", "2" });
+		_mockNonCurrentMembersService
+			.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { 1, 2 });
 
 		// Act
 		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
@@ -110,8 +113,11 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		{
 			MembersWhoHaveRead = new List<Member> { new Member { Id = 1 }, new Member { Id = 2 }, new Member { Id = 3 } }
 		};
-		_mockNonCurrentMembersService.Setup(s => s.GetUsersIdsWithoutRolesAsync()).ReturnsAsync(new List<string> { "1", "2", "3" });
-		_mockNonCurrentMembersService.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<int> { 1, 2, 3 });
+		_mockNonCurrentMembersService.GetUsersIdsWithoutRolesAsync()
+			.Returns(new List<string> { "1", "2", "3" });
+		_mockNonCurrentMembersService
+			.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { 1, 2, 3 });
 
 		// Act
 		var result = await _filteredBookDetailsService.RemoveNonCurrentMembersFromBookDetailsAsync(bookDetailsViewModel);
@@ -120,4 +126,3 @@ public class RemoveNonCurrentMembersFromBookDetailsAsync
 		Assert.Empty(result.MembersWhoHaveRead);
 	}
 }
-

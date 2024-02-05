@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBetterWeb.Core;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests;
@@ -13,11 +13,11 @@ public class RemoveUserFromMemberRoleAsync : MemberSubscriptionCancellationServi
   [Fact]
   public async Task RemovesUserFromMemberRole()
   {
-    _userLookup.Setup(u => u.FindUserIdByEmailAsync(_email)).ReturnsAsync(_userId);
+    _userLookup.FindUserIdByEmailAsync(_email).Returns(Task.FromResult(_userId));
 
     await _memberCancellationService.RemoveUserFromMemberRoleAsync(_email);
 
-    _userRoleMembershipService.Verify(u => u.RemoveUserFromRoleByRoleNameAsync(_userId, Constants.MEMBER_ROLE_NAME), Times.Once);
+	   await _userRoleMembershipService.Received(1).RemoveUserFromRoleByRoleNameAsync(_userId, Constants.MEMBER_ROLE_NAME);
   }
 }
 

@@ -3,24 +3,31 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Specs;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.MemberSubscriptionCancellationServiceTests;
 
 public class SendFutureCancellationEmailAsync : MemberSubscriptionCancellationServiceTest
 {
-  private readonly string _email = "TestEmail";
-  private readonly DateTime _date = new DateTime(1, 1, 1);
+	private readonly string _email = "TestEmail";
+	private readonly DateTime _date = new DateTime(1, 1, 1);
 
-  [Fact]
-  public async Task SendsEmail()
-  {
-    _memberRepository.Setup(s => s.FirstOrDefaultAsync(It.IsAny<MemberByUserIdSpec>(), CancellationToken.None)).ReturnsAsync(new Member());
-    _subscriptionPeriodCalculationsService.Setup(s => s.GetCurrentSubscriptionEndDate(It.IsAny<Member>())).Returns(_date);
+	[Fact]
+	public async Task SendsEmail()
+	{
+		_memberRepository.FirstOrDefaultAsync(
+				Arg.Any<MemberByUserIdSpec>(),
+				CancellationToken.None)!
+			.Returns(Task.FromResult(new Member()));
 
-    await _memberCancellationService.SendFutureCancellationEmailAsync(_email);
+		_subscriptionPeriodCalculationsService.GetCurrentSubscriptionEndDate(
+				Arg.Any<Member>())
+			.Returns(_date);
 
-    _emailService.Verify(e => e.SendEmailAsync(_email, It.IsAny<string>(), It.IsAny<string>()));
-  }
+		await _memberCancellationService.SendFutureCancellationEmailAsync(_email);
+
+		await _emailService.Received()
+			.SendEmailAsync(_email, Arg.Any<string>(), Arg.Any<string>());
+	}
 }

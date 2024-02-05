@@ -2,7 +2,7 @@
 using System.Threading;
 using DevBetterWeb.Web.Interfaces;
 using Xunit;
-using Moq;
+using NSubstitute;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Infrastructure.Interfaces;
@@ -13,15 +13,15 @@ namespace DevBetterWeb.UnitTests.Web.Services.FilteredBookDetailsTests;
 
 public class GetBookDetailsAsync
 {
-	private readonly Mock<INonCurrentMembersService> _nonCurrentMembersServiceMock;
-	private readonly Mock<IBookService> _bookServiceMock;
+	private readonly INonCurrentMembersService _nonCurrentMembersServiceMock;
+	private readonly IBookService _bookServiceMock;
 	private readonly FilteredBookDetailsService _filteredBookDetailsService;
 
 	public GetBookDetailsAsync()
 	{
-		_nonCurrentMembersServiceMock = new Mock<INonCurrentMembersService>();
-		_bookServiceMock = new Mock<IBookService>();
-		_filteredBookDetailsService = new FilteredBookDetailsService(_nonCurrentMembersServiceMock.Object, _bookServiceMock.Object);
+		_nonCurrentMembersServiceMock = Substitute.For<INonCurrentMembersService>();
+		_bookServiceMock = Substitute.For<IBookService>();
+		_filteredBookDetailsService = new FilteredBookDetailsService(_nonCurrentMembersServiceMock, _bookServiceMock);
 	}
 
 	[Fact]
@@ -29,7 +29,7 @@ public class GetBookDetailsAsync
 	{
 		// Arrange
 		var bookId = "1";
-		_bookServiceMock.Setup(s => s.GetBookByIdAsync(int.Parse(bookId))).ReturnsAsync((BookDetailsViewModel?)null);
+		_bookServiceMock.GetBookByIdAsync(int.Parse(bookId)).Returns((BookDetailsViewModel?)null);
 
 		// Act
 		var result = await _filteredBookDetailsService.GetBookDetailsAsync(bookId);
@@ -44,7 +44,7 @@ public class GetBookDetailsAsync
 		// Arrange
 		var bookId = "1";
 		var bookDetails = new BookDetailsViewModel();
-		_bookServiceMock.Setup(s => s.GetBookByIdAsync(int.Parse(bookId))).ReturnsAsync(bookDetails);
+		_bookServiceMock.GetBookByIdAsync(int.Parse(bookId)).Returns(bookDetails);
 
 		// Act
 		var result = await _filteredBookDetailsService.GetBookDetailsAsync(bookId);
@@ -67,9 +67,10 @@ public class GetBookDetailsAsync
 		{
 			MembersWhoHaveRead = new List<Member> { new Member { Id = 1 } }
 		};
-		_bookServiceMock.Setup(s => s.GetBookByIdAsync(int.Parse(bookId))).ReturnsAsync(bookDetails);
-		_nonCurrentMembersServiceMock.Setup(s => s.GetUsersIdsWithoutRolesAsync()).ReturnsAsync(new List<string> { "2", "3" });
-		_nonCurrentMembersServiceMock.Setup(s => s.GetNonCurrentMembersAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<int> { 2, 3 });
+		_bookServiceMock.GetBookByIdAsync(int.Parse(bookId)).Returns(bookDetails);
+		_nonCurrentMembersServiceMock.GetUsersIdsWithoutRolesAsync().Returns(new List<string> { "2", "3" });
+		_nonCurrentMembersServiceMock.GetNonCurrentMembersAsync(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
+			.Returns(new List<int> { 2, 3 });
 
 		// Act
 		var result = await _filteredBookDetailsService.GetBookDetailsAsync(bookId);
@@ -78,5 +79,4 @@ public class GetBookDetailsAsync
 		Assert.NotNull(result);
 		Assert.Equal(filteredBookDetails.MembersWhoHaveRead.Count, result.MembersWhoHaveRead.Count);
 	}
-
 }
