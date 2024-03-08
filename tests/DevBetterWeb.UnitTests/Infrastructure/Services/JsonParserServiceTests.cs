@@ -2,36 +2,37 @@
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using Xunit;
 using FluentAssertions;
 
 namespace DevBetterWeb.UnitTests.Infrastructure.Services;
+
 public class JsonParserServiceTests
 {
 	private readonly IJsonParserService _jsonParserService;
-	private readonly Mock<ILogger<JsonParserService>> _logger = new Mock<ILogger<JsonParserService>>();
+	private readonly ILogger<JsonParserService> _logger = Substitute.For<ILogger<JsonParserService>>();
 
 	public JsonParserServiceTests()
 	{
-		this._jsonParserService = new JsonParserService(this._logger.Object);
+		this._jsonParserService = new JsonParserService(this._logger);
 	}
 
 	[Fact]
 	public void Parse_InvalidJson_ThrowsJsonException()
 	{
-		string invlaidJson = JsonSerializer.Serialize(new { Name = "Test" }).TrimEnd('}');
+		string invalidJson = JsonSerializer.Serialize(new { Name = "Test" }).TrimEnd('}');
 
-		Assert.ThrowsAny<JsonException>(() => this._jsonParserService.Parse(invlaidJson));
+		Assert.ThrowsAny<JsonException>(() => this._jsonParserService.Parse(invalidJson));
 	}
 
 	[Fact]
 	public void Parse_ValidJson_WorksAsExpected()
 	{
-		string vlaidJson = JsonSerializer.Serialize(new { Name = "Test" });
-		var expectedResult = JsonDocument.Parse(vlaidJson);
+		string validJson = JsonSerializer.Serialize(new { Name = "Test" });
+		var expectedResult = JsonDocument.Parse(validJson);
 
-		var actualResult = this._jsonParserService.Parse(vlaidJson);
+		var actualResult = this._jsonParserService.Parse(validJson);
 
 		expectedResult.Should().BeEquivalentTo(actualResult, opt => opt.ComparingByMembers<JsonElement>());
 	}
@@ -39,30 +40,29 @@ public class JsonParserServiceTests
 	[Fact]
 	public void Parse_InvalidJson_LogsErrorMessage()
 	{
-		string invlaidJson = JsonSerializer.Serialize(new { Name = "Test" }).TrimEnd('}');
+		string invalidJson = JsonSerializer.Serialize(new { Name = "Test" }).TrimEnd('}');
 
 		try
 		{
-			var actualResult = this._jsonParserService.Parse(invlaidJson);
+			var actualResult = this._jsonParserService.Parse(invalidJson);
 		}
 		catch (JsonException ex)
 		{
 			// The act is throwing an error. It's intercepted, because we need to test the logging.
 			Assert.NotNull(ex);
+			this._logger.ReceivedLogError(1, ex, $"Failed JSON parsing for: {invalidJson}");
 		}
 
-		this._logger.VerifyLog(l => l.LogError($"Failed JSON parsing for: {invlaidJson}"));
-		this._logger.VerifyLog(l => l.LogInformation("JSON parsing has failed"));
+		this._logger.ReceivedLogInformation(1, "JSON parsing has failed");
 	}
 
 	[Fact]
 	public void Parse_ValidJson_LogsSuccessInfoMessage()
 	{
-		string vlaidJson = JsonSerializer.Serialize(new { Name = "Test" });
-		var expectedResult = JsonDocument.Parse(vlaidJson);
+		string validJson = JsonSerializer.Serialize(new { Name = "Test" });
 
-		var actualResult = this._jsonParserService.Parse(vlaidJson);
+		this._jsonParserService.Parse(validJson);
 
-		this._logger.VerifyLog(l => l.LogInformation("JSON parsing is successful"));
+		this._logger.ReceivedLogInformation(1, "JSON parsing is successful");
 	}
 }
