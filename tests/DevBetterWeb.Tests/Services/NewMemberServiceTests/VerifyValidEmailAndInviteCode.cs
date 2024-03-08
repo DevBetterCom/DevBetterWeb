@@ -69,12 +69,7 @@ public class VerifyValidEmailAndInviteCode
   [Fact]
   public async Task ReturnsExceptionMessageGivenInvalidInviteCode()
   {
-
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-    _ = _invitationRepository.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None).Returns((Invitation)null);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+    _ = _invitationRepository.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None).Returns((Invitation)null!);
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
