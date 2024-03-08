@@ -30,7 +30,7 @@
     <PackageVersion Include="Dapper" Version="2.1.15" />
     <PackageVersion Include="FastEndpoints" Version="5.18.0" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
-    <PackageVersion Include="FastEndpoints.Swagger" Version="5.18.0" />
+    <PackageVersion Include="FastEndpoints.Swagger" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.2.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Flurl" Version="3.0.7" />
