@@ -6,20 +6,20 @@ using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Web.Services.FilteredLeaderboardTests;
 
 public class FilteredLeaderboardServiceTests
 {
-	private readonly Mock<INonCurrentMembersService> _nonCurrentMembersServiceMock;
-	private readonly Mock<IMemberService> _memberServiceMock;
+	private readonly INonCurrentMembersService _nonCurrentMembersServiceMock;
+	private readonly IMemberService _memberServiceMock;
 
 	public FilteredLeaderboardServiceTests()
 	{
-		_nonCurrentMembersServiceMock = new Mock<INonCurrentMembersService>();
-		_memberServiceMock = new Mock<IMemberService>();
+		_nonCurrentMembersServiceMock = Substitute.For<INonCurrentMembersService>();
+		_memberServiceMock = Substitute.For<IMemberService>();
 	}
 
 	[Fact]
@@ -30,15 +30,15 @@ public class FilteredLeaderboardServiceTests
 		List<string> nonUsersId = new List<string> { "3" };
 		List<int> nonMembersId = new List<int> { 3 };
 
-		_nonCurrentMembersServiceMock.Setup(service => service.GetUsersIdsWithoutRolesAsync())
-				.ReturnsAsync(nonUsersId);
-		_nonCurrentMembersServiceMock.Setup(service => service.GetNonCurrentMembersAsync(nonUsersId, CancellationToken.None))
-				.ReturnsAsync(nonMembersId);
+		_nonCurrentMembersServiceMock.GetUsersIdsWithoutRolesAsync()
+				.Returns(nonUsersId);
+		_nonCurrentMembersServiceMock.GetNonCurrentMembersAsync(nonUsersId, CancellationToken.None)
+				.Returns(nonMembersId);
 
-		_memberServiceMock.Setup(service => service.GetActiveAlumniMembersAsync())
-				.ReturnsAsync(new List<Member>());
+		_memberServiceMock.GetActiveAlumniMembersAsync()
+				.Returns(new List<Member>());
 
-		var service = new FilteredLeaderboardService(_nonCurrentMembersServiceMock.Object, _memberServiceMock.Object);
+		var service = new FilteredLeaderboardService(_nonCurrentMembersServiceMock, _memberServiceMock);
 
 		// Act
 		var filteredBookCategories = await service.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories);
