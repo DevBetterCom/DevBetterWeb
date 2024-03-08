@@ -44,7 +44,7 @@ public class JsonParserServiceTests
 
 		try
 		{
-			var actualResult = this._jsonParserService.Parse(invalidJson);
+			this._jsonParserService.Parse(invalidJson);
 		}
 		catch (JsonException ex)
 		{
