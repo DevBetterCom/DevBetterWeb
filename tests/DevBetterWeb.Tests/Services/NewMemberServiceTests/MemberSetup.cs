@@ -62,7 +62,7 @@ public class MemberSetup
     Assert.Equal(_firstName, member.FirstName);
     Assert.Equal(_lastName, member.LastName);
 
-    _userRoleMembershipService.Received(1).AddUserToRoleByRoleNameAsync(_userId, _roleName);
+    await _userRoleMembershipService.Received(1).AddUserToRoleByRoleNameAsync(_userId, _roleName);
     Assert.False(_invitation.Active);
   }
 }

@@ -9,7 +9,6 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests;
 
 public class SendRegistrationEmail
 {
-  private readonly IRepository<Member> _memberRepository = Substitute.For<IRepository<Member>>();
   private readonly IRepository<Invitation> _invitationRepository = Substitute.For<IRepository<Invitation>>();
   private readonly IUserRoleMembershipService _userRoleMembershipService = Substitute.For<IUserRoleMembershipService>();
   private readonly IPaymentHandlerSubscription _paymentHandlerSubscription = Substitute.For<IPaymentHandlerSubscription>();
@@ -43,7 +42,7 @@ public class SendRegistrationEmail
   {
     await _newMemberService.SendRegistrationEmailAsync(_invitation);
 
-    _emailService.Received(1).SendEmailAsync(_email, Arg.Any<string>(), Arg.Any<string>());
+    await _emailService.Received(1).SendEmailAsync(_email, Arg.Any<string>(), Arg.Any<string>());
   }
 
 }

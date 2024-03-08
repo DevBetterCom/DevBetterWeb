@@ -11,7 +11,6 @@ namespace DevBetterWeb.Tests.Services.NewMemberServiceTests;
 
 public class VerifyValidEmailAndInviteCode
 {
-  private readonly IRepository<Member> _memberRepository = Substitute.For<IRepository<Member>>();
   private readonly IRepository<Invitation> _invitationRepository = Substitute.For<IRepository<Invitation>>();
   private readonly IUserRoleMembershipService _userRoleMembershipService = Substitute.For<IUserRoleMembershipService>();
   private readonly IPaymentHandlerSubscription _paymentHandlerSubscription = Substitute.For<IPaymentHandlerSubscription>();
@@ -50,7 +49,7 @@ public class VerifyValidEmailAndInviteCode
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+    await _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
     Assert.Equal(_validEmailAndInviteCodeString, result.Value);
   }
 
@@ -63,7 +62,7 @@ public class VerifyValidEmailAndInviteCode
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+    await _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
     Assert.Equal(_invalidEmailString, result.Value);
   }
 
@@ -79,22 +78,22 @@ public class VerifyValidEmailAndInviteCode
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+    await _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
     Assert.Equal(_invalidInviteCodeString, result.Value);
   }
 
   [Fact]
   public async Task ReturnsExceptionMessageGivenInactiveInviteCode()
   {
-    Invitation _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
+    Invitation invitation = new Invitation(_email, _inviteCode, _subscriptionId);
 
-    _invitation.Deactivate();
+    invitation.Deactivate();
 
-    _invitationRepository.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None).Returns(_invitation);
+    _invitationRepository.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None).Returns(invitation);
 
     var result = await _newMemberService.VerifyValidEmailAndInviteCodeAsync(_email, _inviteCode);
 
-    _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
+    await _invitationRepository.Received(1).FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None);
     Assert.Equal(_inactiveInviteString, result.Value);
   }
 }
