@@ -14,11 +14,15 @@ public class AddCreatedVideoToFolderService : IAddCreatedVideoToFolderService
 {
 	private readonly GetFolderService _getFolderService;
 	private readonly AddVideoToFolderService _addVideoToFolderService;
+	private readonly IEmailService _emailService;
 
-	public AddCreatedVideoToFolderService(GetFolderService getFolderService, AddVideoToFolderService addVideoToFolderService)
+	public AddCreatedVideoToFolderService(GetFolderService getFolderService,
+	 AddVideoToFolderService addVideoToFolderService,
+	 IEmailService emailService ) // update this to get email interface
 	{
 		_getFolderService = getFolderService;
 		_addVideoToFolderService = addVideoToFolderService;
+		_emailService = emailService;
 	}
 
 	public async Task<bool> ExecuteAsync(bool isBaseFolder, long? folderId, ArchiveVideo archiveVideo, CancellationToken cancellationToken = default)
@@ -40,7 +44,10 @@ public class AddCreatedVideoToFolderService : IAddCreatedVideoToFolderService
 			return false;
 		}
 
+		// Send email logic here 
 		return true;
+		await _emailService.SendEmailAsync(
+			email, "New video added to folder", $"New video added to folder {folder.Name}", cancellationToken);
 	}
 
 	private bool ValidateInputs(long? folderId, ArchiveVideo archiveVideo)
