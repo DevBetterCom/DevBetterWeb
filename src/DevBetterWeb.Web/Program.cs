@@ -122,6 +122,7 @@ builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsServi
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IAddCreatedVideoToFolderService, AddCreatedVideoToFolderService>();
 builder.Services.AddScoped<ICreateVideoService, CreateVideoService>();
+builder.Services.AddScoped(typeof(ILocalMigrationService<>), typeof(MigrationService<>));
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
@@ -195,23 +196,11 @@ app.MapRazorPages();
 app.MapDefaultControllerRoute();
 
 // seed database
-await ApplyLocalMigrations(app);
+await ApplyLocalMigrationsAsync(app);
 await SeedDatabase(app);
 
 app.Run();
 
-static async Task ApplyLocalMigrations(WebApplication host)
-{
-	using var scope = host.Services.CreateScope();
-
-	if (host.Environment.EnvironmentName != "Local")
-	{
-		return;
-	}
-	
-	await scope.ApplyDatabaseMigrationsAsync<AppDbContext>();
-	await scope.ApplyDatabaseMigrationsAsync<IdentityDbContext>();
-}
 static async Task SeedDatabase(IHost host)
 {
 	using var scope = host.Services.CreateScope();
@@ -221,9 +210,6 @@ static async Task SeedDatabase(IHost host)
 	var logger = services.GetRequiredService<ILogger<Program>>();
 	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 	logger.LogInformation($"Current environment: {environment}");
-	
-	await scope.ApplyDatabaseMigrationsAsync<AppDbContext>();
-	await scope.ApplyDatabaseMigrationsAsync<IdentityDbContext>();
 
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
@@ -267,6 +253,20 @@ static async Task SeedDatabase(IHost host)
 	{
 		logger.LogInformation("Finished seeding database...");
 	}
+}
+
+async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
+{
+	using var scope = webApplication.Services.CreateScope();
+
+	var identity = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<IdentityDbContext>>();
+
+	var app = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<AppDbContext>>();
+
+	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+	
+	await identity.ApplyLocalMigrationAsync(environment);
+	await app.ApplyLocalMigrationAsync(environment);
 }
 
 //static IHostBuilder CreateHostBuilder(string[] args) =>
