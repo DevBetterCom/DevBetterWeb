@@ -195,23 +195,41 @@ app.MapRazorPages();
 app.MapDefaultControllerRoute();
 
 // seed database
+await ApplyLocalMigrations(app);
 await SeedDatabase(app);
 
 app.Run();
 
+static async Task ApplyLocalMigrations(WebApplication host)
+{
+	using var scope = host.Services.CreateScope();
 
+	if (host.Environment.EnvironmentName != "Local")
+	{
+		return;
+	}
+	
+	await scope.ApplyDatabaseMigrationsAsync<AppDbContext>();
+	await scope.ApplyDatabaseMigrationsAsync<IdentityDbContext>();
+}
 static async Task SeedDatabase(IHost host)
 {
 	using var scope = host.Services.CreateScope();
+
+
 	var services = scope.ServiceProvider;
 	var logger = services.GetRequiredService<ILogger<Program>>();
 	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 	logger.LogInformation($"Current environment: {environment}");
+	
+	await scope.ApplyDatabaseMigrationsAsync<AppDbContext>();
+	await scope.ApplyDatabaseMigrationsAsync<IdentityDbContext>();
 
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
 
+	
 	if (environment == "Production")
 	{
 		return;

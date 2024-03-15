@@ -1,0 +1,33 @@
+﻿services:
+    devbetterweb.web:
+        image: devbetterweb.web
+        ports: 
+        - 80:80
+        build:
+            context: .
+            dockerfile: Dockerfile
+        networks:
+            - my-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Local
+    
+    database:
+        image: mcr.microsoft.com/azure-sql-edge
+        cap_add:
+            - SYS_PTRACE
+        environment:
+            - ACCEPT_EULA=1
+            - MSSQL_SA_PASSWORD=bigStr0ngPwd*
+        ports:
+            - 1433:1433
+        container_name: ms-sql
+        command: 
+        - "/bin/sh" 
+        - "-c"
+        - "/opt/mssql/bin/launchpadd -usens=false -enableOutboundAccess=true -usesameuser=true -sqlGroup root -- -reparentOrphanedDescendants=true -useDefaultLaunchers=false & /app/asdepackage/AsdePackage & /opt/mssql/bin/sqlservr"
+        privileged: true
+        networks:
+            - my-network
+
+networks:
+    my-network:
