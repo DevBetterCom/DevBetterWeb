@@ -204,8 +204,6 @@ app.Run();
 static async Task SeedDatabase(IHost host)
 {
 	using var scope = host.Services.CreateScope();
-
-
 	var services = scope.ServiceProvider;
 	var logger = services.GetRequiredService<ILogger<Program>>();
 	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -214,7 +212,6 @@ static async Task SeedDatabase(IHost host)
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
-
 	
 	if (environment == "Production")
 	{
