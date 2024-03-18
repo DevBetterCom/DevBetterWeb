@@ -19,9 +19,6 @@
 		<Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
-		<Content Include="..\..\.dockerignore">
-		  <Link>.dockerignore</Link>
-		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Ardalis.ApiEndpoints" />
