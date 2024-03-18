@@ -260,10 +260,11 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 
 	var app = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<AppDbContext>>();
 
-	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+	var environment        = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
 	
-	await identity.ApplyLocalMigrationAsync(environment);
-	await app.ApplyLocalMigrationAsync(environment);
+	await identity.ApplyLocalMigrationAsync(environment, runningInContainer);
+	await app.ApplyLocalMigrationAsync(environment, runningInContainer);
 }
 
 //static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -9,7 +9,8 @@
         networks:
             - my-network
         environment:
-            - ASPNETCORE_ENVIRONMENT=Local
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings:DefaultConnection=Server=database,1433;MultipleActiveResultSets=true;User Id=sa;Password=${LOCAL_SQL_PASSWORD};Encrypt=false
     
     database:
         image: mcr.microsoft.com/azure-sql-edge
@@ -17,7 +18,7 @@
             - SYS_PTRACE
         environment:
             - ACCEPT_EULA=1
-            - MSSQL_SA_PASSWORD=bigStr0ngPwd*
+            - MSSQL_SA_PASSWORD=${LOCAL_SQL_PASSWORD}
         ports:
             - 1433:1433
         container_name: ms-sql

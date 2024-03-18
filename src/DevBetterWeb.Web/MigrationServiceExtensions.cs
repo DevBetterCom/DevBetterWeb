@@ -7,10 +7,12 @@ public static class MigrationServiceExtensions {
 
 	public static async Task ApplyLocalMigrationAsync<TContext>(
 		this ILocalMigrationService<TContext> migrationService,
-		string                                environmentName)
+		string                                environmentName,
+		bool runningIncontainer)
 		where TContext : DbContext
 	{
-		if (environmentName is not "Local")
+		if (environmentName is not "Development"
+		    || !runningIncontainer)
 		{
 			return;
 		}
