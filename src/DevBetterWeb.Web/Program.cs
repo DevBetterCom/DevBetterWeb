@@ -260,7 +260,7 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 
 	var app = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<AppDbContext>>();
 
-	var environment        = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+	var environment        = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
 	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
 	
 	await identity.ApplyLocalMigrationAsync(environment, runningInContainer);
