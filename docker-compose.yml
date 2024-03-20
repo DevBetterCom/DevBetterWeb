@@ -1,6 +1,9 @@
 ﻿services:
-    devbetterweb.web:
-        image: devbetterweb.web
+    web:
+        image: dev-better-web
+        container_name: dev-better-web
+        depends_on: 
+        - database
         ports: 
         - 80:80
         build:
@@ -9,8 +12,8 @@
         networks:
             - my-network
         environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ConnectionStrings:DefaultConnection=Server=database,1433;MultipleActiveResultSets=true;User Id=sa;Password=${LOCAL_SQL_PASSWORD};Encrypt=false
+            ASPNETCORE_ENVIRONMENT: Development
+            ConnectionStrings:DefaultConnection: Server=database,1433;MultipleActiveResultSets=true;User Id=sa;Password=${LOCAL_SQL_PASSWORD};Encrypt=false
     
     database:
         image: mcr.microsoft.com/azure-sql-edge
@@ -32,3 +35,4 @@
 
 networks:
     my-network:
+
