@@ -122,6 +122,7 @@ builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsServi
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IAddCreatedVideoToFolderService, AddCreatedVideoToFolderService>();
 builder.Services.AddScoped<ICreateVideoService, CreateVideoService>();
+builder.Services.AddScoped(typeof(ILocalMigrationService<>), typeof(MigrationService<>));
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
@@ -195,10 +196,10 @@ app.MapRazorPages();
 app.MapDefaultControllerRoute();
 
 // seed database
+await ApplyLocalMigrationsAsync(app);
 await SeedDatabase(app);
 
 app.Run();
-
 
 static async Task SeedDatabase(IHost host)
 {
@@ -211,7 +212,7 @@ static async Task SeedDatabase(IHost host)
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
-
+	
 	if (environment == "Production")
 	{
 		return;
@@ -249,6 +250,21 @@ static async Task SeedDatabase(IHost host)
 	{
 		logger.LogInformation("Finished seeding database...");
 	}
+}
+
+async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
+{
+	using var scope = webApplication.Services.CreateScope();
+
+	var identity = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<IdentityDbContext>>();
+
+	var app = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<AppDbContext>>();
+
+	var environment        = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
+	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
+	
+	await identity.ApplyLocalMigrationAsync(environment, runningInContainer);
+	await app.ApplyLocalMigrationAsync(environment, runningInContainer);
 }
 
 //static IHostBuilder CreateHostBuilder(string[] args) =>
