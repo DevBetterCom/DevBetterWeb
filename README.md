@@ -66,49 +66,7 @@ You should create an **appsettings.development.json** file to hold your other co
 
 For the Discord web hook integration, you can use the `dev-test` channel in devBetter's Discord server. The web hook url is in the channel description on Discord. You can use that in you appsettings.development.json. Alternatively, you can set up your own Discord server - see [here](https://ardalis.com/add-discord-notifications-to-asp-net-core-apps/) for a walkthrough -  and add the url to  appsettings.development.json in the Discord Webhooks section that you can copy from appsettings.json. You could also create a mock server which will provide you with a url to use - an example is mocky.io
 
-### Run with Docker
-
-Alternatively you can use `docker-compose` to run the app locally. This is specially helpful when launching the app in operative systems that don't have support for SQL Express like MacOS.
-
-To run with docker compose, simply run in the root of the repo:
-
-```bash
-docker compose up
-```
-
-The multi-container app runs two services:
-- The web project: at `http://localhost/`
-- The SQL Edge container at `localhost:1433`.
-
-By default the application will run in the `Development` environment, and the SQL migrations will be applied programatically by the web project container during startup.
-
-If you want to access the database outside of the app you will need the local password for the database which you can find [here](https://github.com/DevBetterCom/DevBetterWeb/blob/main/.env). You can also find the full connection string as an environment variable for the web project with the name `ConnectionStrings:DefaultConnection`, or you can running in bash:
-
-```bash
-docker inspect \
-	--format='{{range .Config.Env}}{{println .}}{{end}}' dev-better-web \
-	| grep "ConnectionStrings:DefaultConnection=" \
-	| cut -d '=' -f 2- \
-	| sed 's/database/localhost/g'
-```
-
-Or in PowerShell:
-
-```powershell
-docker inspect `
-	--format='{{range .Config.Env}}{{println .}}{{end}}' dev-better-web  `
-	| Select-String "ConnectionStrings:DefaultConnection=" `
-	| ForEach-Object { $_.Line -replace "database", "localhost" } `
-	| ForEach-Object { ($_ -split "Connection=")[1] } 
-```
-
-To stop the services execution run:
-
-```bash
-docker compose down
-```
-
-## EF Migrations Commands
+### EF Migrations Commands
 
 Add a new migration (from the DevBetter.Web folder):
 
@@ -132,6 +90,48 @@ Generate Idempotent Update Script (for production)(from the DevBetter.Web folder
 
 ```powershell
 dotnet ef migrations script -c AppDbContext -i -o migrate.sql -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
+```
+
+### Run with Docker
+
+Alternatively you can use `docker-compose` to run the app locally. This is specially helpful when launching the app in operative systems that don't have support for SQL Express like MacOS.
+
+To run with docker compose, simply run in the root of the repo:
+
+```bash
+docker compose up
+```
+
+The multi-container app runs two services:
+- The web project: at `http://localhost/`
+- The SQL Edge container at `localhost:1433`.
+
+By default the application will run in the `Development` environment, and the SQL migrations will be applied programatically by the web project container during startup.
+
+If you want to access the database outside of the app you will need the local password for the database, which you can find in this [.env file](https://github.com/DevBetterCom/DevBetterWeb/blob/main/.env). You can also find the full connection string as an environment variable for the web project with the name `ConnectionStrings:DefaultConnection` running in bash:
+
+```bash
+docker inspect \
+	--format='{{range .Config.Env}}{{println .}}{{end}}' dev-better-web \
+	| grep "ConnectionStrings:DefaultConnection=" \
+	| cut -d '=' -f 2- \
+	| sed 's/database/localhost/g'
+```
+
+Or in PowerShell:
+
+```powershell
+docker inspect `
+	--format='{{range .Config.Env}}{{println .}}{{end}}' dev-better-web  `
+	| Select-String "ConnectionStrings:DefaultConnection=" `
+	| ForEach-Object { $_.Line -replace "database", "localhost" } `
+	| ForEach-Object { ($_ -split "Connection=")[1] } 
+```
+
+To stop the services run:
+
+```bash
+docker compose down
 ```
 
 ## Video Upload Instructions (admin only)
