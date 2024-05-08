@@ -3,27 +3,28 @@ using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
+using NSubstitute;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using NSubstitute.ExceptionExtensions;
 
 namespace DevBetterWeb.UnitTests.Web.Services.LeaderboardServiceTests;
 
 public class SetBookCategoriesAsync
 {
-	private readonly Mock<IRankAndOrderService> _rankAndOrderServiceMock;
-	private readonly Mock<IBookCategoryService> _bookCategoryServiceMock;
-	private readonly Mock<IFilteredLeaderboardService> _filteredLeaderboardServiceMock;
+	private readonly IRankAndOrderService _rankAndOrderServiceMock;
+	private readonly IBookCategoryService _bookCategoryServiceMock;
+	private readonly IFilteredLeaderboardService _filteredLeaderboardServiceMock;
 	private readonly LeaderboardService _leaderboardService;
 
 	public SetBookCategoriesAsync()
 	{
-		_rankAndOrderServiceMock = new Mock<IRankAndOrderService>();
-		_bookCategoryServiceMock = new Mock<IBookCategoryService>();
-		_filteredLeaderboardServiceMock = new Mock<IFilteredLeaderboardService>();
-		_leaderboardService = new LeaderboardService(_rankAndOrderServiceMock.Object, _bookCategoryServiceMock.Object, _filteredLeaderboardServiceMock.Object);
+		_rankAndOrderServiceMock = Substitute.For<IRankAndOrderService>();
+		_bookCategoryServiceMock = Substitute.For<IBookCategoryService>();
+		_filteredLeaderboardServiceMock = Substitute.For<IFilteredLeaderboardService>();
+		_leaderboardService = new LeaderboardService(_rankAndOrderServiceMock, _bookCategoryServiceMock, _filteredLeaderboardServiceMock);
 	}
 
 	[Fact]
@@ -42,17 +43,17 @@ public class SetBookCategoriesAsync
 			}
 		};
 
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ReturnsAsync(bookCategories);
-		_filteredLeaderboardServiceMock.Setup(fs => fs.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None)).ReturnsAsync(bookCategories);
+		_bookCategoryServiceMock.GetBookCategoriesAsync().Returns(bookCategories);
+		_filteredLeaderboardServiceMock.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None).Returns(bookCategories);
 
 		// Act
 		await _leaderboardService.SetBookCategoriesAsync();
 
 		// Assert
-		_rankAndOrderServiceMock.Verify(rs => rs.UpdateRanksAndReadBooksCountForMemberAsync(It.IsAny<List<BookCategoryDto>>()), Times.Never);
-		_rankAndOrderServiceMock.Verify(rs => rs.UpdateMembersReadRank(It.IsAny<List<BookCategoryDto>>()), Times.Once);
-		_rankAndOrderServiceMock.Verify(rs => rs.UpdateBooksRank(It.IsAny<List<BookCategoryDto>>()), Times.Once);
-		_rankAndOrderServiceMock.Verify(rs => rs.OrderByRankForMembersAndBooks(It.IsAny<List<BookCategoryDto>>()), Times.Once);
+		await _rankAndOrderServiceMock.DidNotReceive().UpdateRanksAndReadBooksCountForMemberAsync(Arg.Any<List<BookCategoryDto>>());
+		_rankAndOrderServiceMock.Received(1).UpdateMembersReadRank(Arg.Any<List<BookCategoryDto>>());
+		_rankAndOrderServiceMock.Received(1).UpdateBooksRank(Arg.Any<List<BookCategoryDto>>());
+		_rankAndOrderServiceMock.Received(1).OrderByRankForMembersAndBooks(Arg.Any<List<BookCategoryDto>>());
 	}
 
 	[Fact]
@@ -81,8 +82,8 @@ public class SetBookCategoriesAsync
 			}
 		};
 
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ReturnsAsync(bookCategories);
-		_filteredLeaderboardServiceMock.Setup(fs => fs.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None)).ReturnsAsync(bookCategoriesWithoutNonActiveMember);
+		_bookCategoryServiceMock.GetBookCategoriesAsync().Returns(bookCategories);
+		_filteredLeaderboardServiceMock.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None).Returns(bookCategoriesWithoutNonActiveMember);
 
 		// Act
 		var result = await _leaderboardService.SetBookCategoriesAsync();
@@ -98,8 +99,8 @@ public class SetBookCategoriesAsync
 		// Arrange
 		var bookCategories = new List<BookCategoryDto>();
 
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ReturnsAsync(bookCategories);
-		_filteredLeaderboardServiceMock.Setup(fs => fs.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None)).ReturnsAsync(bookCategories);
+		_bookCategoryServiceMock.GetBookCategoriesAsync().Returns(bookCategories);
+		_filteredLeaderboardServiceMock.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None).Returns(bookCategories);
 
 		// Act
 		var result = await _leaderboardService.SetBookCategoriesAsync();
@@ -112,7 +113,7 @@ public class SetBookCategoriesAsync
 	public async Task ThrowsExceptionGivenGetBookCategoriesAsyncFails()
 	{
 		// Arrange
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ThrowsAsync(new ArgumentNullException());
+		_bookCategoryServiceMock.GetBookCategoriesAsync().ThrowsAsync(new ArgumentNullException());
 
 		// Act & Assert
 		await Assert.ThrowsAsync<ArgumentNullException>(() => _leaderboardService.SetBookCategoriesAsync());
@@ -134,13 +135,13 @@ public class SetBookCategoriesAsync
 			}
 		};
 
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ReturnsAsync(bookCategories);
-		_filteredLeaderboardServiceMock.Setup(fs => fs.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None)).ReturnsAsync(bookCategories);
+		_bookCategoryServiceMock.GetBookCategoriesAsync().Returns(bookCategories);
+		_filteredLeaderboardServiceMock.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None).Returns(bookCategories);
 
-		_rankAndOrderServiceMock.Setup(rs => rs.OrderByRankForMembersAndBooks(It.IsAny<List<BookCategoryDto>>()))
-			.Callback((List<BookCategoryDto> categories) =>
+		_rankAndOrderServiceMock.When(x => x.OrderByRankForMembersAndBooks(Arg.Any<List<BookCategoryDto>>()))
+			.Do(callInfo =>
 			{
-				foreach (var category in categories)
+				foreach (var category in callInfo.Arg<List<BookCategoryDto>>())
 				{
 					category.Members = category.Members.OrderBy(m => m.BooksRank).ToList();
 				}
@@ -171,13 +172,13 @@ public class SetBookCategoriesAsync
 			}
 		};
 
-		_bookCategoryServiceMock.Setup(bs => bs.GetBookCategoriesAsync()).ReturnsAsync(bookCategories);
-		_filteredLeaderboardServiceMock.Setup(fs => fs.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None)).ReturnsAsync(bookCategories);
+		_bookCategoryServiceMock.GetBookCategoriesAsync().Returns(bookCategories);
+		_filteredLeaderboardServiceMock.RemoveNonCurrentMembersFromLeaderBoardAsync(bookCategories, CancellationToken.None).Returns(bookCategories);
 
-		_rankAndOrderServiceMock.Setup(rs => rs.OrderByRankForMembersAndBooks(It.IsAny<List<BookCategoryDto>>()))
-			.Callback((List<BookCategoryDto> categories) =>
+		_rankAndOrderServiceMock.When(x => x.OrderByRankForMembersAndBooks(Arg.Any<List<BookCategoryDto>>()))
+			.Do(callInfo =>
 			{
-				foreach (var category in categories)
+				foreach (var category in callInfo.Arg<List<BookCategoryDto>>())
 				{
 					category.Members = category.Members.OrderByDescending(m => m.BooksReadCount).ThenBy(m => m.BooksRank).ToList();
 				}

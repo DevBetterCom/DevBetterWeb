@@ -5,17 +5,17 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.Infrastructure.Services;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.AlumniGraduationServiceTests;
 
 public class CheckIfAnyMemberGraduating
 {
-  private readonly Mock<IUserLookupService> userLookupService;
-  private readonly Mock<IRepository<Member>> repository;
-  private readonly Mock<IGraduationCommunicationsService> graduationCommunications;
-  private readonly Mock<IUserRoleManager> userManager;
+  private readonly IUserLookupService userLookupService;
+  private readonly IRepository<Member> repository;
+  private readonly IGraduationCommunicationsService graduationCommunications;
+  private readonly IUserRoleManager userManager;
 
   private const int DAYS_IN_TWO_YEARS = 365 * 2;
 
@@ -23,11 +23,11 @@ public class CheckIfAnyMemberGraduating
 
   public CheckIfAnyMemberGraduating()
   {
-    userLookupService = new Mock<IUserLookupService>();
-    repository = new Mock<IRepository<Member>>();
-    graduationCommunications = new Mock<IGraduationCommunicationsService>();
-    userManager = new Mock<IUserRoleManager>();
-    service = new AlumniGraduationService(userLookupService.Object, repository.Object, graduationCommunications.Object, userManager.Object);
+    userLookupService = Substitute.For<IUserLookupService>();
+    repository = Substitute.For<IRepository<Member>>();
+    graduationCommunications = Substitute.For<IGraduationCommunicationsService>();
+    userManager = Substitute.For<IUserRoleManager>();
+    service = new AlumniGraduationService(userLookupService, repository, graduationCommunications, userManager);
   }
 
   [Fact]
@@ -47,7 +47,7 @@ public class CheckIfAnyMemberGraduating
     var graduatingMember = GetGraduatingMember();
     testlist.Add(graduatingMember);
 
-    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
+    userLookupService.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId).Returns(false);
 
     var list = await service.CheckIfAnyMemberGraduating(testlist);
 
@@ -65,7 +65,7 @@ public class CheckIfAnyMemberGraduating
     var nonGraduatingMember = GetNonGraduatingMember();
     testlist.Add(nonGraduatingMember);
 
-    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId)).ReturnsAsync(false);
+    userLookupService.FindUserIsAlumniByUserIdAsync(graduatingMember.UserId).Returns(false);
 
     var list = await service.CheckIfAnyMemberGraduating(testlist);
 
@@ -92,7 +92,7 @@ public class CheckIfAnyMemberGraduating
     var alum = GetGraduatingMember();
     testlist.Add(alum);
 
-    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(alum.UserId)).ReturnsAsync(true);
+    userLookupService.FindUserIsAlumniByUserIdAsync(alum.UserId).Returns(true);
 
     var list = await service.CheckIfAnyMemberGraduating(testlist);
 
@@ -109,7 +109,7 @@ public class CheckIfAnyMemberGraduating
     member.MemberSubscriptions.Add(nearGraduationSubscription);
     testlist.Add(member);
 
-    userLookupService.Setup(u => u.FindUserIsAlumniByUserIdAsync(member.UserId)).ReturnsAsync(false);
+    userLookupService.FindUserIsAlumniByUserIdAsync(member.UserId).Returns(false);
 
     var list = await service.CheckIfAnyMemberGraduating(testlist);
 
