@@ -99,6 +99,12 @@
                     <span>Live Meetings Calendar</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/CodeOfConduct">
+                    <i class="fas fa-fw fa-link"></i>
+                    <span>Code of Conduct</span></a>
+            </li>
+
             @if (User!.IsInRole(AuthConstants.Roles.ADMINISTRATORS))
             {
                 <hr class="sidebar-divider">
