@@ -9,6 +9,8 @@ public class UserLinksUpdateModel
 	public string? LinkedInUrl { get; set; }
 	[ValidUrlContainingString("Twitter")]
 	public string? TwitterUrl { get; set; }
+	[ValidUrlContainingString("bsky")]
+	public string? BlueskyUrl { get; set; }
 	[ValidUrlContainingString("GitHub")]
 	public string? GithubUrl { get; set; }
 	[ValidUrl]

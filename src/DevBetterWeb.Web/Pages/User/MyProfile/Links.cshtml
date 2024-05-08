@@ -39,6 +39,10 @@
                     <input type="text" asp-for="UserLinksUpdateModel.TwitterUrl" value="@Model.UserLinksUpdateModel.TwitterUrl" class="form-control form-control-sm" title="https://twitter.com/UserName" />
                     <span asp-validation-for="UserLinksUpdateModel.TwitterUrl" class="text-danger"></span>
                     <br />
+                    <label class="font-weight-bold">Bluesky</label>
+                    <input type="text" asp-for="UserLinksUpdateModel.BlueskyUrl" value="@Model.UserLinksUpdateModel.BlueskyUrl" class="form-control form-control-sm" title="https://bsky.app/profile/Username" />
+                    <span asp-validation-for="UserLinksUpdateModel.BlueskyUrl" class="text-danger"></span>
+                    <br />
                     <div class="form-group">
                         <label class="font-weight-bold">Twitch</label>
                         <input type="text" asp-for="UserLinksUpdateModel.TwitchUrl" value="@Model.UserLinksUpdateModel.TwitchUrl" class="form-control form-control-sm" title="https://www.twitch.tv/UserName" />

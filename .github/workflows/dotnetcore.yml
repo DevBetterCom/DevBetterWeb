@@ -12,9 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
         include-prerelease: true
     - name: Build and Test with dotnet
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release

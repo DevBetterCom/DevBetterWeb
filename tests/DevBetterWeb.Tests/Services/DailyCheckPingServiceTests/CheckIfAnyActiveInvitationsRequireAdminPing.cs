@@ -4,17 +4,17 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.DailyCheckPingServiceTests;
 
 public class CheckIfAnyActiveInvitationsRequireAdminPing
 {
-  private readonly Mock<IRepository<Invitation>> _repository = new();
-  private readonly Mock<IRepository<Member>> _memberRepository = new();
-  private readonly Mock<IEmailService> _emailService = new();
-  private readonly Mock<UserManager<ApplicationUser>> _userManager;
+  private readonly IRepository<Invitation> _repository = Substitute.For<IRepository<Invitation>>();
+  private readonly IRepository<Member> _memberRepository = Substitute.For<IRepository<Member>>();
+  private readonly IEmailService _emailService = Substitute.For<IEmailService>();
+  private readonly UserManager<ApplicationUser> _userManager;
 
   private DailyCheckPingService _service;
 
@@ -23,9 +23,9 @@ public class CheckIfAnyActiveInvitationsRequireAdminPing
 
   public CheckIfAnyActiveInvitationsRequireAdminPing()
   {
-    var store = new Mock<IUserStore<ApplicationUser>>();
-    _userManager = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
-    _service = new DailyCheckPingService(_repository.Object, _memberRepository.Object, _emailService.Object, _userManager.Object);
+    var store = Substitute.For<IUserStore<ApplicationUser>>();
+    _userManager = Substitute.For<UserManager<ApplicationUser>>(store, null, null, null, null, null, null, null, null);
+    _service = new DailyCheckPingService(_repository, _memberRepository, _emailService, _userManager);
   }
 
   [Fact]

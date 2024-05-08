@@ -17,8 +17,4 @@ public class InvalidEmailException : Exception
   public InvalidEmailException(string? message, Exception? innerException) : base(message, innerException)
   {
   }
-
-  protected InvalidEmailException(SerializationInfo info, StreamingContext context) : base(info, context)
-  {
-  }
 }
