@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Web.Pages.User;
@@ -10,7 +11,14 @@ public class UserPersonalUpdateModel
 	public string? FirstName { get; set; }
 	[Required]
 	public string? LastName { get; set; }
+	[Required]
 	public string? Address { get; set; }
+	[Required]
+	public string? City { get; set; }
+	[Required]
+	public string? Country { get; set; }
+	[Required]
+	public string? PostalCode { get; set; }
 	[Range(1, 31)]
   [BirthdayDay]
 	public int? BirthdayDay { get; set; }
@@ -36,6 +44,9 @@ public class UserPersonalUpdateModel
 		FirstName = member.FirstName;
 		LastName = member.LastName;
 		Address = member.Address;
+		City = member.City;
+		Country = member.Country;
+		PostalCode = member.PostalCode;
 		BirthdayDay = member.Birthday?.Day;
 		BirthdayMonth = member.Birthday?.Month;
 		Email = member.Email;

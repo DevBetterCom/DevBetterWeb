@@ -271,7 +271,7 @@ public class UserModel : PageModel
 		member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName, false);
 		member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername, false);
 		member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo, false);
-		member.UpdateAddress(UserPersonalUpdateModel.Address, false);
+		member.UpdateAddress(UserPersonalUpdateModel.Address, UserPersonalUpdateModel.City, UserPersonalUpdateModel.Country, UserPersonalUpdateModel.PostalCode, false);
 		member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername, false);
 		member.UpdateEmail(UserPersonalUpdateModel.Email, false);
 
