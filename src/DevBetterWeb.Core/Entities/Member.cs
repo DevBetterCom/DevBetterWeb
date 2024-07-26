@@ -45,6 +45,9 @@ public class Member : BaseEntity, IAggregateRoot
 	public Birthday? Birthday { get; private set; }
 	public string? AboutInfo { get; private set; }
 	public string? Address { get; private set; }
+	public string? City { get; private set; }
+	public string? Country { get; private set; }
+	public string? PostalCode { get; private set; }
 	public Address? ShippingAddress { get; private set; }
 	public Geolocation? CityLocation { get; private set; }
 
@@ -123,11 +126,14 @@ public class Member : BaseEntity, IAggregateRoot
 		}
 	}
 
-	public void UpdateAddress(string? address, bool isEvent = true)
+	public void UpdateAddress(string? address, string? city, string? country, string? postalCode, bool isEvent = true)
 	{
 		if (Address == address) return;
 
 		Address = address;
+		City = city;
+		Country = country;
+		PostalCode = postalCode;
 
 		if (isEvent)
 		{
