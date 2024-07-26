@@ -26,6 +26,10 @@ public class MemberSetup
   private readonly string _userId = "TestUserId";
   private readonly string _firstName = "TestFirstName";
   private readonly string _lastName = "TestLastName";
+  private readonly string _address = "TestAddress";
+  private readonly string _city = "TestCity";
+  private readonly string _country = "TestCountry";
+  private readonly string _postalCode = "TestPostalCode";
   private readonly string _inviteCode = "TestInviteCode";
 
   private readonly string _email = "TestEmail";
@@ -57,7 +61,7 @@ public class MemberSetup
     _memberRepository.GetByIdAsync(memberId, CancellationToken.None).Returns(memberResult);
     _memberRegistrationService.RegisterMemberAsync(_userId).Returns(memberResult);
 
-    Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode, "");
+    Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode, "", _address, _city, _country, _postalCode);
 
     Assert.Equal(_firstName, member.FirstName);
     Assert.Equal(_lastName, member.LastName);
