@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -53,7 +55,7 @@ public class NewMemberRegisterModel : PageModel
   public string? ErrorMessage { get; set; }
   public string? Email { get; set; }
 
-  public class InputModel
+	public class InputModel
   {
     [Required]
     [Display(Name = "First Name")]
@@ -63,6 +65,25 @@ public class NewMemberRegisterModel : PageModel
     public string? LastName { get; set; }
 
     [Required]
+    [Display(Name = "Country")]
+    public string? Country { get; set; }
+
+    [Required]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+		[Display(Name = "City")]
+    public string? City { get; set; }
+
+    [Required]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+		[Display(Name = "Street Address")]
+    public string? StreetAddress { get; set; }
+
+    [Required]
+    [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
+		[Display(Name = "Postal Code")]
+    public string? PostalCode { get; set; }
+
+		[Required]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
@@ -132,7 +153,7 @@ public class NewMemberRegisterModel : PageModel
 					  throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
 				  }
 
-				  await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email);
+				  await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email, Input.StreetAddress!, Input.City!, Input.Country!, Input.PostalCode!);
 
 				  _logger.LogInformation($"Adding user {user.Email} to Member Role");
 				  var roles = await _roleManager.Roles.ToListAsync();
