@@ -128,14 +128,33 @@ public class Member : BaseEntity, IAggregateRoot
 
 	public void UpdateAddress(string? address, string? city, string? country, string? postalCode, bool isEvent = true)
 	{
-		if (Address == address) return;
+		var isUpdate = false;
+		if (Address != address)
+		{
+			Address = address;
+			isUpdate = true;
+		}
 
-		Address = address;
-		City = city;
-		Country = country;
-		PostalCode = postalCode;
+		if (City != city)
+		{
+			City = city;
+			isUpdate = true;
+		}
 
-		if (isEvent)
+		if (Country != country)
+		{
+			Country = country;
+			isUpdate = true;
+		}
+
+
+		if (PostalCode != postalCode)
+		{
+			PostalCode = postalCode;
+			isUpdate = true;
+		}
+
+		if (isEvent && isUpdate)
 		{
 			CreateOrUpdateAddressUpdateEvent(nameof(Address));
 		}
