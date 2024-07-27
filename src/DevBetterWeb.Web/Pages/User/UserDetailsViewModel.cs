@@ -23,6 +23,9 @@ public class UserDetailsViewModel
   public string? Name { get; set; }
   public string? Birthday { get; set; }
   public string? Address { get; set; }
+  public string? City { get; set; }
+  public string? Country { get; set; }
+  public string? PostalCode { get; set; }
   public string? PEFriendCode { get; set; }
   public string? PEBadgeURL { get; set; }
   public List<Book> BooksRead { get; set; } = new List<Book>();
@@ -56,6 +59,9 @@ public class UserDetailsViewModel
     AboutInfo = member.AboutInfo;
     Birthday = member.Birthday?.ToString();
     Address = member.Address;
+    City = member.City;
+    Country = member.Country;
+    PostalCode = member.PostalCode;
     Name = member.UserFullName();
     PEFriendCode = member.PEFriendCode;
     if (!(string.IsNullOrEmpty(member.PEUsername)))

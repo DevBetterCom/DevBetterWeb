@@ -1,189 +1,204 @@
 ﻿@page "{userId}"
 @model DevBetterWeb.Web.Pages.User.DetailsModel
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
 <h3>@Model!.UserDetailsViewModel!.Name</h3>
 
 <div class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                <b>Photo</b>
-            </div>
-            <div class="card-body">
-                <img class="db-avatar" src="@Model.UserDetailsViewModel.AvatarUrl" alt="Profile picture" onerror='epic(this)' />
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <b>Info</b>
-            </div>
-            <div asp-authorize asp-roles="@DevBetterWeb.Core.AuthConstants.Roles.ADMINISTRATORS" class="card-body">
-                <div><b>Shipping Address</b></div>
-                <div class="card">
-                    <div class="card-body" style="white-space: pre-line;">
-                        @Model.UserDetailsViewModel.Address
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div><b>About</b></div>
-                <div class="card">
-                    <div class="card-body" style="white-space: pre-line;">
-                        @Model.UserDetailsViewModel.AboutInfo
-                    </div>
-                </div>
-            </div>
+	<div class="col-6">
+		<div class="card">
+			<div class="card-header">
+				<b>Photo</b>
+			</div>
+			<div class="card-body">
+				<img class="db-avatar" src="@Model.UserDetailsViewModel.AvatarUrl" alt="Profile picture" onerror='epic(this)' />
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				<b>Info</b>
+			</div>
+			<div asp-authorize asp-roles="@DevBetterWeb.Core.AuthConstants.Roles.ADMINISTRATORS" class="card-body">
+				<div><b>Shipping Address</b></div>
+				<div class="card">
+					<div class="card-body" style="white-space: pre-line;">
+						@Model.UserDetailsViewModel.Address
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body" style="white-space: pre-line;">
+						@Model.UserDetailsViewModel.City
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body" style="white-space: pre-line;">
+						@Model.UserDetailsViewModel.Country
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body" style="white-space: pre-line;">
+						@Model.UserDetailsViewModel.PostalCode
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<div><b>About</b></div>
+				<div class="card">
+					<div class="card-body" style="white-space: pre-line;">
+						@Model.UserDetailsViewModel.AboutInfo
+					</div>
+				</div>
+			</div>
 
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.Birthday))
-            {
-                <div class="card-body">
-                    <b>Birthday: </b>
-                    @Model.UserDetailsViewModel.Birthday
-                </div>
-            }
+			@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.Birthday))
+			{
+				<div class="card-body">
+					<b>Birthday: </b>
+					@Model.UserDetailsViewModel.Birthday
+				</div>
+			}
 
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.DiscordUsername))
-            {
-                <div class="card-body">
-                    <b>Discord Username: </b>
-                    @Model.UserDetailsViewModel.DiscordUsername
-                </div>
-            }
+			@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.DiscordUsername))
+			{
+				<div class="card-body">
+					<b>Discord Username: </b>
+					@Model.UserDetailsViewModel.DiscordUsername
+				</div>
+			}
 
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
-            {
-                <div class="card-body">
-                    <div><b>Project Euler Friend Code </b></div>
-                    <div class="card">
-                        <div class="card-body" style="white-space: pre-line;">
-                            @Model.UserDetailsViewModel.PEFriendCode
-                        </div>
-                    </div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
-            {
-                <div>
-                    <img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge" />
-                </div>
-            }
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                <b>Links</b>
-            </div>
-            <div class="card-body">
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlogUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.BlogUrl" target="_blank">Blog</a>
-                    </div>
-                }
+			@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEFriendCode))
+			{
+				<div class="card-body">
+					<div><b>Project Euler Friend Code </b></div>
+					<div class="card">
+						<div class="card-body" style="white-space: pre-line;">
+							@Model.UserDetailsViewModel.PEFriendCode
+						</div>
+					</div>
+				</div>
+			}
+			@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.PEBadgeURL))
+			{
+				<div>
+					<img src=@Model.UserDetailsViewModel.PEBadgeURL alt="Project Euler Badge" />
+				</div>
+			}
+		</div>
+	</div>
+	<div class="col-6">
+		<div class="card">
+			<div class="card-header">
+				<b>Links</b>
+			</div>
+			<div class="card-body">
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlogUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.BlogUrl" target="_blank">Blog</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.CodinGameUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.CodinGameUrl" target="_blank">CodinGame</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.CodinGameUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.CodinGameUrl" target="_blank">CodinGame</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.GithubUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.GithubUrl" target="_blank">GitHub</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.GithubUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.GithubUrl" target="_blank">GitHub</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.LinkedInUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.LinkedInUrl" target="_blank">LinkedIn</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.LinkedInUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.LinkedInUrl" target="_blank">LinkedIn</a>
+					</div>
+				}
 				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.MastodonUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.MastodonUrl" target="_blank">Mastodon</a>
-                    </div>
-                }
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.MastodonUrl" target="_blank">Mastodon</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitchUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.TwitchUrl" target="_blank">Twitch</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitchUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.TwitchUrl" target="_blank">Twitch</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitterUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.TwitterUrl" target="_blank">Twitter</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.TwitterUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.TwitterUrl" target="_blank">Twitter</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlueskyUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.BlueskyUrl" target="_blank">Bluesky</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.BlueskyUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.BlueskyUrl" target="_blank">Bluesky</a>
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
-                {
-                    <div class="mb-2">
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.YouTubeUrl))
+				{
+					<div class="mb-2">
 
-                        <a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
+						<a href="@Model.UserDetailsViewModel.YouTubeUrl" target="_blank">YouTube</a>
 
-                    </div>
-                }
+					</div>
+				}
 
-                @if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
-                {
-                    <div class="mb-2">
-                        <a href="@Model.UserDetailsViewModel.OtherUrl" target="_blank">@Model.UserDetailsViewModel.OtherUrl</a>
-                    </div>
-                }
+				@if (!string.IsNullOrEmpty(Model.UserDetailsViewModel.OtherUrl))
+				{
+					<div class="mb-2">
+						<a href="@Model.UserDetailsViewModel.OtherUrl" target="_blank">@Model.UserDetailsViewModel.OtherUrl</a>
+					</div>
+				}
 
 
-            </div>
-        </div>
-        <br />
-        <div class="card">
-            <div class="card-header">
-                <b>Books</b>
-            </div>
-            <div class="card-body">
+			</div>
+		</div>
+		<br />
+		<div class="card">
+			<div class="card-header">
+				<b>Books</b>
+			</div>
+			<div class="card-body">
 
-                @if (Model.UserDetailsViewModel.BooksRead.Count() == 0)
-                {
-                    <div>@Model.UserDetailsViewModel.Name has not read any books yet.</div>
+				@if (Model.UserDetailsViewModel.BooksRead.Count() == 0)
+				{
+					<div>@Model.UserDetailsViewModel.Name has not read any books yet.</div>
 
-                }
-                else if (Model.UserDetailsViewModel.BooksRead.Count() == 1)
-                {
-                    <div>@Model.UserDetailsViewModel.Name has read 1 book:</div>
+				}
+				else if (Model.UserDetailsViewModel.BooksRead.Count() == 1)
+				{
+					<div>@Model.UserDetailsViewModel.Name has read 1 book:</div>
 
-                }
-                else
-                {
-                    <div>@Model.UserDetailsViewModel.Name has read @Model.UserDetailsViewModel.BooksRead.Count() books:</div>
-                }
+				}
+				else
+				{
+					<div>@Model.UserDetailsViewModel.Name has read @Model.UserDetailsViewModel.BooksRead.Count() books:</div>
+				}
 
-                <ul>
-                    @foreach (var book in Model.UserDetailsViewModel.BooksRead)
-                    {
-                        <li><a asp-page="/Leaderboard/BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a></li>
-                    }
-                </ul>
+				<ul>
+					@foreach (var book in Model.UserDetailsViewModel.BooksRead)
+					{
+						<li><a asp-page="/Leaderboard/BookDetails" asp-route-bookId="@book.Id"> @book.ToString()</a></li>
+					}
+				</ul>
 
-            </div>
-        </div>
-        <br />
-        <partial name="_MemberSubscriptionPercentBar" for="PercentModel" />
-    </div>
+			</div>
+		</div>
+		<br />
+		<partial name="_MemberSubscriptionPercentBar" for="PercentModel" />
+	</div>
 </div>
