@@ -1,169 +1,189 @@
 ﻿@page
 @model DevBetterWeb.Web.Pages.User.MyProfile.IndexModel
 @{
-    ViewData["Title"] = "My Profile";
+	ViewData["Title"] = "My Profile";
 }
 
 <h3>My Profile</h3>
 
 
 <div class="row">
-    <div class="col-7">
-        <div class="card">
-            <div class="card-header">
-                <b>Personal</b>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label class="font-weight-bold">First Name</label>
-                    <p>@Model.UserProfileViewModel.FirstName</p>
-                </div>
+	<div class="col-7">
+		<div class="card">
+			<div class="card-header">
+				<b>Personal</b>
+			</div>
+			<div class="card-body">
+				<div class="form-group">
+					<label class="font-weight-bold">First Name</label>
+					<p>@Model.UserProfileViewModel.FirstName</p>
+				</div>
 
-                <div class="form-group">
-                    <label class="font-weight-bold">Last Name</label>
-                    <p>@Model.UserProfileViewModel.LastName</p>
-                </div>
+				<div class="form-group">
+					<label class="font-weight-bold">Last Name</label>
+					<p>@Model.UserProfileViewModel.LastName</p>
+				</div>
 
-                <div class="form-group">
-                    <label class="font-weight-bold">Shipping Address</label>
-                    <span class="text-secondary small">Only administrators can view this information</span>
-                    <p>@Model.UserProfileViewModel.Address</p>
-                </div>
+				<div class="form-group">
+					<label class="font-weight-bold">Shipping Address</label>
+					<span class="text-secondary small">Only administrators can view this information</span>
+					<p>@Model.UserProfileViewModel.Address</p>
+				</div>
 
-                <div class="form-group">
-                    <label class="font-weight-bold">Birthday</label>
-                    <p>@Model.UserProfileViewModel.Birthday</p>
-                </div>
+				<div class="form-group">
+					<label class="font-weight-bold">City</label>
+					<span class="text-secondary small">Only administrators can view this information</span>
+					<p>@Model.UserProfileViewModel.City</p>
+				</div>
 
-                <label class="font-weight-bold">About</label>
-                <p>@Model.UserProfileViewModel.AboutInfo</p>
-                <label class="font-weight-bold">Discord Username</label>
-                <p>@Model.UserProfileViewModel.DiscordUsername</p>
-                <label class="font-weight-bold">Project Euler Username</label>
-                <p>@Model.UserProfileViewModel.PEUsername</p>
-                <label class="font-weight-bold">Project Euler Friend Code</label>
-                <p>@Model.UserProfileViewModel.PEFriendCode</p>
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/Personal">Edit</a>
+				<div class="form-group">
+					<label class="font-weight-bold">Country</label>
+					<span class="text-secondary small">Only administrators can view this information</span>
+					<p>@Model.UserProfileViewModel.Country</p>
+				</div>
 
-            </div>
+				<div class="form-group">
+					<label class="font-weight-bold">Postal Code</label>
+					<span class="text-secondary small">Only administrators can view this information</span>
+					<p>@Model.UserProfileViewModel.PostalCode</p>
+				</div>
 
-        </div>
-        <br />
+				<div class="form-group">
+					<label class="font-weight-bold">Birthday</label>
+					<p>@Model.UserProfileViewModel.Birthday</p>
+				</div>
 
-        <div class="card">
-            <div class="card-header">
-                <b>Books You've Read</b>
-            </div>
-            @if (Model.UserProfileViewModel.BooksRead.Any())
-            {
-                @foreach (var book in Model.UserProfileViewModel.BooksRead)
-                {
-                    <div class="card-body">
-                        <strong>
-                            @book.ToString()
-                        </strong>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="card-body">You haven't read any books yet. Add one below!</div>
-            }
-            <div class="card-body">
+				<label class="font-weight-bold">About</label>
+				<p>@Model.UserProfileViewModel.AboutInfo</p>
+				<label class="font-weight-bold">Discord Username</label>
+				<p>@Model.UserProfileViewModel.DiscordUsername</p>
+				<label class="font-weight-bold">Project Euler Username</label>
+				<p>@Model.UserProfileViewModel.PEUsername</p>
+				<label class="font-weight-bold">Project Euler Friend Code</label>
+				<p>@Model.UserProfileViewModel.PEFriendCode</p>
+				<a class="btn btn-primary nav-item" href="/User/MyProfile/Personal">Edit</a>
 
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/Books">Edit</a>
+			</div>
 
-            </div>
-        </div>
-        <br />
-        @if (Model.GetIsAlumni())
-        {
-            <div class="card">
-                <div class="card-header">
-                    <b>Books You've Added</b>
-                </div>
-                @if (Model.UserProfileViewModel.BooksAdd.Any())
-                {
-                    @foreach (var book in Model.UserProfileViewModel.BooksAdd)
-                    {
-                        <div class="card-body">
-                            <strong>
-                                @book.ToString()
-                            </strong>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div class="card-body">You haven't added any books yet. Alumni members can add one book to the devBetter reading list. 
-                        Add one below!</div>
-                    <div class="card-body">
-                        <a class="btn btn-primary nav-item" href="/User/MyProfile/BooksAdd">Add</a>
-                    </div>
-                }
-            </div>
-            <br />
-        }
-        @if (!Model.GetIsAlumni())
-        {
-            <partial name="_MemberSubscriptionPercentBar" for="Model" />
-        }
-    </div>
-    <div class="col-5">
-        <div class="card">
-            <div class="card-header">
-                <b>Avatar / Profile Image</b>
-            </div>
-            <div class="card-body">
-                <div>
-                    <a href="/User/MyProfile/EditAvatar">
-                        <img class="db-avatar" src="@Model.AvatarUrl" alt="Profile picture" onerror='epic(this)' />
-                    </a>
-                </div>
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/EditAvatar">Edit</a>
-            </div>
-        </div>
-        <br />
-        <div class="card">
-            <div class="card-header">
-                <b>Links</b>
-            </div>
-            <div class="card-body">
+		</div>
+		<br />
 
-                <label class="font-weight-bold">Blog</label>
-                <p>@Model.UserProfileViewModel.BlogUrl</p>
-                <label class="font-weight-bold">CodinGame</label>
-                <p>@Model.UserProfileViewModel.CodinGameUrl</p>
-                <label class="font-weight-bold">GitHub</label>
-                <p>@Model.UserProfileViewModel.GithubUrl</p>
-                <label class="font-weight-bold">LinkedIn</label>
-                <p>@Model.UserProfileViewModel.LinkedInUrl</p>
+		<div class="card">
+			<div class="card-header">
+				<b>Books You've Read</b>
+			</div>
+			@if (Model.UserProfileViewModel.BooksRead.Any())
+			{
+				@foreach (var book in Model.UserProfileViewModel.BooksRead)
+				{
+					<div class="card-body">
+						<strong>
+							@book.ToString()
+						</strong>
+					</div>
+				}
+			}
+			else
+			{
+				<div class="card-body">You haven't read any books yet. Add one below!</div>
+			}
+			<div class="card-body">
+
+				<a class="btn btn-primary nav-item" href="/User/MyProfile/Books">Edit</a>
+
+			</div>
+		</div>
+		<br />
+		@if (Model.GetIsAlumni())
+		{
+			<div class="card">
+				<div class="card-header">
+					<b>Books You've Added</b>
+				</div>
+				@if (Model.UserProfileViewModel.BooksAdd.Any())
+				{
+					@foreach (var book in Model.UserProfileViewModel.BooksAdd)
+					{
+						<div class="card-body">
+							<strong>
+								@book.ToString()
+							</strong>
+						</div>
+					}
+				}
+				else
+				{
+					<div class="card-body">
+						You haven't added any books yet. Alumni members can add one book to the devBetter reading list.
+						Add one below!
+					</div>
+					<div class="card-body">
+						<a class="btn btn-primary nav-item" href="/User/MyProfile/BooksAdd">Add</a>
+					</div>
+				}
+			</div>
+			<br />
+		}
+		@if (!Model.GetIsAlumni())
+		{
+			<partial name="_MemberSubscriptionPercentBar" for="Model" />
+		}
+	</div>
+	<div class="col-5">
+		<div class="card">
+			<div class="card-header">
+				<b>Avatar / Profile Image</b>
+			</div>
+			<div class="card-body">
+				<div>
+					<a href="/User/MyProfile/EditAvatar">
+						<img class="db-avatar" src="@Model.AvatarUrl" alt="Profile picture" onerror='epic(this)' />
+					</a>
+				</div>
+				<a class="btn btn-primary nav-item" href="/User/MyProfile/EditAvatar">Edit</a>
+			</div>
+		</div>
+		<br />
+		<div class="card">
+			<div class="card-header">
+				<b>Links</b>
+			</div>
+			<div class="card-body">
+
+				<label class="font-weight-bold">Blog</label>
+				<p>@Model.UserProfileViewModel.BlogUrl</p>
+				<label class="font-weight-bold">CodinGame</label>
+				<p>@Model.UserProfileViewModel.CodinGameUrl</p>
+				<label class="font-weight-bold">GitHub</label>
+				<p>@Model.UserProfileViewModel.GithubUrl</p>
+				<label class="font-weight-bold">LinkedIn</label>
+				<p>@Model.UserProfileViewModel.LinkedInUrl</p>
 				<label class="font-weight-bold">Mastodon</label>
 				<p>@Model.UserProfileViewModel.MastodonUrl</p>
-                <label class="font-weight-bold">Twitter</label>
-	            <p>@Model.UserProfileViewModel.TwitterUrl</p>
-                <label class="font-weight-bold">Bluesky</label>
-                <p>@Model.UserProfileViewModel.BlueskyUrl</p>
-                <label class="font-weight-bold">Twitch</label>
-                <p>@Model.UserProfileViewModel.TwitchUrl</p>
-                <label class="font-weight-bold">YouTube</label>
-                <p>@Model.UserProfileViewModel.YouTubeUrl</p>
-                <label class="font-weight-bold">Other</label>
-                <p>@Model.UserProfileViewModel.OtherUrl</p>
+				<label class="font-weight-bold">Twitter</label>
+				<p>@Model.UserProfileViewModel.TwitterUrl</p>
+				<label class="font-weight-bold">Bluesky</label>
+				<p>@Model.UserProfileViewModel.BlueskyUrl</p>
+				<label class="font-weight-bold">Twitch</label>
+				<p>@Model.UserProfileViewModel.TwitchUrl</p>
+				<label class="font-weight-bold">YouTube</label>
+				<p>@Model.UserProfileViewModel.YouTubeUrl</p>
+				<label class="font-weight-bold">Other</label>
+				<p>@Model.UserProfileViewModel.OtherUrl</p>
 
-                <a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
+				<a class="btn btn-primary nav-item" href="/User/MyProfile/Links">Edit</a>
 
-            </div>
-        </div>
-        <br />
+			</div>
+		</div>
+		<br />
 
-            <div class="card">
-                <div class="card-header">
-                    <b>Billing Information</b>
-                </div>
-                <div class="card-body">
-                    <a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
-                </div>
-            </div>
-    </div>
+		<div class="card">
+			<div class="card-header">
+				<b>Billing Information</b>
+			</div>
+			<div class="card-body">
+				<a class="btn btn-primary nav-item" href="/User/MyProfile/Billing">View</a>
+			</div>
+		</div>
+	</div>
 </div>

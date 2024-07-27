@@ -11,7 +11,14 @@ public class UserProfileViewModel
 	public string? FirstName { get; set; }
 	[Required]
 	public string? LastName { get; set; }
+	[Required]
 	public string? Address { get; set; }
+	[Required]
+	public string? City { get; set; }
+	[Required]
+	public string? Country { get; set; }
+	[Required]
+	public string? PostalCode { get; set; }
 	public string? Birthday { get; set; }
 
 	[ValidUrl]
@@ -59,6 +66,9 @@ public class UserProfileViewModel
 
 		AboutInfo = member.AboutInfo ?? valueToUseIfNull;
 		Address = member.Address ?? valueToUseIfNull;
+		City = member.City ?? valueToUseIfNull;
+		Country = member.Country ?? valueToUseIfNull;
+		PostalCode = member.PostalCode ?? valueToUseIfNull;
 		Birthday = member.Birthday?.ToString() ?? valueToUseIfNull;
 		BlogUrl = member.BlogUrl ?? valueToUseIfNull;
 		CodinGameUrl = member.CodinGameUrl ?? valueToUseIfNull;
