@@ -32,6 +32,7 @@ using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using NimblePros.Vimeo.Extensions;
 using NimblePros.OutboxServer.Infrastructure.Extensions;
+using MassTransit;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -55,7 +56,17 @@ builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stri
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-builder.Services.RegisterObEf();
+//Outbox services
+var connectionString = builder.Configuration.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)!;
+builder.Services
+	.ConfigureObDatabase(connectionString)
+	.RegisterObMediatR(null)
+	.RegisterObEf()
+	.AddObEmailSendServices()
+	.AddObMetricsServices()
+	.RegisterObAutoMapperProfiles()
+	.RegisterObEmailAdapters(builder.Configuration)
+	.ConfigureObMassTransit(builder.Configuration);
 
 // PRODUCTION SERVICES
 if (builder.Environment.EnvironmentName.ToLower() == "production")
@@ -198,6 +209,9 @@ app.MapDefaultControllerRoute();
 
 // seed database
 await SeedDatabase(app);
+
+//Outbox Server Migrate database
+NimblePros.OutboxServer.Infrastructure.Data.SeedData.MigrateDatabase(app);
 
 app.Run();
 
