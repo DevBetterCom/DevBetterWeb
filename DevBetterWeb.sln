@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevBetterWeb.FunctionalTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OutboxServer", "OutboxServer", "{CFCCFFD6-025B-460E-A801-4EA744799B16}"
 	ProjectSection(SolutionItems) = preProject
-		OutboxServer\NimblePros.OutboxServer.1.0.1-beta.1.nupkg = OutboxServer\NimblePros.OutboxServer.1.0.1-beta.1.nupkg
+		OutboxServer\NimblePros.OutboxServer.nupkg = OutboxServer\NimblePros.OutboxServer.nupkg
 	EndProjectSection
 EndProject
 Global
