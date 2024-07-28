@@ -29,6 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+    <PackageReference Include="NimblePros.OutboxServer" />
     <PackageReference Include="Stripe.net" />
   </ItemGroup>
 
