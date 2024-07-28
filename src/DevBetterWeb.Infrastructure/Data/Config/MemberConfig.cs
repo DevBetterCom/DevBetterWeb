@@ -11,9 +11,6 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
   {
 	  builder.Property(x => x.UserId).HasMaxLength(500);
     builder.Property(x => x.Address).HasMaxLength(500);
-    builder.Property(x => x.City).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
-    builder.Property(x => x.Country).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
-    builder.Property(x => x.PostalCode).HasMaxLength(DataConfigConstants.NAME_COLUMN_WIDTH);
     builder.Property(x => x.BlogUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.CodinGameUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.GitHubUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);

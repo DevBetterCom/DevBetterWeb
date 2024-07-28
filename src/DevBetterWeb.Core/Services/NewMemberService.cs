@@ -93,10 +93,10 @@ public class NewMemberService : INewMemberService
   }
 
   public async Task<Member> MemberSetupAsync(string userId,
-    string firstName, string lastName, string inviteCode, string email, string streetAddress, string city, string country, string postalCode)
+    string firstName, string lastName, string inviteCode, string email, string streetAddress, string city, string state, string postalCode, string country)
   {
     Guard.Against.NullOrEmpty(inviteCode, nameof(inviteCode));
-    Member member = await CreateNewMemberAsync(userId, firstName, lastName, email, streetAddress, city, country, postalCode);
+    Member member = await CreateNewMemberAsync(userId, firstName, lastName, email, streetAddress, city, state, postalCode, country);
     await AddUserToMemberRoleAsync(userId);
 
     var spec = new InvitationByInviteCodeSpec(inviteCode);
@@ -152,12 +152,12 @@ public class NewMemberService : INewMemberService
     await _invitationRepository.SaveChangesAsync();
   }
 
-  private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName, string email, string streetAddress, string city, string country, string postalCode)
+  private async Task<Member> CreateNewMemberAsync(string userId, string firstName, string lastName, string email, string street, string city, string state, string postalCode, string country)
   {
     Member member = await _memberRegistrationService.RegisterMemberAsync(userId);
     member.UpdateName(firstName, lastName);
 		member.UpdateEmail(email);
-		member.UpdateAddress(streetAddress, city, country, postalCode);
+		member.UpdateShippingAddress(street, city, state, postalCode, country);
 
 		return member;
   }

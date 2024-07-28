@@ -9,6 +9,6 @@ public interface INewMemberService
   Task<Invitation> CreateInvitationAsync(string email, string stripeEventId);
   Task SendRegistrationEmailAsync(Invitation invitation);
   Task<Result<string>> VerifyValidEmailAndInviteCodeAsync(string email, string inviteCode);
-  Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode, string email, string streetAddress, string city, string country, string postalCode);
+  Task<Member> MemberSetupAsync(string userId, string firstName, string lastName, string inviteCode, string email, string streetAddress, string city, string state, string postalCode, string country);
   Task DeactivateInviteAsync(Invitation invite);
 }

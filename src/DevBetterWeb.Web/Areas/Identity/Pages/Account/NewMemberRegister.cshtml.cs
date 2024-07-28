@@ -73,7 +73,11 @@ public class NewMemberRegisterModel : PageModel
 		[Display(Name = "City")]
     public string? City { get; set; }
 
-    [Required]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+    [Display(Name = "State")]
+    public string? State { get; set; }
+
+		[Required]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 		[Display(Name = "Street Address")]
     public string? StreetAddress { get; set; }
@@ -153,7 +157,7 @@ public class NewMemberRegisterModel : PageModel
 					  throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
 				  }
 
-				  await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email, Input.StreetAddress!, Input.City!, Input.Country!, Input.PostalCode!);
+				  await _newMemberService.MemberSetupAsync(userId, Input.FirstName!, Input.LastName!, inviteCode!, email, Input.StreetAddress!, Input.City!, Input.State!, Input.PostalCode!, Input.Country!);
 
 				  _logger.LogInformation($"Adding user {user.Email} to Member Role");
 				  var roles = await _roleManager.Roles.ToListAsync();

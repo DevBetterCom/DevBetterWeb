@@ -24,6 +24,7 @@ public class UserDetailsViewModel
   public string? Birthday { get; set; }
   public string? Address { get; set; }
   public string? City { get; set; }
+  public string? State { get; set; }
   public string? Country { get; set; }
   public string? PostalCode { get; set; }
   public string? PEFriendCode { get; set; }
@@ -59,9 +60,15 @@ public class UserDetailsViewModel
     AboutInfo = member.AboutInfo;
     Birthday = member.Birthday?.ToString();
     Address = member.Address;
-    City = member.City;
-    Country = member.Country;
-    PostalCode = member.PostalCode;
+    if (member.ShippingAddress != null)
+    {
+	    Address = member.ShippingAddress.Street;
+	    City = member.ShippingAddress.City;
+	    Country = member.ShippingAddress.Country;
+	    PostalCode = member.ShippingAddress.PostalCode;
+	    State = member.ShippingAddress.State;
+		}
+    
     Name = member.UserFullName();
     PEFriendCode = member.PEFriendCode;
     if (!(string.IsNullOrEmpty(member.PEUsername)))

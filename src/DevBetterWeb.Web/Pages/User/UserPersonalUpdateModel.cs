@@ -15,6 +15,7 @@ public class UserPersonalUpdateModel
 	public string? Address { get; set; }
 	[Required]
 	public string? City { get; set; }
+	public string? State { get; set; }
 	[Required]
 	public string? Country { get; set; }
 	[Required]
@@ -44,9 +45,14 @@ public class UserPersonalUpdateModel
 		FirstName = member.FirstName;
 		LastName = member.LastName;
 		Address = member.Address;
-		City = member.City;
-		Country = member.Country;
-		PostalCode = member.PostalCode;
+		if (member.ShippingAddress != null)
+		{
+			Address = member.ShippingAddress.Street;
+			City = member.ShippingAddress.City;
+			Country = member.ShippingAddress.Country;
+			State = member.ShippingAddress.State;
+			PostalCode = member.ShippingAddress.PostalCode;
+		}
 		BirthdayDay = member.Birthday?.Day;
 		BirthdayMonth = member.Birthday?.Month;
 		Email = member.Email;

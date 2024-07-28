@@ -45,9 +45,6 @@ public class Member : BaseEntity, IAggregateRoot
 	public Birthday? Birthday { get; private set; }
 	public string? AboutInfo { get; private set; }
 	public string? Address { get; private set; }
-	public string? City { get; private set; }
-	public string? Country { get; private set; }
-	public string? PostalCode { get; private set; }
 	public Address? ShippingAddress { get; private set; }
 	public Geolocation? CityLocation { get; private set; }
 
@@ -126,31 +123,12 @@ public class Member : BaseEntity, IAggregateRoot
 		}
 	}
 
-	public void UpdateAddress(string? address, string? city, string? country, string? postalCode, bool isEvent = true)
+	public void UpdateAddress(string? address, bool isEvent = true)
 	{
 		var isUpdate = false;
 		if (Address != address)
 		{
 			Address = address;
-			isUpdate = true;
-		}
-
-		if (City != city)
-		{
-			City = city;
-			isUpdate = true;
-		}
-
-		if (Country != country)
-		{
-			Country = country;
-			isUpdate = true;
-		}
-
-
-		if (PostalCode != postalCode)
-		{
-			PostalCode = postalCode;
 			isUpdate = true;
 		}
 
@@ -203,6 +181,25 @@ public class Member : BaseEntity, IAggregateRoot
 			var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
 			_favoriteArchiveVideos.Remove(removal);
+		}
+	}
+
+	public void UpdateShippingAddress(string street, string city, string state, string postalCode, string country, bool isEvent = true)
+	{
+		var isUpdated = false;
+		if (ShippingAddress == null)
+		{
+			ShippingAddress = new Address(street, city, state, postalCode, country);
+		}
+		else
+		{
+			isUpdated = ShippingAddress.Update(street, city, state, postalCode, country);
+		}
+
+		if (isEvent && isUpdated)
+		{
+			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
+			Events.Add(addressUpdatedEvent);
 		}
 	}
 
