@@ -40,7 +40,7 @@ public class MemberUpdateAddress
     string newState = Guid.NewGuid().ToString();
 
 		var member = GetMemberWithDefaultAddress();
-		member.UpdateAddress(_initialAddress);
+		member.UpdateAddress(newAddress);
 		member.UpdateShippingAddress(newAddress, newCity, newState, newPostalCode, newCountry);
 
 		Assert.Equal(newAddress, member.Address);
@@ -56,7 +56,7 @@ public class MemberUpdateAddress
     string newState = Guid.NewGuid().ToString();
 
 		var member = GetMemberWithDefaultAddress();
-		member.UpdateAddress(_initialAddress);
+		member.UpdateAddress(newAddress);
 		member.UpdateShippingAddress(newAddress, newCity, newState, newPostalCode, newCountry);
 		var eventCreated = (MemberHomeAddressUpdatedEvent)member.Events.First();
 
