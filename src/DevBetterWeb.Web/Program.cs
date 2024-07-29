@@ -33,6 +33,7 @@ using Microsoft.Extensions.Configuration;
 using NimblePros.Vimeo.Extensions;
 using NimblePros.OutboxServer.Infrastructure.Extensions;
 using MassTransit;
+using DevBetterWeb.Infrastructure.Extensions;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -55,6 +56,8 @@ builder.Services.Configure<DiscordWebhookUrls>(builder.Configuration.GetSection(
 builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("StripeOptions"));
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+builder.Services.AddSingleton(builder.Configuration.GetEmailSettings());
 
 //Outbox services
 builder.AddAspireServiceDefaults();
