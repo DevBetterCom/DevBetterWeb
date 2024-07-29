@@ -28,7 +28,7 @@
     </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="2.40.3" />
     <PackageVersion Include="Dapper" Version="2.1.35" />
-    <PackageVersion Include="FastEndpoints" Version="5.18.0" />
+    <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.18.0" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.2.0" />
