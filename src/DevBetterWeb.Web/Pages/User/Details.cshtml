@@ -22,28 +22,21 @@
 			</div>
 			<div asp-authorize asp-roles="@DevBetterWeb.Core.AuthConstants.Roles.ADMINISTRATORS" class="card-body">
 				<div><b>Shipping Address</b></div>
-				<div class="card">
-					<div class="card-body" style="white-space: pre-line;">
+				<div class="card">		
+					<div class="card-body">
+						<b>Address: </b>
 						@Model.UserDetailsViewModel.Address
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-body" style="white-space: pre-line;">
+						<br />
+						<b>City: </b>
 						@Model.UserDetailsViewModel.City
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-body" style="white-space: pre-line;">
+						<br />
+						<b>State: </b>
 						@Model.UserDetailsViewModel.State
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-body" style="white-space: pre-line;">
+						<br />
+						<b>Country: </b>
 						@Model.UserDetailsViewModel.Country
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-body" style="white-space: pre-line;">
+						<br />
+						<b>Postal Code: </b>
 						@Model.UserDetailsViewModel.PostalCode
 					</div>
 				</div>
