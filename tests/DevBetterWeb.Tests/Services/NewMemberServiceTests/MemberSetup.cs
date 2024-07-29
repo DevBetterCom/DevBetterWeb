@@ -5,27 +5,32 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
 using DevBetterWeb.Core.Specs;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests;
 
 public class MemberSetup
 {
-  private readonly Mock<IRepository<Member>> _memberRepository = new();
-  private readonly Mock<IRepository<Invitation>> _invitationRepository = new();
-  private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService = new();
-  private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription = new();
-  private readonly Mock<IEmailService> _emailService = new();
-  private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
-  private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
-  private readonly Mock<IMemberAddBillingActivityService> _memberAddBillingActivityService = new();
+  private readonly IRepository<Member> _memberRepository = Substitute.For<IRepository<Member>>();
+  private readonly IRepository<Invitation> _invitationRepository = Substitute.For<IRepository<Invitation>>();
+  private readonly IUserRoleMembershipService _userRoleMembershipService = Substitute.For<IUserRoleMembershipService>();
+  private readonly IPaymentHandlerSubscription _paymentHandlerSubscription = Substitute.For<IPaymentHandlerSubscription>();
+  private readonly IEmailService _emailService = Substitute.For<IEmailService>();
+  private readonly IMemberRegistrationService _memberRegistrationService = Substitute.For<IMemberRegistrationService>();
+  private readonly IAppLogger<NewMemberService> _logger = Substitute.For<IAppLogger<NewMemberService>>();
+  private readonly IMemberAddBillingActivityService _memberAddBillingActivityService = Substitute.For<IMemberAddBillingActivityService>();
 
   private readonly INewMemberService _newMemberService;
 
   private readonly string _userId = "TestUserId";
   private readonly string _firstName = "TestFirstName";
   private readonly string _lastName = "TestLastName";
+  private readonly string _address = "TestAddress";
+  private readonly string _city = "TestCity";
+  private readonly string _state = "TestState";
+  private readonly string _country = "TestCountry";
+  private readonly string _postalCode = "TestPostalCode";
   private readonly string _inviteCode = "TestInviteCode";
 
   private readonly string _email = "TestEmail";
@@ -36,13 +41,13 @@ public class MemberSetup
 
   public MemberSetup()
   {
-    _newMemberService = new NewMemberService(_invitationRepository.Object,
-      _userRoleMembershipService.Object,
-      _paymentHandlerSubscription.Object,
-      _emailService.Object,
-      _memberRegistrationService.Object,
-      _logger.Object,
-      _memberAddBillingActivityService.Object);
+    _newMemberService = new NewMemberService(_invitationRepository,
+      _userRoleMembershipService,
+      _paymentHandlerSubscription,
+      _emailService,
+      _memberRegistrationService,
+      _logger,
+      _memberAddBillingActivityService);
     _invitation = new Invitation(_email, _inviteCode, _subscriptionId);
   }
 
@@ -52,17 +57,17 @@ public class MemberSetup
     var memberResult = new Member();
     var memberId = memberResult.Id;
 
-    _invitationRepository.Setup(r => r.FirstOrDefaultAsync(It.IsAny<InvitationByInviteCodeSpec>(), CancellationToken.None)).ReturnsAsync(_invitation);
-    _invitationRepository.Setup(r => r.ListAsync(It.IsAny<ActiveInvitationByEmailSpec>(), CancellationToken.None)).ReturnsAsync(new List<Invitation>());
-    _memberRepository.Setup(r => r.GetByIdAsync(memberId, CancellationToken.None)).ReturnsAsync(memberResult);
-    _memberRegistrationService.Setup(r => r.RegisterMemberAsync(_userId)).ReturnsAsync(memberResult);
+    _invitationRepository.FirstOrDefaultAsync(Arg.Any<InvitationByInviteCodeSpec>(), CancellationToken.None).Returns(_invitation);
+    _invitationRepository.ListAsync(Arg.Any<ActiveInvitationByEmailSpec>(), CancellationToken.None).Returns(new List<Invitation>());
+    _memberRepository.GetByIdAsync(memberId, CancellationToken.None).Returns(memberResult);
+    _memberRegistrationService.RegisterMemberAsync(_userId).Returns(memberResult);
 
-    Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode, "");
+    Member member = await _newMemberService.MemberSetupAsync(_userId, _firstName, _lastName, _inviteCode, "", _address, _city, _state, _postalCode, _country);
 
     Assert.Equal(_firstName, member.FirstName);
     Assert.Equal(_lastName, member.LastName);
 
-    _userRoleMembershipService.Verify(u => u.AddUserToRoleByRoleNameAsync(_userId, _roleName), Times.Once);
+    await _userRoleMembershipService.Received(1).AddUserToRoleByRoleNameAsync(_userId, _roleName);
     Assert.False(_invitation.Active);
   }
 }

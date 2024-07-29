@@ -28,6 +28,12 @@ public class HomeController : Controller
     return View();
   }
 
+	[Route("/Home/StripeVerification")]
+  public IActionResult StripeVerification()
+  {
+    return View();
+  }
+
   public IActionResult Error()
   {
     var feature = HttpContext

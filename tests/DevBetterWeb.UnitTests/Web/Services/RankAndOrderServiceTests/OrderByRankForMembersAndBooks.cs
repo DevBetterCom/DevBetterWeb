@@ -4,21 +4,21 @@ using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
+using NSubstitute;
 using System;
 
 namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class OrderByRankForMembersAndBooks
 {
-	private readonly Mock<IRankingService> _mockRankingService;
+	private readonly IRankingService _mockRankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public OrderByRankForMembersAndBooks()
 	{
-		_mockRankingService = new Mock<IRankingService>();
-		var mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, mockMemberService.Object);
+		_mockRankingService = Substitute.For<IRankingService>();
+		var mockMemberService = Substitute.For<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(_mockRankingService, mockMemberService);
 	}
 
 	private List<BookCategoryDto> GetTestBookCategories()
@@ -55,8 +55,8 @@ public class OrderByRankForMembersAndBooks
 		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.OrderMembersByRank(It.IsAny<List<MemberForBookDto>>()), Times.Exactly(bookCategories.Count * 2));
-		_mockRankingService.Verify(rs => rs.OrderBooksByRank(It.IsAny<List<BookDto>>()), Times.Exactly(bookCategories.Count));
+		_mockRankingService.Received(bookCategories.Count * 2).OrderMembersByRank(Arg.Any<List<MemberForBookDto>>());
+		_mockRankingService.Received(bookCategories.Count).OrderBooksByRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
@@ -69,8 +69,8 @@ public class OrderByRankForMembersAndBooks
 		_rankAndOrderService.OrderByRankForMembersAndBooks(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.OrderMembersByRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
-		_mockRankingService.Verify(rs => rs.OrderBooksByRank(It.IsAny<List<BookDto>>()), Times.Never());
+		_mockRankingService.DidNotReceive().OrderMembersByRank(Arg.Any<List<MemberForBookDto>>());
+		_mockRankingService.DidNotReceive().OrderBooksByRank(Arg.Any<List<BookDto>>());
 	}
 
 	[Fact]
