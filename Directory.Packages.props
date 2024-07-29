@@ -4,7 +4,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="altcover" Version="8.8.10" />
+    <PackageVersion Include="altcover" Version="8.8.173" />
     <PackageVersion Include="Ardalis.ApiClient" Version="0.2.3" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
