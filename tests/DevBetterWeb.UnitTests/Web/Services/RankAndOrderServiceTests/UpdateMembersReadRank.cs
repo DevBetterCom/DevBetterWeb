@@ -4,7 +4,7 @@ using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Models;
 using DevBetterWeb.Web.Services;
 using Xunit;
-using Moq;
+using NSubstitute;
 using System.Linq;
 using System;
 
@@ -12,14 +12,14 @@ namespace DevBetterWeb.UnitTests.Web.Services.RankAndOrderServiceTests;
 
 public class UpdateMembersReadRank
 {
-	private readonly Mock<IRankingService> _mockRankingService;
+	private readonly IRankingService _mockRankingService;
 	private readonly RankAndOrderService _rankAndOrderService;
 
 	public UpdateMembersReadRank()
 	{
-		_mockRankingService = new Mock<IRankingService>();
-		var mockMemberService = new Mock<IMemberService>();
-		_rankAndOrderService = new RankAndOrderService(_mockRankingService.Object, mockMemberService.Object);
+		_mockRankingService = Substitute.For<IRankingService>();
+		var mockMemberService = Substitute.For<IMemberService>();
+		_rankAndOrderService = new RankAndOrderService(_mockRankingService, mockMemberService);
 	}
 
 	private List<BookCategoryDto> GetTestBookCategories()
@@ -58,8 +58,8 @@ public class UpdateMembersReadRank
 		// Assert
 		foreach (var category in bookCategories)
 		{
-			_mockRankingService.Verify(rs => rs.CalculateMemberRank(category.Members), Times.AtLeastOnce());
-			_mockRankingService.Verify(rs => rs.CalculateMemberRank(category.Alumnus), Times.AtLeastOnce());
+			_mockRankingService.Received().CalculateMemberRank(category.Members);
+			_mockRankingService.Received().CalculateMemberRank(category.Alumnus);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
+		_mockRankingService.DidNotReceive().CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
 
 
@@ -88,7 +88,7 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Exactly(bookCategories.Count * 2));
+		_mockRankingService.Received(bookCategories.Count * 2).CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
 
 	[Fact]
@@ -157,6 +157,6 @@ public class UpdateMembersReadRank
 		_rankAndOrderService.UpdateMembersReadRank(bookCategories);
 
 		// Assert
-		_mockRankingService.Verify(rs => rs.CalculateMemberRank(It.IsAny<List<MemberForBookDto>>()), Times.Never());
+		_mockRankingService.DidNotReceive().CalculateMemberRank(Arg.Any<List<MemberForBookDto>>());
 	}
 }

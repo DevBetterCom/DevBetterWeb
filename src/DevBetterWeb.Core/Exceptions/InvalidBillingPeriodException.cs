@@ -17,8 +17,4 @@ public class InvalidBillingPeriodException : Exception
   public InvalidBillingPeriodException(string? message, Exception? innerException) : base(message, innerException)
   {
   }
-
-  protected InvalidBillingPeriodException(SerializationInfo info, StreamingContext context) : base(info, context)
-  {
-  }
 }

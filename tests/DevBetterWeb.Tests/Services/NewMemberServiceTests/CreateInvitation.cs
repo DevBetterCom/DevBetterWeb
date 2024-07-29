@@ -3,20 +3,19 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DevBetterWeb.Tests.Services.NewMemberServiceTests;
 
 public class CreateInvitation
 {
-  private readonly Mock<IRepository<Member>> _memberRepository = new();
-  private readonly Mock<IRepository<Invitation>> _invitationRepository = new();
-  private readonly Mock<IUserRoleMembershipService> _userRoleMembershipService = new();
-  private readonly Mock<IPaymentHandlerSubscription> _paymentHandlerSubscription = new();
-  private readonly Mock<IEmailService> _emailService = new();
-  private readonly Mock<IMemberRegistrationService> _memberRegistrationService = new();
-  private readonly Mock<IAppLogger<NewMemberService>> _logger = new();
+  private readonly IRepository<Invitation> _invitationRepository = Substitute.For<IRepository<Invitation>>();
+  private readonly IUserRoleMembershipService _userRoleMembershipService = Substitute.For<IUserRoleMembershipService>();
+  private readonly IPaymentHandlerSubscription _paymentHandlerSubscription = Substitute.For<IPaymentHandlerSubscription>();
+  private readonly IEmailService _emailService = Substitute.For<IEmailService>();
+  private readonly IMemberRegistrationService _memberRegistrationService = Substitute.For<IMemberRegistrationService>();
+  private readonly IAppLogger<NewMemberService> _logger = Substitute.For<IAppLogger<NewMemberService>>();
 
   private readonly INewMemberService _newMemberService;
 
@@ -25,12 +24,12 @@ public class CreateInvitation
 
   public CreateInvitation()
   {
-    _newMemberService = new NewMemberService(_invitationRepository.Object,
-    _userRoleMembershipService.Object,
-    _paymentHandlerSubscription.Object,
-    _emailService.Object,
-    _memberRegistrationService.Object,
-    _logger.Object,
+    _newMemberService = new NewMemberService(_invitationRepository,
+    _userRoleMembershipService,
+    _paymentHandlerSubscription,
+    _emailService,
+    _memberRegistrationService,
+    _logger,
             null!); // TODO: Add dependency
 
   }
@@ -43,6 +42,6 @@ public class CreateInvitation
     Assert.Equal(_email, invitation.Email);
     Assert.Equal(_subscriptionId, invitation.PaymentHandlerSubscriptionId);
 
-    _invitationRepository.Verify(r => r.AddAsync(invitation, CancellationToken.None), Times.Once);
+    await _invitationRepository.Received(1).AddAsync(invitation, CancellationToken.None);
   }
 }
