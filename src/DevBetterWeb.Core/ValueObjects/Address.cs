@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using CSharpFunctionalExtensions;
 
 namespace DevBetterWeb.Core.ValueObjects;
 
 public class Address : ValueObject
 {
-  public string Street { get; }
-  public string City { get; }
-  public string State { get; }
-  public string PostalCode { get; }
-  public string Country { get; }
+  public string Street { get; private set; }
+  public string City { get; private set; }
+  public string State { get; private set; }
+  public string PostalCode { get; private set; }
+  public string Country { get; private set; }
 
   public Address(string street,
     string city,
@@ -47,5 +48,43 @@ public class Address : ValueObject
     tokens.Add(country);
 
     return string.Join(',', tokens);
+	}
+
+  public bool Update(string street, string city, string state, string postalCode, string country)
+  {
+	  var isUpdated = false;
+
+	  if (Street != street)
+	  {
+			isUpdated = true;
+			Street = street;
+	  }
+
+	  if (City != city)
+	  {
+		  isUpdated = true;
+		  City = city;
+	  }
+
+	  if (State != state)
+	  {
+		  isUpdated = true;
+		  State = state;
+	  }
+
+	  if (Country != country)
+	  {
+		  isUpdated = true;
+		  Country = country;
+	  }
+
+	  if (PostalCode != postalCode)
+	  {
+		  isUpdated = true;
+		  PostalCode = postalCode;
+	  }
+
+
+		return isUpdated;
   }
 }

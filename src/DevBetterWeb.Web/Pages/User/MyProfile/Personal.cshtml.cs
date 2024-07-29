@@ -81,6 +81,7 @@ public class MyProfilePersonalModel : PageModel
     member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername);
     member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo);
     member.UpdateAddress(UserPersonalUpdateModel.Address);
+    member.UpdateShippingAddress(UserPersonalUpdateModel.Address!, UserPersonalUpdateModel.City!, UserPersonalUpdateModel.State!, UserPersonalUpdateModel.PostalCode!, UserPersonalUpdateModel.Country!);
     member.UpdateBirthday(UserPersonalUpdateModel.BirthdayDay, UserPersonalUpdateModel.BirthdayMonth);
     member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername);
     member.UpdateEmail(UserPersonalUpdateModel.Email);
