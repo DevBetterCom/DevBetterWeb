@@ -186,10 +186,11 @@ public class Member : BaseEntity, IAggregateRoot
 
 	public void UpdateShippingAddress(string street, string city, string state, string postalCode, string country, bool isEvent = true)
 	{
-		var isUpdated = false;
+		bool isUpdated;
 		if (ShippingAddress == null)
 		{
 			ShippingAddress = new Address(street, city, state, postalCode, country);
+			isUpdated = true;
 		}
 		else
 		{
