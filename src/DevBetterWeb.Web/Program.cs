@@ -57,16 +57,9 @@ builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSec
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 //Outbox services
+builder.AddAspireServiceDefaults();
 var connectionString = builder.Configuration.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)!;
-builder.Services
-	.ConfigureObDatabase(connectionString)
-	.RegisterObMediatR(null)
-	.RegisterObEf()
-	.AddObEmailSendServices()
-	.AddObMetricsServices()
-	.RegisterObAutoMapperProfiles()
-	.RegisterObEmailAdapters(builder.Configuration)
-	.ConfigureObMassTransit(builder.Configuration);
+builder.Services.AddOutboxServerInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment(), connectionString);
 
 // PRODUCTION SERVICES
 if (builder.Environment.EnvironmentName.ToLower() == "production")

@@ -94,11 +94,12 @@ public class DefaultInfrastructureModule : Module
 
 	private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
   {
-    builder.RegisterType<LocalSmtpEmailService>().As<IEmailService>();
+    builder.RegisterType<OutboxSendEmailService>().As<IEmailService>();
   }
 
   private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
   {
-    builder.RegisterType<SendGridEmailService>().As<IEmailService>();
+    //builder.RegisterType<SendGridEmailService>().As<IEmailService>();
+    builder.RegisterType<OutboxSendEmailService>().As<IEmailService>();
   }
 }
