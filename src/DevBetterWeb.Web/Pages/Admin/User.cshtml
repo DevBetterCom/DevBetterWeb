@@ -206,7 +206,7 @@
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
     <form asp-page-handler="UpdateLinks">
-      <input type="hidden" name="userId" value="@Model.UserLinksUpdateModel.UserId" />
+      <input type="hidden" name="userId" value="@Model!.UserLinksUpdateModel.UserId" />
       <div class="card">
         <div class="card-header">
           <b>Links</b>
@@ -323,7 +323,7 @@
           </tr>
           </thead>
           <tbody>
-            @foreach (var item in Model.Invoices)
+            @foreach (var item in Model!.Invoices)
             {
               <tr>
                 <td>

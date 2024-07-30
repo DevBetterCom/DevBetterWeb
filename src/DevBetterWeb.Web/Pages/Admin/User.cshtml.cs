@@ -133,7 +133,7 @@ public class UserModel : PageModel
 
 				AddressHistory = member.AddressHistory.OrderByDescending(a => a.UpdatedOn).Select(a => new AddressHistoryViewModel
 				{
-					Address = a.Address.ToString(),
+					Address = a.Address!.ToString(),
 					UpdatedOn = a.UpdatedOn
 				}).ToList();
 
