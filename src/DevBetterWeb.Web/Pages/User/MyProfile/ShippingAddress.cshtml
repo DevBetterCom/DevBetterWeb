@@ -1,0 +1,66 @@
+﻿@page
+@using System.Linq;
+@model DevBetterWeb.Web.Pages.User.ShippingAddressModel
+@{
+	ViewData["Title"] = "My Profile: Shipping Address";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<form method="post">
+	<div class="row">
+		<div class="col-7">
+			<div class="card">
+				<div class="card-header">
+					<b>Shipping Address</b>
+				</div>
+				<div class="card-body">
+
+					<div class="form-group">
+						<label class="font-weight-bold">Country</label>
+						<select asp-for="UserShippingAddressUpdateModel.Country" asp-items="@ISO3166.Country.List.Select(i => new SelectListItem { Text = i.Name, Value = i.Name }).ToList()"
+										class="form-control form-control-sm"></select>
+						<span asp-validation-for="UserShippingAddressUpdateModel.Country" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="font-weight-bold">City</label>
+						<input asp-for="UserShippingAddressUpdateModel.City" type="text" value="@Model.UserShippingAddressUpdateModel.City"
+									 class="form-control form-control-sm" />
+						<span asp-validation-for="UserShippingAddressUpdateModel.City" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="font-weight-bold">Street</label>
+						<input asp-for="UserShippingAddressUpdateModel.Street" type="text" value="@Model.UserShippingAddressUpdateModel.Street"
+									 class="form-control form-control-sm" />
+						<span asp-validation-for="UserShippingAddressUpdateModel.Street" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="font-weight-bold">Postal code</label>
+						<input asp-for="UserShippingAddressUpdateModel.PostalCode" type="text" value="@Model.UserShippingAddressUpdateModel.PostalCode"
+									 class="form-control form-control-sm" />
+						<span asp-validation-for="UserShippingAddressUpdateModel.PostalCode" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="font-weight-bold">State</label>
+						<input asp-for="UserShippingAddressUpdateModel.State" type="text" value="@Model.UserShippingAddressUpdateModel.State"
+									 class="form-control form-control-sm" />
+						<span asp-validation-for="UserShippingAddressUpdateModel.State" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br />
+	<input type="submit" value="Save" class="btn btn-success" />
+	<br />
+	<br />
+
+	<a class="btn btn-primary nav-item" href="./">Back to My Profile</a>
+
+
+</form>

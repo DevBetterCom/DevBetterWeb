@@ -87,4 +87,9 @@ public class Address : ValueObject
 
 		return isUpdated;
   }
+
+  public override string ToString()
+  {
+	  return $"{Street}, {City}, {State} {PostalCode}, {Country}";
+  }
 }
