@@ -44,7 +44,6 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? LastName { get; private set; }
 	public Birthday? Birthday { get; private set; }
 	public string? AboutInfo { get; private set; }
-	public string? Address { get; private set; }
 	public Address? ShippingAddress { get; private set; }
 	public Geolocation? CityLocation { get; private set; }
 
@@ -120,21 +119,6 @@ public class Member : BaseEntity, IAggregateRoot
 		if (valueChanged && isEvent)
 		{
 			CreateOrUpdateUpdateEvent("Name");
-		}
-	}
-
-	public void UpdateAddress(string? address, bool isEvent = true)
-	{
-		var isUpdate = false;
-		if (Address != address)
-		{
-			Address = address;
-			isUpdate = true;
-		}
-
-		if (isEvent && isUpdate)
-		{
-			CreateOrUpdateAddressUpdateEvent(nameof(Address));
 		}
 	}
 

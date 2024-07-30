@@ -10,7 +10,6 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
   public void Configure(EntityTypeBuilder<Member> builder)
   {
 	  builder.Property(x => x.UserId).HasMaxLength(500);
-    builder.Property(x => x.Address).HasMaxLength(500);
     builder.Property(x => x.BlogUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.CodinGameUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);
     builder.Property(x => x.GitHubUrl).HasMaxLength(DataConfigConstants.URL_COLUMN_WIDTH);

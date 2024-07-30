@@ -31,14 +31,14 @@ public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
   public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
   {
     var member = addressUpdatedEvent.Member;
-    if (member.Address is null) return;
+    if (member.ShippingAddress is null) return;
 
-    _logger.LogInformation($"Parsing address for member {member.FirstName} {member.LastName}: {member.Address}");
-    var addressParts = member.Address.Split(',');
+    _logger.LogInformation($"Parsing address for member {member.FirstName} {member.LastName}: {member.ShippingAddress}");
+    var addressParts = member.ShippingAddress.ToString().Split(',');
 
     if (addressParts is not null)
     {
-      string responseString = await _mapCoordinateService.GetMapCoordinates(member.Address);
+      string responseString = await _mapCoordinateService.GetMapCoordinates(member.ShippingAddress.ToString());
       if (!string.IsNullOrEmpty(responseString))
       {
         _logger.LogInformation($"API Response: {responseString}");
@@ -55,7 +55,7 @@ public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
           _logger.LogInformation($"Set lat/long to {latitude}/{longitude}.");
         }
 
-        var message = $"Member {member.UserFullName()} change the address to {member.Address}";
+        var message = $"Member {member.UserFullName()} change the address to {member.ShippingAddress}";
         await _webhook.SendAsync(message);
 
 				//await _repository.UpdateAsync(member);

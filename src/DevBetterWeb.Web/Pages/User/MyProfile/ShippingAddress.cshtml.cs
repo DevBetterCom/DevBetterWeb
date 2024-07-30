@@ -58,7 +58,6 @@ public class ShippingAddressModel : PageModel
 			UserShippingAddressUpdateModel.State,
 			UserShippingAddressUpdateModel.PostalCode,
 			UserShippingAddressUpdateModel.Country);
-		member.UpdateAddress(member.ShippingAddress!.ToString());
 
 		await _memberRepository.UpdateAsync(member);
 	}

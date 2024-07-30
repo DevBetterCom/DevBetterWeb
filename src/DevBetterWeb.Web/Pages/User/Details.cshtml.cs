@@ -41,9 +41,7 @@ public class DetailsModel : PageModel
       return NotFound();
     }
 
-#pragma warning disable CS0436 // Type conflicts with imported type
     UserDetailsViewModel = new UserDetailsViewModel(member!);
-#pragma warning restore CS0436 // Type conflicts with imported type
 
     int percentageNum = _memberSubscriptionPeriodCalculationsService.GetPercentageProgressToAlumniStatus(member!);
 
