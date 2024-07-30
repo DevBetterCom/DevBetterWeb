@@ -35,7 +35,7 @@ public class IndexModel : PageModel
     // Handle members that are in the database before map functionality is introduced, so they will not trigger the AddressUpdated event
     foreach (var member in members)
     {
-      if (member.Address is not null && (member.CityLatitude is null || member.CityLongitude is null))
+      if (member.ShippingAddress is not null && (member.CityLatitude is null || member.CityLongitude is null))
       {
         _logger.LogInformation($"Updating lat/long for {member.FirstName} {member.LastName}");
         // TODO: figure out if we need to update location data here

@@ -117,103 +117,96 @@
 </div>
 
 <div class="row" style="margin-top: 20px;">
-  <div class="col-12">
-    <form asp-page-handler="UpdatePersonalInfo">
-      <input type="hidden" name="userId" value="@Model.UserPersonalUpdateModel.UserId" />
-      <div class="card">
-        <div class="card-header">
-          <b>Personal</b>
-          <div class="ml-auto" style="float: right;">
-            <input type="submit" value="Save" class="btn btn-success" />
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label class="font-weight-bold">Email</label>
-            <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
-            <span asp-validation-for="UserPersonalUpdateModel.Email" class="text-danger"></span>
-          </div>
+	<div class="col-12">
+		<form asp-page-handler="UpdatePersonalInfo">
+			<input type="hidden" name="userId" value="@Model.UserPersonalUpdateModel.UserId" />
+			<div class="card">
+				<div class="card-header">
+					<b>Personal</b>
+					<div class="ml-auto" style="float: right;">
+						<input type="submit" value="Save" class="btn btn-success" />
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label class="font-weight-bold">Email</label>
+						<input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.Email" class="text-danger"></span>
+					</div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">First Name</label>
-            <input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm" />
-            <span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
-          </div>
+					<div class="form-group">
+						<label class="font-weight-bold">First Name</label>
+						<input asp-for="UserPersonalUpdateModel.FirstName" type="text" value="@Model.UserPersonalUpdateModel.FirstName" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.FirstName" class="text-danger"></span>
+					</div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">Last Name</label>
-            <input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm" />
-            <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
-          </div>
+					<div class="form-group">
+						<label class="font-weight-bold">Last Name</label>
+						<input asp-for="UserPersonalUpdateModel.LastName" type="text" value="@Model.UserPersonalUpdateModel.LastName" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
+					</div>
 
-	        <div class="form-group">
-		        <label class="font-weight-bold">Shipping Address</label>
-		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-		        <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
-						<span asp-validation-for="UserPersonalUpdateModel.Address" class="text-danger"></span>
-	        </div>
-						
-	        <div class="form-group">
-		        <label class="font-weight-bold">City</label>
-		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-		        <input asp-for="UserPersonalUpdateModel.City" type="text" value="@Model.UserPersonalUpdateModel.City" class="form-control form-control-sm" />
-		        <span asp-validation-for="UserPersonalUpdateModel.City" class="text-danger"></span>
-	        </div>
-						
-	        <div class="form-group">
-		        <label class="font-weight-bold">State</label>
-		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-						<input asp-for="UserPersonalUpdateModel.State" type="text" value="@Model.UserPersonalUpdateModel.State" class="form-control form-control-sm" />
-						<span asp-validation-for="UserPersonalUpdateModel.State" class="text-danger"></span>
-	        </div>
-						
-	        <div class="form-group">
-		        <label class="font-weight-bold">Country</label>
-		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-		        <input asp-for="UserPersonalUpdateModel.Country" type="text" value="@Model.UserPersonalUpdateModel.Country" class="form-control form-control-sm" />
-						<span asp-validation-for="UserPersonalUpdateModel.Country" class="text-danger"></span>
-	        </div>
-						
-	        <div class="form-group">
-		        <label class="font-weight-bold">Postal Code</label>
-		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-		        <input asp-for="UserPersonalUpdateModel.PostalCode" type="text" value="@Model.UserPersonalUpdateModel.PostalCode" class="form-control form-control-sm" />
-						<span asp-validation-for="UserPersonalUpdateModel.PostalCode" class="text-danger"></span>
-	        </div>
+					<div class="form-group">
+						<label class="font-weight-bold">About</label>
+						<textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
+					</div>
 
-	        <div class="form-group">
-            <label class="font-weight-bold">About</label>
-            <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
-          </div>
+					<div class="form-group">
+						<label class="font-weight-bold">Discord Username</label>
+						<input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234" />
+						<span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
+					</div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">Discord Username</label>
-            <input asp-for="UserPersonalUpdateModel.DiscordUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.DiscordUsername" placeholder="username#1234" title="username#1234" />
-            <span asp-validation-for="UserPersonalUpdateModel.DiscordUsername" class="text-danger"></span>
-          </div>
+					<div class="form-group">
+						<label class="font-weight-bold">Project Euler Username</label>
+						<input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username" />
+					</div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">Project Euler Username</label>
-            <input asp-for="UserPersonalUpdateModel.PEUsername" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEUsername" title="username" />
-          </div>
+					<div class="form-group">
+						<label class="font-weight-bold">Project Euler Friend Code</label>
+						<input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789" />
+					</div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">Project Euler Friend Code</label>
-            <input asp-for="UserPersonalUpdateModel.PEFriendCode" class="form-control form-control-sm" value="@Model.UserPersonalUpdateModel.PEFriendCode" title="123456789" />
-          </div>
+				</div>
+			</div>
 
-        </div>
-      </div>
+		</form>
 
-    </form>
-
-  </div>
+	</div>
 </div>
+
+<div class="card">
+	<div class="card-header">
+		<b>Shipping Address</b>
+		<button class="btn btn-primary btn-sm ml-auto" data-toggle="modal" data-target="#addressHistoryModal">View Address History</button>
+	</div>
+
+	<div class="card-body">
+		@if (@Model.UserPersonalUpdateModel.Address != "none")
+		{
+			<div>
+				<strong>
+					@Model.UserPersonalUpdateModel.Address
+				</strong>
+			</div>
+		}
+
+		<span class="text-secondary small">
+			City, State (optional), and Country are used for <a href="https://devbetter.com/user/map/60b5123e-5392-4b9a-b3bc-fd4a215d4252">map</a> location.
+			<br />
+			Full shipping address is only visible to admins and is used for shipping books and other packages to members from time to time.
+		</span>
+	</div>
+	<div class="card-body">
+		<a class="btn btn-primary nav-item" href="/User/MyProfile/ShippingAddress?userId=@Model?.IdentityUser?.Id">Edit</a>
+	</div>
+</div>
+<br />
 
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
     <form asp-page-handler="UpdateLinks">
-      <input type="hidden" name="userId" value="@Model.UserLinksUpdateModel.UserId" />
+      <input type="hidden" name="userId" value="@Model!.UserLinksUpdateModel.UserId" />
       <div class="card">
         <div class="card-header">
           <b>Links</b>
@@ -330,7 +323,7 @@
           </tr>
           </thead>
           <tbody>
-            @foreach (var item in Model.Invoices)
+            @foreach (var item in Model!.Invoices)
             {
               <tr>
                 <td>
@@ -585,6 +578,42 @@
       </form>
     </div>
   </div>
+</div>
+
+// Shipping Address History
+<div class="modal fade" id="addressHistoryModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Address History</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				@if (Model.AddressHistory.Any())
+				{
+					<ul class="list-group">
+						@foreach (var history in Model.AddressHistory)
+						{
+							<li class="list-group-item">
+								<strong>Address:</strong> @history.Address
+								<br />
+								<strong>Updated On:</strong> @history.UpdatedOn.ToString("MMMM dd, yyyy")
+							</li>
+						}
+					</ul>
+				}
+				else
+				{
+					<p>No address history available.</p>
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section scripts{
