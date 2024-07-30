@@ -63,6 +63,9 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? DiscordUsername { get; private set; }
 	public string? MastodonUrl { get; private set; } // added and deployed 5 Jan 2022 but site broke
 
+	private readonly List<MemberAddressHistory> _addressHistory = new();
+	public IReadOnlyList<MemberAddressHistory> AddressHistory => _addressHistory.AsReadOnly();
+
 	public List<Book> BooksRead { get; set; } = new List<Book>();
 	public List<Book> UploadedBooks { get; set; } = new List<Book>();
 	public List<MemberVideoProgress> MemberVideosProgress { get; set; } = new List<MemberVideoProgress>();
@@ -181,10 +184,15 @@ public class Member : BaseEntity, IAggregateRoot
 			isUpdated = ShippingAddress.Update(street, city, state, postalCode, country);
 		}
 
-		if (isEvent && isUpdated)
+		if (isUpdated)
 		{
-			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
-			Events.Add(addressUpdatedEvent);
+			_addressHistory.Add(new MemberAddressHistory(Id, ShippingAddress));
+
+			if (isEvent)
+			{
+				var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
+				Events.Add(addressUpdatedEvent);
+			}
 		}
 	}
 
