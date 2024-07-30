@@ -26,6 +26,7 @@ namespace DevBetterWeb.Web.Pages.Admin;
 [Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 public class UserModel : PageModel
 {
+	public List<AddressHistoryViewModel> AddressHistory { get; set; } = new List<AddressHistoryViewModel>();
 	[BindProperty] public UserPersonalUpdateModel UserPersonalUpdateModel { get; set; } = new UserPersonalUpdateModel();
 	[BindProperty] public UserLinksUpdateModel UserLinksUpdateModel { get; set; } = new UserLinksUpdateModel();
 
@@ -129,6 +130,12 @@ public class UserModel : PageModel
 			{
 				UserPersonalUpdateModel = new UserPersonalUpdateModel(member);
 				UserLinksUpdateModel = new UserLinksUpdateModel(member);
+
+				AddressHistory = member.AddressHistory.OrderByDescending(a => a.UpdatedOn).Select(a => new AddressHistoryViewModel
+				{
+					Address = a.Address.ToString(),
+					UpdatedOn = a.UpdatedOn
+				}).ToList();
 
 				MemberSubscriptionPlans = await _subscriptionPlanRepository.ListAsync();
 				_logger.LogInformation($"MemberSubscriptionPlans Count: {MemberSubscriptionPlans.Count}");
@@ -312,5 +319,11 @@ public class UserModel : PageModel
 	{
 		public string IsConfirmedString { get; set; } = "";
 		public string EditEmailConfirmationMessage { get; set; } = "";
+	}
+
+	public class AddressHistoryViewModel
+	{
+		public string Address { get; set; } = string.Empty;
+		public DateTimeOffset UpdatedOn { get; set; }
 	}
 }

@@ -48,5 +48,10 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
     });
 
     builder.HasMany(x => x.FavoriteArchiveVideos);
-  }
+
+    builder.HasMany(x => x.AddressHistory)
+	    .WithOne()
+	    .HasForeignKey(ah => ah.MemberId)
+	    .OnDelete(DeleteBehavior.Cascade);
+	}
 }

@@ -7,7 +7,7 @@ namespace DevBetterWeb.Core.Entities;
 public class MemberAddressHistory : BaseEntity, IAggregateRoot
 {
 	public int MemberId { get; private set; }
-	public Address Address { get; private set; }
+	public Address? Address { get; private set; }
 	public DateTimeOffset UpdatedOn { get; private set; }
 
 	public MemberAddressHistory(int memberId, Address address)
@@ -15,5 +15,10 @@ public class MemberAddressHistory : BaseEntity, IAggregateRoot
 		MemberId = memberId;
 		Address = address;
 		UpdatedOn = DateTime.UtcNow;
+	}
+
+	private MemberAddressHistory()
+	{
+		// EF
 	}
 }
