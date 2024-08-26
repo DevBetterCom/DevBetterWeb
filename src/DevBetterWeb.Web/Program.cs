@@ -31,6 +31,7 @@ using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using NimblePros.Vimeo.Extensions;
+using DevBetterWeb.Infrastructure.Interfaces;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -122,6 +123,7 @@ builder.Services.AddScoped<IFilteredBookDetailsService, FilteredBookDetailsServi
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IAddCreatedVideoToFolderService, AddCreatedVideoToFolderService>();
 builder.Services.AddScoped<ICreateVideoService, CreateVideoService>();
+builder.Services.AddScoped<IGetUsersHaveRolesService, GetUsersHaveRolesService>();
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
