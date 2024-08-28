@@ -11,13 +11,19 @@ namespace DevBetterWeb.Infrastructure.Data;
 
 public class AppDbContext : DbContext
 {
-	private readonly IDomainEventDispatcher _dispatcher;
+	private readonly IDomainEventDispatcher? _dispatcher;
 
 	public AppDbContext(DbContextOptions<AppDbContext> options,
 			IDomainEventDispatcher dispatcher)
 			: base(options)
 	{
 		_dispatcher = dispatcher;
+	}
+
+	public AppDbContext(DbContextOptions<AppDbContext> options)
+		: base(options)
+	{
+		// For EF Design time
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
