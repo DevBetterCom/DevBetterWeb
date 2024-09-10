@@ -4,7 +4,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="altcover" Version="8.8.10" />
+    <PackageVersion Include="altcover" Version="8.8.173" />
     <PackageVersion Include="Ardalis.ApiClient" Version="0.2.3" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
@@ -28,9 +28,9 @@
     </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="2.40.3" />
     <PackageVersion Include="Dapper" Version="2.1.35" />
-    <PackageVersion Include="FastEndpoints" Version="5.18.0" />
+    <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
-    <PackageVersion Include="FastEndpoints.Swagger" Version="5.18.0" />
+    <PackageVersion Include="FastEndpoints.Swagger" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.2.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Flurl" Version="3.0.7" />
@@ -71,7 +71,7 @@
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.1-dev-00043" />
     <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageVersion Include="SQLite" Version="3.13.0" />
     <PackageVersion Include="Stripe.net" Version="40.16.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -83,7 +83,7 @@
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageVersion Include="xunit" Version="2.6.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
-    <PackageVersion Include="xunit.runner.console" Version="2.6.4">
+    <PackageVersion Include="xunit.runner.console" Version="2.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>

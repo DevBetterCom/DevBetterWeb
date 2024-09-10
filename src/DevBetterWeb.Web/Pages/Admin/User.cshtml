@@ -146,13 +146,42 @@
             <span asp-validation-for="UserPersonalUpdateModel.LastName" class="text-danger"></span>
           </div>
 
-          <div class="form-group">
-            <label class="font-weight-bold">Shipping Address</label>
-            <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
-            <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
-          </div>
+	        <div class="form-group">
+		        <label class="font-weight-bold">Shipping Address</label>
+		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+		        <textarea asp-for="UserPersonalUpdateModel.Address" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.Address</textarea>
+						<span asp-validation-for="UserPersonalUpdateModel.Address" class="text-danger"></span>
+	        </div>
+						
+	        <div class="form-group">
+		        <label class="font-weight-bold">City</label>
+		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+		        <input asp-for="UserPersonalUpdateModel.City" type="text" value="@Model.UserPersonalUpdateModel.City" class="form-control form-control-sm" />
+		        <span asp-validation-for="UserPersonalUpdateModel.City" class="text-danger"></span>
+	        </div>
+						
+	        <div class="form-group">
+		        <label class="font-weight-bold">State</label>
+		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+						<input asp-for="UserPersonalUpdateModel.State" type="text" value="@Model.UserPersonalUpdateModel.State" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.State" class="text-danger"></span>
+	        </div>
+						
+	        <div class="form-group">
+		        <label class="font-weight-bold">Country</label>
+		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+		        <input asp-for="UserPersonalUpdateModel.Country" type="text" value="@Model.UserPersonalUpdateModel.Country" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.Country" class="text-danger"></span>
+	        </div>
+						
+	        <div class="form-group">
+		        <label class="font-weight-bold">Postal Code</label>
+		        <span class="text-secondary small">Only administrators can view this information - include country if non-US</span>
+		        <input asp-for="UserPersonalUpdateModel.PostalCode" type="text" value="@Model.UserPersonalUpdateModel.PostalCode" class="form-control form-control-sm" />
+						<span asp-validation-for="UserPersonalUpdateModel.PostalCode" class="text-danger"></span>
+	        </div>
 
-          <div class="form-group">
+	        <div class="form-group">
             <label class="font-weight-bold">About</label>
             <textarea asp-for="UserPersonalUpdateModel.AboutInfo" rows="5" style="max-width: 100%" class="form-control form-control-sm">@Model.UserPersonalUpdateModel.AboutInfo</textarea>
           </div>

@@ -125,11 +125,14 @@ public class Member : BaseEntity, IAggregateRoot
 
 	public void UpdateAddress(string? address, bool isEvent = true)
 	{
-		if (Address == address) return;
+		var isUpdate = false;
+		if (Address != address)
+		{
+			Address = address;
+			isUpdate = true;
+		}
 
-		Address = address;
-
-		if (isEvent)
+		if (isEvent && isUpdate)
 		{
 			CreateOrUpdateAddressUpdateEvent(nameof(Address));
 		}
@@ -178,6 +181,26 @@ public class Member : BaseEntity, IAggregateRoot
 			var removal = FavoriteArchiveVideos.First(v => v.ArchiveVideoId == archiveVideo.Id);
 
 			_favoriteArchiveVideos.Remove(removal);
+		}
+	}
+
+	public void UpdateShippingAddress(string street, string city, string state, string postalCode, string country, bool isEvent = true)
+	{
+		bool isUpdated;
+		if (ShippingAddress == null)
+		{
+			ShippingAddress = new Address(street, city, state, postalCode, country);
+			isUpdated = true;
+		}
+		else
+		{
+			isUpdated = ShippingAddress.Update(street, city, state, postalCode, country);
+		}
+
+		if (isEvent && isUpdated)
+		{
+			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
+			Events.Add(addressUpdatedEvent);
 		}
 	}
 

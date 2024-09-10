@@ -9,13 +9,22 @@ namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
 public class MemberUpdateAddress
 {
   private string _initialAddress = "";
+  private string _initialCity = "";
+  private string _initialCountry = "";
+  private string _initialPostalCode = "";
+  private string _initialState = "";
 
   private Member GetMemberWithDefaultAddress()
   {
     _initialAddress = Guid.NewGuid().ToString();
+    _initialCity = Guid.NewGuid().ToString();
+    _initialCountry = Guid.NewGuid().ToString();
+    _initialPostalCode = Guid.NewGuid().ToString();
+    _initialState = Guid.NewGuid().ToString();
 
     var member = MemberHelpers.CreateWithDefaultConstructor();
     member.UpdateAddress(_initialAddress);
+    member.UpdateShippingAddress(_initialAddress, _initialCity, _initialState, _initialPostalCode, _initialCountry);
     member.Events.Clear();
 
     return member;
@@ -25,21 +34,31 @@ public class MemberUpdateAddress
   public void SetsAddress()
   {
     string newAddress = Guid.NewGuid().ToString();
+    string newCity = Guid.NewGuid().ToString();
+    string newCountry = Guid.NewGuid().ToString();
+    string newPostalCode = Guid.NewGuid().ToString();
+    string newState = Guid.NewGuid().ToString();
 
-    var member = GetMemberWithDefaultAddress();
-    member.UpdateAddress(newAddress);
+		var member = GetMemberWithDefaultAddress();
+		member.UpdateAddress(newAddress);
+		member.UpdateShippingAddress(newAddress, newCity, newState, newPostalCode, newCountry);
 
-    Assert.Equal(newAddress, member.Address);
+		Assert.Equal(newAddress, member.Address);
   }
 
   [Fact]
   public void RecordsEventIfAddressChanges()
   {
     string newAddress = Guid.NewGuid().ToString();
+    string newCity = Guid.NewGuid().ToString();
+    string newCountry = Guid.NewGuid().ToString();
+    string newPostalCode = Guid.NewGuid().ToString();
+    string newState = Guid.NewGuid().ToString();
 
-    var member = GetMemberWithDefaultAddress();
-    member.UpdateAddress(newAddress);
-    var eventCreated = (MemberHomeAddressUpdatedEvent)member.Events.First();
+		var member = GetMemberWithDefaultAddress();
+		member.UpdateAddress(newAddress);
+		member.UpdateShippingAddress(newAddress, newCity, newState, newPostalCode, newCountry);
+		var eventCreated = (MemberHomeAddressUpdatedEvent)member.Events.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Address", eventCreated.UpdateDetails);
@@ -49,9 +68,10 @@ public class MemberUpdateAddress
   public void RecordsNoEventIfAddressDoesNotChange()
   {
     var member = GetMemberWithDefaultAddress();
-    member.UpdateAddress(_initialAddress);
+		member.UpdateAddress(_initialAddress);
+		member.UpdateShippingAddress(_initialAddress, _initialCity, _initialState, _initialPostalCode, _initialCountry);
 
-    Assert.Empty(member.Events);
+		Assert.Empty(member.Events);
   }
 
   [Fact]
