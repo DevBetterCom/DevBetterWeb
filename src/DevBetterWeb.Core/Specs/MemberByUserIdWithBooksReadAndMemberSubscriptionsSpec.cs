@@ -17,6 +17,8 @@ public sealed class MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec : Spec
 	    .Include(member => member.MemberSubscriptions);
 
 		Query
-			.Include(member => member.UploadedBooks);
+			.Include(member => member.UploadedBooks)
+			.AsSplitQuery()
+			.AsNoTracking();
 	}
 }
