@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<AssemblyName>DevBetterWeb.Web</AssemblyName>
 		<OutputType>Exe</OutputType>
@@ -10,10 +10,6 @@
 		<UserSecretsId>27d752ff-6567-4d4a-a3c0-1662e9085350</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<WarningsAsErrors />
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">

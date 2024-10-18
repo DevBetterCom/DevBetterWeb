@@ -20,5 +20,7 @@ public sealed class MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec : Spec
 			.Include(member => member.UploadedBooks)
 			.AsSplitQuery()
 			.AsNoTracking();
+
+		Query.EnableCache(nameof(MemberByUserIdWithBooksReadAndMemberSubscriptionsSpec), userId);
 	}
 }
