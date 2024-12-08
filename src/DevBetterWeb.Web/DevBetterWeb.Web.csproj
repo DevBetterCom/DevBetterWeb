@@ -66,6 +66,7 @@
 		<PackageReference Include="Flurl.Http" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\DevBetterWeb.AspireServiceDefaults\DevBetterWeb.AspireServiceDefaults.csproj" />
 		<ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
 		<ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
 	</ItemGroup>

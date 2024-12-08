@@ -36,6 +36,8 @@ using NimblePros.Vimeo.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddAspireServiceDefaults();
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
