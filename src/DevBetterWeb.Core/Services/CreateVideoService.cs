@@ -12,6 +12,8 @@ using NimblePros.Vimeo.Interfaces;
 using NimblePros.Vimeo.Models;
 using NimblePros.Vimeo.VideoServices;
 using NimblePros.Vimeo.VideoTusService;
+using static DevBetterWeb.Core.Entities.Member;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace DevBetterWeb.Core.Services;
 public class CreateVideoService : ICreateVideoService
@@ -20,13 +22,15 @@ public class CreateVideoService : ICreateVideoService
 	private readonly IUploadVideoTusService _uploadVideoTusService;
 	private readonly IRepository<ArchiveVideo> _repositoryArchiveVideo;
 	private readonly IAddCreatedVideoToFolderService _addCreatedVideoToFolderService;
+	private readonly IAppLogger<CreateVideoService> _logger;
 
-	public CreateVideoService(GetVideoService getVideoService, IUploadVideoTusService uploadVideoTusService, IRepository<ArchiveVideo> repositoryArchiveVideo, IAddCreatedVideoToFolderService addCreatedVideoToFolderService)
+	public CreateVideoService(IAppLogger<CreateVideoService> logger, GetVideoService getVideoService, IUploadVideoTusService uploadVideoTusService, IRepository<ArchiveVideo> repositoryArchiveVideo, IAddCreatedVideoToFolderService addCreatedVideoToFolderService)
 	{
 		_getVideoService = getVideoService;
 		_uploadVideoTusService = uploadVideoTusService;
 		_repositoryArchiveVideo = repositoryArchiveVideo;
 		_addCreatedVideoToFolderService = addCreatedVideoToFolderService;
+		_logger = logger;
 	}
 
 	public async Task<string> StartAsync(string videoName, long videoSize, string domain, CancellationToken cancellationToken = default)
@@ -40,9 +44,13 @@ public class CreateVideoService : ICreateVideoService
 			EmbedDomains = new List<string> { domain },
 			HideFromVimeo = true
 		};
-		var sessionId = await _uploadVideoTusService.StartAsync(uploadVideoRequest, cancellationToken);
+		var responseSessionId = await _uploadVideoTusService.StartAsync(uploadVideoRequest, cancellationToken);
+		if (!responseSessionId.IsSuccess || string.IsNullOrEmpty(responseSessionId.Data))
+		{
+			_logger.LogError(new Exception(responseSessionId.Exception.Message), responseSessionId.Json);
+		}
 
-		return sessionId;
+		return responseSessionId.Data;
 	}
 
 	public async Task<UploadChunkStatus> UploadChunkAsync(bool isBaseFolder, string sessionId, string chunk, string? description, long? folderId, CancellationToken cancellationToken = default)
