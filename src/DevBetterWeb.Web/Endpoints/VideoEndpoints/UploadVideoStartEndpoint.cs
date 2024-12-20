@@ -14,15 +14,19 @@ public class UploadVideoStartEndpoint : EndpointBaseAsync
 	.WithResult<ActionResult<UploadVideoStartResponse>>
 {
 	private readonly ICreateVideoService _createVideo;
+	private readonly IAppLogger<UploadVideoStartEndpoint> _logger;
 
-	public UploadVideoStartEndpoint(ICreateVideoService createVideo)
+	public UploadVideoStartEndpoint(ICreateVideoService createVideo,
+		IAppLogger<UploadVideoStartEndpoint> logger)
 	{
 		_createVideo = createVideo;
+		_logger = logger;
 	}
 
 	[HttpPost("videos/start")]
 	public override async Task<ActionResult<UploadVideoStartResponse>> HandleAsync([FromBody] UploadVideoStartRequest request, CancellationToken cancellationToken = default)
 	{
+		_logger.LogWarning("HandleAsync called for videos/start");
 		string domain = HttpContext.Request.Host.Value;
 		var sessionId = await _createVideo.StartAsync(request.VideoName, request.VideoSize, domain, cancellationToken);
 
