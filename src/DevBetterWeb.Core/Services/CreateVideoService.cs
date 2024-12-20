@@ -45,6 +45,8 @@ public class CreateVideoService : ICreateVideoService
 			HideFromVimeo = true
 		};
 		var responseSessionId = await _uploadVideoTusService.StartAsync(uploadVideoRequest, cancellationToken);
+		//TODO: Remove this
+		_logger.LogInformation($"Error Vimeo: {responseSessionId.Json}");
 		if (!responseSessionId.IsSuccess || string.IsNullOrEmpty(responseSessionId.Data))
 		{
 			_logger.LogError(new Exception(responseSessionId.Exception?.Message), responseSessionId.Json);
