@@ -165,7 +165,7 @@
         }
       });
     });
-	
+
 	function startUpload(file, videoName, videoCreationDate) {
 			const videoSize = file.size;
 
@@ -175,28 +175,38 @@
 				createdTime: videoCreationDate,
 			};
 
-			$.ajax({
-				url: '/videos/start',
-				type: 'POST',
-				data: JSON.stringify(uploadVideoStartRequest),
-				contentType: 'application/json',
-				success: function (data) {
+			fetch('/videos/start', {
+				method: 'POST',
+				body: JSON.stringify(uploadVideoStartRequest),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(response => {
+					if (!response.ok) {
+						document.getElementById('confirmCreate').disabled = false;
+						throw new Error(HTTP error! status: ${response.status});
+					} else {
+						return response.text();
+					}
+				})
+				.then(data => {
 					try {
-						const jsonData = JSON.parse(data);
+						let jsonData = JSON.parse(data);
 						uploadChunks(jsonData.sessionId, file, null);
 					} catch (e) {
 						document.getElementById('confirmCreate').disabled = false;
-						console.error("The server's response wasn't valid JSON:", data);
-						alert("The server's response wasn't valid JSON.");
+						console.log("The server's response wasn't valid JSON. It was:", data);
+						console.log("The server's response wasn't valid JSON. It was:", e);
+
 					}
-				},
-				error: function (xhr, status, error) {
+				})
+				.catch(error => {
 					document.getElementById('confirmCreate').disabled = false;
-					console.error('Request failed', status, error);
-					alert(`HTTP error! status: ${xhr.status}`);
-				}
-			});
-	}
+					console.error('Request failed', error);
+					alert(error.message);
+				});
+		}
 
 
     function uploadChunks(sessionId, file, folderId) {
@@ -237,10 +247,10 @@
       progressBar.setAttribute("aria-valuenow", progress);
       progressText.innerText = progress + "%";
     }
-	
+
 	function uploadChunk(sessionId, chunk, isLastChunk, folderId) {
 			return new Promise((resolve, reject) => {
-				const mdFileContentPromise = readMdFilePromise();
+				mdFileContentPromise = readMdFilePromise();
 
 				const reader = new FileReader();
 				reader.onload = async function (e) {
@@ -248,7 +258,6 @@
 						new Uint8Array(e.target.result)
 							.reduce((data, byte) => data + String.fromCharCode(byte), '')
 					);
-
 					let body = { sessionId, chunk: base64Chunk };
 					if (folderId !== null) {
 						body.folderId = folderId;
@@ -257,30 +266,29 @@
 						const mdFileContent = await mdFileContentPromise;
 						body.description = mdFileContent;
 					}
-
-					$.ajax({
-						url: '/videos/upload',
-						type: 'POST',
-						data: JSON.stringify(body),
-						contentType: 'application/json',
-						success: function (response) {
-							resolve(response);
-						},
-						error: function (xhr, status, error) {
-							console.error('Upload chunk failed', status, error);
-							reject(new Error('Upload chunk failed'));
+					fetch('/videos/upload', {
+						method: 'POST',
+						body: JSON.stringify(body),
+						headers: {
+							'Content-Type': 'application/json'
 						}
-					});
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Upload chunk failed');
+							}
+							resolve(response.json());
+						})
+						.catch(reject);
 				};
 
 				reader.onerror = function () {
 					reject(new Error('Failed to read file'));
 				};
 
-	
 				reader.readAsArrayBuffer(chunk);
 			});
-		}
+	}
 
 
     function updateMdPreview(descriptionContent) {
