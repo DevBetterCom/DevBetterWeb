@@ -165,47 +165,39 @@
         }
       });
     });
-    function startUpload(file, videoName, videoCreationDate) {
-      const videoSize = file.size;
+	
+	function startUpload(file, videoName, videoCreationDate) {
+			const videoSize = file.size;
 
-      const uploadVideoStartRequest = {
-        videoSize: videoSize,
-        videoName: videoName,
-        createdTime: videoCreationDate,
-      };
+			const uploadVideoStartRequest = {
+				videoSize: videoSize,
+				videoName: videoName,
+				createdTime: videoCreationDate,
+			};
 
-      fetch('/videos/start', {
-        method: 'POST',
-        body: JSON.stringify(uploadVideoStartRequest),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            document.getElementById('confirmCreate').disabled = false;
-            throw new Error(`HTTP error! status: ${response.status}`);
-          } else {
-            return response.text();
-          }
-        })
-        .then(data => {
-          try {
-            let jsonData = JSON.parse(data);
-            uploadChunks(jsonData.sessionId, file, null);
-          } catch (e) {
-            document.getElementById('confirmCreate').disabled = false;
-            console.log("The server's response wasn't valid JSON. It was:", data);
-            console.log("The server's response wasn't valid JSON. It was:", e);
+			$.ajax({
+				url: '/videos/start',
+				type: 'POST',
+				data: JSON.stringify(uploadVideoStartRequest),
+				contentType: 'application/json',
+				success: function (data) {
+					try {
+						const jsonData = JSON.parse(data);
+						uploadChunks(jsonData.sessionId, file, null);
+					} catch (e) {
+						document.getElementById('confirmCreate').disabled = false;
+						console.error("The server's response wasn't valid JSON:", data);
+						alert("The server's response wasn't valid JSON.");
+					}
+				},
+				error: function (xhr, status, error) {
+					document.getElementById('confirmCreate').disabled = false;
+					console.error('Request failed', status, error);
+					alert(`HTTP error! status: ${xhr.status}`);
+				}
+			});
+	}
 
-          }
-        })
-        .catch(error => {
-          document.getElementById('confirmCreate').disabled = false;
-          console.error('Request failed', error);
-          alert(error.message);
-        });
-    }
 
     function uploadChunks(sessionId, file, folderId) {
       let offset = 0;
@@ -245,48 +237,51 @@
       progressBar.setAttribute("aria-valuenow", progress);
       progressText.innerText = progress + "%";
     }
+	
+	function uploadChunk(sessionId, chunk, isLastChunk, folderId) {
+			return new Promise((resolve, reject) => {
+				const mdFileContentPromise = readMdFilePromise();
 
-    function uploadChunk(sessionId, chunk, isLastChunk, folderId) {
-      return new Promise((resolve, reject) => {
-        mdFileContentPromise = readMdFilePromise();
+				const reader = new FileReader();
+				reader.onload = async function (e) {
+					const base64Chunk = btoa(
+						new Uint8Array(e.target.result)
+							.reduce((data, byte) => data + String.fromCharCode(byte), '')
+					);
 
-        const reader = new FileReader();
-        reader.onload = async function (e) {
-          const base64Chunk = btoa(
-            new Uint8Array(e.target.result)
-              .reduce((data, byte) => data + String.fromCharCode(byte), '')
-          );
-          let body = { sessionId, chunk: base64Chunk };
-          if (folderId !== null) {
-            body.folderId = folderId;
-          }
-          if (isLastChunk) {
-            const mdFileContent = await mdFileContentPromise;
-            body.description = mdFileContent;
-          }
-          fetch('/videos/upload', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Upload chunk failed');
-              }
-              resolve(response.json());
-            })
-            .catch(reject);
-        };
+					let body = { sessionId, chunk: base64Chunk };
+					if (folderId !== null) {
+						body.folderId = folderId;
+					}
+					if (isLastChunk) {
+						const mdFileContent = await mdFileContentPromise;
+						body.description = mdFileContent;
+					}
 
-        reader.onerror = function () {
-          reject(new Error('Failed to read file'));
-        };
+					$.ajax({
+						url: '/videos/upload',
+						type: 'POST',
+						data: JSON.stringify(body),
+						contentType: 'application/json',
+						success: function (response) {
+							resolve(response);
+						},
+						error: function (xhr, status, error) {
+							console.error('Upload chunk failed', status, error);
+							reject(new Error('Upload chunk failed'));
+						}
+					});
+				};
 
-        reader.readAsArrayBuffer(chunk);
-      });
-    }
+				reader.onerror = function () {
+					reject(new Error('Failed to read file'));
+				};
+
+	
+				reader.readAsArrayBuffer(chunk);
+			});
+		}
+
 
     function updateMdPreview(descriptionContent) {
       var converter = new showdown.Converter();
