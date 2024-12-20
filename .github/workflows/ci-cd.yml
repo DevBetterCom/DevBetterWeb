@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on: [ push, pull_request, workflow_dispatch ]
 
 env:
-  AZURE_WEBAPP_NAME: devBetter
+  AZURE_WEBAPP_NAME: devbetter-linux
   AZURE_GROUP_NAME: DevBetterGroup
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
