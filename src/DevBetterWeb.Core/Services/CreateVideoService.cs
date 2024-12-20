@@ -47,7 +47,7 @@ public class CreateVideoService : ICreateVideoService
 		var responseSessionId = await _uploadVideoTusService.StartAsync(uploadVideoRequest, cancellationToken);
 		if (!responseSessionId.IsSuccess || string.IsNullOrEmpty(responseSessionId.Data))
 		{
-			_logger.LogError(new Exception(responseSessionId.Exception.Message), responseSessionId.Json);
+			_logger.LogError(new Exception(responseSessionId.Exception?.Message), responseSessionId.Json);
 		}
 
 		return responseSessionId.Data;
