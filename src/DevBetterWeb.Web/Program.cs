@@ -193,9 +193,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapRazorPages();
-app.MapDefaultControllerRoute();
 
 app.UseStaticFiles();
+app.MapDefaultControllerRoute();
+
+
 
 // seed database
 await ApplyLocalMigrationsAsync(app);

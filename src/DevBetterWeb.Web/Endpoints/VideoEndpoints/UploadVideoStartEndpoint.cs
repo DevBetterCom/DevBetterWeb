@@ -23,7 +23,7 @@ public class UploadVideoStartEndpoint : EndpointBaseAsync
 		_logger = logger;
 	}
 
-	[HttpPost("videos/start")]
+	[HttpPost("api/videos/start")]
 	public override async Task<ActionResult<UploadVideoStartResponse>> HandleAsync([FromBody] UploadVideoStartRequest request, CancellationToken cancellationToken = default)
 	{
 		_logger.LogWarning("HandleAsync called for videos/start");

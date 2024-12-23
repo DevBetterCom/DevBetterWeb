@@ -174,7 +174,7 @@
 				createdTime: videoCreationDate,
 			};
 
-			fetch('/videos/start', {
+			fetch('/api/videos/start', {
 				method: 'POST',
 				body: JSON.stringify(uploadVideoStartRequest),
 				headers: {
@@ -265,7 +265,7 @@
 						const mdFileContent = await mdFileContentPromise;
 						body.description = mdFileContent;
 					}
-					fetch('/videos/upload', {
+					fetch('/api/videos/upload', {
 						method: 'POST',
 						body: JSON.stringify(body),
 						headers: {
