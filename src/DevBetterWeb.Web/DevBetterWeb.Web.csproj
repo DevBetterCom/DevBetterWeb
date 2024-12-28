@@ -48,6 +48,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="NimblePros.ApiClient" />
 		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="Sendgrid" />
 		<PackageReference Include="Serilog" />

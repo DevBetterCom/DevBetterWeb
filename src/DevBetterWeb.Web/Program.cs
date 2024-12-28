@@ -177,7 +177,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
 //app.UseCookiePolicy();
 
 app.UseRouting();
@@ -195,7 +195,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapRazorPages();
+
+app.UseStaticFiles();
 app.MapDefaultControllerRoute();
+
+
 
 // seed database
 await ApplyLocalMigrationsAsync(app);

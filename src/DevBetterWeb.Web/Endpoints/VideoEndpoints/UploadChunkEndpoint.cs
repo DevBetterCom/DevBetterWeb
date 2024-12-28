@@ -25,7 +25,7 @@ public class UploadChunkEndpoint : EndpointBaseAsync
 		_vimeoSettings = vimeoSettings;
 	}
 
-	[HttpPost("videos/upload")]
+	[HttpPost("api/videos/upload")]
 	public override async Task<ActionResult<UploadChunkStatus>> HandleAsync([FromBody] UploadChunkRequest uploadChunkRequest, CancellationToken cancellationToken = default)
 	{
 		if (uploadChunkRequest.Chunk.Length <= 0)
