@@ -5,7 +5,7 @@ on: [pull_request, workflow_dispatch]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       VIMEO_TOKEN: ${{ secrets.VIMEO_TOKEN }}
 
