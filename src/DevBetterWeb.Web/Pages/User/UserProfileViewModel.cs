@@ -66,16 +66,7 @@ public class UserProfileViewModel
 		string valueToUseIfNull = "none";
 
 		AboutInfo = member.AboutInfo ?? valueToUseIfNull;
-		Address = member.Address ?? valueToUseIfNull;
-		if (member.ShippingAddress != null)
-		{
-			Address = member.ShippingAddress.Street ?? valueToUseIfNull;
-			City = member.ShippingAddress.City ?? valueToUseIfNull;
-			State = member.ShippingAddress.State ?? valueToUseIfNull;
-			Country = member.ShippingAddress.Country ?? valueToUseIfNull;
-			PostalCode = member.ShippingAddress.PostalCode ?? valueToUseIfNull;
-		}
-		
+		Address = member.ShippingAddress?.ToString() ?? valueToUseIfNull;
 		Birthday = member.Birthday?.ToString() ?? valueToUseIfNull;
 		BlogUrl = member.BlogUrl ?? valueToUseIfNull;
 		CodinGameUrl = member.CodinGameUrl ?? valueToUseIfNull;

@@ -44,7 +44,6 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? LastName { get; private set; }
 	public Birthday? Birthday { get; private set; }
 	public string? AboutInfo { get; private set; }
-	public string? Address { get; private set; }
 	public Address? ShippingAddress { get; private set; }
 	public Geolocation? CityLocation { get; private set; }
 
@@ -63,6 +62,9 @@ public class Member : BaseEntity, IAggregateRoot
 	public string? CodinGameUrl { get; private set; }
 	public string? DiscordUsername { get; private set; }
 	public string? MastodonUrl { get; private set; } // added and deployed 5 Jan 2022 but site broke
+
+	private readonly List<MemberAddressHistory> _addressHistory = new();
+	public IReadOnlyList<MemberAddressHistory> AddressHistory => _addressHistory.AsReadOnly();
 
 	public List<Book> BooksRead { get; set; } = new List<Book>();
 	public List<Book> UploadedBooks { get; set; } = new List<Book>();
@@ -120,21 +122,6 @@ public class Member : BaseEntity, IAggregateRoot
 		if (valueChanged && isEvent)
 		{
 			CreateOrUpdateUpdateEvent("Name");
-		}
-	}
-
-	public void UpdateAddress(string? address, bool isEvent = true)
-	{
-		var isUpdate = false;
-		if (Address != address)
-		{
-			Address = address;
-			isUpdate = true;
-		}
-
-		if (isEvent && isUpdate)
-		{
-			CreateOrUpdateAddressUpdateEvent(nameof(Address));
 		}
 	}
 
@@ -197,10 +184,15 @@ public class Member : BaseEntity, IAggregateRoot
 			isUpdated = ShippingAddress.Update(street, city, state, postalCode, country);
 		}
 
-		if (isEvent && isUpdated)
+		if (isUpdated)
 		{
-			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
-			Events.Add(addressUpdatedEvent);
+			_addressHistory.Add(new MemberAddressHistory(Id, ShippingAddress));
+
+			if (isEvent)
+			{
+				var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
+				Events.Add(addressUpdatedEvent);
+			}
 		}
 	}
 

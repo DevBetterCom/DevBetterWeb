@@ -44,15 +44,7 @@ public class UserPersonalUpdateModel
 		AboutInfo = member.AboutInfo;
 		FirstName = member.FirstName;
 		LastName = member.LastName;
-		Address = member.Address;
-		if (member.ShippingAddress != null)
-		{
-			Address = member.ShippingAddress.Street;
-			City = member.ShippingAddress.City;
-			Country = member.ShippingAddress.Country;
-			State = member.ShippingAddress.State;
-			PostalCode = member.ShippingAddress.PostalCode;
-		}
+		Address = member.ShippingAddress?.ToString();
 		BirthdayDay = member.Birthday?.Day;
 		BirthdayMonth = member.Birthday?.Month;
 		Email = member.Email;

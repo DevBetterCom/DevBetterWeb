@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using CSharpFunctionalExtensions;
 
 namespace DevBetterWeb.Core.ValueObjects;
@@ -86,5 +85,10 @@ public class Address : ValueObject
 
 
 		return isUpdated;
+  }
+
+  public override string ToString()
+  {
+	  return $"{Street}, {City}, {State} {PostalCode}, {Country}";
   }
 }

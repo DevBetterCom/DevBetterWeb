@@ -28,8 +28,11 @@
 	            <span asp-validation-for="Input!.LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-	            <label asp-for="Input!.Country"></label>
-							<input asp-for="Input!.Country" class="form-control" />
+	            <label asp-for="Input!.Country" class="font-weight-bold"></label>
+	            <select asp-for="Input!.Country" 
+	                    asp-items="@ISO3166.Country.List.Select(i => new SelectListItem { Text = i.Name, Value = i.Name }).ToList()" 
+	                    class="form-control form-control-sm">
+	            </select>
 	            <span asp-validation-for="Input!.Country" class="text-danger"></span>
             </div>
             <div class="form-group">

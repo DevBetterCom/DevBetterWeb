@@ -38,7 +38,7 @@ public class MemberLinksDTO
 			UserId = member.UserId,
 			PEUsername = member.PEUsername,
 			PEBadgeURL = $"https://projecteuler.net/profile/{member.PEUsername}.png",
-			Address = member.Address,
+			Address = member.ShippingAddress?.ToString(),
 			CodinGameUrl = member.CodinGameUrl,
 			SubscribedDays = member.TotalSubscribedDays()
 		};

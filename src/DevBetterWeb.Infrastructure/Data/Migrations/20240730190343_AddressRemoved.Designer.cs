@@ -4,6 +4,7 @@ using DevBetterWeb.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240730190343_AddressRemoved")]
+    partial class AddressRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,27 +329,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Members");
-                });
-
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberAddressHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("UpdatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.ToTable("MemberAddressHistory");
                 });
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberSubscription", b =>
@@ -756,65 +738,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
                     b.Navigation("ShippingAddress");
                 });
 
-            modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberAddressHistory", b =>
-                {
-                    b.HasOne("DevBetterWeb.Core.Entities.Member", null)
-                        .WithMany("AddressHistory")
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("DevBetterWeb.Core.ValueObjects.Address", "Address", b1 =>
-                        {
-                            b1.Property<int>("MemberAddressHistoryId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("PostalCode")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(12)
-                                .HasColumnType("nvarchar(12)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasDefaultValue("");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasDefaultValue("");
-
-                            b1.HasKey("MemberAddressHistoryId");
-
-                            b1.ToTable("MemberAddressHistory");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MemberAddressHistoryId");
-                        });
-
-                    b.Navigation("Address");
-                });
-
             modelBuilder.Entity("DevBetterWeb.Core.Entities.MemberSubscription", b =>
                 {
                     b.HasOne("DevBetterWeb.Core.Entities.Member", null)
@@ -990,8 +913,6 @@ namespace DevBetterWeb.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("DevBetterWeb.Core.Entities.Member", b =>
                 {
-                    b.Navigation("AddressHistory");
-
                     b.Navigation("BillingActivities");
 
                     b.Navigation("FavoriteArchiveVideos");

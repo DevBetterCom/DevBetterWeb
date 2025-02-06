@@ -59,16 +59,7 @@ public class UserDetailsViewModel
     OtherUrl = member.OtherUrl;
     AboutInfo = member.AboutInfo;
     Birthday = member.Birthday?.ToString();
-    Address = member.Address;
-    if (member.ShippingAddress != null)
-    {
-	    Address = member.ShippingAddress.Street;
-	    City = member.ShippingAddress.City;
-	    Country = member.ShippingAddress.Country;
-	    PostalCode = member.ShippingAddress.PostalCode;
-	    State = member.ShippingAddress.State;
-		}
-    
+    Address = member.ShippingAddress?.ToString();
     Name = member.UserFullName();
     PEFriendCode = member.PEFriendCode;
     if (!(string.IsNullOrEmpty(member.PEUsername)))
