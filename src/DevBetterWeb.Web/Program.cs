@@ -36,11 +36,19 @@ using NimblePros.Vimeo.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
+var isProduction = builder.Environment.IsEnvironment("Production");
+var isTesting = builder.Environment.IsEnvironment("Testing");
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
-
+if (!isTesting)
+{
+	builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
+}
+else
+{
+	builder.Host.UseSerilog((_, config) => config.MinimumLevel.Information().WriteTo.Console());
+}
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
 	options.CheckConsentNeeded = context => true;
@@ -55,8 +63,6 @@ builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stri
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-var isProduction = builder.Environment.IsEnvironment("Production");
-var isTesting = builder.Environment.IsEnvironment("Testing");
 
 if (isProduction)
 {
@@ -207,7 +213,7 @@ static async Task SeedDatabase(IHost host)
 	var context = services.GetRequiredService<AppDbContext>();
 	var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 	SeedData.PopulateInitData(context, userManager);
-	
+
 	if (environment == "Production")
 	{
 		return;
@@ -255,9 +261,9 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 
 	var app = scope.ServiceProvider.GetRequiredService<ILocalMigrationService<AppDbContext>>();
 
-	var environment        = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
+	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
 	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
-	
+
 	await identity.ApplyLocalMigrationAsync(environment, runningInContainer);
 	await app.ApplyLocalMigrationAsync(environment, runningInContainer);
 }
