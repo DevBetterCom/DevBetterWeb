@@ -20,13 +20,13 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '9.0.x'
         include-prerelease: true
     
     - name: Build and test
-      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release /p:TreatWarningsAsErrors=false
+      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp' /p:TreatWarningsAsErrors=false
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
 
     # Deploy to Azure WebApps using Publish Profile
     - name: 'Azure webapp deploy with Publish Profile'
