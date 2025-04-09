@@ -15,11 +15,7 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<WarningsAsErrors />
 	</PropertyGroup>
-	<ItemGroup>
-		<Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views;appsettings.json;web.config">
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Ardalis.ApiEndpoints" />
 		<PackageReference Include="Ardalis.ListStartupServices" />
