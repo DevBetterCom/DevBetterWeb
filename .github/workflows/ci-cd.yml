@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on: [ push, pull_request, workflow_dispatch ]
 
 env:
-  AZURE_WEBAPP_NAME: devBetter
+  AZURE_WEBAPP_NAME: devbetter-linux
   AZURE_GROUP_NAME: DevBetterGroup
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
@@ -12,7 +12,7 @@ jobs:
     name: Continuous Integration
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     outputs:
       is_push_to_default_branch: ${{ steps.conditionals_handler.outputs.is_push_to_default_branch }}
@@ -104,7 +104,7 @@ jobs:
     if: needs.ci.outputs.is_push_to_default_branch == 'true'
     name: Continuous Deployment
     needs: ci
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download publish artifacts
         id: dl_publish_artifacts
