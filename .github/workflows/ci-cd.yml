@@ -58,7 +58,7 @@ jobs:
         id: setup_dotnet_core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
           include-prerelease: true
 
       - name: Checkout repository
@@ -72,14 +72,13 @@ jobs:
         id: build_solution
         shell: pwsh
         run: |
-          dotnet build ./DevBetterWeb.sln --configuration Release --output Artifacts
+          dotnet build ./DevBetterWeb.sln --configuration Release
 
       - name: Run unit tests
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test ./DevBetterWeb.sln --filter FullyQualifiedName!~Vimeo.Tests --configuration Release --no-build --output Artifacts
-
+          dotnet test ./DevBetterWeb.sln --filter FullyQualifiedName!~Vimeo.Tests --configuration Release --no-build
       - name: Publish WebApp
         id: publish_webapp
         shell: pwsh
