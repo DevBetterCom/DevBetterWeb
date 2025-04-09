@@ -1,9 +1,9 @@
-name: publish
+name: Build and Deploy to Azure
 
 env:
   AZURE_WEBAPP_NAME: devbetter-linux
   AZURE_GROUP_NAME: DevBetterGroup
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  PUBLISH_DIR: '${{ github.workspace }}/publish'
 
 on:
   push:
@@ -15,23 +15,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET Core
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 9 SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
-        include-prerelease: true
-    
+
+    - name: Restore dependencies
+      run: dotnet restore
+
     - name: Build and test
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
-    - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
 
-    # Deploy to Azure WebApps using Publish Profile
-    - name: 'Azure webapp deploy with Publish Profile'
+    - name: Publish app
+      run: |
+        dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj \
+          -c Release \
+          -r linux-x64 \
+          --self-contained true \
+          -o "$PUBLISH_DIR" \
+          /p:PublishTrimmed=false
+
+    - name: Zip published output
+      run: |
+        cd "$PUBLISH_DIR"
+        zip -r ../app.zip .
+
+    - name: Deploy to Azure Web App using zipDeploy
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZUREWEBAPPPUBLISHPROFILE }}
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp'
+        package: ./app.zip
+        deployment-method: zipDeploy
