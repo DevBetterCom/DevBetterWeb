@@ -53,7 +53,6 @@ builder.Services.Configure<DiscordWebhookUrls>(builder.Configuration.GetSection(
 builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("StripeOptions"));
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-builder.Services.AddHttpContextAccessor();
 
 // PRODUCTION SERVICES
 if (builder.Environment.EnvironmentName.ToLower() == "production")
