@@ -3,7 +3,8 @@ name: publish
 env:
   AZURE_WEBAPP_NAME: devbetter-linux
   AZURE_GROUP_NAME: DevBetterGroup
-  
+  AZURE_WEBAPP_PACKAGE_PATH: '${{ github.workspace }}/publish'
+
 on:
   push:
     branches:
@@ -15,27 +16,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
         include-prerelease: true
-    
+
     - name: Build and test
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
 
-    - name: publish
-      run: |
-        dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj \
-          -c Release \
-          -r linux-x64 \
-          --self-contained true \
-          -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' \
-          /p:PublishTrimmed=false
+    - name: Publish
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj \
+        -c Release \
+        -r linux-x64 \
+        --self-contained true \
+        -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' \
+        /p:PublishTrimmed=false
 
     - name: Zip published output
-      run: zip -r app.zip ./publish
+      run: |
+        cd '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+        zip -r ../app.zip .
       shell: bash
 
     - name: Deploy to Azure Web App
