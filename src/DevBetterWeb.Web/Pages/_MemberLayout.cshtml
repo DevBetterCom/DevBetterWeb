@@ -1,7 +1,9 @@
+@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @using DevBetterWeb.Infrastructure.Identity.Data;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 <!DOCTYPE html>
 <html lang="en">
@@ -197,7 +199,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; devBetter @DateTime.Now.Year; All Rights Reserved.</span>
+                        <span>Copyright &copy; devBetter @DateTime.Now.Year; All Rights Reserved. @HttpContextAccessor.HttpContext?.Connection?.LocalIpAddress</span>
                     </div>
                 </div>
             </footer>
