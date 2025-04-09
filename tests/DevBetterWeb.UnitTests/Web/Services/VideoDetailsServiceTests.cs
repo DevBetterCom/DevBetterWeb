@@ -6,6 +6,7 @@ using Xunit;
 using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Services;
 using NimblePros.Vimeo.Models;
+using System.Threading.Tasks;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 
@@ -14,7 +15,7 @@ public class VideoDetailsServiceTests
 	private readonly HttpTest _httpTest = new HttpTest();
 
 	[Fact]
-	public async void GetTranscript_Returns_Empty_String_When_No_TextTracks()
+	public async Task GetTranscript_Returns_Empty_String_When_No_TextTracks()
 	{
 		List<TextTrack> textTracks = new();
 		var vttServiceMock = Substitute.For<IWebVTTParsingService>();
@@ -27,7 +28,7 @@ public class VideoDetailsServiceTests
 	}
 
 	[Fact]
-	public async void GetTranscript_Returns_Empty_String_When_TextTrackLink_Is_Invalid()
+	public async Task GetTranscript_Returns_Empty_String_When_TextTrackLink_Is_Invalid()
 	{
 		List<TextTrack> textTracks = new() { new TextTrack { Link = "I am most definitely not a valid url" } };
 		_httpTest.RespondWith("Me no findy", 404);
