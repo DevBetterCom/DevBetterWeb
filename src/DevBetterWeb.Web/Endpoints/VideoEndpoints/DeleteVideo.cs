@@ -44,6 +44,6 @@ public class DeleteVideo : EndpointBaseAsync
 		}
 
 		// something went wrong
-		throw new System.Exception(deleteResponse.Message);
+		throw new System.Exception(deleteResponse!.Message);
 	}
 }

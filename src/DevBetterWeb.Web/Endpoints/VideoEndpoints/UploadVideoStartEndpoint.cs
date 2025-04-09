@@ -27,7 +27,7 @@ public class UploadVideoStartEndpoint : EndpointBaseAsync
 	public override async Task<ActionResult<UploadVideoStartResponse>> HandleAsync([FromBody] UploadVideoStartRequest request, CancellationToken cancellationToken = default)
 	{
 		_logger.LogWarning("HandleAsync called for videos/start");
-		string domain = HttpContext.Request.Host.Value;
+		string domain = HttpContext!.Request!.Host!.Value!;
 		var sessionId = await _createVideo.StartAsync(request.VideoName, request.VideoSize, domain, cancellationToken);
 
 		if (string.IsNullOrWhiteSpace(sessionId))
