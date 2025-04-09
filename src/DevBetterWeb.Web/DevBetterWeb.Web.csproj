@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<AssemblyName>DevBetterWeb.Web</AssemblyName>
 		<OutputType>Exe</OutputType>
@@ -62,7 +62,6 @@
 		<PackageReference Include="Westwind.AspNetCore.Markdown" />
 		<PackageReference Include="WindowsAzure.Storage" />
 		<PackageReference Include="AutoMapper" />
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
 		<PackageReference Include="Flurl" />
 		<PackageReference Include="Flurl.Http" />
 	</ItemGroup>
