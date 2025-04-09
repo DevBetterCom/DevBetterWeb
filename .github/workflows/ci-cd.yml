@@ -72,7 +72,7 @@ jobs:
         id: build_solution
         shell: pwsh
         run: |
-          dotnet build ./DevBetterWeb.sln --configuration Release --output Artifacts
+          dotnet build ./DevBetterWeb.sln --configuration Release
 
       - name: Run unit tests
         id: run_unit_tests
