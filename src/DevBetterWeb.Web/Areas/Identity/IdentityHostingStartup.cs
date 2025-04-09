@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NimblePros.Vimeo.Models;
 
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
 namespace DevBetterWeb.Web.Areas.Identity;
@@ -13,9 +15,15 @@ public class IdentityHostingStartup : IHostingStartup
 {
   public void Configure(IWebHostBuilder builder)
   {
-    builder.ConfigureServices((context, services) =>
+
+
+		builder.ConfigureServices((context, services) =>
     {
-      services.AddDbContext<IdentityDbContext>(options =>
+			if (context.HostingEnvironment.IsEnvironment("Testing"))
+			{
+				return;
+			}
+			services.AddDbContext<IdentityDbContext>(options =>
                   options.UseSqlServer(
                       context.Configuration.GetConnectionString("DefaultConnection")));
 

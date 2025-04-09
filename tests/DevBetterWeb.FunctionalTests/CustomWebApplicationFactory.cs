@@ -28,6 +28,12 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Progr
 	/// <returns></returns>
 	protected override IHost CreateHost(IHostBuilder builder)
 	{
+		// disable sql logging in tests
+		builder.ConfigureLogging(logging =>
+		{
+			logging.ClearProviders();
+			logging.AddConsole();
+		});
 		var host = builder.Build();
 
 		// Get service provider.
@@ -71,50 +77,54 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Progr
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{
 		builder
-				.UseSolutionRelativeContentRoot("src/DevBetterWeb.Web")
-				//.UseEnvironment("Testing")
-				.ConfigureServices(services =>
+			.UseSolutionRelativeContentRoot("src/DevBetterWeb.Web")
+			.UseEnvironment("Testing")
+			.ConfigureServices(services =>
+			{
+				string inMemoryAppDb = Guid.NewGuid().ToString();
+				string inMemoryIdentityDb = Guid.NewGuid().ToString();
+
+				services.AddDbContext<AppDbContext>(options =>
 				{
-					// Remove the app's ApplicationDbContext registration.
-					var descriptor = services.SingleOrDefault(
-						d => d.ServiceType ==
-								typeof(DbContextOptions<AppDbContext>));
-
-					if (descriptor != null)
-					{
-						services.Remove(descriptor);
-					}
-
-					// This should be set for each individual test run
-					string inMemoryCollectionName = Guid.NewGuid().ToString();
-
-					// Add ApplicationDbContext using an in-memory database for testing.
-					services.AddDbContext<AppDbContext>(options =>
-				{
-					options.UseInMemoryDatabase(inMemoryCollectionName);
+					options.UseInMemoryDatabase(inMemoryAppDb);
+					options.UseInternalServiceProvider(new ServiceCollection()
+						.AddEntityFrameworkInMemoryDatabase()
+						.BuildServiceProvider());
 				});
 
-					// Remove the app's IdentityDbContext registration.
-					var descriptorIdentityDbContext = services.SingleOrDefault(
-						d => d.ServiceType ==
-								typeof(DbContextOptions<IdentityDbContext>));
-
-					if (descriptorIdentityDbContext != null)
-					{
-						services.Remove(descriptorIdentityDbContext);
-					}
-
-					// This should be set for each individual test run
-					string inMemoryCollectionNameIdentityDbContext = Guid.NewGuid().ToString();
-
-					// Add IdentityDbContext using an in-memory database for testing.
-					services.AddDbContext<IdentityDbContext>(options =>
+				services.AddDbContext<IdentityDbContext>(options =>
 				{
-					options.UseInMemoryDatabase(inMemoryCollectionNameIdentityDbContext);
+					options.UseInMemoryDatabase(inMemoryIdentityDb);
+					options.UseInternalServiceProvider(new ServiceCollection()
+						.AddEntityFrameworkInMemoryDatabase()
+						.BuildServiceProvider());
 				});
 
-					services.AddScoped<IMediator, NoOpMediator>();
-					services.AddScoped<IDomainEventDispatcher, NoOpDomainEventDispatcher>();
-				});
+				services.AddIdentityCore<ApplicationUser>(options =>
+				{
+					options.User.RequireUniqueEmail = false;
+				})
+				.AddRoles<IdentityRole>()
+				.AddEntityFrameworkStores<IdentityDbContext>()
+				.AddSignInManager()
+				.AddDefaultTokenProviders();
+
+				services.AddScoped<IMediator, NoOpMediator>();
+				services.AddScoped<IDomainEventDispatcher, NoOpDomainEventDispatcher>();
+			});
+
 	}
+
+	private void RemoveAll<T>(IServiceCollection services)
+	{
+		var descriptors = services.Where(d =>
+			d.ServiceType == typeof(T) ||
+			(d.ServiceType.IsGenericType && d.ServiceType.GetGenericTypeDefinition() == typeof(T))).ToList();
+
+		foreach (var descriptor in descriptors)
+		{
+			services.Remove(descriptor);
+		}
+	}
+
 }
