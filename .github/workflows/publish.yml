@@ -25,8 +25,8 @@ jobs:
     - name: Build and test
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
 
-    - name: Publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o ./publish
+    - name: publish
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp' -r linux-x64 --self-contained true /p:PublishTrimmed=false
 
     - name: Zip published output
       run: |
