@@ -26,12 +26,13 @@ jobs:
       run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
 
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp' -r linux-x64 --self-contained true /p:PublishTrimmed=false
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj \
+        -c Release -r linux-x64 --self-contained true \
+        -o '${{ github.workspace }}/publish' /p:PublishTrimmed=false
+
 
     - name: Zip published output
-      run: |
-        cd publish
-        zip -r ../app.zip .
+      run: zip -r app.zip ./publish
       shell: bash
 
     - name: Deploy to Azure Web App
