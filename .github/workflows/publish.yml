@@ -24,9 +24,9 @@ jobs:
         include-prerelease: true
     
     - name: Build and test
-      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release -warnaserror-
+      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release /p:TreatWarningsAsErrors=false
     - name: publish
-      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp' -warnaserror-
+      run: dotnet publish ./src/DevBetterWeb.Web/DevBetterWeb.Web.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/WebApp' /p:TreatWarningsAsErrors=false
 
     # Deploy to Azure WebApps using Publish Profile
     - name: 'Azure webapp deploy with Publish Profile'
