@@ -31,6 +31,7 @@ using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using NimblePros.Vimeo.Extensions;
+using NimblePros.Metronome;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
@@ -72,6 +73,8 @@ if (builder.Environment.EnvironmentName.ToLower() == "production")
 	builder.Services.AddStartupNotificationService();
 }
 
+builder.Services.AddMetronome();
+
 // TEST SERVICES
 //if (builder.Environment.EnvironmentName.ToLower() == "testing")
 //{
@@ -83,9 +86,11 @@ if (builder.Environment.EnvironmentName.ToLower() == "production")
 
 if (!builder.Services.Any(x => x.ServiceType == typeof(AppDbContext)))
 {
-	builder.Services.AddDbContext<AppDbContext>(options =>
+	builder.Services.AddDbContext<AppDbContext>((provider, options) =>
 			options.UseSqlServer(builder.Configuration
-					.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+					.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME))
+			.AddMetronomeDbTracking(provider)
+			);
 }
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
@@ -167,6 +172,7 @@ if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
 	app.UseShowAllServicesMiddleware();
+	app.UseMetronomeLoggingMiddleware();
 }
 else
 {
