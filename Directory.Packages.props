@@ -69,7 +69,7 @@
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.1-dev-00043" />
     <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
-    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.0.1" />
+    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.1.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.7" />
     <PackageVersion Include="SQLite" Version="3.13.0" />
@@ -79,7 +79,6 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="TagHelperSamples.Authorization" Version="3.0.56" />
-    <PackageVersion Include="Westwind.AspNetCore.Markdown" Version="3.23.0" />
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />

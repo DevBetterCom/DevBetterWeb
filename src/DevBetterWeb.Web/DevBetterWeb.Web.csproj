@@ -57,7 +57,6 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
 		<PackageReference Include="TagHelperSamples.Authorization" />
-		<PackageReference Include="Westwind.AspNetCore.Markdown" />
 		<PackageReference Include="WindowsAzure.Storage" />
 		<PackageReference Include="AutoMapper" />
 		<PackageReference Include="Flurl" />

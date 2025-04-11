@@ -22,7 +22,7 @@ public static class ConfigureServicesExtensions
     services.AddScoped<IPaymentHandlerPrice, StripePaymentHandlerPriceService>();
     services.AddScoped<IPaymentHandlerPaymentIntent, StripePaymentHandlerPaymentIntentService>();
     services.AddScoped<IPaymentHandlerPaymentMethod, StripePaymentHandlerPaymentMethodService>();
-    services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
+    //services.AddScoped<IPaymentHandlerSubscriptionDTO, StripePaymentHandlerSubscriptionDTO>();
     services.AddScoped<IPaymentHandlerSubscriptionCreationService, StripePaymentHandlerSubscriptionCreationService>();
     services.AddScoped<IPaymentHandlerInvoice, StripePaymentHandlerInvoiceService>();
     services.AddScoped<IIssuingHandlerCardListService, StripeIssuingHandlerCardListService>();
@@ -30,9 +30,12 @@ public static class ConfigureServicesExtensions
     services.AddScoped<IIssuingHandlerTransactionListService, StripeIssuingHandlerTransactionListService>();
   }
 
-  public static void AddDailyCheckServices(this IServiceCollection services)
+  public static void AddDailyCheckServices(this IServiceCollection services, bool isProduction)
   {
-    services.AddHostedService<DailyCheckService>();
+		if (isProduction)
+		{
+			services.AddHostedService<DailyCheckService>();
+		}
     services.AddScoped<IDailyCheckPingService, DailyCheckPingService>();
     services.AddScoped<IDailyCheckSubscriptionPlanCountService, DailyCheckSubscriptionPlanCountService>();
   }

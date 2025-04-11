@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NimblePros.Metronome;
 using NimblePros.Vimeo.Models;
 
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
@@ -23,9 +24,11 @@ public class IdentityHostingStartup : IHostingStartup
 			{
 				return;
 			}
-			services.AddDbContext<IdentityDbContext>(options =>
+			services.AddDbContext<IdentityDbContext>((provider, options) =>
                   options.UseSqlServer(
-                      context.Configuration.GetConnectionString("DefaultConnection")));
+                      context.Configuration.GetConnectionString("DefaultConnection"))
+														.AddMetronomeDbTracking(provider)
+			);
 
       services.AddIdentity<ApplicationUser, IdentityRole>(x =>
                       {
