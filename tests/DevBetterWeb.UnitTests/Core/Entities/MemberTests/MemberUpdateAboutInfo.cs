@@ -16,7 +16,7 @@ public class MemberTests
 
     Member? member = MemberHelpers.CreateWithDefaultConstructor();
     member.UpdateAboutInfo(_initialAboutInfo);
-    member.Events.Clear();
+    member.ClearDomainEvents();
 
     return member;
   }
@@ -39,7 +39,7 @@ public class MemberTests
 
     var member = GetMemberWithDefaultAboutInfo();
     member.UpdateAboutInfo(newAboutInfo);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("AboutInfo", eventCreated.UpdateDetails);
@@ -51,7 +51,7 @@ public class MemberTests
     var member = GetMemberWithDefaultAboutInfo();
     member.UpdateAboutInfo(_initialAboutInfo);
 
-    Assert.Empty(member.Events);
+    Assert.Empty(member.DomainEvents);
   }
 
   [Fact]
@@ -62,7 +62,7 @@ public class MemberTests
     var member = GetMemberWithDefaultAboutInfo();
     member.UpdateName("kylo", "ren");
     member.UpdateAboutInfo(newAboutInfo);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Name,AboutInfo", eventCreated.UpdateDetails);

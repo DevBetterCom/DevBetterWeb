@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
+using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -10,15 +11,14 @@ namespace DevBetterWeb.Web.Services;
 
 public class StartupNotificationService : IHostedService
 {
-  //private static bool _notificationSent = false;
-  private readonly IDomainEventDispatcher _dispatcher;
-  private readonly ILogger<StartupNotificationService> _logger;
+	private readonly IMediator _mediator;
+	private readonly ILogger<StartupNotificationService> _logger;
 
-  public StartupNotificationService(IDomainEventDispatcher dispatcher,
+  public StartupNotificationService(IMediator mediator,
       ILogger<StartupNotificationService> logger)
   {
-    _dispatcher = dispatcher;
-    _logger = logger;
+		_mediator = mediator;
+		_logger = logger;
   }
 
   public async Task StartAsync(CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class StartupNotificationService : IHostedService
     _logger.LogInformation("StartupNotificationService.StartAsync called");
     //if (!_notificationSent)
     //{
-    await _dispatcher.Dispatch(new AppStartedEvent(DateTime.Now));
+    await _mediator.Publish(new AppStartedEvent(DateTime.Now));
     //  _notificationSent = true;
     //}
   }

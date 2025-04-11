@@ -29,7 +29,7 @@ public class Member : BaseEntity, IAggregateRoot
 	internal Member(string userId)
 	{
 		UserId = userId;
-		Events.Add(new NewMemberCreatedEvent(this));
+		RegisterDomainEvent(new NewMemberCreatedEvent(this));
 	}
 
 	internal Member(string userId, string firstName, string lastName)
@@ -200,7 +200,7 @@ public class Member : BaseEntity, IAggregateRoot
 		if (isEvent && isUpdated)
 		{
 			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
-			Events.Add(addressUpdatedEvent);
+			RegisterDomainEvent(addressUpdatedEvent);
 		}
 	}
 
@@ -211,7 +211,7 @@ public class Member : BaseEntity, IAggregateRoot
 		if (isEvent)
 		{
 			var addressUpdatedEvent = new MemberAddressUpdatedEvent(this, ShippingAddress);
-			Events.Add(addressUpdatedEvent);
+			RegisterDomainEvent(addressUpdatedEvent);
 		}
 
 		ShippingAddress = newAddress;
@@ -299,7 +299,7 @@ public class Member : BaseEntity, IAggregateRoot
 			BooksRead.Add(book);
 			CreateOrUpdateUpdateEvent("Books");
 			var newBookReadEvent = new MemberAddedBookReadEvent(this, book);
-			Events.Add(newBookReadEvent);
+			RegisterDomainEvent(newBookReadEvent);
 		}
 	}
 
@@ -310,7 +310,7 @@ public class Member : BaseEntity, IAggregateRoot
 			UploadedBooks.Add(book);
 			AddBookRead(book);
 			var newBookAddedEvent = new MemberAddedBookAddEvent(this, book);
-			Events.Add(newBookAddedEvent);
+			RegisterDomainEvent(newBookAddedEvent);
 		}
 		// TODO: throw an exception if somehow someone is trying to add more than one book
 	}
@@ -335,7 +335,7 @@ public class Member : BaseEntity, IAggregateRoot
 
 		MemberSubscriptions.Add(subscription);
 
-		Events.Add(new SubscriptionAddedEvent(this, subscription));
+		RegisterDomainEvent(new SubscriptionAddedEvent(this, subscription));
 	}
 
 	public void ExtendCurrentSubscription(DateTime newEndDate)
@@ -346,7 +346,7 @@ public class Member : BaseEntity, IAggregateRoot
 			if (s.Dates.Contains(DateTime.Today))
 			{
 				s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
-				Events.Add(new SubscriptionUpdatedEvent(this, s));
+				RegisterDomainEvent(new SubscriptionUpdatedEvent(this, s));
 			}
 		}
 	}
@@ -356,7 +356,7 @@ public class Member : BaseEntity, IAggregateRoot
 		var details = new BillingDetails(UserFullName(), subscriptionPlanName, actionVerbPastTense, billingPeriod, DateTime.Now, amount);
 		var activity = new BillingActivity(Id, details);
 		BillingActivities.Add(activity);
-		Events.Add(new BillingActivityCreatedEvent(activity, this));
+		RegisterDomainEvent(new BillingActivityCreatedEvent(activity, this));
 	}
 
 	public void UpdateDiscord(string? discordUsername, bool isEvent = true)
@@ -373,7 +373,7 @@ public class Member : BaseEntity, IAggregateRoot
 
 	private void CreateOrUpdateUpdateEvent(string updateDetails)
 	{
-		MemberUpdatedEvent? updatedEvent = Events.Find(evt => evt is MemberUpdatedEvent) as MemberUpdatedEvent;
+		MemberUpdatedEvent? updatedEvent = _domainEvents.Find(evt => evt is MemberUpdatedEvent) as MemberUpdatedEvent;
 
 		if (updatedEvent != null)
 		{
@@ -382,19 +382,19 @@ public class Member : BaseEntity, IAggregateRoot
 		}
 
 		updatedEvent = new MemberUpdatedEvent(this, updateDetails);
-		Events.Add(updatedEvent);
+		RegisterDomainEvent(updatedEvent);
 	}
 
 	private void CreateOrUpdateAddressUpdateEvent(string updateDetails)
 	{
-		if (Events.Find(evt => evt is MemberHomeAddressUpdatedEvent) is MemberHomeAddressUpdatedEvent updatedEvent)
+		if (_domainEvents.Find(evt => evt is MemberHomeAddressUpdatedEvent) is MemberHomeAddressUpdatedEvent updatedEvent)
 		{
 			updatedEvent.UpdateDetails += "," + updateDetails;
 			return;
 		}
 
 		updatedEvent = new MemberHomeAddressUpdatedEvent(this, updateDetails);
-		Events.Add(updatedEvent);
+		RegisterDomainEvent(updatedEvent);
 	}
 
 	public int TotalSubscribedDays()

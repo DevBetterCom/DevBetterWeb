@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-
         <IsPackable>false</IsPackable>
-    </PropertyGroup>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	</PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MediatR" />

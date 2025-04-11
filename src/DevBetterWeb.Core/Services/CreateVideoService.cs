@@ -99,7 +99,7 @@ public class CreateVideoService : ICreateVideoService
 		if (existVideo == null)
 		{
 			var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-			archiveVideo.Events.Add(videoAddedEvent);
+			archiveVideo.AddDomainEvent(videoAddedEvent);
 
 			_ = await _repositoryArchiveVideo.AddAsync(archiveVideo, cancellationToken);
 

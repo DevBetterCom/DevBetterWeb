@@ -18,7 +18,7 @@ public class MemberUpdateName
 
     var member = MemberHelpers.CreateWithDefaultConstructor();
     member.UpdateName(_initialFirstName, _initialLastName);
-    member.Events.Clear();
+    member.ClearDomainEvents();
 
     return member;
   }
@@ -43,7 +43,7 @@ public class MemberUpdateName
 
     var member = GetMemberWithDefaultName();
     member.UpdateName(newFirstName, _initialLastName);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Name", eventCreated.UpdateDetails);
@@ -56,7 +56,7 @@ public class MemberUpdateName
 
     var member = GetMemberWithDefaultName();
     member.UpdateName(_initialFirstName, newLastName);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Name", eventCreated.UpdateDetails);
@@ -68,7 +68,7 @@ public class MemberUpdateName
     var member = GetMemberWithDefaultName();
     member.UpdateName(_initialFirstName, _initialLastName);
 
-    Assert.Empty(member.Events);
+    Assert.Empty(member.DomainEvents);
   }
 
   [Fact]
@@ -79,7 +79,7 @@ public class MemberUpdateName
     var member = GetMemberWithDefaultName();
     member.UpdateDiscord("new discord");
     member.UpdateName(_initialFirstName, newLastName);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Discord Username,Name", eventCreated.UpdateDetails);

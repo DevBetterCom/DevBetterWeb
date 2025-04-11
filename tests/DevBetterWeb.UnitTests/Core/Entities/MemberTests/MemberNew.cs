@@ -19,7 +19,7 @@ public class MemberNew
   {
     var member = MemberHelpers.CreateWithDefaultConstructor();
 
-    Assert.Empty(member.Events);
+    Assert.Empty(member.DomainEvents);
   }
 
   [Fact]
@@ -35,7 +35,7 @@ public class MemberNew
   {
     var member = MemberHelpers.CreateWithInternalConstructor();
 
-    var eventCreated = (NewMemberCreatedEvent)member.Events.First();
+    var eventCreated = (NewMemberCreatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
   }

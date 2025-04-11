@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.ListStartupServices;
-using Autofac.Extensions.DependencyInjection;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Services;
+using DevBetterWeb.Infrastructure;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.Identity.Data;
@@ -27,19 +27,21 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Autofac;
 using DevBetterWeb.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using NimblePros.Vimeo.Extensions;
+using NimblePros.Metronome;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
 var isProduction = builder.Environment.IsEnvironment("Production");
+bool isDevelopment = builder.Environment.IsDevelopment();
+string vimeoToken = builder.Configuration["Vimeo:Token"] ?? "";
 var isTesting = builder.Environment.IsEnvironment("Testing");
 
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+// builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 if (!isTesting)
 {
@@ -66,9 +68,11 @@ builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSet
 
 if (isProduction)
 {
-	builder.Services.AddDbContext<AppDbContext>(options =>
+	builder.Services.AddDbContext<AppDbContext>((provider, options) =>
 		options.UseSqlServer(builder.Configuration
-			.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+			.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME))
+					.AddMetronomeDbTracking(provider)
+		);
 
 	// Other prod-only services
 	builder.Services.AddStripeServices(
@@ -79,10 +83,21 @@ if (isProduction)
 else if (!isTesting)
 {
 	// Fallback for other non-test, non-prod envs (e.g., Development, Staging)
-	builder.Services.AddDbContext<AppDbContext>(options =>
+	builder.Services.AddDbContext<AppDbContext>((provider, options) =>
 		options.UseSqlServer(builder.Configuration
-			.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME)));
+			.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME))
+					.AddMetronomeDbTracking(provider)
+		);
+
 }
+
+builder.Services.AddInfrastructureServices(isDevelopment, vimeoToken);
+
+builder.Services.AddMediatR(cfg =>
+	cfg.RegisterServicesFromAssemblies(
+		typeof(IAggregateRoot).Assembly,
+		typeof(AppDbContext).Assembly,
+		typeof(Program).Assembly));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
@@ -148,13 +163,22 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 	options.ConnectionString = builder.Configuration["APPINSIGHTS_CONNECTIONSTRING"];
 });
 
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-{
-	//	containerBuilder.RegisterModule(new DefaultCoreModule());
-	bool isDevelopment = builder.Environment.EnvironmentName == "Development";
-	containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDevelopment,
-		vimeoSettings.Token));
-});
+//builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+//{
+//	//	containerBuilder.RegisterModule(new DefaultCoreModule());
+//	bool isDevelopment = builder.Environment.EnvironmentName == "Development";
+//	containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDevelopment,
+//		vimeoSettings.Token));
+
+//	// HACK to get Metronome working
+//	containerBuilder.RegisterType<DbCallCounter>()
+//						 .AsSelf()
+//						 .SingleInstance(); // or Scoped, if that fits your use
+
+//	containerBuilder.RegisterType<DbCallCountingInterceptor>()
+//				 .AsSelf()
+//				 .SingleInstance();
+//});
 
 // TODO: Configure Testing and Production Services from Startup
 
@@ -164,6 +188,7 @@ if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
 	app.UseShowAllServicesMiddleware();
+	app.UseMetronomeLoggingMiddleware();
 }
 else
 {

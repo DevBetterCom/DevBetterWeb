@@ -16,7 +16,7 @@ public class MemberUpdateBirthday
   { 
     var member = MemberHelpers.CreateWithDefaultConstructor();
     member.UpdateBirthday(_initialDay, _initialMonth);
-    member.Events.Clear();
+    member.ClearDomainEvents();
 
     return member;
   }
@@ -41,7 +41,7 @@ public class MemberUpdateBirthday
 
     var member = GetMemberWithDefaultBirthday();
     member.UpdateBirthday(day, month);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Birthday", eventCreated.UpdateDetails);
@@ -53,7 +53,7 @@ public class MemberUpdateBirthday
     var member = GetMemberWithDefaultBirthday();
     member.UpdateBirthday(_initialDay, _initialMonth);
 
-    Assert.Empty(member.Events);
+    Assert.Empty(member.DomainEvents);
   }
 
   [Fact]

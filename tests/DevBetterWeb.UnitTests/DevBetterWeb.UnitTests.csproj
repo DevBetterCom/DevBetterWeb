@@ -3,6 +3,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+	  <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" />

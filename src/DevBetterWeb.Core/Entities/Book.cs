@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
@@ -16,7 +17,12 @@ public class Book : BaseEntity, IAggregateRoot
 	public Member? MemberWhoUpload { get; set; }
   public BookCategory? BookCategory { get; set; }
 
-  public override string ToString()
+	public void AddDomainEvent(NewBookCreatedEvent bookAddedEvent)
+	{
+		this.RegisterDomainEvent(bookAddedEvent);
+	}
+
+	public override string ToString()
   {
     return Title + " by " + Author;
   }

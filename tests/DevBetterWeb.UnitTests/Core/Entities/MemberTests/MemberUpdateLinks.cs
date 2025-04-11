@@ -34,7 +34,7 @@ public class MemberUpdateLinks
       _initialTwitterUrl,
       _initialBlueskyUrl,
 			_initialMastodonUrl);
-    member.Events.Clear();
+    member.ClearDomainEvents();
 
     return member;
   }
@@ -75,7 +75,7 @@ public class MemberUpdateLinks
       _initialTwitterUrl,
       _initialBlueskyUrl,
 			_initialMastodonUrl);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Links", eventCreated.UpdateDetails);
@@ -96,7 +96,7 @@ public class MemberUpdateLinks
       _initialBlueskyUrl,
 			_initialMastodonUrl);
 
-    Assert.Empty(member.Events);
+    Assert.Empty(member.DomainEvents);
   }
 
   [Fact]
@@ -117,11 +117,11 @@ public class MemberUpdateLinks
       _initialTwitterUrl,
       _initialBlueskyUrl,
 			_initialMastodonUrl);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Name,AboutInfo,Links", eventCreated.UpdateDetails);
-    Assert.Single(member.Events);
+    Assert.Single(member.DomainEvents);
   }
 
 }

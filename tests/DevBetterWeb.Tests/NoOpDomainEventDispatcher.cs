@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 
@@ -10,4 +11,9 @@ public class NoOpDomainEventDispatcher : IDomainEventDispatcher
   {
     return Task.CompletedTask;
   }
+
+	public Task DispatchAndClearEvents(IEnumerable<IHasDomainEvents> entitiesWithEvents)
+	{
+		return Task.CompletedTask;
+	}
 }
