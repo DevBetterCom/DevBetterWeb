@@ -7,8 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NimblePros.Metronome;
-using NimblePros.Vimeo.Models;
 
+// TODO: remove this magic since it's hard to know it exists - move it to an extension method called from Program.cs
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
 namespace DevBetterWeb.Web.Areas.Identity;
 
