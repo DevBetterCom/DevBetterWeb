@@ -12,10 +12,6 @@
 		<IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<WarningsAsErrors />
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.ApiEndpoints" />
