@@ -75,7 +75,7 @@
     <PackageVersion Include="SQLite" Version="3.13.0" />
     <PackageVersion Include="Stripe.net" Version="40.16.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="TagHelperSamples.Authorization" Version="3.0.56" />
