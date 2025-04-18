@@ -34,6 +34,8 @@ using Serilog;
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
 
 var builder = WebApplication.CreateBuilder(args);
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
 var isProduction = builder.Environment.IsEnvironment("Production");
 bool isDevelopment = builder.Environment.IsDevelopment();
@@ -167,7 +169,7 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 
 
 var app = builder.Build();
-
+app.Urls.Add($"http://*:{port}");
 if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
