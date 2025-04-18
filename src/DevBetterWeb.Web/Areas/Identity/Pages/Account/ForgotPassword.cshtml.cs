@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Infrastructure.DomainEvents;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,19 +22,19 @@ public class ForgotPasswordModel : PageModel
 {
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IEmailSender _emailSender;
-  private readonly DomainEventDispatcher _dispatcher;
   private readonly ILogger<ForgotPasswordModel> _logger;
+	private readonly IMediator _mediator;
 
-  public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
+	public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
       IEmailSender emailSender,
-      DomainEventDispatcher dispatcher,
-      ILogger<ForgotPasswordModel> logger)
+      ILogger<ForgotPasswordModel> logger,
+			IMediator mediator)
   {
     _userManager = userManager;
     _emailSender = emailSender;
-    _dispatcher = dispatcher;
     _logger = logger;
-  }
+		_mediator = mediator;
+	}
 
   [BindProperty]
   public InputModel? Input { get; set; }
@@ -55,7 +56,7 @@ public class ForgotPasswordModel : PageModel
         _logger.LogWarning($"User {Input!.Email} does not exist or is not confirmed.");
 
         var noUserEvent = new InvalidUserEvent(Input!.Email!);
-        await _dispatcher.Dispatch(noUserEvent);
+        await _mediator.Publish(noUserEvent);
 
         // Don't reveal that the user does not exist or is not confirmed
         return RedirectToPage("./ForgotPasswordConfirmation");
@@ -80,7 +81,7 @@ public class ForgotPasswordModel : PageModel
           $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
       var newEvent = new PasswordResetEvent(Input.Email!);
-      await _dispatcher.Dispatch(newEvent);
+      await _mediator.Publish(newEvent);
 
       return RedirectToPage("./ForgotPasswordConfirmation");
     }

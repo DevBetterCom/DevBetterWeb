@@ -111,7 +111,7 @@ public class EditModel : PageModel
     return RedirectToPage("./Index");
   }
 
-  public IActionResult OnPostEditQuestion(int questionId, string questionText, int timestamp)
+  public async Task<IActionResult> OnPostEditQuestion(int questionId, string questionText, int timestamp)
   {
     var question = _context.Questions!.FirstOrDefault(x => x.Id == questionId);
 
@@ -121,7 +121,7 @@ public class EditModel : PageModel
     }
     question.UpdateQuestion(questionText);
 
-    _context.SaveChanges();
+    await _context.SaveChangesAsync();
 
 
     return RedirectToPage("edit", new { id = question.ArchiveVideoId });
@@ -149,7 +149,7 @@ public class EditModel : PageModel
     return RedirectToPage("edit", new { id = archiveVideoId });
   }
 
-  public IActionResult OnPostDeleteQuestion(int questionId)
+  public async Task<IActionResult> OnPostDeleteQuestion(int questionId)
   {
     var question = _context.Questions!.FirstOrDefault(x => x.Id == questionId);
 
@@ -160,8 +160,7 @@ public class EditModel : PageModel
 
     var archiveVideoId = question.ArchiveVideoId;
     _context.Questions!.Remove(question);
-    _context.SaveChanges();
-
+    await _context.SaveChangesAsync();
 
     return RedirectToPage("edit", new { id = question.ArchiveVideoId });
   }

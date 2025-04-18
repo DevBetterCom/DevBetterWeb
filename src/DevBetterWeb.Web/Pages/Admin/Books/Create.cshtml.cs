@@ -77,7 +77,7 @@ public class CreateModel : PageModel
     };
 
     var bookAddedEvent = new NewBookCreatedEvent(bookEntity);
-    bookEntity.Events.Add(bookAddedEvent);
+    bookEntity.AddDomainEvent(bookAddedEvent);
 
     await _bookRepository.AddAsync(bookEntity);
 

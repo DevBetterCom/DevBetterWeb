@@ -16,8 +16,6 @@
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageVersion Include="Ardalis.Specification" Version="9.0.1" />
     <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.1" />
-    <PackageVersion Include="Autofac" Version="8.2.1" />
-    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
@@ -62,6 +60,7 @@
     <PackageVersion Include="NETStandard.Library" Version="2.0.3" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NimblePros.ApiClient" Version="1.0.13" />
+    <PackageVersion Include="NimblePros.Metronome" Version="0.4.1" />
     <PackageVersion Include="NimblePros.Vimeo" Version="1.0.12" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="ReportGenerator" Version="5.4.5" />
@@ -70,7 +69,7 @@
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.1-dev-00043" />
     <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
-    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.0.1" />
+    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.1.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.7" />
     <PackageVersion Include="SQLite" Version="3.13.0" />
@@ -80,7 +79,6 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="TagHelperSamples.Authorization" Version="3.0.56" />
-    <PackageVersion Include="Westwind.AspNetCore.Markdown" Version="3.23.0" />
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />

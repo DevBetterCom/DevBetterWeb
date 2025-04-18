@@ -6,6 +6,7 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using GoogleReCaptcha.V3.Interface;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,22 +21,22 @@ public class RegisterModel : PageModel
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly ILogger<RegisterModel> _logger;
   private readonly IEmailService _emailService;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly ICaptchaValidator _captchaValidator;
+	private readonly IMediator _mediator;
 
-  public RegisterModel(
+	public RegisterModel(
           UserManager<ApplicationUser> userManager,
           ILogger<RegisterModel> logger,
           IEmailService emailService,
-          IDomainEventDispatcher dispatcher,
-          ICaptchaValidator captchaValidator)
+          ICaptchaValidator captchaValidator,
+					IMediator mediator)
   {
     _userManager = userManager;
     _logger = logger;
     _emailService = emailService;
-    _dispatcher = dispatcher;
     _captchaValidator = captchaValidator;
-  }
+		_mediator = mediator;
+	}
 
   [BindProperty]
   public InputModel? Input { get; set; }
@@ -87,7 +88,7 @@ public class RegisterModel : PageModel
 	        var newUserEvent = new NewUserRegisteredEvent(Input.Email!,
 	          Request.HttpContext.Connection.RemoteIpAddress!.ToString());
 
-	        await _dispatcher.Dispatch(newUserEvent);
+	        await _mediator.Publish(newUserEvent);
 
 	        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 	        var callbackUrl = Url.Page(
@@ -113,7 +114,7 @@ public class RegisterModel : PageModel
 	  {
 		  _logger.LogError(exception, "RegisterModel Exception");
 		  var exceptionEvent = new ExceptionEvent(exception);
-		  await _dispatcher.Dispatch(exceptionEvent);
+		  await _mediator.Publish(exceptionEvent);
 	  }
 		// If we got this far, something failed, redisplay form
 		return Page();

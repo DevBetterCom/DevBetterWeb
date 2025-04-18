@@ -3,6 +3,7 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,14 @@ namespace DevBetterWeb.Infrastructure.Services;
 public class AspNetCoreIdentityUserEmailConfirmationService : IUserEmailConfirmationService
 {
   private readonly UserManager<ApplicationUser> _userManager;
-  private readonly IDomainEventDispatcher _dispatcher;
+	private readonly IMediator _mediator;
 
-  public AspNetCoreIdentityUserEmailConfirmationService(UserManager<ApplicationUser> userManager,
-      IDomainEventDispatcher dispatcher)
+  public AspNetCoreIdentityUserEmailConfirmationService(
+			UserManager<ApplicationUser> userManager,
+      IMediator mediator)
   {
     _userManager = userManager;
-    _dispatcher = dispatcher;
+		_mediator = mediator;
   }
 
   public async Task UpdateUserEmailConfirmationAsync(string userId, bool isEmailConfirmed)
@@ -30,6 +32,6 @@ public class AspNetCoreIdentityUserEmailConfirmationService : IUserEmailConfirma
     await _userManager.UpdateAsync(user);
 
     var userEmailConfirmedChangedEvent = new UserEmailConfirmedChangedEvent(user!.Email!, isEmailConfirmed);
-    await _dispatcher.Dispatch(userEmailConfirmedChangedEvent);
+    await _mediator.Publish(userEmailConfirmedChangedEvent);
   }
 }

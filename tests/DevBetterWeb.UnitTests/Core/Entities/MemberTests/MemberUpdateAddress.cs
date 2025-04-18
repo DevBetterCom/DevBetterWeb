@@ -25,7 +25,7 @@ public class MemberUpdateAddress
     var member = MemberHelpers.CreateWithDefaultConstructor();
     member.UpdateAddress(_initialAddress);
     member.UpdateShippingAddress(_initialAddress, _initialCity, _initialState, _initialPostalCode, _initialCountry);
-    member.Events.Clear();
+    member.ClearDomainEvents();
 
     return member;
   }
@@ -58,7 +58,7 @@ public class MemberUpdateAddress
 		var member = GetMemberWithDefaultAddress();
 		member.UpdateAddress(newAddress);
 		member.UpdateShippingAddress(newAddress, newCity, newState, newPostalCode, newCountry);
-		var eventCreated = (MemberHomeAddressUpdatedEvent)member.Events.First();
+		var eventCreated = (MemberHomeAddressUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Address", eventCreated.UpdateDetails);
@@ -71,7 +71,7 @@ public class MemberUpdateAddress
 		member.UpdateAddress(_initialAddress);
 		member.UpdateShippingAddress(_initialAddress, _initialCity, _initialState, _initialPostalCode, _initialCountry);
 
-		Assert.Empty(member.Events);
+		Assert.Empty(member.DomainEvents);
   }
 
   [Fact]
@@ -82,7 +82,7 @@ public class MemberUpdateAddress
     var member = GetMemberWithDefaultAddress();
     member.UpdateName("kylo", "ren");
     member.UpdateDiscord(newDiscord);
-    var eventCreated = (MemberUpdatedEvent)member.Events.First();
+    var eventCreated = (MemberUpdatedEvent)member.DomainEvents.First();
 
     Assert.Same(member, eventCreated.Member);
     Assert.Equal("Name,Discord Username", eventCreated.UpdateDetails);

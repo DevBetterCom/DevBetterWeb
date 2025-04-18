@@ -5,6 +5,7 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
+using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -16,17 +17,17 @@ public class DailyCheckService : BackgroundService
   private const int DELAY_IN_MILLISECONDS = ONE_HOUR_IN_MILLISECONDS;
 
   private readonly ILogger<DailyCheckService> _logger;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly IRepository<DailyCheck> _repository;
+	private readonly IMediator _mediator;
 
-  public DailyCheckService(ILogger<DailyCheckService> logger,
-    IDomainEventDispatcher dispatcher,
-    IRepository<DailyCheck> repository)
+	public DailyCheckService(ILogger<DailyCheckService> logger,
+    IRepository<DailyCheck> repository,
+		IMediator mediator)
   {
     _logger = logger;
-    _dispatcher = dispatcher;
     _repository = repository;
-  }
+		_mediator = mediator;
+	}
 
   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
   {
@@ -60,7 +61,7 @@ public class DailyCheckService : BackgroundService
 
   private async void RaiseDailyCheckInitiatedEvent()
   {
-    await _dispatcher.Dispatch(new DailyCheckInitiatedEvent());
+    await _mediator.Publish(new DailyCheckInitiatedEvent());
     _logger.LogInformation("Daily Check Event Raised");
 
     DailyCheck dailyCheck = new DailyCheck();

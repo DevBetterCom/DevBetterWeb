@@ -3,6 +3,7 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,19 +13,19 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
 {
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly RoleManager<IdentityRole> _roleManager;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly IAppLogger<AspNetCoreIdentityUserEmailConfirmationService> _logger;
+	private readonly IMediator _mediator;
 
-  public AspNetCoreIdentityUserRoleMembershipService(UserManager<ApplicationUser> userManager,
+	public AspNetCoreIdentityUserRoleMembershipService(UserManager<ApplicationUser> userManager,
       RoleManager<IdentityRole> roleManager,
-      IDomainEventDispatcher dispatcher,
-      IAppLogger<AspNetCoreIdentityUserEmailConfirmationService> logger)
+      IAppLogger<AspNetCoreIdentityUserEmailConfirmationService> logger,
+			IMediator mediator)
   {
     _userManager = userManager;
     _roleManager = roleManager;
-    _dispatcher = dispatcher;
     _logger = logger;
-  }
+		_mediator = mediator;
+	}
 
   public async Task AddUserToRoleAsync(string userId, string roleId)
   {
@@ -37,7 +38,7 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
     await _userManager.AddToRoleAsync(user, role.Name!);
 
     var userAddedToRoleEvent = new UserAddedToRoleEvent(user!.Email!, role.Name!);
-    await _dispatcher.Dispatch(userAddedToRoleEvent);
+    await _mediator.Publish(userAddedToRoleEvent);
   }
 
   public async Task AddUserToRoleByRoleNameAsync(string userId, string roleName)
@@ -63,7 +64,7 @@ public class AspNetCoreIdentityUserRoleMembershipService : IUserRoleMembershipSe
       await _userManager.RemoveFromRoleAsync(user, role!.Name!);
 
       var userRemovedFromRoleEvent = new UserRemovedFromRoleEvent(user!.Email!, role.Name!);
-      await _dispatcher.Dispatch(userRemovedFromRoleEvent);
+      await _mediator.Publish(userRemovedFromRoleEvent);
     }
     else
     {

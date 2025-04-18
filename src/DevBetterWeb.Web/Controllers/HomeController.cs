@@ -1,5 +1,5 @@
 ﻿using DevBetterWeb.Core.Events;
-using DevBetterWeb.Core.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +10,17 @@ namespace DevBetterWeb.Web.Controllers;
 public class HomeController : Controller
 {
   private readonly IWebHostEnvironment _webHostEnvironment;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly ILogger<HomeController> _logger;
+	private readonly IMediator _mediator;
 
-  public HomeController(IWebHostEnvironment webHostEnvironment,
-          IDomainEventDispatcher dispatcher,
-          ILogger<HomeController> logger)
+	public HomeController(IWebHostEnvironment webHostEnvironment,
+          ILogger<HomeController> logger,
+					IMediator mediator)
   {
     _webHostEnvironment = webHostEnvironment;
-    _dispatcher = dispatcher;
     _logger = logger;
-  }
+		_mediator = mediator;
+	}
 
   public IActionResult Index()
   {
@@ -42,7 +42,7 @@ public class HomeController : Controller
     if (feature != null)
     {
       var exceptionEvent = new SiteErrorOccurredEvent(feature.Error);
-      _dispatcher.Dispatch(exceptionEvent);
+			_mediator.Publish(exceptionEvent);
 
       _logger.LogError(feature.Error, "devBetter global error caught");
     }

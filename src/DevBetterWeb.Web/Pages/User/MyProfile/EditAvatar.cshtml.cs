@@ -9,6 +9,7 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -39,21 +40,21 @@ public class EditAvatarModel : PageModel
   private readonly UserManager<ApplicationUser> _userManager;
   private readonly IConfiguration _configuration;
   private readonly ILogger<EditAvatarModel> _logger;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly IRepository<Member> _memberRepository;
+	private readonly IMediator _mediator;
 
-  public EditAvatarModel(UserManager<ApplicationUser> userManager,
+	public EditAvatarModel(UserManager<ApplicationUser> userManager,
       IConfiguration configuration,
       ILogger<EditAvatarModel> logger,
-      IDomainEventDispatcher dispatcher,
-      IRepository<Member> memberRepository)
+      IRepository<Member> memberRepository,
+			IMediator mediator)
   {
     _userManager = userManager;
     _configuration = configuration;
     _logger = logger;
-    _dispatcher = dispatcher;
     _memberRepository = memberRepository;
-  }
+		_mediator = mediator;
+	}
 
   public async Task OnGetAsync()
   {
@@ -92,7 +93,7 @@ public class EditAvatarModel : PageModel
         if (member is null) throw new MemberNotFoundException(applicationUser.Id);
 
         var memberAvatarUpdatedEvent = new MemberAvatarUpdatedEvent(member);
-        await _dispatcher.Dispatch(memberAvatarUpdatedEvent);
+        await _mediator.Publish(memberAvatarUpdatedEvent);
       }
     }
     return RedirectToPage("./Index");

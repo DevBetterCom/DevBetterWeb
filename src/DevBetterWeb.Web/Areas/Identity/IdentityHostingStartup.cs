@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NimblePros.Vimeo.Models;
+using NimblePros.Metronome;
 
+// TODO: remove this magic since it's hard to know it exists - move it to an extension method called from Program.cs
 [assembly: HostingStartup(typeof(DevBetterWeb.Web.Areas.Identity.IdentityHostingStartup))]
 namespace DevBetterWeb.Web.Areas.Identity;
 
@@ -23,9 +24,11 @@ public class IdentityHostingStartup : IHostingStartup
 			{
 				return;
 			}
-			services.AddDbContext<IdentityDbContext>(options =>
+			services.AddDbContext<IdentityDbContext>((provider, options) =>
                   options.UseSqlServer(
-                      context.Configuration.GetConnectionString("DefaultConnection")));
+                      context.Configuration.GetConnectionString("DefaultConnection"))
+														.AddMetronomeDbTracking(provider)
+			);
 
       services.AddIdentity<ApplicationUser, IdentityRole>(x =>
                       {

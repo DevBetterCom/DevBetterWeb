@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
+using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using DevBetterWeb.Core.ValueObjects;
@@ -45,4 +46,9 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
 
 	  }
   }
+
+	internal void AddDomainEvent(VideoAddedEvent videoAddedEvent)
+	{
+		RegisterDomainEvent(videoAddedEvent);
+	}
 }

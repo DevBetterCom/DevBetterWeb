@@ -124,7 +124,7 @@ public class VideosService : IVideosService
 	  if (existVideo == null)
 	  {
 		  var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-		  archiveVideo.Events.Add(videoAddedEvent);
+		  archiveVideo.AddDomainEvent(videoAddedEvent);
 		  _ = await _repositoryArchiveVideo.AddAsync(archiveVideo, cancellationToken);
 	  }
 	  else

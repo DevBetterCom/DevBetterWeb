@@ -8,11 +8,11 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using GoogleReCaptcha.V3.Interface;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -26,27 +26,27 @@ public class NewMemberRegisterModel : PageModel
   private readonly RoleManager<IdentityRole> _roleManager;
   private readonly IUserRoleMembershipService _userRoleMembershipService;
   private readonly ILogger<RegisterModel> _logger;
-  private readonly IDomainEventDispatcher _dispatcher;
   private readonly ICaptchaValidator _captchaValidator;
   private readonly INewMemberService _newMemberService;
+	private readonly IMediator _mediator;
 
-  public NewMemberRegisterModel(
+	public NewMemberRegisterModel(
           UserManager<ApplicationUser> userManager,
           RoleManager<IdentityRole> roleManager,
           IUserRoleMembershipService userRoleMembershipService,
           ILogger<RegisterModel> logger,
-          IDomainEventDispatcher dispatcher,
           ICaptchaValidator captchaValidator,
-          INewMemberService newMemberService)
+          INewMemberService newMemberService,
+					IMediator mediator)
   {
     _userManager = userManager;
     _roleManager = roleManager;
     _userRoleMembershipService = userRoleMembershipService;
     _logger = logger;
-    _dispatcher = dispatcher;
     _captchaValidator = captchaValidator;
     _newMemberService = newMemberService;
-  }
+		_mediator = mediator;
+	}
 
   [BindProperty]
   public InputModel? Input { get; set; }
@@ -146,7 +146,7 @@ public class NewMemberRegisterModel : PageModel
 				  var newUserEvent = new NewUserRegisteredEvent(email,
 					  Request.HttpContext.Connection.RemoteIpAddress!.ToString());
 
-				  await _dispatcher.Dispatch(newUserEvent);
+				  await _mediator.Publish(newUserEvent);
 
 				  var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 				  var userId = user.Id;
@@ -180,7 +180,7 @@ public class NewMemberRegisterModel : PageModel
 	  {
 			_logger.LogError(exception, "NewUserRegistered Exception");
 			var exceptionEvent = new ExceptionEvent(exception);
-			await _dispatcher.Dispatch(exceptionEvent);
+			await _mediator.Publish(exceptionEvent);
 	  }
     
 

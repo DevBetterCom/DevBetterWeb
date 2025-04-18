@@ -6,18 +6,24 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DevBetterWeb.Infrastructure.Data;
 
 public class AppDbContext : DbContext
 {
-	private readonly IDomainEventDispatcher _dispatcher;
+	private readonly IDomainEventDispatcher? _dispatcher;
 
 	public AppDbContext(DbContextOptions<AppDbContext> options,
-			IDomainEventDispatcher dispatcher)
+			IDomainEventDispatcher? dispatcher)
 			: base(options)
 	{
 		_dispatcher = dispatcher;
+	}	
+	
+	public AppDbContext(DbContextOptions<AppDbContext> options)
+			: this(options, null!)
+	{
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,30 +49,28 @@ public class AppDbContext : DbContext
 
 	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
 	{
-		if (_dispatcher is not null)
-		{
-			var membersWithAddressUpdatedEvents = ChangeTracker.Entries<Member>()
-			 .Select(e => e.Entity)
-			 .Where(e => e.Events.Any(x => x.GetType() == typeof(MemberAddressUpdatedEvent)))
-			 .ToArray();
+		// TODO: See why were doing these before saving - find all handlers of MemberAddressUpdatedEvent
+		//if (_dispatcher is not null)
+		//{
+		//	var membersWithAddressUpdatedEvents = ChangeTracker.Entries<Member>()
+		//	 .Select(e => e.Entity)
+		//	 .Where(e => e.DomainEvents.Any(x => x.GetType() == typeof(MemberAddressUpdatedEvent)))
+		//	 .ToArray();
 
-			foreach (var member in membersWithAddressUpdatedEvents)
-			{
-				var addressUpdatedEvents = member.Events
-					.Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
-					.ToArray();
+		//	foreach (var member in membersWithAddressUpdatedEvents)
+		//	{
+		//		var addressUpdatedEvents = member.DomainEvents
+		//			.Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
+		//			.ToArray();
 
-				member.Events
-					.Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
-					.ToList()
-					.Clear();
+		//		member.DomainEvents
+		//			.Where(e => e.GetType() == typeof(MemberAddressUpdatedEvent))
+		//			.ToList()
+		//			.Clear();
 
-				foreach (var addressUpdatedEvent in addressUpdatedEvents)
-				{
-					await _dispatcher.Dispatch(addressUpdatedEvent).ConfigureAwait(false);
-				}
-			}
-		}
+		//			await _dispatcher.DispatchAndClearEvents(addressUpdatedEvents!).ConfigureAwait(false);
+		//	}
+		//}
 
 		int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -76,18 +80,9 @@ public class AppDbContext : DbContext
 		// dispatch events only if save was successful
 		var entitiesWithEvents = ChangeTracker.Entries<BaseEntity>()
 				.Select(e => e.Entity)
-				.Where(e => e.Events.Any())
+				.Where(e => e.DomainEvents.Any())
 				.ToArray();
-
-		foreach (var entity in entitiesWithEvents)
-		{
-			var events = entity.Events.ToArray();
-			entity.Events.Clear();
-			foreach (var domainEvent in events)
-			{
-				await _dispatcher.Dispatch(domainEvent).ConfigureAwait(false);
-			}
-		}
+		await _dispatcher.DispatchAndClearEvents(entitiesWithEvents);
 
 		return result;
 	}
@@ -97,3 +92,20 @@ public class AppDbContext : DbContext
 		return SaveChangesAsync().GetAwaiter().GetResult();
 	}
 }
+
+
+// chatgpt made this - it allowed dotnet ef database update to work locally
+//public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+//{
+//	public AppDbContext CreateDbContext(string[] args)
+//	{
+//		var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+
+//		// Replace with your actual connection string
+//		var connectionString = "Server=localhost\\SQLEXPRESS;TrustServerCertificate=true;Database=DevBetterWeb.App;Trusted_Connection=True;MultipleActiveResultSets=true";
+//		optionsBuilder.UseSqlServer(connectionString);
+
+//		return new AppDbContext(optionsBuilder.Options);
+//	}
+//}
+

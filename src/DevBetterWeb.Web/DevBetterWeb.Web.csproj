@@ -12,21 +12,16 @@
 		<IdentityUIFrameworkVersion>Bootstrap4</IdentityUIFrameworkVersion>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<WarningsAsErrors />
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.ApiEndpoints" />
 		<PackageReference Include="Ardalis.ListStartupServices" />
 		<PackageReference Include="Ardalis.SmartEnum" />
-		<PackageReference Include="Autofac" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" />
 		<PackageReference Include="BuildBundlerMinifier" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="GoogleReCaptcha.V3" />
+		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
 		<PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
@@ -46,6 +41,7 @@
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="NimblePros.ApiClient" />
+		<PackageReference Include="NimblePros.Metronome" />
 		<PackageReference Include="NimblePros.Vimeo" />
 		<PackageReference Include="Sendgrid" />
 		<PackageReference Include="Serilog" />
@@ -57,7 +53,6 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
 		<PackageReference Include="TagHelperSamples.Authorization" />
-		<PackageReference Include="Westwind.AspNetCore.Markdown" />
 		<PackageReference Include="WindowsAzure.Storage" />
 		<PackageReference Include="AutoMapper" />
 		<PackageReference Include="Flurl" />
