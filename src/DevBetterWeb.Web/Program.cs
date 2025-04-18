@@ -169,7 +169,6 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 
 
 var app = builder.Build();
-app.Urls.Add($"http://*:{port}");
 if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
@@ -178,6 +177,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+	app.Urls.Add($"http://*:{port}");
 	app.UseExceptionHandler("/Home/Error");
 	app.UseHsts();
 }

@@ -19,6 +19,7 @@
 		<PackageReference Include="Ardalis.SmartEnum" />
 		<PackageReference Include="Ardalis.Specification" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
+		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Core" />
 		<PackageReference Include="NimblePros.Vimeo" />
