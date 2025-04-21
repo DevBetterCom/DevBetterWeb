@@ -57,6 +57,7 @@ public class CreateVideoService : ICreateVideoService
 
 	public async Task<UploadChunkStatus> UploadChunkAsync(bool isBaseFolder, string sessionId, string chunk, string? description, long? folderId, CancellationToken cancellationToken = default)
 	{
+		_logger.LogInformation("Calling CreateVideoService.UploadChunkAsync");
 		var result = await _uploadVideoTusService.UploadChunkAsync(sessionId, Convert.FromBase64String(chunk), cancellationToken);
 		if (result.UploadChunkStatus == UploadChunkStatus.Completed)
 		{
