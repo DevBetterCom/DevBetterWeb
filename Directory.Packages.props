@@ -14,8 +14,8 @@
     <PackageVersion Include="Ardalis.Result" Version="10.1.0" />
     <PackageVersion Include="Ardalis.Result.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
-    <PackageVersion Include="Ardalis.Specification" Version="9.0.1" />
-    <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.1" />
+    <PackageVersion Include="Ardalis.Specification" Version="9.1.0" />
+    <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.1.0" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
