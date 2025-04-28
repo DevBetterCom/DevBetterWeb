@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
@@ -34,7 +35,7 @@ public class DailyCheckInitiatedEventHandler : IHandle<DailyCheckInitiatedEvent>
     _repository = repository;
   }
 
-  public async Task Handle(DailyCheckInitiatedEvent domainEvent)
+  public async Task Handle(DailyCheckInitiatedEvent domainEvent, CancellationToken cancellationToken)
   {
     AppendOnlyStringList messages = new();
 

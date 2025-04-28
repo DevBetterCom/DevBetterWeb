@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogMemberUpdateHomeAddressHandler : IHandle<MemberHomeAddres
     _webhook = webhook;
   }
 
-  public Task Handle(MemberHomeAddressUpdatedEvent memberHomeAddressUpdatedEvent)
+  public Task Handle(MemberHomeAddressUpdatedEvent memberHomeAddressUpdatedEvent, CancellationToken cancellationToken)
   {
     var message = returnWebhookMessageString(memberHomeAddressUpdatedEvent);
     return _webhook.SendAsync(message);

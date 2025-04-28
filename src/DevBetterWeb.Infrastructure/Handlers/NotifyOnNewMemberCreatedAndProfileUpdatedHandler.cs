@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Events;
@@ -21,7 +22,7 @@ public class NotifyOnNewMemberCreatedAndProfileUpdatedHandler : IHandle<NewMembe
     _emailService = emailService;
   }
 
-  public async Task Handle(NewMemberCreatedAndProfileUpdatedEvent domainEvent)
+  public async Task Handle(NewMemberCreatedAndProfileUpdatedEvent domainEvent, CancellationToken cancellationToken)
   {
     var usersInAdminRole = await _userManager.GetUsersInRoleAsync(AuthConstants.Roles.ADMINISTRATORS);
 

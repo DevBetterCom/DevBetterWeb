@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Enums;
@@ -425,7 +426,7 @@ public class Member : BaseEntity, IAggregateRoot
 			_jsonParserService = jsonParserService;
 		}
 
-		public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
+		public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent, CancellationToken cancellationToken)
 		{
 			var member = addressUpdatedEvent.Member;
 			var oldAddress = addressUpdatedEvent.OldAddress;

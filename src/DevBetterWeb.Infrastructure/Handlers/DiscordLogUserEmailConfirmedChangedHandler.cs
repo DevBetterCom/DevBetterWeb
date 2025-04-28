@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogUserEmailConfirmedChangedHandler : IHandle<UserEmailConfi
     _webhook = webhook;
   }
 
-  public Task Handle(UserEmailConfirmedChangedEvent domainEvent)
+  public Task Handle(UserEmailConfirmedChangedEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"For the user {domainEvent.EmailAddress} EmailConfirmed value has been changed to: {domainEvent.IsEmailConfirmed}";
     return _webhook.SendAsync(message);

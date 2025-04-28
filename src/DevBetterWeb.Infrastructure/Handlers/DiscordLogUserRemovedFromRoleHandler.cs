@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogUserRemovedFromRoleHandler : IHandle<UserRemovedFromRoleE
     _webhook = webhook;
   }
 
-  public Task Handle(UserRemovedFromRoleEvent domainEvent)
+  public Task Handle(UserRemovedFromRoleEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"User {domainEvent.EmailAddress} removed from role {domainEvent.Role}.";
     return _webhook.SendAsync(message);
