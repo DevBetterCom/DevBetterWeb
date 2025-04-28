@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DevBetterWeb.Infrastructure.DomainEvents;
 
