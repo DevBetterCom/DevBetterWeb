@@ -47,8 +47,9 @@ public class ArchiveVideo : BaseEntity, IAggregateRoot
 	  }
   }
 
-	internal void AddDomainEvent(VideoAddedEvent videoAddedEvent)
+	internal void NewVideoAdded()
 	{
+		var videoAddedEvent = new VideoAddedEvent(this);
 		RegisterDomainEvent(videoAddedEvent);
 	}
 }
