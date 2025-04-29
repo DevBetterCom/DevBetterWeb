@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogNewUserRegisteredHandler : IHandle<NewUserRegisteredEvent
     _webhook = webhook;
   }
 
-  public Task Handle(NewUserRegisteredEvent domainEvent)
+  public Task Handle(NewUserRegisteredEvent domainEvent, CancellationToken cancellationToken)
   {
 	  var message = $"New user registered with email address: {domainEvent.EmailAddress} from IP {domainEvent.IpAddress}.";
     return _webhook.SendAsync(message);

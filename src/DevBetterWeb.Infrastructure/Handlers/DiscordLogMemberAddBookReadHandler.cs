@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -20,7 +21,7 @@ public class DiscordLogMemberAddBookReadHandler : IHandle<MemberAddedBookReadEve
         $"Check out the leaderboard here: https://devbetter.com/Leaderboard.";
   }
 
-  public Task Handle(MemberAddedBookReadEvent domainEvent)
+  public Task Handle(MemberAddedBookReadEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = returnWebhookMessageString(domainEvent);
     return _webhook.SendAsync(message);

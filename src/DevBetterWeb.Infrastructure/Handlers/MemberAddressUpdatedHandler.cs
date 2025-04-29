@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -28,7 +29,7 @@ public class MemberAddressUpdatedHandler : IHandle<MemberAddressUpdatedEvent>
     //_repository = repository;
   }
 
-  public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent)
+  public async Task Handle(MemberAddressUpdatedEvent addressUpdatedEvent, CancellationToken cancellationToken)
   {
     var member = addressUpdatedEvent.Member;
     if (member.Address is null) return;
