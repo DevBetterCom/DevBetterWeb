@@ -48,14 +48,13 @@ public class DateTimeRange : ValueObject
 
   public bool Contains(DateTime date)
   {
-    if (date >= StartDate && date <= EndDate)
-    {
-      return true;
-    }
-    return false;
+	  if (date < StartDate) return false;
+	  if (EndDate == null) return true;
+
+	  return date <= EndDate;
   }
 
-  protected override IEnumerable<IComparable> GetEqualityComponents()
+	protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return StartDate;
     yield return EndDate ?? DateTime.MaxValue;
