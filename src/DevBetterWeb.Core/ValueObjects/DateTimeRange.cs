@@ -17,13 +17,18 @@ public class DateTimeRange : ValueObject
     EndDate = endDate;
   }
 
-  /// <summary>
-  /// Returns total number of days in the DateTimeRange.
-  /// If no EndDate has been specified, will use provided endDateToUseIfMissing instead.
-  /// </summary>
-  /// <param name="endDateToUseIfMissing"></param>
-  /// <returns></returns>
-  public int ToDays(DateTime endDateToUseIfMissing)
+  public void UpdateEnd(DateTime endDate)
+  {
+	  EndDate = endDate;
+  }
+
+	/// <summary>
+	/// Returns total number of days in the DateTimeRange.
+	/// If no EndDate has been specified, will use provided endDateToUseIfMissing instead.
+	/// </summary>
+	/// <param name="endDateToUseIfMissing"></param>
+	/// <returns></returns>
+	public int ToDays(DateTime endDateToUseIfMissing)
   {
     var end = EndDate ?? endDateToUseIfMissing;
 
