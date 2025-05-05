@@ -30,6 +30,7 @@ public class MemberSubscriptionRenewalService : IMemberSubscriptionRenewalServic
     if (member is null) throw new MemberWithEmailNotFoundException(email);
     member.ExtendCurrentSubscription(subscriptionEndDate);
 
+    await _memberRepository.UpdateAsync(member);
 		await _memberRepository.SaveChangesAsync();
 
 		_logger.LogInformation($"Extended {member.UserFullName} subscription to {subscriptionEndDate.ToShortDateString}");
