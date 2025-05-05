@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogBillingActivityCreatedEventHandler : IHandle<BillingActiv
     _webhook = webhook;
   }
   
-  public Task Handle(BillingActivityCreatedEvent domainEvent)
+  public Task Handle(BillingActivityCreatedEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"BillingActivity with action {domainEvent.BillingActivity.Details.ActionVerbPastTense} created for member {domainEvent.BillingActivity.Details.MemberName}";
     return _webhook.SendAsync(message);

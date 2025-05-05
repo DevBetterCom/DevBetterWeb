@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogInvalidUserHandler : IHandle<InvalidUserEvent>
     _webhook = webhook;
   }
 
-  public Task Handle(InvalidUserEvent domainEvent)
+  public Task Handle(InvalidUserEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"Password reset requested by {domainEvent.EmailAddress} but no confirmed user found with that address.";
     return _webhook.SendAsync(message);

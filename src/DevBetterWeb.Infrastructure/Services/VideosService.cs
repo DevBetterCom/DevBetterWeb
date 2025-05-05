@@ -123,8 +123,7 @@ public class VideosService : IVideosService
 	  var existVideo = await _repositoryArchiveVideo.FirstOrDefaultAsync(spec, cancellationToken);
 	  if (existVideo == null)
 	  {
-		  var videoAddedEvent = new VideoAddedEvent(archiveVideo);
-		  archiveVideo.AddDomainEvent(videoAddedEvent);
+		  archiveVideo.NewVideoAdded();
 		  _ = await _repositoryArchiveVideo.AddAsync(archiveVideo, cancellationToken);
 	  }
 	  else

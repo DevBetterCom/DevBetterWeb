@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class AppStartedEventHandler : IHandle<AppStartedEvent>
     _webhook = webhook;
   }
   
-  public async Task Handle(AppStartedEvent domainEvent)
+  public async Task Handle(AppStartedEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"DevBetter.com web app started at {domainEvent.StartDateTime}.";
     await _webhook.SendAsync(message);

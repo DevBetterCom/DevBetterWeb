@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogUserAddedToRoleHandler : IHandle<UserAddedToRoleEvent>
     _webhook = webhook;
   }
 
-  public Task Handle(UserAddedToRoleEvent domainEvent)
+  public Task Handle(UserAddedToRoleEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"User {domainEvent.EmailAddress} added to role {domainEvent.Role}.";
     return _webhook.SendAsync(message);
