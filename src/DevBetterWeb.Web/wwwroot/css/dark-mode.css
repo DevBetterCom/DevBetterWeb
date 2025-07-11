@@ -1,4 +1,4 @@
-/* Dark Mode CSS Variables and Styles for Member Area Only */
+/* Dark Mode CSS Variables and Styles for Member Area */
 
 /* Define CSS variables for both light and dark themes */
 :root {
@@ -472,4 +472,137 @@ a:hover {
     background-color: var(--footer-bg) !important;
     color: var(--footer-text);
     border-top: 1px solid var(--border-color);
+}
+
+/* SB Admin 2 Card Overrides for Dark Mode */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Force override any specific SB Admin card background colors */
+[data-theme="dark"] .card,
+[data-theme="dark"] .card .card-header,
+[data-theme="dark"] .card .card-body,
+[data-theme="dark"] .card .card-footer {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Text and link colors inside cards */
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card .form-group,
+[data-theme="dark"] .card label,
+[data-theme="dark"] .card ul,
+[data-theme="dark"] .card li {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card a {
+    color: var(--link-color) !important;
+}
+
+[data-theme="dark"] .card a:hover {
+    color: var(--link-hover-color) !important;
+}
+
+/* Specific fixes for Resources page and similar content */
+[data-theme="dark"] .form-group label.font-weight-bold,
+[data-theme="dark"] label.font-weight-bold,
+[data-theme="dark"] .font-weight-bold {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] pre {
+    color: var(--text-color) !important;
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--footer-text) !important;
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--btn-primary-bg);
+}
+
+.badge-secondary {
+    background-color: var(--footer-text);
+}
+
+/* Footer (member area) */
+[data-theme="dark"] .footer,
+[data-theme="dark"] .sticky-footer {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text);
+    border-top: 1px solid var(--border-color);
+}
+
+/* SB Admin 2 Card Overrides for Dark Mode */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Force override any specific SB Admin card background colors */
+[data-theme="dark"] .card,
+[data-theme="dark"] .card .card-header,
+[data-theme="dark"] .card .card-body,
+[data-theme="dark"] .card .card-footer {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Text and link colors inside cards */
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card .form-group,
+[data-theme="dark"] .card label,
+[data-theme="dark"] .card ul,
+[data-theme="dark"] .card li {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card a {
+    color: var(--link-color) !important;
+}
+
+[data-theme="dark"] .card a:hover {
+    color: var(--link-hover-color) !important;
 }
