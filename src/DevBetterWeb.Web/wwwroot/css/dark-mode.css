@@ -45,7 +45,7 @@
     --input-bg: #2d2d2d;
     --input-border: #495057;
     --table-bg: #2d2d2d;
-    --table-striped-bg: #343a40;
+    --table-striped-bg: #353a40;
     --shadow: rgba(0, 0, 0, 0.3);
     
     /* SB Admin specific dark colors */
@@ -176,19 +176,104 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-/* Tables */
-.table {
-    color: var(--text-color);
-    background-color: var(--table-bg);
+/* Tables - Enhanced dark mode support */
+[data-theme="dark"] .table {
+    color: var(--text-color) !important;
+    background-color: var(--table-bg) !important;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--table-striped-bg);
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-striped-bg) !important;
 }
 
-.table th,
-.table td {
-    border-color: var(--border-color);
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody tr {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Member area specific table overrides */
+[data-theme="dark"] .container-fluid .table,
+[data-theme="dark"] #content .table,
+[data-theme="dark"] .card .table {
+    background-color: var(--table-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .container-fluid .table tbody tr,
+[data-theme="dark"] #content .table tbody tr,
+[data-theme="dark"] .card .table tbody tr {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .container-fluid .table-striped tbody tr:nth-of-type(odd),
+[data-theme="dark"] #content .table-striped tbody tr:nth-of-type(odd),
+[data-theme="dark"] .card .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-striped-bg) !important;
+}
+
+/* Force override any white backgrounds */
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] tr.bg-white,
+[data-theme="dark"] td.bg-white,
+[data-theme="dark"] th.bg-white {
+    background-color: var(--table-bg) !important;
+}
+
+/* DataTables specific styling */
+[data-theme="dark"] .dataTables_wrapper {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+[data-theme="dark"] .dataTables_wrapper .dataTables_paginate {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dataTables_wrapper .dataTables_filter input {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Ensure no white backgrounds leak through */
+[data-theme="dark"] table,
+[data-theme="dark"] table tr,
+[data-theme="dark"] table td,
+[data-theme="dark"] table th {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(odd) > td,
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(even) > td,
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(even) > th {
+    background-color: var(--table-bg) !important;
 }
 
 /* Links */
