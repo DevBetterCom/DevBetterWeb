@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dark Mode Test - devBetter</title>
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/site.css" rel="stylesheet" />
+    <link href="/css/dark-mode.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-light static-top navbar-expand-md">
+        <div class="navbar-brand d-flex">
+            <div>
+                <a class="" href="/">
+                    <img src="/images/logo_218x48.png" id="logo" alt="devBetter logo" />
+                    <img src="/images/icon_50x50.png" id="icon" alt="devBetter icon" />
+                </a>
+            </div>
+        </div>
+
+        <div class="navbar-nav ml-auto">
+            <a class="nav-item nav-link text-primary" href="#">FAQ</a>
+            <a class="nav-item nav-link text-primary" href="#"><i class="fab fa-github"></i></a>
+            <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">
+                <i class="fas fa-moon"></i> Dark
+            </button>
+        </div>
+    </nav>
+
+    <div class="container-fluid body-content">
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dark Mode Test</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>This is a test page to verify the dark mode implementation works correctly.</p>
+                        <p>Click the <strong>Dark/Light</strong> toggle button in the navigation bar to switch between modes.</p>
+                        
+                        <h4>Test Elements:</h4>
+                        <ul>
+                            <li>Text should be readable in both modes</li>
+                            <li>Links should have appropriate colors: <a href="#">This is a test link</a></li>
+                            <li>Buttons should work: <button class="btn btn-primary">Primary Button</button></li>
+                        </ul>
+
+                        <div class="form-group">
+                            <label for="testInput">Test Input:</label>
+                            <input type="text" class="form-control" id="testInput" placeholder="Type something here...">
+                        </div>
+
+                        <div class="alert alert-info">
+                            This is an info alert to test alert styling.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Side Panel</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">This side panel tests additional styling.</p>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Test 1</td>
+                                    <td>Value 1</td>
+                                </tr>
+                                <tr>
+                                    <td>Test 2</td>
+                                    <td>Value 2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+                    <p class="text-muted small mb-4 mb-lg-0">&copy; 2025 devBetter; All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mr-3">
+                            <a href="#">
+                                <i class="fab fa-facebook fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mr-3">
+                            <a href="#">
+                                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/js/site.js"></script>
+</body>
+</html>

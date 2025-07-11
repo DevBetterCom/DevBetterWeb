@@ -1,0 +1,353 @@
+/* Dark Mode CSS Variables and Styles */
+
+/* Define CSS variables for both light and dark themes */
+:root {
+    /* Light mode colors (default) */
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --navbar-bg: #f8f9fa;
+    --navbar-text: #495057;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --link-color: #007bff;
+    --link-hover-color: #0056b3;
+    --footer-bg: #f8f9fa;
+    --footer-text: #6c757d;
+    --btn-primary-bg: #007bff;
+    --btn-primary-text: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --table-bg: #ffffff;
+    --table-striped-bg: #f8f9fa;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --navbar-bg: #2d2d2d;
+    --navbar-text: #e9ecef;
+    --card-bg: #2d2d2d;
+    --border-color: #495057;
+    --link-color: #66b3ff;
+    --link-hover-color: #99ccff;
+    --footer-bg: #2d2d2d;
+    --footer-text: #adb5bd;
+    --btn-primary-bg: #0d6efd;
+    --btn-primary-text: #ffffff;
+    --input-bg: #2d2d2d;
+    --input-border: #495057;
+    --table-bg: #2d2d2d;
+    --table-striped-bg: #343a40;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Apply theme variables to elements */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar .nav-link {
+    color: var(--navbar-text) !important;
+}
+
+.navbar .nav-link:hover {
+    color: var(--link-hover-color) !important;
+}
+
+.navbar-brand {
+    color: var(--navbar-text) !important;
+}
+
+/* Cards and content containers */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.card-header {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--input-bg);
+    border-color: var(--link-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Tables */
+.table {
+    color: var(--text-color);
+    background-color: var(--table-bg);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-striped-bg);
+}
+
+.table th,
+.table td {
+    border-color: var(--border-color);
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.btn-primary:hover {
+    background-color: var(--link-hover-color);
+    border-color: var(--link-hover-color);
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.modal-header {
+    border-color: var(--border-color);
+}
+
+.modal-footer {
+    border-color: var(--border-color);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: var(--table-striped-bg);
+    color: var(--text-color);
+}
+
+/* Alerts */
+.alert {
+    border-color: var(--border-color);
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    background-color: var(--table-striped-bg);
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--table-striped-bg);
+    border-color: var(--link-color);
+}
+
+.dark-mode-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--link-color);
+}
+
+/* Responsive design for dark mode toggle */
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        font-size: 12px;
+        padding: 4px 8px;
+        margin-left: 5px;
+    }
+    
+    .dark-mode-toggle i {
+        margin-right: 2px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dark-mode-toggle {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    /* Hide text on very small screens, keep only icon */
+    .dark-mode-toggle .fas {
+        margin-right: 0;
+    }
+}
+
+/* Ensure smooth transitions for all theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Ensure images don't become too bright in dark mode */
+[data-theme="dark"] img {
+    opacity: 0.9;
+}
+
+/* Special handling for logos - keep them at full opacity */
+[data-theme="dark"] #logo,
+[data-theme="dark"] #icon {
+    opacity: 1;
+}
+
+/* Pagination */
+.page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--link-color);
+}
+
+.page-link:hover {
+    background-color: var(--table-striped-bg);
+    border-color: var(--border-color);
+    color: var(--link-hover-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-bg);
+}
+
+/* List groups */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Text muted */
+.text-muted {
+    color: var(--footer-text) !important;
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--btn-primary-bg);
+}
+
+.badge-secondary {
+    background-color: var(--footer-text);
+}
+
+/* Landing page specific dark mode styles */
+[data-theme="dark"] .showcase {
+    background-color: var(--bg-color);
+}
+
+[data-theme="dark"] .showcase .showcase-text {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .bg-light1 {
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .testimonials {
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .features-icons {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .features-icons h3 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .testimonial-item h5 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .call-to-action {
+    background-color: var(--navbar-bg) !important;
+}
+
+/* Special handling for masthead overlays in dark mode */
+[data-theme="dark"] header.masthead .overlay {
+    opacity: 0.7; /* Slightly more overlay in dark mode for better text contrast */
+}
+
+[data-theme="dark"] header.masthead1 .overlay {
+    opacity: 0.7;
+}
+
+/* Blockquotes */
+[data-theme="dark"] .blockquote {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .blockquote-footer {
+    color: var(--footer-text);
+}
+
+/* Social media icons in footer */
+[data-theme="dark"] .footer .fab {
+    color: var(--navbar-text);
+    transition: color 0.3s ease;
+}
+
+[data-theme="dark"] .footer .fab:hover {
+    color: var(--link-hover-color);
+}
