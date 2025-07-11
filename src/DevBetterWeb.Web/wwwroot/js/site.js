@@ -36,18 +36,26 @@ class DarkModeToggle {
     }
 
     loadDarkModePreference() {
-        // Check session storage first
+        // The inline script in the member layout has already applied the theme
+        // We just need to ensure the session storage is consistent
         const sessionPreference = sessionStorage.getItem(this.storageKey);
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
         if (sessionPreference !== null) {
+            // Session preference exists - ensure it matches the current theme
             const isDark = sessionPreference === 'true';
-            this.setDarkMode(isDark);
+            if ((isDark && currentTheme !== 'dark') || (!isDark && currentTheme === 'dark')) {
+                this.setDarkMode(isDark);
+            }
             return;
         }
 
-        // Fall back to system preference if no session preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            this.setDarkMode(true);
+        // No session preference - check if system preference was applied by inline script
+        if (currentTheme === 'dark') {
+            // Dark theme was applied by inline script based on system preference
+            sessionStorage.setItem(this.storageKey, 'true');
         } else {
+            // No preference - apply light mode as default
             this.setDarkMode(false);
         }
     }

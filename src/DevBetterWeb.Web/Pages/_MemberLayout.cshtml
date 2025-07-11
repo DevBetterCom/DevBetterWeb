@@ -18,6 +18,27 @@
 
     <title>@ViewData["Title"] - devBetter</title>
 
+    <!-- Inline script to prevent dark mode flicker - must run before CSS loads -->
+    <script>
+        (function() {
+            // Check if dark mode preference exists in session storage
+            const darkModeKey = 'devbetter_darkMode_member';
+            const sessionPreference = sessionStorage.getItem(darkModeKey);
+            
+            if (sessionPreference === 'true') {
+                // Apply dark mode immediately before CSS loads
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else if (sessionPreference === null) {
+                // No session preference - check system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    // Store the system preference in session storage
+                    sessionStorage.setItem(darkModeKey, 'true');
+                }
+            }
+        })();
+    </script>
+
     <partial name="_GoogleAnalyticsPartial" />
 
     <!-- Custom fonts for this template-->

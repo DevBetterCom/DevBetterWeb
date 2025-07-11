@@ -21,11 +21,41 @@ The dark mode feature allows authenticated users in the member/admin area to tog
 2. **`wwwroot/dark-mode-test.html`** - Test page for verifying dark mode functionality
 
 ### Modified Files:
-1. **`Pages/_MemberLayout.cshtml`** - Added dark mode CSS link and toggle button to topbar
+1. **`Pages/_MemberLayout.cshtml`** - Added dark mode CSS link, anti-flicker inline script, and toggle button to topbar
 2. **`wwwroot/js/site.js`** - Added member-area-specific dark mode toggle functionality
 
 ### Removed From:
 1. **`Views/Shared/_Layout.cshtml`** - Dark mode toggle and CSS removed from public layout
+
+## Anti-Flicker Implementation
+
+One common issue with dark mode implementations is the "flicker" effect where the page briefly displays in light mode before switching to dark mode on page load. This is solved with an inline script in the `<head>` section that runs before CSS loads:
+
+```html
+<!-- Inline script to prevent dark mode flicker - must run before CSS loads -->
+<script>
+    (function() {
+        const darkModeKey = 'devbetter_darkMode_member';
+        const sessionPreference = sessionStorage.getItem(darkModeKey);
+        
+        if (sessionPreference === 'true') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else if (sessionPreference === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                sessionStorage.setItem(darkModeKey, 'true');
+            }
+        }
+    })();
+</script>
+```
+
+This approach:
+1. **Executes immediately** before CSS loads
+2. **Checks session storage** for user's preference
+3. **Applies theme instantly** by setting the `data-theme` attribute
+4. **Respects system preference** if no session preference exists
+5. **Works with the main JavaScript** which handles subsequent toggle interactions
 
 ## How It Works
 
