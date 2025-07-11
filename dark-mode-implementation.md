@@ -1,10 +1,18 @@
-# Dark Mode Implementation for DevBetterWeb
+# Dark Mode Implementation for DevBetterWeb Member Area
 
-This document explains the dark mode feature implementation for the DevBetterWeb application.
+This document explains the dark mode feature implementation for the DevBetterWeb application's member/admin area only.
 
 ## Overview
 
-The dark mode feature allows users to toggle between light and dark themes for better viewing experience, especially in low-light conditions. The preference is stored for the current browser session only.
+The dark mode feature allows authenticated users in the member/admin area to toggle between light and dark themes for better viewing experience, especially in low-light conditions. The preference is stored for the current browser session only.
+
+**Important:** Dark mode is only available in the authenticated member/admin area, not on the public homepage or marketing pages.
+
+## Scope
+
+- **Enabled**: Member area (`/User/`, `/Admin/` pages) with `_MemberLayout.cshtml`
+- **Disabled**: Public pages (`/`, marketing pages) with `_Layout.cshtml`
+- **Design**: Integrates with SB Admin 2 theme used in the member area
 
 ## Files Modified/Created
 
@@ -13,8 +21,11 @@ The dark mode feature allows users to toggle between light and dark themes for b
 2. **`wwwroot/dark-mode-test.html`** - Test page for verifying dark mode functionality
 
 ### Modified Files:
-1. **`Views/Shared/_Layout.cshtml`** - Added dark mode CSS link and toggle button
-2. **`wwwroot/js/site.js`** - Added dark mode toggle functionality
+1. **`Pages/_MemberLayout.cshtml`** - Added dark mode CSS link and toggle button to topbar
+2. **`wwwroot/js/site.js`** - Added member-area-specific dark mode toggle functionality
+
+### Removed From:
+1. **`Views/Shared/_Layout.cshtml`** - Dark mode toggle and CSS removed from public layout
 
 ## How It Works
 

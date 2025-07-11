@@ -6,19 +6,33 @@ function epic(c) {
     c.src = '/devbetter_icon_200x200.jpg';
 };
 
-// Dark Mode Toggle Functionality
+// Dark Mode Toggle Functionality (Member Area Only)
 class DarkModeToggle {
     constructor() {
-        this.storageKey = 'devbetter_darkMode';
+        this.storageKey = 'devbetter_darkMode_member';
         this.init();
     }
 
     init() {
+        // Only initialize if we're in the member area
+        if (!this.isMemberArea()) {
+            return;
+        }
+        
         // Initialize dark mode state
         this.loadDarkModePreference();
         this.setupToggleButton();
         this.updateToggleButton();
         this.setupSystemPreferenceListener();
+    }
+
+    isMemberArea() {
+        // Check if we're in the member area by looking for the dark mode toggle button
+        // or by checking the URL path
+        return document.getElementById('darkModeToggle') !== null || 
+               window.location.pathname.startsWith('/User/') ||
+               window.location.pathname.startsWith('/Admin/') ||
+               document.getElementById('wrapper') !== null; // SB Admin wrapper
     }
 
     loadDarkModePreference() {
@@ -112,11 +126,14 @@ class DarkModeToggle {
     }
 }
 
-// Initialize dark mode when the DOM is loaded
+// Initialize dark mode when the DOM is loaded (Member area only)
 document.addEventListener('DOMContentLoaded', function() {
-    // Create global instance for other scripts to access
-    window.darkModeToggle = new DarkModeToggle();
+    // Only create dark mode instance if we're in the member area
+    const darkModeToggle = new DarkModeToggle();
     
-    // Also make it available as a shorter reference
-    window.darkMode = window.darkModeToggle;
+    // Only make it globally available if it was actually initialized
+    if (darkModeToggle.isMemberArea()) {
+        window.darkModeToggle = darkModeToggle;
+        window.darkMode = darkModeToggle;
+    }
 });

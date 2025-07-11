@@ -1,4 +1,4 @@
-/* Dark Mode CSS Variables and Styles */
+/* Dark Mode CSS Variables and Styles for Member Area Only */
 
 /* Define CSS variables for both light and dark themes */
 :root {
@@ -20,9 +20,15 @@
     --table-bg: #ffffff;
     --table-striped-bg: #f8f9fa;
     --shadow: rgba(0, 0, 0, 0.1);
+    
+    /* SB Admin specific colors */
+    --sb-sidebar-bg: #4e73df;
+    --sb-topbar-bg: #ffffff;
+    --sb-content-bg: #f8f9fc;
+    --sb-card-shadow: rgba(0, 0, 0, 0.15);
 }
 
-/* Dark mode colors */
+/* Dark mode colors - only applied to member pages */
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
     --text-color: #e9ecef;
@@ -41,13 +47,89 @@
     --table-bg: #2d2d2d;
     --table-striped-bg: #343a40;
     --shadow: rgba(0, 0, 0, 0.3);
+    
+    /* SB Admin specific dark colors */
+    --sb-sidebar-bg: #1a1a2e;
+    --sb-topbar-bg: #2d2d2d;
+    --sb-content-bg: #1a1a1a;
+    --sb-card-shadow: rgba(0, 0, 0, 0.4);
 }
 
-/* Apply theme variables to elements */
+/* Apply theme variables to elements - scoped to member area */
 body {
-    background-color: var(--bg-color);
+    background-color: var(--sb-content-bg);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* SB Admin specific styling for dark mode */
+[data-theme="dark"] #wrapper {
+    background-color: var(--sb-content-bg);
+}
+
+/* Sidebar dark mode */
+[data-theme="dark"] .sidebar {
+    background: linear-gradient(180deg, var(--sb-sidebar-bg) 10%, #16213e 100%) !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: #d1d3e2 !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .sidebar .sidebar-brand {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .sidebar .collapse-inner {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .sidebar .collapse-item {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .sidebar .collapse-item:hover {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--link-hover-color) !important;
+}
+
+/* Topbar dark mode */
+[data-theme="dark"] .topbar {
+    background-color: var(--sb-topbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .topbar .nav-link {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .topbar .dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .topbar .dropdown-item {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .topbar .dropdown-item:hover {
+    background-color: var(--table-striped-bg);
+    color: var(--text-color);
+}
+
+/* Content area */
+[data-theme="dark"] #content-wrapper {
+    background-color: var(--sb-content-bg);
+}
+
+[data-theme="dark"] #content {
+    background-color: var(--sb-content-bg);
 }
 
 /* Navbar styling */
@@ -176,27 +258,40 @@ a:hover {
     background-color: var(--table-striped-bg);
 }
 
-/* Dark mode toggle button */
+/* Dark mode toggle button for member area */
 .dark-mode-toggle {
-    background: none;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 6px 12px;
-    border-radius: 4px;
+    background: none !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 14px;
-    margin-left: 10px;
+    margin-right: 15px;
+    text-decoration: none !important;
+    box-shadow: none !important;
 }
 
 .dark-mode-toggle:hover {
-    background-color: var(--table-striped-bg);
-    border-color: var(--link-color);
+    background-color: var(--table-striped-bg) !important;
+    border-color: var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
 }
 
 .dark-mode-toggle:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--link-color);
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+}
+
+.dark-mode-toggle:active {
+    background-color: var(--table-striped-bg) !important;
+    border-color: var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
 }
 
 /* Responsive design for dark mode toggle */
@@ -286,68 +381,10 @@ a:hover {
     background-color: var(--footer-text);
 }
 
-/* Landing page specific dark mode styles */
-[data-theme="dark"] .showcase {
-    background-color: var(--bg-color);
-}
-
-[data-theme="dark"] .showcase .showcase-text {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .bg-light {
-    background-color: var(--card-bg) !important;
-}
-
-[data-theme="dark"] .bg-light1 {
-    background-color: var(--table-striped-bg) !important;
-}
-
-[data-theme="dark"] .testimonials {
-    background-color: var(--table-striped-bg) !important;
-}
-
-[data-theme="dark"] .features-icons {
-    background-color: var(--card-bg) !important;
-}
-
-[data-theme="dark"] .features-icons h3 {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .testimonial-item h5 {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .call-to-action {
-    background-color: var(--navbar-bg) !important;
-}
-
-/* Special handling for masthead overlays in dark mode */
-[data-theme="dark"] header.masthead .overlay {
-    opacity: 0.7; /* Slightly more overlay in dark mode for better text contrast */
-}
-
-[data-theme="dark"] header.masthead1 .overlay {
-    opacity: 0.7;
-}
-
-/* Blockquotes */
-[data-theme="dark"] .blockquote {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .blockquote-footer {
+/* Footer (member area) */
+[data-theme="dark"] .footer,
+[data-theme="dark"] .sticky-footer {
+    background-color: var(--footer-bg) !important;
     color: var(--footer-text);
-}
-
-/* Social media icons in footer */
-[data-theme="dark"] .footer .fab {
-    color: var(--navbar-text);
-    transition: color 0.3s ease;
-}
-
-[data-theme="dark"] .footer .fab:hover {
-    color: var(--link-hover-color);
+    border-top: 1px solid var(--border-color);
 }
