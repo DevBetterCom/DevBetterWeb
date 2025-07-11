@@ -95,17 +95,17 @@ public class AppDbContext : DbContext
 
 
 // chatgpt made this - it allowed dotnet ef database update to work locally
-//public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
-//{
-//	public AppDbContext CreateDbContext(string[] args)
-//	{
-//		var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+{
+	public AppDbContext CreateDbContext(string[] args)
+	{
+		var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-//		// Replace with your actual connection string
-//		var connectionString = "Server=localhost\\SQLEXPRESS;TrustServerCertificate=true;Database=DevBetterWeb.App;Trusted_Connection=True;MultipleActiveResultSets=true";
-//		optionsBuilder.UseSqlServer(connectionString);
+		// Replace with your actual connection string
+		var connectionString = "Server=(localdb)\\mssqllocaldb;TrustServerCertificate=true;Database=DevBetterWeb.App;Trusted_Connection=True;MultipleActiveResultSets=true";
+		optionsBuilder.UseSqlServer(connectionString);
 
-//		return new AppDbContext(optionsBuilder.Options);
-//	}
-//}
+		return new AppDbContext(optionsBuilder.Options);
+	}
+}
 
