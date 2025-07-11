@@ -346,7 +346,7 @@ public class Member : BaseEntity, IAggregateRoot
 			MemberSubscription s = MemberSubscriptions[i];
 			if (s.Dates.Contains(DateTime.Today))
 			{
-				s.Dates = new DateTimeRange(s.Dates.StartDate, newEndDate);
+				s.Dates.UpdateEnd(newEndDate);
 				RegisterDomainEvent(new SubscriptionUpdatedEvent(this, s));
 			}
 		}
