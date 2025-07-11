@@ -17,5 +17,5 @@ jobs:
         dotnet-version: '9.0.x'
         include-prerelease: true
     - name: Build and Test with dotnet
-      run: dotnet test --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
+      run: dotnet test DevBetterWeb.slnx --filter FullyQualifiedName!~Vimeo.Tests --configuration Release
     
