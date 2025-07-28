@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
@@ -15,7 +16,7 @@ public class DiscordLogExceptionHandler : IHandle<ExceptionEvent>
     _webhook = webhook;
   }
 
-  public Task Handle(ExceptionEvent domainEvent)
+  public Task Handle(ExceptionEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"Exception {DateTime.UtcNow}: {domainEvent.Exception}";
     return _webhook.SendAsync(message);

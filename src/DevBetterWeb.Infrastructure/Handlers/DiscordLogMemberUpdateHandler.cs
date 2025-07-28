@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogMemberUpdateHandler : IHandle<MemberUpdatedEvent>
     _webhook = webhook;
   }
 
-  public Task Handle(MemberUpdatedEvent memberUpdatedEvent)
+  public Task Handle(MemberUpdatedEvent memberUpdatedEvent, CancellationToken cancellationToken)
   {
     var message = returnWebhookMessageString(memberUpdatedEvent);
     return _webhook.SendAsync(message);

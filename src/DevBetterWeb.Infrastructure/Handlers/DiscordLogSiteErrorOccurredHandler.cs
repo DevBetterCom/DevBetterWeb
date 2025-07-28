@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogSiteErrorOccurredHandler : IHandle<SiteErrorOccurredEvent
     _webhook = webhook;
   }
 
-  public Task Handle(SiteErrorOccurredEvent domainEvent)
+  public Task Handle(SiteErrorOccurredEvent domainEvent, CancellationToken cancellationToken)
   {
 	  var message = $"Site error: {domainEvent.SiteException.ToString()}.";
     return _webhook.SendAsync(message);

@@ -75,13 +75,15 @@ public class ForgotPasswordModel : PageModel
 
       _logger.LogInformation("Sending password reset request with URL " + callbackUrl);
 
-      await _emailSender.SendEmailAsync(
+			var newEvent = new PasswordResetEvent(Input.Email!, callbackUrl);
+			await _mediator.Publish(newEvent);
+			
+			// this might fail due to token usage so make it last
+			await _emailSender.SendEmailAsync(
           Input!.Email!,
           "Reset Password",
           $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-      var newEvent = new PasswordResetEvent(Input.Email!);
-      await _mediator.Publish(newEvent);
 
       return RedirectToPage("./ForgotPasswordConfirmation");
     }

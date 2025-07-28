@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogSubscriptionAddedEventHandler : IHandle<SubscriptionAdded
     _webhook = webhook;
   }
   
-  public Task Handle(SubscriptionAddedEvent domainEvent)
+  public Task Handle(SubscriptionAddedEvent domainEvent, CancellationToken cancellationToken)
   {
 	  var message = $"Member {domainEvent.Member.UserFullName()} added subscription {domainEvent.MemberSubscription.Id}";
     return _webhook.SendAsync(message);

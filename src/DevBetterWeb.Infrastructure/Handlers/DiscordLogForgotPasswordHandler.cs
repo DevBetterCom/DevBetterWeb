@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
@@ -14,7 +15,7 @@ public class DiscordLogForgotPasswordHandler : IHandle<PasswordResetEvent>
     _webhook = webhook;
   }
 
-  public Task Handle(PasswordResetEvent domainEvent)
+  public Task Handle(PasswordResetEvent domainEvent, CancellationToken cancellationToken)
   {
     var message = $"Password reset requested by {domainEvent.EmailAddress}.";
     return _webhook.SendAsync(message);

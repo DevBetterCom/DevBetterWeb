@@ -1,0 +1,608 @@
+/* Dark Mode CSS Variables and Styles for Member Area */
+
+/* Define CSS variables for both light and dark themes */
+:root {
+    /* Light mode colors (default) */
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --navbar-bg: #f8f9fa;
+    --navbar-text: #495057;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --link-color: #007bff;
+    --link-hover-color: #0056b3;
+    --footer-bg: #f8f9fa;
+    --footer-text: #6c757d;
+    --btn-primary-bg: #007bff;
+    --btn-primary-text: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --table-bg: #ffffff;
+    --table-striped-bg: #f8f9fa;
+    --shadow: rgba(0, 0, 0, 0.1);
+    
+    /* SB Admin specific colors */
+    --sb-sidebar-bg: #4e73df;
+    --sb-topbar-bg: #ffffff;
+    --sb-content-bg: #f8f9fc;
+    --sb-card-shadow: rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode colors - only applied to member pages */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --navbar-bg: #2d2d2d;
+    --navbar-text: #e9ecef;
+    --card-bg: #2d2d2d;
+    --border-color: #495057;
+    --link-color: #66b3ff;
+    --link-hover-color: #99ccff;
+    --footer-bg: #2d2d2d;
+    --footer-text: #adb5bd;
+    --btn-primary-bg: #0d6efd;
+    --btn-primary-text: #ffffff;
+    --input-bg: #2d2d2d;
+    --input-border: #495057;
+    --table-bg: #2d2d2d;
+    --table-striped-bg: #353a40;
+    --shadow: rgba(0, 0, 0, 0.3);
+    
+    /* SB Admin specific dark colors */
+    --sb-sidebar-bg: #1a1a2e;
+    --sb-topbar-bg: #2d2d2d;
+    --sb-content-bg: #1a1a1a;
+    --sb-card-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* Apply theme variables to elements - scoped to member area */
+body {
+    background-color: var(--sb-content-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* SB Admin specific styling for dark mode */
+[data-theme="dark"] #wrapper {
+    background-color: var(--sb-content-bg);
+}
+
+/* Sidebar dark mode */
+[data-theme="dark"] .sidebar {
+    background: linear-gradient(180deg, var(--sb-sidebar-bg) 10%, #16213e 100%) !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: #d1d3e2 !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .sidebar .sidebar-brand {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .sidebar .collapse-inner {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .sidebar .collapse-item {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .sidebar .collapse-item:hover {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--link-hover-color) !important;
+}
+
+/* Topbar dark mode */
+[data-theme="dark"] .topbar {
+    background-color: var(--sb-topbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .topbar .nav-link {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .topbar .dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .topbar .dropdown-item {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .topbar .dropdown-item:hover {
+    background-color: var(--table-striped-bg);
+    color: var(--text-color);
+}
+
+/* Content area */
+[data-theme="dark"] #content-wrapper {
+    background-color: var(--sb-content-bg);
+}
+
+[data-theme="dark"] #content {
+    background-color: var(--sb-content-bg);
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar .nav-link {
+    color: var(--navbar-text) !important;
+}
+
+.navbar .nav-link:hover {
+    color: var(--link-hover-color) !important;
+}
+
+.navbar-brand {
+    color: var(--navbar-text) !important;
+}
+
+/* Cards and content containers */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.card-header {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--input-bg);
+    border-color: var(--link-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Tables - Enhanced dark mode support */
+[data-theme="dark"] .table {
+    color: var(--text-color) !important;
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody tr {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--table-striped-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Member area specific table overrides */
+[data-theme="dark"] .container-fluid .table,
+[data-theme="dark"] #content .table,
+[data-theme="dark"] .card .table {
+    background-color: var(--table-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .container-fluid .table tbody tr,
+[data-theme="dark"] #content .table tbody tr,
+[data-theme="dark"] .card .table tbody tr {
+    background-color: var(--table-bg) !important;
+}
+
+[data-theme="dark"] .container-fluid .table-striped tbody tr:nth-of-type(odd),
+[data-theme="dark"] #content .table-striped tbody tr:nth-of-type(odd),
+[data-theme="dark"] .card .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-striped-bg) !important;
+}
+
+/* Force override any white backgrounds */
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] tr.bg-white,
+[data-theme="dark"] td.bg-white,
+[data-theme="dark"] th.bg-white {
+    background-color: var(--table-bg) !important;
+}
+
+/* DataTables specific styling */
+[data-theme="dark"] .dataTables_wrapper {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+[data-theme="dark"] .dataTables_wrapper .dataTables_paginate {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dataTables_wrapper .dataTables_filter input {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Ensure no white backgrounds leak through */
+[data-theme="dark"] table,
+[data-theme="dark"] table tr,
+[data-theme="dark"] table td,
+[data-theme="dark"] table th {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(odd) > td,
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(even) > td,
+[data-theme="dark"] .table-striped > tbody > tr:nth-child(even) > th {
+    background-color: var(--table-bg) !important;
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.btn-primary:hover {
+    background-color: var(--link-hover-color);
+    border-color: var(--link-hover-color);
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.modal-header {
+    border-color: var(--border-color);
+}
+
+.modal-footer {
+    border-color: var(--border-color);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: var(--table-striped-bg);
+    color: var(--text-color);
+}
+
+/* Alerts */
+.alert {
+    border-color: var(--border-color);
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    background-color: var(--table-striped-bg);
+}
+
+/* Dark mode toggle button for member area */
+.dark-mode-toggle {
+    background: none !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    margin-right: 15px;
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--table-striped-bg) !important;
+    border-color: var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+}
+
+.dark-mode-toggle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+}
+
+.dark-mode-toggle:active {
+    background-color: var(--table-striped-bg) !important;
+    border-color: var(--link-color) !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+}
+
+/* Responsive design for dark mode toggle */
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        font-size: 12px;
+        padding: 4px 8px;
+        margin-left: 5px;
+    }
+    
+    .dark-mode-toggle i {
+        margin-right: 2px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dark-mode-toggle {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    /* Hide text on very small screens, keep only icon */
+    .dark-mode-toggle .fas {
+        margin-right: 0;
+    }
+}
+
+/* Ensure smooth transitions for all theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Ensure images don't become too bright in dark mode */
+[data-theme="dark"] img {
+    opacity: 0.9;
+}
+
+/* Special handling for logos - keep them at full opacity */
+[data-theme="dark"] #logo,
+[data-theme="dark"] #icon {
+    opacity: 1;
+}
+
+/* Pagination */
+.page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--link-color);
+}
+
+.page-link:hover {
+    background-color: var(--table-striped-bg);
+    border-color: var(--border-color);
+    color: var(--link-hover-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-bg);
+}
+
+/* List groups */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Text muted */
+.text-muted {
+    color: var(--footer-text) !important;
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--btn-primary-bg);
+}
+
+.badge-secondary {
+    background-color: var(--footer-text);
+}
+
+/* Footer (member area) */
+[data-theme="dark"] .footer,
+[data-theme="dark"] .sticky-footer {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text);
+    border-top: 1px solid var(--border-color);
+}
+
+/* SB Admin 2 Card Overrides for Dark Mode */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Force override any specific SB Admin card background colors */
+[data-theme="dark"] .card,
+[data-theme="dark"] .card .card-header,
+[data-theme="dark"] .card .card-body,
+[data-theme="dark"] .card .card-footer {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Text and link colors inside cards */
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card .form-group,
+[data-theme="dark"] .card label,
+[data-theme="dark"] .card ul,
+[data-theme="dark"] .card li {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card a {
+    color: var(--link-color) !important;
+}
+
+[data-theme="dark"] .card a:hover {
+    color: var(--link-hover-color) !important;
+}
+
+/* Specific fixes for Resources page and similar content */
+[data-theme="dark"] .form-group label.font-weight-bold,
+[data-theme="dark"] label.font-weight-bold,
+[data-theme="dark"] .font-weight-bold {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] pre {
+    color: var(--text-color) !important;
+    background-color: var(--table-striped-bg) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--footer-text) !important;
+}
+
+/* Badges */
+.badge-primary {
+    background-color: var(--btn-primary-bg);
+}
+
+.badge-secondary {
+    background-color: var(--footer-text);
+}
+
+/* Footer (member area) */
+[data-theme="dark"] .footer,
+[data-theme="dark"] .sticky-footer {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text);
+    border-top: 1px solid var(--border-color);
+}
+
+/* SB Admin 2 Card Overrides for Dark Mode */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Force override any specific SB Admin card background colors */
+[data-theme="dark"] .card,
+[data-theme="dark"] .card .card-header,
+[data-theme="dark"] .card .card-body,
+[data-theme="dark"] .card .card-footer {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Text and link colors inside cards */
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card .form-group,
+[data-theme="dark"] .card label,
+[data-theme="dark"] .card ul,
+[data-theme="dark"] .card li {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card a {
+    color: var(--link-color) !important;
+}
+
+[data-theme="dark"] .card a:hover {
+    color: var(--link-hover-color) !important;
+}
