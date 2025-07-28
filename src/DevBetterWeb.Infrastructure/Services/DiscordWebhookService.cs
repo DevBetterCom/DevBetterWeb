@@ -42,7 +42,7 @@ public class DiscordWebhookService : IDiscordWebhookService
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Error sending webhook", webhookUrl, content);
+			_logger.LogError(ex, "Error sending webhook to {webhookUrl} with {content}", webhookUrl, content);
 			return new HttpResponseMessage();
 		}
 	}
