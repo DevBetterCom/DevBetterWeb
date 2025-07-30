@@ -60,7 +60,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 builder.Services.AddLogging();
 
-builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("AuthMessageSenderOptions"));
+builder.Services.Configure<ApiMailSenderOptions>(builder.Configuration.GetSection("ApiMailSenderOptions")); 
 builder.Services.Configure<DiscordWebhookUrls>(builder.Configuration.GetSection("DiscordWebhookUrls"));
 builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("StripeOptions"));
 builder.Services.Configure<SubscriptionPlanOptions>(builder.Configuration.GetSection("SubscriptionPlanOptions"));
