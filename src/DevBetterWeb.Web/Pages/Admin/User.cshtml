@@ -273,7 +273,9 @@
         <b>Transactions</b>
       </div>
       <div class="card-body" style="overflow: auto;">
-      <b>Total (Paid): @Model.Invoices.Count for $@Model.Invoices.Where(x => x.IsPaid).Sum(x => x.AmountPaid)</b>
+                <b>
+                    Total (Paid): @Model.Invoices.Count for @((Model.Invoices.Where(x => x.IsPaid).Sum(x => x.AmountPaid) / 100.0).ToString("C"))
+                </b>
         <table class="table">
           <thead>
           <tr>
