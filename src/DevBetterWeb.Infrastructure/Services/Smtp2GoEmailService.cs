@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Net;
-using System.Net.Mail;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Interfaces;
@@ -10,35 +11,39 @@ namespace DevBetterWeb.Infrastructure.Services;
 
 public class Smtp2GoEmailService : IEmailService
 {
+  private readonly HttpClient _httpClient;
   public Smtp2GoEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
   {
     Guard.Against.Null(optionsAccessor.Value, nameof(optionsAccessor.Value));
     Options = optionsAccessor.Value;
+    _httpClient = new HttpClient();
   }
 
-  public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
+  public AuthMessageSenderOptions Options { get; }
 
   public async Task SendEmailAsync(string email, string subject, string message)
   {
-    if (string.IsNullOrEmpty(Options.SmtpServer)) throw new Exception("SMTP Server not set.");
-    if (string.IsNullOrEmpty(Options.SmtpUsername)) throw new Exception("SMTP Username not set.");
-    if (string.IsNullOrEmpty(Options.SmtpPassword)) throw new Exception("SMTP Password not set.");
+    if (string.IsNullOrEmpty(Options.ApiKey)) throw new Exception("SMTP API Key not set.");
 
-    using var client = new SmtpClient(Options.SmtpServer, Options.SmtpPort)
+    var request = new HttpRequestMessage(HttpMethod.Post, "https://api.smtp2go.com/v3/email/send");
+    request.Headers.Add("Authorization", $"Bearer {Options.ApiKey}");
+
+    var payload = new
     {
-      EnableSsl = true,
-      Credentials = new NetworkCredential(Options.SmtpUsername, Options.SmtpPassword)
+      sender = "donotreply@devbetter.com",
+      to = new[] { email },
+      subject = subject,
+      text_body = message,
+      html_body = message
     };
+    string json = JsonSerializer.Serialize(payload);
+    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-    var mailMessage = new MailMessage(
-      from: "donotreply@devbetter.com",
-      to: email,
-      subject: subject,
-      body: message)
+    var response = await _httpClient.SendAsync(request);
+    if (!response.IsSuccessStatusCode)
     {
-      IsBodyHtml = true
-    };
-
-    await client.SendMailAsync(mailMessage);
+      var error = await response.Content.ReadAsStringAsync();
+      throw new Exception($"SMTP2GO API error: {response.StatusCode} - {error}");
+    }
   }
 }

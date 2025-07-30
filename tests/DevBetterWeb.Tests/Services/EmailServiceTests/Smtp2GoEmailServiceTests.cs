@@ -27,7 +27,7 @@ public class Smtp2GoEmailServiceTests
   }
 
   [Fact]
-  public async Task SendEmailAsync_WithNullSmtpUsername_ThrowsException()
+  public async Task SendEmailAsync_WithNullApiKey_ThrowsException()
   {
     var options = new AuthMessageSenderOptions
     {
@@ -38,22 +38,6 @@ public class Smtp2GoEmailServiceTests
     var exception = await Assert.ThrowsAsync<Exception>(() =>
       service.SendEmailAsync("test@example.com", "Test Subject", "Test Message"));
 
-    Assert.Equal("SMTP Username not set.", exception.Message);
-  }
-
-  [Fact]
-  public async Task SendEmailAsync_WithNullSmtpPassword_ThrowsException()
-  {
-    var options = new AuthMessageSenderOptions
-    {
-      SmtpServer = "mail.smtp2go.com",
-      SmtpUsername = "testuser"
-    };
-    var service = new Smtp2GoEmailService(Options.Create(options));
-
-    var exception = await Assert.ThrowsAsync<Exception>(() =>
-      service.SendEmailAsync("test@example.com", "Test Subject", "Test Message"));
-
-    Assert.Equal("SMTP Password not set.", exception.Message);
+    Assert.Equal("SMTP API Key not set.", exception.Message);
   }
 }
