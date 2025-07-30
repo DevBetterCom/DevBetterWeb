@@ -28,9 +28,9 @@ public class Smtp2GoEmailService : IEmailService
     if (string.IsNullOrEmpty(Options.Sender)) throw new Exception("SMTP Sender not set.");
 
 		var request = new HttpRequestMessage(HttpMethod.Post, Options.ApiBaseUrl.TrimEnd('/') + "/email/send");
-		request.Headers.Add("Authorization", $"Bearer {Options.ApiKey}");
+		request.Headers.Add("X-Smtp2go-Api-Key", Options.ApiKey);
 
-    var payload = new
+		var payload = new
     {
 			sender = Options.Sender,
 			to = new[] { email },
