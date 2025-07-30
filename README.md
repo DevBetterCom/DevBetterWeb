@@ -15,7 +15,7 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 - Register
 - Login
 - View Public Questions/Topics
-- Validate Accounts via Email (SendGrid)
+- Validate Accounts via Email (SMTP2Go)
 
 ### Members Only
 
