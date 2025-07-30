@@ -12,7 +12,7 @@ namespace DevBetterWeb.Infrastructure.Services;
 public class Smtp2GoEmailService : IEmailService
 {
   private readonly HttpClient _httpClient;
-  public Smtp2GoEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
+  public Smtp2GoEmailService(IOptions<ApiMailSenderOptions> optionsAccessor)
   {
     Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
     Guard.Against.Null(optionsAccessor.Value, nameof(optionsAccessor.Value));
@@ -20,18 +20,20 @@ public class Smtp2GoEmailService : IEmailService
     _httpClient = new HttpClient();
   }
 
-  public AuthMessageSenderOptions Options { get; }
+  public ApiMailSenderOptions Options { get; }
 
   public async Task SendEmailAsync(string email, string subject, string message)
   {
     if (string.IsNullOrEmpty(Options.ApiKey)) throw new Exception("SMTP API Key not set.");
+    if (string.IsNullOrEmpty(Options.ApiBaseUrl)) throw new Exception("SMTP API Base URL not set.");
+    if (string.IsNullOrEmpty(Options.Sender)) throw new Exception("SMTP Sender not set.");
 
-    var request = new HttpRequestMessage(HttpMethod.Post, "https://api.smtp2go.com/v3/email/send");
+    var request = new HttpRequestMessage(HttpMethod.Post, Options.ApiBaseUrl.TrimEnd('/') + "/email/send");
     request.Headers.Add("Authorization", $"Bearer {Options.ApiKey}");
 
     var payload = new
     {
-      sender = "donotreply@devbetter.com",
+      sender = Options.Sender,
       to = new[] { email },
       subject = subject,
       text_body = message,
