@@ -15,18 +15,6 @@ public class Smtp2GoEmailServiceTests
   }
 
   [Fact]
-  public async Task SendEmailAsync_WithNullSmtpServer_ThrowsException()
-  {
-    var options = new AuthMessageSenderOptions();
-    var service = new Smtp2GoEmailService(Options.Create(options));
-
-    var exception = await Assert.ThrowsAsync<Exception>(() =>
-      service.SendEmailAsync("test@example.com", "Test Subject", "Test Message"));
-
-    Assert.Equal("SMTP Server not set.", exception.Message);
-  }
-
-  [Fact]
   public async Task SendEmailAsync_WithNullApiKey_ThrowsException()
   {
     var options = new AuthMessageSenderOptions

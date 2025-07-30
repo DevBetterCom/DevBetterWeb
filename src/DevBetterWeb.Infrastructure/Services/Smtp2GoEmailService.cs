@@ -14,6 +14,7 @@ public class Smtp2GoEmailService : IEmailService
   private readonly HttpClient _httpClient;
   public Smtp2GoEmailService(IOptions<AuthMessageSenderOptions> optionsAccessor)
   {
+    Guard.Against.Null(optionsAccessor, nameof(optionsAccessor));
     Guard.Against.Null(optionsAccessor.Value, nameof(optionsAccessor.Value));
     Options = optionsAccessor.Value;
     _httpClient = new HttpClient();
