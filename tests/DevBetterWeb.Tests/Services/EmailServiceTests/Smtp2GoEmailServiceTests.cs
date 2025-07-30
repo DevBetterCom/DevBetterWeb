@@ -17,10 +17,7 @@ public class Smtp2GoEmailServiceTests
   [Fact]
   public async Task SendEmailAsync_WithNullApiKey_ThrowsException()
   {
-    var options = new AuthMessageSenderOptions
-    {
-      SmtpServer = "mail.smtp2go.com"
-    };
+		var options = new ApiMailSenderOptions();
     var service = new Smtp2GoEmailService(Options.Create(options));
 
     var exception = await Assert.ThrowsAsync<Exception>(() =>
