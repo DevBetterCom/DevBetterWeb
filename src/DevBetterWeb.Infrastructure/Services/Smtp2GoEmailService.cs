@@ -20,7 +20,6 @@ public class Smtp2GoEmailService : IEmailService
     _httpClient = new HttpClient();
   }
 
-  public ApiMailSenderOptions Options { get; }
 
   public async Task SendEmailAsync(string email, string subject, string message)
   {
@@ -28,12 +27,10 @@ public class Smtp2GoEmailService : IEmailService
     if (string.IsNullOrEmpty(Options.ApiBaseUrl)) throw new Exception("SMTP API Base URL not set.");
     if (string.IsNullOrEmpty(Options.Sender)) throw new Exception("SMTP Sender not set.");
 
-    var request = new HttpRequestMessage(HttpMethod.Post, Options.ApiBaseUrl.TrimEnd('/') + "/email/send");
     request.Headers.Add("Authorization", $"Bearer {Options.ApiKey}");
 
     var payload = new
     {
-      sender = Options.Sender,
       to = new[] { email },
       subject = subject,
       text_body = message,
