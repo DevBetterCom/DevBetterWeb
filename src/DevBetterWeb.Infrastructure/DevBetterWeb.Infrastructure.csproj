@@ -20,7 +20,6 @@
     <PackageReference Include="Markdig" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="NimblePros.Vimeo" />
-    <PackageReference Include="Sendgrid" />
     <PackageReference Include="Ardalis.EFCore.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" />

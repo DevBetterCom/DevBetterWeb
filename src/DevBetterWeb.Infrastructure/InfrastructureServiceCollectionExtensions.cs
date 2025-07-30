@@ -26,7 +26,7 @@ public static class InfrastructureServiceCollectionExtensions
 		}
 		else
 		{
-			services.AddTransient<IEmailService, SendGridEmailService>();
+			services.AddTransient<IEmailService, Smtp2GoEmailService>();
 		}
 
 		// Common Dependencies
