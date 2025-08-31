@@ -1,6 +1,6 @@
 using Xunit;
-using FluentAssertions;
 using DevBetterWeb.Web.Services;
+using Shouldly;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 
@@ -37,6 +37,6 @@ get people invited.
 
 		var actual = new WebVTTParsingService().Parse(vtt, "https://devbetter.com/Videos/Details/1234");
 
-		actual.Should().Be(expected);
+		actual.ShouldBe(expected);
 	}
 }

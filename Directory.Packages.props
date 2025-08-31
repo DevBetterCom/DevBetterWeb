@@ -29,7 +29,6 @@
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.2.0" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Flurl" Version="4.0.0" />
     <PackageVersion Include="Flurl.Http" Version="4.0.2" />
     <PackageVersion Include="GoogleReCaptcha.V3" Version="1.3.1" />

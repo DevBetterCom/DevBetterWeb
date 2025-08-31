@@ -1,8 +1,7 @@
 ﻿using System;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Enums;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
@@ -21,13 +20,10 @@ public class MemberAddBillingActivity
 
     var billingActivity = member.BillingActivities[0];
 
-    using (new AssertionScope())
-    {
-      billingActivity.Details.SubscriptionPlanName.Should().Be(subscriptionPlanName);
-      billingActivity.Details.ActionVerbPastTense.Should().Be(actionVerb);
-      billingActivity.Details.BillingPeriod.Should().Be(billingPeriod);
-      billingActivity.Details.MemberName.Should().Be(member.UserFullName());
-    }
+    billingActivity.Details.SubscriptionPlanName.ShouldBe(subscriptionPlanName);
+    billingActivity.Details.ActionVerbPastTense.ShouldBe(actionVerb);
+    billingActivity.Details.BillingPeriod.ShouldBe(billingPeriod);
+    billingActivity.Details.MemberName.ShouldBe(member.UserFullName());
   }
 
   [Fact]
@@ -44,10 +40,7 @@ public class MemberAddBillingActivity
 
     var billingActivity = member.BillingActivities[0];
 
-    using (new AssertionScope())
-    {
-      billingActivity.Details.BillingPeriod.Should().Be(billingPeriod);
-      billingActivity.Details.Amount.Should().Be(amount);
-    }
+    billingActivity.Details.BillingPeriod.ShouldBe(billingPeriod);
+    billingActivity.Details.Amount.ShouldBe(amount);
   }
 }

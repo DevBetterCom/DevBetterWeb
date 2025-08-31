@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Specs;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Specs;
@@ -44,7 +44,7 @@ public class ArchiveVideoByPageSpecEvaluate
 
     var result = sut.Evaluate(_archiveVideos);
 
-    result.Should().HaveCount(_archiveVideos.Count());
+    result.Count().ShouldBe(_archiveVideos.Count());
   }
 
   [Theory]
@@ -61,7 +61,7 @@ public class ArchiveVideoByPageSpecEvaluate
 
     var result = sut.Evaluate(_archiveVideos);
 
-    result.Should().HaveCount(expectedCount);
+    result.Count().ShouldBe(expectedCount);
   }
 
   [Theory]
@@ -80,7 +80,7 @@ public class ArchiveVideoByPageSpecEvaluate
 
     var result = sut.Evaluate(_archiveVideos);
 
-    result.Should().HaveCount(expectedCount);
+    result.Count().ShouldBe(expectedCount);
   }
 
   [Theory]
@@ -99,6 +99,6 @@ public class ArchiveVideoByPageSpecEvaluate
 
     var result = sut.Evaluate(_archiveVideos);
 
-    result.Should().HaveCount(expectedCount);
+    result.Count().ShouldBe(expectedCount);
   }
 }
