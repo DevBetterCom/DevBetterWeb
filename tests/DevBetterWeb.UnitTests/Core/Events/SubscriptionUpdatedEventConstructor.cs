@@ -2,7 +2,7 @@
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.UnitTests.Core.Entities;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Events;
@@ -17,8 +17,8 @@ public class SubscriptionUpdatedEventConstructor
   {
     var sut = new SubscriptionUpdatedEvent(_member, _memberSubscription);
 
-    sut.Member.Should().Be(_member);
-    sut.MemberSubscription.Should().Be(_memberSubscription);
+    sut.Member.ShouldBe(_member);
+    sut.MemberSubscription.ShouldBe(_memberSubscription);
   }
 
   [Fact]
@@ -26,7 +26,7 @@ public class SubscriptionUpdatedEventConstructor
   {
     var action = () => new SubscriptionUpdatedEvent(null!, _memberSubscription);
 
-    action.Should().Throw<ArgumentNullException>();
+    action.ShouldThrow<ArgumentNullException>();
   }
     
   [Fact]
@@ -34,6 +34,6 @@ public class SubscriptionUpdatedEventConstructor
   {
     var action = () => new SubscriptionUpdatedEvent(_member, null!);
 
-    action.Should().Throw<ArgumentNullException>();
+    action.ShouldThrow<ArgumentNullException>();
   }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DevBetterWeb.Core.Entities;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
@@ -26,7 +26,7 @@ public class MemberRemoveFavoriteArchiveVideo
     };
     member.RemoveFavoriteArchiveVideo(nonexistingArchiveVideo);
 
-    member.FavoriteArchiveVideos.Count().Should().Be(expectedCount);
+    member.FavoriteArchiveVideos.Count().ShouldBe(expectedCount);
   }
 
   [Fact]
@@ -39,8 +39,8 @@ public class MemberRemoveFavoriteArchiveVideo
     };
     member.AddFavoriteArchiveVideo(archiveVideo);
 
-	member.RemoveFavoriteArchiveVideo(archiveVideo);
+		member.RemoveFavoriteArchiveVideo(archiveVideo);
     
-    member.FavoriteArchiveVideos.Should().BeEmpty();
+    member.FavoriteArchiveVideos.ShouldBeEmpty();
   }
 }

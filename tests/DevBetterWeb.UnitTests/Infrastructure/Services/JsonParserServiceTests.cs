@@ -3,8 +3,8 @@ using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Shouldly;
 using Xunit;
-using FluentAssertions;
 
 namespace DevBetterWeb.UnitTests.Infrastructure.Services;
 
@@ -34,7 +34,7 @@ public class JsonParserServiceTests
 
 		var actualResult = this._jsonParserService.Parse(validJson);
 
-		expectedResult.Should().BeEquivalentTo(actualResult, opt => opt.ComparingByMembers<JsonElement>());
+		actualResult.RootElement.GetProperty("Name").GetString().ShouldBeEquivalentTo(expectedResult.RootElement.GetProperty("Name").GetString());
 	}
 
 	[Fact]

@@ -4,7 +4,7 @@ using DevBetterWeb.Core.Enums;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.ValueObjects;
 using DevBetterWeb.UnitTests.Core.Entities;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Events;
@@ -28,9 +28,9 @@ public class BillingActivityCreatedEventConstructor
   {
     var sut = new BillingActivityCreatedEvent(_billingActivity, _member);
 
-    sut.DateOccurred.Should().NotBe(default);
-    sut.Member.Should().Be(_member);
-    sut.BillingActivity.Should().Be(_billingActivity);
+    sut.DateOccurred.ShouldNotBe(default);
+    sut.Member.ShouldBe(_member);
+    sut.BillingActivity.ShouldBe(_billingActivity);
   }
     
   [Fact]
@@ -38,7 +38,7 @@ public class BillingActivityCreatedEventConstructor
   {
     var action = () => new BillingActivityCreatedEvent(null!, _member);
 
-    action.Should().Throw<ArgumentNullException>();
+    action.ShouldThrow<ArgumentNullException>();
   }
 
   [Fact]
@@ -46,6 +46,6 @@ public class BillingActivityCreatedEventConstructor
   {
     var action = () => new BillingActivityCreatedEvent(_billingActivity, null!);
 
-    action.Should().Throw<ArgumentNullException>();
+    action.ShouldThrow<ArgumentNullException>();
   }
 }

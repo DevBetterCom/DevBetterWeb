@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DevBetterWeb.Core.Entities;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.Entities.MemberTests;
@@ -22,11 +21,8 @@ public class MemberAddFavoriteArchiveVideo
 
     member.AddFavoriteArchiveVideo(archiveVideo);
 
-    using (new AssertionScope())
-    {
-	  member.FavoriteArchiveVideos.Single().ArchiveVideoId.Should().Be(_validArchiveVideoId);
-	  member.FavoriteArchiveVideos.Single().MemberId.Should().Be(member.Id);
-    }
+	  member.FavoriteArchiveVideos.Single().ArchiveVideoId.ShouldBe(_validArchiveVideoId);
+	  member.FavoriteArchiveVideos.Single().MemberId.ShouldBe(member.Id);
   }
 
   [Fact]
@@ -42,6 +38,6 @@ public class MemberAddFavoriteArchiveVideo
     member.AddFavoriteArchiveVideo(archiveVideo);
     member.AddFavoriteArchiveVideo(archiveVideo);
 
-    member.FavoriteArchiveVideos.Count().Should().Be(1);
+    member.FavoriteArchiveVideos.Count().ShouldBe(1);
   }
 }
