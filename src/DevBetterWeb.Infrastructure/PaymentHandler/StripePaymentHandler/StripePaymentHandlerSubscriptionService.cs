@@ -14,16 +14,19 @@ namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscription
 {
   private readonly SubscriptionService _subscriptionService;
+  private readonly CustomerService _customerService;
   private readonly IPaymentHandlerSubscriptionCreationService _paymentHandlerSubscriptionCreationService;
   private readonly IRepository<Invitation> _invitationRepository;
   private readonly IAppLogger<StripePaymentHandlerSubscriptionService> _logger;
 
   public StripePaymentHandlerSubscriptionService(SubscriptionService subscriptionService,
+    CustomerService customerService,
     IPaymentHandlerSubscriptionCreationService paymentHandlerSubscriptionCreationService,
     IRepository<Invitation> invitationRepository,
     IAppLogger<StripePaymentHandlerSubscriptionService> logger)
   {
     _subscriptionService = subscriptionService;
+    _customerService = customerService;
     _paymentHandlerSubscriptionCreationService = paymentHandlerSubscriptionCreationService;
     _invitationRepository = invitationRepository;
     _logger = logger;
@@ -31,17 +34,53 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
 
   public async Task CancelSubscriptionAtPeriodEnd(string customerEmail)
   {
-    var spec = new InactiveInvitationByEmailSpec(customerEmail);
-    var invite = await _invitationRepository.FirstOrDefaultAsync(spec);
-    if (invite is null) throw new InvitationNotFoundException(customerEmail);
-    var subscriptionId = invite.PaymentHandlerSubscriptionId;
+    var subscriptionId = await GetSubscriptionIdForEmailAsync(customerEmail);
 
     var subscriptionCancelOptions = new SubscriptionUpdateOptions
     {
       CancelAtPeriodEnd = true,
     };
 
-    _subscriptionService.Update(subscriptionId, subscriptionCancelOptions);
+    await _subscriptionService.UpdateAsync(subscriptionId, subscriptionCancelOptions);
+  }
+
+  private async Task<string> GetSubscriptionIdForEmailAsync(string customerEmail)
+  {
+    var spec = new InactiveInvitationByEmailSpec(customerEmail);
+    var invite = await _invitationRepository.FirstOrDefaultAsync(spec);
+
+    if (invite != null && !string.IsNullOrEmpty(invite.PaymentHandlerSubscriptionId))
+    {
+      return invite.PaymentHandlerSubscriptionId;
+    }
+
+    _logger.LogWarning($"No inactive invitation with a valid subscription ID found for {customerEmail}. Falling back to Stripe customer lookup.");
+
+    var customerListOptions = new CustomerListOptions
+    {
+      Email = customerEmail.ToLower(),
+      Limit = 1,
+    };
+    var customers = await _customerService.ListAsync(customerListOptions);
+    if (customers.Data.Count == 0)
+    {
+      throw new InvitationNotFoundException(customerEmail);
+    }
+
+    var customerId = customers.Data[0].Id;
+    var subscriptionListOptions = new SubscriptionListOptions
+    {
+      Customer = customerId,
+      Status = "active",
+      Limit = 1,
+    };
+    var subscriptions = await _subscriptionService.ListAsync(subscriptionListOptions);
+    if (subscriptions.Data.Count == 0)
+    {
+      throw new InvitationNotFoundException(customerEmail);
+    }
+
+    return subscriptions.Data[0].Id;
   }
 
   public IPaymentHandlerSubscriptionDTO CreateSubscription(string customerId, string priceId, string paymentMethodId)
