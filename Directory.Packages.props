@@ -23,7 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
+    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.7.0" />
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
