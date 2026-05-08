@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
 using Flurl.Http.Testing;
 using NSubstitute;
 using Xunit;
@@ -7,6 +6,7 @@ using DevBetterWeb.Web.Interfaces;
 using DevBetterWeb.Web.Services;
 using NimblePros.Vimeo.Models;
 using System.Threading.Tasks;
+using Shouldly;
 
 namespace DevBetterWeb.UnitTests.Web.Services;
 
@@ -24,7 +24,7 @@ public class VideoDetailsServiceTests
 
 		var result = await videoDetailsService.GetTranscriptAsync(textTracks, "https://it-does-not-matter-for-this-test.com");
 
-		result.Should().BeEmpty();
+		result.ShouldBeEmpty();
 	}
 
 	[Fact]
@@ -38,6 +38,6 @@ public class VideoDetailsServiceTests
 
 		var result = await videoDetailsService.GetTranscriptAsync(textTracks, "https://it-does-not-matter-for-this-test.com");
 
-		result.Should().BeEmpty();
+		result.ShouldBeEmpty();
 	}
 }

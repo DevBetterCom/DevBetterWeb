@@ -1,6 +1,5 @@
 ﻿using DevBetterWeb.Core.ValueObjects;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Shouldly;
 using Xunit;
 
 namespace DevBetterWeb.UnitTests.Core.ValueObjects;
@@ -15,10 +14,7 @@ public class MemberFavoriteArchiveVideoConstructor
   {
     var memberFavoriteArchiveVideo = new MemberFavoriteArchiveVideo(_validMemberId, _validArchiveVideoId);
 
-    using (new AssertionScope())
-    {
-      memberFavoriteArchiveVideo.ArchiveVideoId.Should().Be(_validArchiveVideoId);
-      memberFavoriteArchiveVideo.MemberId.Should().Be(_validMemberId);
-    }
+    memberFavoriteArchiveVideo.ArchiveVideoId.ShouldBe(_validArchiveVideoId);
+    memberFavoriteArchiveVideo.MemberId.ShouldBe(_validMemberId);
   }
 }
