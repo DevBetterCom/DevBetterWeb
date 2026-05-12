@@ -91,7 +91,15 @@ else if (!isTesting)
 
 builder.Services.AddInfrastructureServices(isDevelopment, vimeoToken);
 
-builder.Services.AddMediator();
+builder.Services.AddMediator(options =>
+{
+	options.Assemblies =
+	[
+		typeof(IAggregateRoot),
+		typeof(AppDbContext),
+		typeof(Program)
+	];
+});
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
