@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
-using MediatR;
+using Mediator;
 
 namespace DevBetterWeb.Infrastructure.DomainEvents;
 

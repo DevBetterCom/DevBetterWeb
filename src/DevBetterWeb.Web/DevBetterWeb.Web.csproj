@@ -21,7 +21,8 @@
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="GoogleReCaptcha.V3" />
-		<PackageReference Include="MediatR" />
+		<PackageReference Include="Mediator.Abstractions" />
+		<PackageReference Include="Mediator.SourceGenerator" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
 		<PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />

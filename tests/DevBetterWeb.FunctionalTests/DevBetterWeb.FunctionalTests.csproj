@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR" />
+        <PackageReference Include="Mediator.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit" />
