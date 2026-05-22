@@ -26,7 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using NimblePros.Metronome;
 using NimblePros.Vimeo.Extensions;
 using Serilog;
@@ -103,8 +103,7 @@ builder.Services.AddDailyCheckServices(isProduction);
 builder.Services.AddStripeServices(
 	builder.Configuration.GetSection("StripeOptions")["StripeSecretKey"]!);
 
-var webProjectAssembly = typeof(Program).Assembly;
-builder.Services.AddAutoMapper(webProjectAssembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 
 builder.Services.AddMetronome();
 
@@ -153,6 +152,8 @@ builder.Services.Configure<ServiceConfig>(config =>
 
 builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddMvc()
 	.AddControllersAsServices()
 	.AddRazorRuntimeCompilation();
@@ -162,10 +163,14 @@ builder.Services.AddSwaggerGen(c =>
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 
-builder.Services.AddApplicationInsightsTelemetry(options =>
+var appInsightsConnectionString = builder.Configuration["APPINSIGHTS_CONNECTIONSTRING"];
+if (!string.IsNullOrWhiteSpace(appInsightsConnectionString))
 {
-	options.ConnectionString = builder.Configuration["APPINSIGHTS_CONNECTIONSTRING"];
-});
+	builder.Services.AddApplicationInsightsTelemetry(options =>
+	{
+		options.ConnectionString = appInsightsConnectionString;
+	});
+}
 
 
 var app = builder.Build();
@@ -200,6 +205,8 @@ if (app.Environment.IsDevelopment())
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 	});
 }
+
+app.MapHealthChecks("/health");
 
 app.MapRazorPages();
 

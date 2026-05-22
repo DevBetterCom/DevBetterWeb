@@ -11,10 +11,10 @@ public class EventUtilityParseEvent
   public void ParseJsonToSubscriptionId()
   {
     string json = System.IO.File.ReadAllText(_jsonFile);
-    var stripeEvent = EventUtility.ParseEvent(json);
+    var stripeEvent = EventUtility.ParseEvent(json, throwOnApiVersionMismatch: false);
 
     var invoice = (Invoice)stripeEvent.Data.Object;
-    string subscriptionId = invoice.SubscriptionId;
+    string subscriptionId = invoice.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty;
     Assert.Equal("sub_K1hzaxOt9gb2TB", subscriptionId);
   }
 }

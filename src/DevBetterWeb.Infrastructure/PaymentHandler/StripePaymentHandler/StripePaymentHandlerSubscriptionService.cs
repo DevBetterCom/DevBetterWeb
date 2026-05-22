@@ -181,14 +181,14 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
 
   private DateTime GetEndDate(Subscription subscription)
   {
-    DateTime endDate = subscription.CurrentPeriodEnd;
+    DateTime endDate = subscription.Items.Data[0].CurrentPeriodEnd;
 
     return endDate;
   }
 
   private DateTime GetStartDate(Subscription subscription)
   {
-    DateTime startDate = subscription.CurrentPeriodStart;
+    DateTime startDate = subscription.Items.Data[0].CurrentPeriodStart;
 
     return startDate;
   }

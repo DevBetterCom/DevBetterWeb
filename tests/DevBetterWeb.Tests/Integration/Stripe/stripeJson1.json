@@ -162,7 +162,13 @@
         "paid_at": 1628777276,
         "voided_at": null
       },
-      "subscription": "sub_K1hzaxOt9gb2TB",
+      "parent": {
+        "type": "subscription_details",
+        "subscription_details": {
+          "subscription": "sub_K1hzaxOt9gb2TB",
+          "metadata": {}
+        }
+      },
       "subtotal": 20000,
       "tax": null,
       "total": 20000,
