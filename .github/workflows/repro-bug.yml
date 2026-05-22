@@ -1,7 +1,7 @@
 name: Bug Reproduction Video
 
 on:
-  issues:
+  pull_request:
     types:
       - labeled
 
@@ -17,20 +17,23 @@ env:
   SOLUTION_FILE: DevBetterWeb.slnx
   PROJECT_FILE: src/DevBetterWeb.Web/DevBetterWeb.Web.csproj
 
-  APP_URL: https://localhost:5001
-  APP_STARTUP_COMMAND: dotnet run --project src/Web/Web.csproj
+  APP_URL: http://127.0.0.1:5010
+  APP_STARTUP_COMMAND: dotnet run --project src/DevBetterWeb.Web/DevBetterWeb.Web.csproj --no-build --launch-profile "DevBetterWeb.Web - DEV"
 
 jobs:
   reproduce-bug:
     if: github.event.label.name == 'bug'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    concurrency:
+      group: repro-bug-pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
 
     env:
-      ISSUE_TITLE: ${{ github.event.issue.title }}
-      ISSUE_BODY: ${{ github.event.issue.body }}
-      ISSUE_NUMBER: ${{ github.event.issue.number }}
-      ISSUE_URL: ${{ github.event.issue.html_url }}
+      ISSUE_TITLE: ${{ github.event.pull_request.title }}
+      ISSUE_BODY: ${{ github.event.pull_request.body }}
+      ISSUE_NUMBER: ${{ github.event.pull_request.number }}
+      ISSUE_URL: ${{ github.event.pull_request.html_url }}
       REPO_NAME: ${{ github.repository }}
 
     steps:
@@ -46,6 +49,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Initialize Playwright project
+        run: |
+          npm init -y
+          npm install @playwright/test wait-on
+          npx playwright install --with-deps
 
       - name: Restore .NET dependencies
         run: |
@@ -69,18 +78,12 @@ jobs:
 
       - name: Start application
         run: |
-          ${APP_STARTUP_COMMAND} &
+          ${APP_STARTUP_COMMAND} > app.log 2>&1 &
           echo $! > app.pid
 
       - name: Wait for application startup
         run: |
-          npx wait-on "${APP_URL}"
-
-      - name: Initialize Playwright project
-        run: |
-          npm init -y
-          npm install @playwright/test wait-on
-          npx playwright install --with-deps
+          npx wait-on "${APP_URL}" --timeout 120000
 
       - name: Generate reproduction script
         run: |
@@ -95,7 +98,7 @@ jobs:
             screenshot: 'only-on-failure'
           });
 
-          test('attempt reproduction from github issue', async ({ page }) => {
+          test('attempt reproduction from github pull request', async ({ page }) => {
             await page.goto(process.env.APP_URL, {
               waitUntil: 'networkidle'
             });
@@ -118,13 +121,15 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: repro-artifacts-issue-${{ github.event.issue.number }}
+          name: repro-artifacts-pr-${{ github.event.pull_request.number }}
           path: |
+            app.log
             test-results
             playwright-report
+          if-no-files-found: warn
           retention-days: 14
 
-      - name: Comment on issue with artifact link
+      - name: Comment on PR with artifact link
         if: always()
         uses: actions/github-script@v7
         with:
@@ -136,7 +141,7 @@ jobs:
             const body = `
             🤖 Automated reproduction attempt completed.
 
-            ## Issue
+            ## Pull Request
             #${process.env.ISSUE_NUMBER}
 
             ## Configuration
@@ -158,7 +163,7 @@ jobs:
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
+              issue_number: context.payload.pull_request.number,
               body
             });
 
