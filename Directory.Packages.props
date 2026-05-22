@@ -24,7 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.7.0" />
-    <PackageVersion Include="Dapper" Version="2.1.72" />
+    <PackageVersion Include="Dapper" Version="2.1.79" />
     <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.19.2" />
