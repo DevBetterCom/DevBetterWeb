@@ -55,7 +55,7 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
 			// Was InvoicePaymentSucceeded changed to InvoicePaid
-			if (stripeEvent.Type != Events.InvoicePaid)
+			if (stripeEvent.Type != EventTypes.InvoicePaid)
 			{
 				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
 			}

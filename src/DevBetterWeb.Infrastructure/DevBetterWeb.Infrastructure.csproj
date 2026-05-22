@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <AssemblyName>DevBetterWeb.Infrastructure</AssemblyName>
     <PackageId>DevBetterWeb.Infrastructure</PackageId>
     <LangVersion>latest</LangVersion>

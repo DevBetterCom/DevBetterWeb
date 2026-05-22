@@ -40,7 +40,7 @@ public class StripePaymentHandlerInvoiceService : IPaymentHandlerInvoice
     var stripeEvent = EventUtility.ParseEvent(json);
     var invoice = stripeEvent.Data.Object as Invoice;
 
-    var subscriptionId = invoice!.Subscription.Id;
+    var subscriptionId = invoice!.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty;
 
     return subscriptionId;
   }

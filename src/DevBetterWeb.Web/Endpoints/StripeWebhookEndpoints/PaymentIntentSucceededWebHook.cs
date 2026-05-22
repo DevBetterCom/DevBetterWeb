@@ -48,7 +48,7 @@ public class PaymentIntentSucceededWebHook : EndpointBaseAsync
 
 			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
-			if (stripeEvent.Type != Events.PaymentIntentSucceeded)
+			if (stripeEvent.Type != EventTypes.PaymentIntentSucceeded)
 			{
 				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
 			}

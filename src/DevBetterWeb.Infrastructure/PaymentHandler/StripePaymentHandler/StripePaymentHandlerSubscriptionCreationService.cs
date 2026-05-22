@@ -50,14 +50,14 @@ public class StripePaymentHandlerSubscriptionCreationService : IPaymentHandlerSu
         },
     };
 
-    subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+    subscriptionOptions.AddExpand("latest_invoice");
 
     var subscription = _subscriptionService.Create(subscriptionOptions);
 
     var id = subscription.Id;
     var status = subscription.Status;
-    var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.PaymentIntent.Status;
-    var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
+    var latestInvoicePaymentIntentStatus = subscription.LatestInvoice?.Status ?? string.Empty;
+    var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice?.ConfirmationSecret?.ClientSecret ?? string.Empty;
 
     var subscriptionDTO = new StripePaymentHandlerSubscriptionDTO(id, status, latestInvoicePaymentIntentStatus, latestInvoicePaymentIntentClientSecret);
 

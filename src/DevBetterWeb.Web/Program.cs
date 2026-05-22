@@ -36,6 +36,8 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
+builder.AddServiceDefaults();
+
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
 var isProduction = builder.Environment.IsEnvironment("Production");
 bool isDevelopment = builder.Environment.IsDevelopment();
@@ -103,8 +105,7 @@ builder.Services.AddDailyCheckServices(isProduction);
 builder.Services.AddStripeServices(
 	builder.Configuration.GetSection("StripeOptions")["StripeSecretKey"]!);
 
-var webProjectAssembly = typeof(Program).Assembly;
-builder.Services.AddAutoMapper(webProjectAssembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 
 builder.Services.AddMetronome();
 
@@ -205,6 +206,7 @@ app.MapRazorPages();
 
 app.UseStaticFiles();
 app.MapDefaultControllerRoute();
+app.MapDefaultEndpoints();
 
 // seed database
 await ApplyLocalMigrationsAsync(app);

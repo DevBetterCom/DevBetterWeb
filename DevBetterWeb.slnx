@@ -20,6 +20,7 @@
   <Folder Name="/src/">
     <Project Path="src/DevBetterWeb.Core/DevBetterWeb.Core.csproj" />
     <Project Path="src/DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj" />
+    <Project Path="src/DevBetterWeb.ServiceDefaults/DevBetterWeb.ServiceDefaults.csproj" />
     <Project Path="src/DevBetterWeb.Web/DevBetterWeb.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
@@ -27,4 +28,5 @@
     <Project Path="tests/DevBetterWeb.Tests/DevBetterWeb.Tests.csproj" />
     <Project Path="tests/DevBetterWeb.UnitTests/DevBetterWeb.UnitTests.csproj" />
   </Folder>
+  <Project Path="DevBetterWeb.AppHost/DevBetterWeb.AppHost.csproj" />
 </Solution>

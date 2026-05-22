@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using DevBetterWeb.Core.Entities;
@@ -181,14 +182,14 @@ public class StripePaymentHandlerSubscriptionService : IPaymentHandlerSubscripti
 
   private DateTime GetEndDate(Subscription subscription)
   {
-    DateTime endDate = subscription.CurrentPeriodEnd;
+    DateTime endDate = subscription.Items?.Data?.FirstOrDefault()?.CurrentPeriodEnd ?? default;
 
     return endDate;
   }
 
   private DateTime GetStartDate(Subscription subscription)
   {
-    DateTime startDate = subscription.CurrentPeriodStart;
+    DateTime startDate = subscription.Items?.Data?.FirstOrDefault()?.CurrentPeriodStart ?? default;
 
     return startDate;
   }
