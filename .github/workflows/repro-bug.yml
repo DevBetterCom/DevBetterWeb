@@ -58,22 +58,34 @@ jobs:
 
       - name: Restore .NET dependencies
         run: |
-          if [ -n "${SOLUTION_FILE}" ] && [ -f "${SOLUTION_FILE}" ]; then
-            dotnet restore "${SOLUTION_FILE}"
-          elif [ -n "${PROJECT_FILE}" ] && [ -f "${PROJECT_FILE}" ]; then
-            dotnet restore "${PROJECT_FILE}"
+          if [ -n "${PROJECT_FILE}" ] && [ -f "${PROJECT_FILE}" ]; then
+            dotnet restore "${PROJECT_FILE}" \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
+          elif [ -n "${SOLUTION_FILE}" ] && [ -f "${SOLUTION_FILE}" ]; then
+            dotnet restore "${SOLUTION_FILE}" \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
           else
-            dotnet restore
+            dotnet restore \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
           fi
 
       - name: Build application
         run: |
-          if [ -n "${SOLUTION_FILE}" ] && [ -f "${SOLUTION_FILE}" ]; then
-            dotnet build "${SOLUTION_FILE}" --no-restore
-          elif [ -n "${PROJECT_FILE}" ] && [ -f "${PROJECT_FILE}" ]; then
-            dotnet build "${PROJECT_FILE}" --no-restore
+          if [ -n "${PROJECT_FILE}" ] && [ -f "${PROJECT_FILE}" ]; then
+            dotnet build "${PROJECT_FILE}" --no-restore \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
+          elif [ -n "${SOLUTION_FILE}" ] && [ -f "${SOLUTION_FILE}" ]; then
+            dotnet build "${SOLUTION_FILE}" --no-restore \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
           else
-            dotnet build --no-restore
+            dotnet build --no-restore \
+              /p:ManagePackageVersionsCentrally=true \
+              /p:CentralPackageVersionsFile="$(pwd)/Directory.Packages.props"
           fi
 
       - name: Start application

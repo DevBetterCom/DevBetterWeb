@@ -1,6 +1,10 @@
 <Project>
-<PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-  <NuGetAuditMode>direct</NuGetAuditMode>
-</PropertyGroup>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+
+		<!-- Enforce central package versions for every project in this repo. -->
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<CentralPackageVersionsFile>$(MSBuildThisFileDirectory)Directory.Packages.props</CentralPackageVersionsFile>
+	</PropertyGroup>
 </Project>
