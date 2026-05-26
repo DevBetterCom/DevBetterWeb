@@ -125,7 +125,7 @@ jobs:
             core.setOutput('issue_number', String(issueNumber));
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ steps.target.outputs.checkout_ref }}
 
