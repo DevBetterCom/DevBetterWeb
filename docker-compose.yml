@@ -5,7 +5,7 @@
         depends_on: 
         - database
         ports: 
-        - 80:80
+        - 80:8080
         build:
             context: .
             dockerfile: Dockerfile
