@@ -40,7 +40,7 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 ### Prerequisite
 
-- [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [The command-line interface (CLI) tools for Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 
 ### Building and Running the App Locally
