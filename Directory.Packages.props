@@ -44,26 +44,25 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
     <PackageVersion Include="Microsoft.CodeCoverage" Version="17.8.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
-    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.7" />
     <PackageVersion Include="NETStandard.Library" Version="2.0.3" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="NimblePros.ApiClient" Version="2.2.0" />
