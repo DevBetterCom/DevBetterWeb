@@ -62,7 +62,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
-    <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
+    <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
     <PackageVersion Include="NETStandard.Library" Version="2.0.3" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="NimblePros.ApiClient" Version="2.2.0" />
