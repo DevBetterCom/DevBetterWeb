@@ -35,7 +35,7 @@ public class StripeSubscriptionHandlerService : ISubscriptionHandlerService
 			{
 				options.StartingAfter = page.Data[^1].Id;
 			}
-		} while (page.HasMore);
+		} while (page.HasMore && page.Data.Count > 0);
 
 		return subscriptions.Where(s => _billableStatuses.Contains(s.Status)).ToList();
 	}

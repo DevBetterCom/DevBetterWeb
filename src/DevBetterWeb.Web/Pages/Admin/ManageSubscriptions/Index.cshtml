@@ -60,7 +60,7 @@
 						else
 						{
 							<form method="post" asp-page-handler="Pause" style="display:inline"
-							      onsubmit="return confirm('Pause collection for @subscription.CustomerEmail? Stripe will stop charging until resumed.');">
+							      onsubmit="return confirm('Pause collection for this customer? Stripe will stop charging until resumed.');">
 								<input type="hidden" name="subscriptionId" value="@subscription.Id" />
 								<button type="submit" class="btn btn-sm btn-warning">Pause</button>
 							</form>
@@ -68,13 +68,13 @@
 						@if (!subscription.CancelAtPeriodEnd)
 						{
 							<form method="post" asp-page-handler="Cancel" style="display:inline"
-							      onsubmit="return confirm('Cancel @subscription.CustomerEmail at period end?');">
+							      onsubmit="return confirm('Cancel this subscription at period end?');">
 								<input type="hidden" name="subscriptionId" value="@subscription.Id" />
 								<button type="submit" class="btn btn-sm btn-outline-danger">Cancel at Period End</button>
 							</form>
 						}
 						<form method="post" asp-page-handler="CancelNow" style="display:inline"
-						      onsubmit="return confirm('IMMEDIATELY cancel @subscription.Id for @subscription.CustomerEmail? This cannot be undone.');">
+						      onsubmit="return confirm('IMMEDIATELY cancel this subscription? This cannot be undone.');">
 							<input type="hidden" name="subscriptionId" value="@subscription.Id" />
 							<button type="submit" class="btn btn-sm btn-danger">Cancel Now</button>
 						</form>
