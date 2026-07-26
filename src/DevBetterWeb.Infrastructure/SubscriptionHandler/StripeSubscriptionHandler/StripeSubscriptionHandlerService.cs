@@ -41,10 +41,25 @@ public class StripeSubscriptionHandlerService : ISubscriptionHandlerService
 	}
 
 	public Task<Subscription> PauseAsync(string subscriptionId, CancellationToken cancellationToken = default)
-		=> throw new NotImplementedException();
+	{
+		var options = new SubscriptionUpdateOptions
+		{
+			PauseCollection = new SubscriptionPauseCollectionOptions
+			{
+				Behavior = "void",
+			},
+		};
+
+		return _subscriptionService.UpdateAsync(subscriptionId, options, cancellationToken: cancellationToken);
+	}
 
 	public Task<Subscription> ResumeAsync(string subscriptionId, CancellationToken cancellationToken = default)
-		=> throw new NotImplementedException();
+	{
+		var options = new SubscriptionUpdateOptions();
+		options.AddExtraParam("pause_collection", "");
+
+		return _subscriptionService.UpdateAsync(subscriptionId, options, cancellationToken: cancellationToken);
+	}
 
 	public Task<Subscription> CancelAtPeriodEndAsync(string subscriptionId, CancellationToken cancellationToken = default)
 		=> throw new NotImplementedException();
