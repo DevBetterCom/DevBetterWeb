@@ -62,8 +62,17 @@ public class StripeSubscriptionHandlerService : ISubscriptionHandlerService
 	}
 
 	public Task<Subscription> CancelAtPeriodEndAsync(string subscriptionId, CancellationToken cancellationToken = default)
-		=> throw new NotImplementedException();
+	{
+		var options = new SubscriptionUpdateOptions
+		{
+			CancelAtPeriodEnd = true,
+		};
+
+		return _subscriptionService.UpdateAsync(subscriptionId, options, cancellationToken: cancellationToken);
+	}
 
 	public Task<Subscription> CancelImmediatelyAsync(string subscriptionId, CancellationToken cancellationToken = default)
-		=> throw new NotImplementedException();
+	{
+		return _subscriptionService.CancelAsync(subscriptionId, null, cancellationToken: cancellationToken);
+	}
 }
