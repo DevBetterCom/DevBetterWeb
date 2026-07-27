@@ -339,3 +339,6 @@ src/DevBetterWeb.Web/web.config
 /src/DevBetterWeb.Web/migrate.sql
 /NDependOut
 /src/DevBetterWeb.Web/log*.*
+
+# Claude Code worktrees live inside the repo; plans stay tracked
+.claude/worktrees/
