@@ -22,10 +22,14 @@ public class GraduationCommunicationsService : IGraduationCommunicationsService
 
   public async Task SendGraduationCommunications(Member member)
   {
-    var memberEmail = "";
+    var user = await _userManager.FindByIdAsync(member.UserId);
+    var memberEmail = user?.Email ?? member.Email;
     var memberSubject = "Congratulations from DevBetter!";
     var memberText = "You're now an alumnus of DevBetter! Congratulations on your graduation!\nNow that you're an alumnus, you'll retain full access as long as you want it (and you follow our code of conduct and other terms), but your subscription is free.";
-    await _emailService.SendEmailAsync(memberEmail, memberSubject, memberText);
+    if (!string.IsNullOrEmpty(memberEmail))
+    {
+      await _emailService.SendEmailAsync(memberEmail, memberSubject, memberText);
+    }
 
     var adminSubject = "DevBetter Graduation";
     var adminText = $"{member.UserFullName()} is now an alumnus of DevBetter. Please add them to the Alumni role in Discord and ensure that they are no longer paying for access.";

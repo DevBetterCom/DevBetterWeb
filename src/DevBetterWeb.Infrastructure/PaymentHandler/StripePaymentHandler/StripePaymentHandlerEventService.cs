@@ -21,7 +21,7 @@ public class StripePaymentHandlerEventService : IPaymentHandlerEventService
     var invoice = stripeEvent.Data.Object as Invoice;
     if (invoice != null)
     {
-      return invoice.SubscriptionId;
+      return invoice.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty;
     }
 
     var subscription = stripeEvent.Data.Object as Subscription;
@@ -38,7 +38,7 @@ public class StripePaymentHandlerEventService : IPaymentHandlerEventService
     var invoice = stripeEvent.Data.Object as Invoice;
     if (invoice != null)
     {
-      return invoice.SubscriptionId;
+      return invoice.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty;
     }
 
     var subscription = stripeEvent.Data.Object as Subscription;

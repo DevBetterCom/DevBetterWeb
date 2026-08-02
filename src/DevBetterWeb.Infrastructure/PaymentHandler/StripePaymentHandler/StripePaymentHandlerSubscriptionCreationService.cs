@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
@@ -50,14 +51,14 @@ public class StripePaymentHandlerSubscriptionCreationService : IPaymentHandlerSu
         },
     };
 
-    subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+    subscriptionOptions.AddExpand("latest_invoice.payments.data.payment.payment_intent");
 
     var subscription = _subscriptionService.Create(subscriptionOptions);
 
     var id = subscription.Id;
     var status = subscription.Status;
-    var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.PaymentIntent.Status;
-    var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
+    var latestInvoicePaymentIntentStatus = subscription.LatestInvoice.Payments?.Data?.FirstOrDefault()?.Payment?.PaymentIntent?.Status ?? string.Empty;
+    var latestInvoicePaymentIntentClientSecret = subscription.LatestInvoice.ConfirmationSecret?.ClientSecret ?? string.Empty;
 
     var subscriptionDTO = new StripePaymentHandlerSubscriptionDTO(id, status, latestInvoicePaymentIntentStatus, latestInvoicePaymentIntentClientSecret);
 

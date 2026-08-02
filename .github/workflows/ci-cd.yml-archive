@@ -72,13 +72,13 @@ jobs:
         id: build_solution
         shell: pwsh
         run: |
-          dotnet build ./DevBetterWeb.sln --configuration Release
+          dotnet build ./DevBetterWeb.slnx --configuration Release
 
       - name: Run unit tests
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test ./DevBetterWeb.sln --filter FullyQualifiedName!~Vimeo.Tests --configuration Release --no-build
+          dotnet test ./DevBetterWeb.slnx --filter FullyQualifiedName!~Vimeo.Tests --configuration Release --no-build
       - name: Publish WebApp
         id: publish_webapp
         shell: pwsh

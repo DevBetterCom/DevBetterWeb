@@ -1,0 +1,87 @@
+@page
+@model DevBetterWeb.Web.Pages.Admin.ManageSubscriptions.IndexModel
+
+@{
+	ViewData["Title"] = "Manage Subscriptions";
+}
+
+<h2>Manage Subscriptions</h2>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+	<div class="alert alert-info">@Model.StatusMessage</div>
+}
+
+<div class="card">
+	<div class="card-header">
+		<b>Billable Stripe Subscriptions (@Model.Subscriptions.Count)</b>
+	</div>
+	<div class="card-body" style="overflow: auto;">
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Customer Email</th>
+				<th>Plan</th>
+				<th>Amount</th>
+				<th>Interval</th>
+				<th>Status</th>
+				<th>Current Period End</th>
+				<th>Actions</th>
+			</tr>
+			</thead>
+			<tbody>
+			@foreach (var subscription in Model.Subscriptions)
+			{
+				<tr>
+					<td>@subscription.CustomerEmail<br /><small class="text-muted">@subscription.Id</small></td>
+					<td>@subscription.PlanName</td>
+					<td>$@subscription.Amount.ToString("F2") @subscription.Currency.ToUpper()</td>
+					<td>@subscription.Interval</td>
+					<td>
+						@subscription.Status
+						@if (subscription.IsPaused)
+						{
+							<span class="badge badge-warning">Paused</span>
+						}
+						@if (subscription.CancelAtPeriodEnd)
+						{
+							<span class="badge badge-secondary">Cancels at period end</span>
+						}
+					</td>
+					<td>@subscription.CurrentPeriodEnd.ToString("MM/dd/yyyy")</td>
+					<td style="white-space: nowrap;">
+						@if (subscription.IsPaused)
+						{
+							<form method="post" asp-page-handler="Resume" style="display:inline">
+								<input type="hidden" name="subscriptionId" value="@subscription.Id" />
+								<button type="submit" class="btn btn-sm btn-success">Resume</button>
+							</form>
+						}
+						else
+						{
+							<form method="post" asp-page-handler="Pause" style="display:inline"
+							      onsubmit="return confirm('Pause collection for this customer? Stripe will stop charging until resumed.');">
+								<input type="hidden" name="subscriptionId" value="@subscription.Id" />
+								<button type="submit" class="btn btn-sm btn-warning">Pause</button>
+							</form>
+						}
+						@if (!subscription.CancelAtPeriodEnd)
+						{
+							<form method="post" asp-page-handler="Cancel" style="display:inline"
+							      onsubmit="return confirm('Cancel this subscription at period end?');">
+								<input type="hidden" name="subscriptionId" value="@subscription.Id" />
+								<button type="submit" class="btn btn-sm btn-outline-danger">Cancel at Period End</button>
+							</form>
+						}
+						<form method="post" asp-page-handler="CancelNow" style="display:inline"
+						      onsubmit="return confirm('IMMEDIATELY cancel this subscription? This cannot be undone.');">
+							<input type="hidden" name="subscriptionId" value="@subscription.Id" />
+							<button type="submit" class="btn btn-sm btn-danger">Cancel Now</button>
+						</form>
+					</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DevBetterWeb.Web.Models;
 using Stripe;
 
@@ -10,9 +10,9 @@ public class InvoiceProfile : Profile
   {
 	  CreateMap<Invoice, StripeInvoiceDto>()
 		  .ForPath(dest => dest.IsPaid,
-			  opt => opt.MapFrom(source => source.Paid))
+			  opt => opt.MapFrom(source => source.Status == "paid"))
 		  .ForPath(dest => dest.IsPaidOutOfBand,
-			  opt => opt.MapFrom(source => source.PaidOutOfBand))
+			  opt => opt.MapFrom(source => false))
 			.ForPath(dest => dest.FinalizedAt,
 			  opt => opt.MapFrom(source => source.StatusTransitions.FinalizedAt))
 		  .ForPath(dest => dest.PaidAt,

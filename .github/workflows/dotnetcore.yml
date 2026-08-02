@@ -10,11 +10,11 @@ jobs:
       VIMEO_TOKEN: ${{ secrets.VIMEO_TOKEN }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7.0.0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '10.0.x'
         include-prerelease: true
     - name: Build and Test with dotnet
       run: dotnet test DevBetterWeb.slnx --filter FullyQualifiedName!~Vimeo.Tests --configuration Release

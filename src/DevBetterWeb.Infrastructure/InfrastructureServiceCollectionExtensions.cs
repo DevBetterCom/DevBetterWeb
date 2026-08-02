@@ -8,6 +8,7 @@ using DevBetterWeb.Infrastructure.InvoiceHandler.StripeInvoiceHandler;
 using DevBetterWeb.Infrastructure.IssuingHandler.StripeIssuingHandler;
 using DevBetterWeb.Infrastructure.Logging;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Infrastructure.SubscriptionHandler.StripeSubscriptionHandler;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Stripe;
@@ -74,6 +75,7 @@ public static class InfrastructureServiceCollectionExtensions
 		services.AddTransient<IIssuingHandlerCardListService, StripeIssuingHandlerCardListService>();
 		services.AddTransient<IIssuingHandlerTransactionListService, StripeIssuingHandlerTransactionListService>();
 		services.AddTransient<IInvoiceHandlerListService, StripeInvoiceHandlerListService>();
+		services.AddTransient<ISubscriptionHandlerService, StripeSubscriptionHandlerService>();
 
 		// Vimeo
 		services.RegisterVimeoServicesDependencies(vimeoToken);

@@ -13,7 +13,6 @@ using NimblePros.Vimeo.Models;
 using NimblePros.Vimeo.VideoServices;
 using NimblePros.Vimeo.VideoTusService;
 using static DevBetterWeb.Core.Entities.Member;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace DevBetterWeb.Core.Services;
 public class CreateVideoService : ICreateVideoService
