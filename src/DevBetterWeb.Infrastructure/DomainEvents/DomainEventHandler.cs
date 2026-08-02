@@ -17,7 +17,7 @@ public class DomainEventHandler<TDomainEvent> : INotificationHandler<TDomainEven
 		_handlers = handlers;
 	}
 
-	public async Task Handle(TDomainEvent notification, CancellationToken cancellationToken)
+	public async ValueTask Handle(TDomainEvent notification, CancellationToken cancellationToken)
 	{
 		foreach (var handler in _handlers)
 		{
