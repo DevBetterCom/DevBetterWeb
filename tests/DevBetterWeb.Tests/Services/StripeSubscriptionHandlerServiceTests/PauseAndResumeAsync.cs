@@ -28,7 +28,7 @@ public class PauseAndResumeAsync
 
 		await _stripeSubscriptionService.Received(1).UpdateAsync(SubscriptionId,
 			Arg.Is<SubscriptionUpdateOptions>(o =>
-				o.PauseCollection != null && o.PauseCollection.Behavior == "void"),
+				o!.PauseCollection != null && o.PauseCollection.Behavior == "void"),
 			Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>());
 	}
 
@@ -41,7 +41,7 @@ public class PauseAndResumeAsync
 		// via AddExtraParam, which lands in the options' ExtraParams dictionary.
 		await _stripeSubscriptionService.Received(1).UpdateAsync(SubscriptionId,
 			Arg.Is<SubscriptionUpdateOptions>(o =>
-				o.ExtraParams != null && o.ExtraParams.ContainsKey("pause_collection")),
+				o!.ExtraParams != null && o.ExtraParams.ContainsKey("pause_collection")),
 			Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>());
 	}
 }

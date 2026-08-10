@@ -6,7 +6,7 @@ using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Web;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Models;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;

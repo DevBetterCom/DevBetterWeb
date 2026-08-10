@@ -141,7 +141,7 @@ public class SetBookCategoriesAsync
 		_rankAndOrderServiceMock.When(x => x.OrderByRankForMembersAndBooks(Arg.Any<List<BookCategoryDto>>()))
 			.Do(callInfo =>
 			{
-				foreach (var category in callInfo.Arg<List<BookCategoryDto>>())
+				foreach (var category in callInfo.Arg<List<BookCategoryDto>>()!)
 				{
 					category.Members = category.Members.OrderBy(m => m.BooksRank).ToList();
 				}
@@ -178,7 +178,7 @@ public class SetBookCategoriesAsync
 		_rankAndOrderServiceMock.When(x => x.OrderByRankForMembersAndBooks(Arg.Any<List<BookCategoryDto>>()))
 			.Do(callInfo =>
 			{
-				foreach (var category in callInfo.Arg<List<BookCategoryDto>>())
+				foreach (var category in callInfo.Arg<List<BookCategoryDto>>()!)
 				{
 					category.Members = category.Members.OrderByDescending(m => m.BooksReadCount).ThenBy(m => m.BooksRank).ToList();
 				}

@@ -17,11 +17,14 @@
 		<PackageReference Include="Ardalis.ApiEndpoints" />
 		<PackageReference Include="Ardalis.ListStartupServices" />
 		<PackageReference Include="Ardalis.SmartEnum" />
-		<PackageReference Include="BuildBundlerMinifier" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="GoogleReCaptcha.V3" />
-		<PackageReference Include="MediatR" />
+		<PackageReference Include="Mediator.Abstractions" />
+		<PackageReference Include="Mediator.SourceGenerator">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
 		<PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />

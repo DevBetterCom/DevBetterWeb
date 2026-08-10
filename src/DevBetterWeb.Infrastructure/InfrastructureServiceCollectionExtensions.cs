@@ -31,7 +31,7 @@ public static class InfrastructureServiceCollectionExtensions
 		}
 
 		// Common Dependencies
-		services.AddScoped<IDomainEventDispatcher,MediatRDomainEventDispatcher>();
+		services.AddScoped<IDomainEventDispatcher, MediatorDomainEventDispatcher>();
 //		services.AddScoped<IDomainEventDispatcher>(sp => sp.GetRequiredService<DomainEventDispatcher>());
 
 		services.AddScoped<IMemberRegistrationService, MemberRegistrationService>();

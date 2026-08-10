@@ -31,11 +31,11 @@ public class ListBillableAsync
 		foreach (var status in _billableStatuses)
 		{
 			await _stripeSubscriptionService.Received(1).ListAsync(
-				Arg.Is<SubscriptionListOptions>(o => o.Status == status && o.Expand.Contains("data.customer")),
+				Arg.Is<SubscriptionListOptions>(o => o!.Status == status && o.Expand.Contains("data.customer")),
 				Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>());
 		}
 		await _stripeSubscriptionService.DidNotReceive().ListAsync(
-			Arg.Is<SubscriptionListOptions>(o => o.Status == "all"),
+			Arg.Is<SubscriptionListOptions>(o => o!.Status == "all"),
 			Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>());
 	}
 
@@ -46,7 +46,7 @@ public class ListBillableAsync
 			.ListAsync(Arg.Any<SubscriptionListOptions>(), Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>())
 			.Returns(callInfo =>
 			{
-				var options = callInfo.Arg<SubscriptionListOptions>();
+				var options = callInfo.Arg<SubscriptionListOptions>()!;
 				var data = options.Status switch
 				{
 					"active" => new List<Subscription> { new() { Id = "sub_active", Status = "active" } },
@@ -84,7 +84,7 @@ public class ListBillableAsync
 			.ListAsync(Arg.Any<SubscriptionListOptions>(), Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>())
 			.Returns(callInfo =>
 			{
-				var options = callInfo.Arg<SubscriptionListOptions>();
+				var options = callInfo.Arg<SubscriptionListOptions>()!;
 				if (options.Status != "active")
 				{
 					return EmptyPage();

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
-using MediatR;
+using Mediator;
 
 namespace DevBetterWeb.Core.Handlers;
 

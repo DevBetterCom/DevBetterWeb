@@ -1,5 +1,5 @@
 ﻿using DevBetterWeb.Core.Events;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

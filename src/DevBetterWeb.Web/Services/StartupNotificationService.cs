@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

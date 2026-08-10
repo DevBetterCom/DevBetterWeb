@@ -5,7 +5,7 @@ using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

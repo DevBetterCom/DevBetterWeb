@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
     <PackageReference Include="Markdig" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="Mediator.Abstractions" />
     <PackageReference Include="NimblePros.Vimeo" />
     <PackageReference Include="Ardalis.EFCore.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />

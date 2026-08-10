@@ -23,8 +23,7 @@ public class CheckIfAnyActiveInvitationsRequireAdminPing
 
   public CheckIfAnyActiveInvitationsRequireAdminPing()
   {
-    var store = Substitute.For<IUserStore<ApplicationUser>>();
-    _userManager = Substitute.For<UserManager<ApplicationUser>>(store, null, null, null, null, null, null, null, null);
+    _userManager = UserManagerHelpers.CreateSubstitute();
     _service = new DailyCheckPingService(_repository, _memberRepository, _emailService, _userManager);
   }
 

@@ -3,17 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.SharedKernel;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Infrastructure.DomainEvents;
 
-public class MediatRDomainEventDispatcher : IDomainEventDispatcher
+public class MediatorDomainEventDispatcher : IDomainEventDispatcher
 {
 	private readonly IMediator _mediator;
-	private readonly ILogger<MediatRDomainEventDispatcher> _logger;
+	private readonly ILogger<MediatorDomainEventDispatcher> _logger;
 
-	public MediatRDomainEventDispatcher(IMediator mediator, ILogger<MediatRDomainEventDispatcher> logger)
+	public MediatorDomainEventDispatcher(IMediator mediator, ILogger<MediatorDomainEventDispatcher> logger)
 	{
 		_mediator = mediator;
 		_logger = logger;
