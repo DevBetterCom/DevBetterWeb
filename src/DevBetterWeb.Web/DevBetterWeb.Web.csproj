@@ -17,7 +17,6 @@
 		<PackageReference Include="Ardalis.ApiEndpoints" />
 		<PackageReference Include="Ardalis.ListStartupServices" />
 		<PackageReference Include="Ardalis.SmartEnum" />
-		<PackageReference Include="BuildBundlerMinifier" />
 		<PackageReference Include="CSharpFunctionalExtensions" />
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="GoogleReCaptcha.V3" />

@@ -30,7 +30,7 @@ public class CancelAsync
 		await _service.CancelAtPeriodEndAsync(SubscriptionId);
 
 		await _stripeSubscriptionService.Received(1).UpdateAsync(SubscriptionId,
-			Arg.Is<SubscriptionUpdateOptions>(o => o.CancelAtPeriodEnd == true),
+			Arg.Is<SubscriptionUpdateOptions>(o => o!.CancelAtPeriodEnd == true),
 			Arg.Any<RequestOptions>(), Arg.Any<CancellationToken>());
 	}
 

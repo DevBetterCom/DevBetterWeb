@@ -21,8 +21,7 @@ public class SendMemberSubscriptionEndedEmailAsync
 
   public SendMemberSubscriptionEndedEmailAsync()
   {
-    var store = Substitute.For<IUserStore<ApplicationUser>>();
-    _userManager = Substitute.For<UserManager<ApplicationUser>>(store, null, null, null, null, null, null, null, null);
+    _userManager = UserManagerHelpers.CreateSubstitute();
     _emailService = Substitute.For<IEmailService>();
     _memberLookup = Substitute.For<IMemberLookupService>();
     _memberSubscriptionEndedAdminEmailService = new MemberSubscriptionEndedAdminEmailService(
