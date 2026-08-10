@@ -127,7 +127,7 @@ public class UpdateBooksRank
 		_mockRankingService.When(rs => rs.CalculateBookRank(Arg.Any<List<BookDto>>()))
 			.Do(callInfo =>
 			{
-				foreach (var book in callInfo.Arg<List<BookDto>>())
+				foreach (var book in callInfo.Arg<List<BookDto>>()!)
 				{
 					book.Rank = book.Id!.Value;
 				}
