@@ -1,11 +1,14 @@
 ﻿using System;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 
 namespace DevBetterWeb.Web.Controllers;
 
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS)]
 [Route("get-subscription-status")]
 [ApiController]
 public class SubscriptionStatusController : Controller

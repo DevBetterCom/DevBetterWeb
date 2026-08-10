@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.SharedKernel;
-using MediatR;
+using Mediator;
 
 namespace DevBetterWeb.Core.Interfaces;
 

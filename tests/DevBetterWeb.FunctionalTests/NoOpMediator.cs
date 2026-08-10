@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+#nullable enable
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Mediator;
 
 namespace DevBetterWeb.FunctionalTests;
 
@@ -12,33 +13,48 @@ public class NoOpMediator : IMediator
 		throw new System.NotImplementedException();
 	}
 
-	public IAsyncEnumerable<object> CreateStream(object request, CancellationToken cancellationToken = default)
+	public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamQuery<TResponse> query, CancellationToken cancellationToken = default)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public Task Publish(object notification, CancellationToken cancellationToken = default)
+	public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamCommand<TResponse> command, CancellationToken cancellationToken = default)
 	{
-		return Task.CompletedTask;
+		throw new System.NotImplementedException();
 	}
 
-	public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
+	public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default)
 	{
-		return Task.CompletedTask;
+		throw new System.NotImplementedException();
 	}
 
-	public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+	public ValueTask Publish(object notification, CancellationToken cancellationToken = default)
 	{
-		return Task.FromResult<TResponse>(default);
+		return ValueTask.CompletedTask;
 	}
 
-	public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest
+	public ValueTask Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
 	{
-		return Task.CompletedTask;
+		return ValueTask.CompletedTask;
 	}
 
-	public Task<object> Send(object request, CancellationToken cancellationToken = default)
+	public ValueTask<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
 	{
-		return Task.FromResult<object>(default);
+		return ValueTask.FromResult<TResponse>(default!);
+	}
+
+	public ValueTask<TResponse> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
+	{
+		return ValueTask.FromResult<TResponse>(default!);
+	}
+
+	public ValueTask<TResponse> Send<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+	{
+		return ValueTask.FromResult<TResponse>(default!);
+	}
+
+	public ValueTask<object?> Send(object request, CancellationToken cancellationToken = default)
+	{
+		return ValueTask.FromResult<object?>(default);
 	}
 }

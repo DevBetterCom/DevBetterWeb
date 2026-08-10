@@ -1,6 +1,6 @@
 ﻿using System;
 using DevBetterWeb.Core.SharedKernel;
-using MediatR;
+using Mediator;
 
 namespace DevBetterWeb.Core.Events;
 

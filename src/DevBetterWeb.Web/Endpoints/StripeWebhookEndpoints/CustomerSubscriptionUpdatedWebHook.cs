@@ -57,7 +57,7 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 
 			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
-			if (stripeEvent.Type != EventTypes.CustomerUpdated)
+			if (stripeEvent.Type != EventTypes.CustomerSubscriptionUpdated)
 			{
 				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
 			}

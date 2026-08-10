@@ -2,15 +2,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Web.Pages.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace DevBetterWeb.Web.Pages.Map;
 
+[Authorize(Roles = AuthConstants.Roles.ADMINISTRATORS_MEMBERS_ALUMNI)]
 public class IndexModel : PageModel
 {
   private readonly ILogger<IndexModel> _logger;

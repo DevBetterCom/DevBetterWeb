@@ -3,7 +3,7 @@ using DevBetterWeb.Core.Events;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Identity.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
