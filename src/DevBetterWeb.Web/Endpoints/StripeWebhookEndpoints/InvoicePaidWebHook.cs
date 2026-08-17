@@ -47,17 +47,24 @@ public class InvoicePaidWebHook : EndpointBaseAsync
 			json = await streamReader.ReadToEndAsync();
 		}
 
+		string? signatureHeader = Request.Headers["Stripe-Signature"];
+		if (string.IsNullOrEmpty(signatureHeader))
+		{
+			_logger.LogWarning("Missing Stripe-Signature header");
+			return BadRequest("Missing Stripe-Signature header");
+		}
+
 		try
 		{
-			var stripeEvent = EventUtility.ConstructEvent(json,
-				Request.Headers["Stripe-Signature"], _stripeWebHookSecretKey);
+			var stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, _stripeWebHookSecretKey);
 
 			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
 			// Was InvoicePaymentSucceeded changed to InvoicePaid
 			if (stripeEvent.Type != EventTypes.InvoicePaid)
 			{
-				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
+				_logger.LogWarning($"Ignoring unexpected Stripe event type {stripeEvent.Type}");
+				return Ok();
 			}
 
 			await HandleInvoicePaymentSucceeded(json);

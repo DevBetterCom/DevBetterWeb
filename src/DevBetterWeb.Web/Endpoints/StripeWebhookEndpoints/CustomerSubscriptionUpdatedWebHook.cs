@@ -50,16 +50,23 @@ public class CustomerSubscriptionUpdatedWebHook : EndpointBaseAsync
 			json = await streamReader.ReadToEndAsync();
 		}
 
+		string? signatureHeader = Request.Headers["Stripe-Signature"];
+		if (string.IsNullOrEmpty(signatureHeader))
+		{
+			_logger.LogWarning("Missing Stripe-Signature header");
+			return BadRequest("Missing Stripe-Signature header");
+		}
+
 		try
 		{
-			var stripeEvent = EventUtility.ConstructEvent(json,
-				Request.Headers["Stripe-Signature"], _stripeWebHookSecretKey);
+			var stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, _stripeWebHookSecretKey);
 
 			_logger.LogInformation($"Processing Stripe Event Type: {stripeEvent.Type}");
 
 			if (stripeEvent.Type != EventTypes.CustomerSubscriptionUpdated)
 			{
-				throw new Exception($"Unhandled Stripe event type {stripeEvent.Type}");
+				_logger.LogWarning($"Ignoring unexpected Stripe event type {stripeEvent.Type}");
+				return Ok();
 			}
 
 			var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
