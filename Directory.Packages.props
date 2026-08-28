@@ -68,7 +68,7 @@
     <PackageVersion Include="NimblePros.ApiClient" Version="2.2.0" />
     <PackageVersion Include="NimblePros.Metronome" Version="0.4.1" />
     <PackageVersion Include="NimblePros.Vimeo" Version="2.1.2" />
-    <PackageVersion Include="NSubstitute" Version="6.0.0" />
+    <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="ReportGenerator" Version="5.5.11" />
     <PackageVersion Include="Sendgrid" Version="9.29.3" />
     <PackageVersion Include="Serilog" Version="4.4.0" />
