@@ -17,13 +17,18 @@ public class DateTimeRange : ValueObject
     EndDate = endDate;
   }
 
-  /// <summary>
-  /// Returns total number of days in the DateTimeRange.
-  /// If no EndDate has been specified, will use provided endDateToUseIfMissing instead.
-  /// </summary>
-  /// <param name="endDateToUseIfMissing"></param>
-  /// <returns></returns>
-  public int ToDays(DateTime endDateToUseIfMissing)
+  public void UpdateEnd(DateTime endDate)
+  {
+	  EndDate = endDate;
+  }
+
+	/// <summary>
+	/// Returns total number of days in the DateTimeRange.
+	/// If no EndDate has been specified, will use provided endDateToUseIfMissing instead.
+	/// </summary>
+	/// <param name="endDateToUseIfMissing"></param>
+	/// <returns></returns>
+	public int ToDays(DateTime endDateToUseIfMissing)
   {
     var end = EndDate ?? endDateToUseIfMissing;
 
@@ -48,14 +53,13 @@ public class DateTimeRange : ValueObject
 
   public bool Contains(DateTime date)
   {
-    if (date >= StartDate && date <= EndDate)
-    {
-      return true;
-    }
-    return false;
+	  if (date < StartDate) return false;
+	  if (EndDate == null) return true;
+
+	  return date <= EndDate;
   }
 
-  protected override IEnumerable<IComparable> GetEqualityComponents()
+	protected override IEnumerable<IComparable> GetEqualityComponents()
   {
     yield return StartDate;
     yield return EndDate ?? DateTime.MaxValue;

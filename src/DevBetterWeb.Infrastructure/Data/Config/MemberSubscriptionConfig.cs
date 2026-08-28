@@ -8,7 +8,7 @@ class MemberSubscriptionConfig : IEntityTypeConfiguration<MemberSubscription>
 {
   public void Configure(EntityTypeBuilder<MemberSubscription> builder)
   {
-    builder.OwnsOne(x => x.Dates)
-           .ToTable("MemberSubscriptionDates");
-  }
+    builder
+	    .ComplexProperty(x => x.Dates);
+	}
 }
