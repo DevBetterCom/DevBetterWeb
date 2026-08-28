@@ -1,24 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
 using DevBetterWeb.Core.Entities;
 
 namespace DevBetterWeb.Web.Pages.User;
 
-public class UserPersonalUpdateModel
+public class UserPersonalUpdateModel : IValidatableObject
 {
 
 	[Required]
 	public string? FirstName { get; set; }
 	[Required]
 	public string? LastName { get; set; }
-	[Required]
 	public string? Address { get; set; }
-	[Required]
 	public string? City { get; set; }
 	public string? State { get; set; }
-	[Required]
 	public string? Country { get; set; }
-	[Required]
 	public string? PostalCode { get; set; }
 	[Range(1, 31)]
   [BirthdayDay]
@@ -59,5 +56,29 @@ public class UserPersonalUpdateModel
 		PEFriendCode = member.PEFriendCode;
 		PEUsername = member.PEUsername;
 		DiscordUsername = member.DiscordUsername;
+	}
+
+	public bool HasAnyAddressField() =>
+		!string.IsNullOrWhiteSpace(Address) ||
+		!string.IsNullOrWhiteSpace(City) ||
+		!string.IsNullOrWhiteSpace(Country) ||
+		!string.IsNullOrWhiteSpace(PostalCode) ||
+		!string.IsNullOrWhiteSpace(State);
+
+	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+	{
+		if (!HasAnyAddressField()) yield break;
+
+		if (string.IsNullOrWhiteSpace(Address))
+			yield return new ValidationResult("The Address field is required when providing address information.", new[] { nameof(Address) });
+
+		if (string.IsNullOrWhiteSpace(City))
+			yield return new ValidationResult("The City field is required when providing address information.", new[] { nameof(City) });
+
+		if (string.IsNullOrWhiteSpace(Country))
+			yield return new ValidationResult("The Country field is required when providing address information.", new[] { nameof(Country) });
+
+		if (string.IsNullOrWhiteSpace(PostalCode))
+			yield return new ValidationResult("The Postal Code field is required when providing address information.", new[] { nameof(PostalCode) });
 	}
 }
