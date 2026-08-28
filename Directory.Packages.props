@@ -44,7 +44,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.11" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.10" />
