@@ -12,6 +12,28 @@
 	<div class="alert alert-info">@Model.StatusMessage</div>
 }
 
+<div class="card mb-3">
+	<div class="card-header">
+		<b>Replay Missed Stripe Webhooks</b>
+	</div>
+	<div class="card-body">
+		<p class="text-muted">
+			Use these when a Stripe webhook failed and the event cannot be resent (for example, events created with an older API version).
+			Each action runs the same processing as the webhook, so only replay an event once.
+		</p>
+		<form method="post" asp-page-handler="ReplayPaidInvoice" class="form-inline mb-2"
+		      onsubmit="return confirm('Process this paid invoice? A new subscription sends a registration email; a renewal extends the member and records billing activity.');">
+			<input type="text" name="invoiceId" class="form-control mr-2" placeholder="in_..." style="min-width: 22rem;" />
+			<button type="submit" class="btn btn-primary">Replay invoice.paid</button>
+		</form>
+		<form method="post" asp-page-handler="ReplaySubscriptionEnded" class="form-inline"
+		      onsubmit="return confirm('Process this subscription as ended? This removes the member role and sends a cancellation email.');">
+			<input type="text" name="subscriptionId" class="form-control mr-2" placeholder="sub_..." style="min-width: 22rem;" />
+			<button type="submit" class="btn btn-danger">Replay subscription ended</button>
+		</form>
+	</div>
+</div>
+
 <div class="card">
 	<div class="card-header">
 		<b>Billable Stripe Subscriptions (@Model.Subscriptions.Count)</b>

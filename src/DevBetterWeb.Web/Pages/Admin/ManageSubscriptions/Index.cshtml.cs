@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevBetterWeb.Core;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ namespace DevBetterWeb.Web.Pages.Admin.ManageSubscriptions;
 public class IndexModel : PageModel
 {
 	private readonly ISubscriptionHandlerService _subscriptionHandlerService;
+	private readonly IWebhookHandlerService _webhookHandlerService;
 	private readonly IMapper _mapper;
 
 	public List<StripeSubscriptionDto> Subscriptions { get; private set; } = new();
@@ -24,9 +26,12 @@ public class IndexModel : PageModel
 	[TempData]
 	public string? StatusMessage { get; set; }
 
-	public IndexModel(ISubscriptionHandlerService subscriptionHandlerService, IMapper mapper)
+	public IndexModel(ISubscriptionHandlerService subscriptionHandlerService,
+		IWebhookHandlerService webhookHandlerService,
+		IMapper mapper)
 	{
 		_subscriptionHandlerService = subscriptionHandlerService;
+		_webhookHandlerService = webhookHandlerService;
 		_mapper = mapper;
 	}
 
@@ -54,6 +59,34 @@ public class IndexModel : PageModel
 	public Task<IActionResult> OnPostCancelNowAsync(string subscriptionId)
 		=> ExecuteActionAsync(subscriptionId, id => _subscriptionHandlerService.CancelImmediatelyAsync(id, HttpContext.RequestAborted),
 			"canceled immediately");
+
+	// Replays invoice.paid processing (new member invitation or renewal) for events Stripe could not deliver.
+	public Task<IActionResult> OnPostReplayPaidInvoiceAsync(string invoiceId)
+		=> ExecuteReplayAsync(invoiceId, "invoice", () => _webhookHandlerService.ReprocessPaidInvoiceAsync(invoiceId.Trim()));
+
+	// Replays customer.subscription.deleted processing (member role removal) for events Stripe could not deliver.
+	public Task<IActionResult> OnPostReplaySubscriptionEndedAsync(string subscriptionId)
+		=> ExecuteReplayAsync(subscriptionId, "subscription", () => _webhookHandlerService.ReprocessSubscriptionEndedAsync(subscriptionId.Trim()));
+
+	private async Task<IActionResult> ExecuteReplayAsync(string id, string idKind, Func<Task<string>> replay)
+	{
+		if (string.IsNullOrWhiteSpace(id))
+		{
+			StatusMessage = $"No {idKind} id provided.";
+			return RedirectToPage();
+		}
+
+		try
+		{
+			StatusMessage = await replay();
+		}
+		catch (Exception exception)
+		{
+			StatusMessage = $"Error replaying {idKind} {id}: {exception.Message}";
+		}
+
+		return RedirectToPage();
+	}
 
 	private async Task<IActionResult> ExecuteActionAsync(string subscriptionId,
 		Func<string, Task<Subscription>> action, string successVerb)

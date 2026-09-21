@@ -1,4 +1,6 @@
-﻿namespace DevBetterWeb.Core.Interfaces;
+﻿using DevBetterWeb.Core.ValueObjects;
+
+namespace DevBetterWeb.Core.Interfaces;
 
 public interface IPaymentHandlerInvoice
 {
@@ -6,4 +8,5 @@ public interface IPaymentHandlerInvoice
   string GetBillingReason(string json);
   string GetCustomerId(string json);
   decimal GetPaymentAmount(string json);
+  PaidInvoiceDetails GetInvoiceDetails(string invoiceId);
 }

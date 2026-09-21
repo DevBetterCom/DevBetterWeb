@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.MappingProfiles;
 using DevBetterWeb.Web.Pages.Admin.ManageSubscriptions;
@@ -15,6 +16,7 @@ namespace DevBetterWeb.Tests.Pages.ManageSubscriptionsIndexModelTests;
 public class OnGetAsync
 {
 	private readonly ISubscriptionHandlerService _subscriptionHandlerService = Substitute.For<ISubscriptionHandlerService>();
+	private readonly IWebhookHandlerService _webhookHandlerService = Substitute.For<IWebhookHandlerService>();
 	private readonly IndexModel _pageModel;
 
 	public OnGetAsync()
@@ -22,7 +24,7 @@ public class OnGetAsync
 		var configuration = new MapperConfiguration(
 			cfg => cfg.AddProfile<SubscriptionProfile>(),
 			NullLoggerFactory.Instance);
-		_pageModel = new IndexModel(_subscriptionHandlerService, configuration.CreateMapper());
+		_pageModel = new IndexModel(_subscriptionHandlerService, _webhookHandlerService, configuration.CreateMapper());
 		_pageModel.PageContext = new Microsoft.AspNetCore.Mvc.RazorPages.PageContext
 		{
 			HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext(),
