@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DevBetterWeb.Core;
 using DevBetterWeb.Core.Entities;
 using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
@@ -79,7 +80,12 @@ public class WebhookHandlerService : IWebhookHandlerService
   {
 		// TODO: Log all JSON from these webhooks to a db table - perhaps use a decorator on this service
     var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
-    var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
+    await HandleCustomerSubscriptionEndedBySubscriptionIdAsync(paymentHandlerEvent.SubscriptionId);
+  }
+
+  private async Task HandleCustomerSubscriptionEndedBySubscriptionIdAsync(string subscriptionId)
+  {
+    var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
 		if (await IsAlumniAsync(paymentHandlerCustomer.Email))
@@ -94,8 +100,8 @@ public class WebhookHandlerService : IWebhookHandlerService
     var memberFullInfo = await _repository.FirstOrDefaultAsync(memberByEmailSpec);
 
 		await _memberSubscriptionEndedAdminEmailService.SendMemberSubscriptionEndedEmailAsync(paymentHandlerCustomer.Email, memberFullInfo);
-    var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
-    var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
+    var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+    var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
     await _memberAddBillingActivityService.AddMemberSubscriptionEndingBillingActivity(paymentHandlerCustomer.Email, subscriptionPlanName, billingPeriod);
   }
 
@@ -103,7 +109,13 @@ public class WebhookHandlerService : IWebhookHandlerService
   {
 		// TODO: Log all JSON from these webhooks to a db table - perhaps use a decorator on this service
 		var paymentHandlerEvent = _paymentHandlerEventService.FromJson(json);
-    var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
+    var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
+    await HandleCustomerSubscriptionRenewedAsync(paymentHandlerEvent.SubscriptionId, paymentAmount);
+  }
+
+  private async Task HandleCustomerSubscriptionRenewedAsync(string subscriptionId, decimal paymentAmount)
+  {
+    var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
     var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
     if (await IsAlumniAsync(paymentHandlerCustomer.Email))
@@ -111,14 +123,12 @@ public class WebhookHandlerService : IWebhookHandlerService
 	    return;
     }
 
-    var subscriptionEndDate = _paymentHandlerSubscription.GetEndDate(paymentHandlerEvent.SubscriptionId);
+    var subscriptionEndDate = _paymentHandlerSubscription.GetEndDate(subscriptionId);
 
     await _memberSubscriptionRenewalService.ExtendMemberSubscription(paymentHandlerCustomer.Email, subscriptionEndDate);
 
-    var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
-
-    var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(paymentHandlerEvent.SubscriptionId);
-    var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(paymentHandlerEvent.SubscriptionId);
+    var subscriptionPlanName = _paymentHandlerSubscription.GetAssociatedProductName(subscriptionId);
+    var billingPeriod = _paymentHandlerSubscription.GetBillingPeriod(subscriptionId);
     await _memberAddBillingActivityService.AddMemberSubscriptionRenewalBillingActivity(paymentHandlerCustomer.Email, paymentAmount, subscriptionPlanName, billingPeriod);
   }
 
@@ -131,23 +141,83 @@ public class WebhookHandlerService : IWebhookHandlerService
       _logger.LogWarning("Payment handler subscriptionId is null or empty", json);
     }
     var paymentAmount = _paymentHandlerInvoice.GetPaymentAmount(json);
+    await HandleNewCustomerSubscriptionAsync(paymentHandlerEvent.SubscriptionId, paymentAmount);
+  }
 
-    var newSubscriberIsAlreadyMember = await IsNewCustomerSubscriptionWithEmailAlreadyMember(paymentHandlerEvent.SubscriptionId);
+  /// <summary>
+  /// Re-runs invoice.paid processing for an invoice fetched from Stripe, for events that
+  /// could not be delivered to (or were rejected by) the invoice.paid webhook.
+  /// </summary>
+  public async Task<string> ReprocessPaidInvoiceAsync(string invoiceId)
+  {
+    var invoice = _paymentHandlerInvoice.GetInvoiceDetails(invoiceId);
+
+    if (invoice.Status != "paid")
+    {
+      return $"Invoice {invoiceId} was not processed because its status is '{invoice.Status}', not 'paid'.";
+    }
+
+    if (string.IsNullOrEmpty(invoice.SubscriptionId))
+    {
+      return $"Invoice {invoiceId} was not processed because it is not associated with a subscription.";
+    }
+
+    if (invoice.BillingReason == StripeConstants.INVOICE_PAYMENT_SUCCEEDED_FOR_SUBSCRIPTION_CREATION)
+    {
+      var status = _paymentHandlerSubscription.GetStatus(invoice.SubscriptionId);
+      if (status != "active")
+      {
+        return $"Invoice {invoiceId} was not processed because subscription {invoice.SubscriptionId} status is '{status}', not 'active'.";
+      }
+
+      await HandleNewCustomerSubscriptionAsync(invoice.SubscriptionId, invoice.Total);
+      return $"Invoice {invoiceId} processed as a new subscription ({invoice.SubscriptionId}).";
+    }
+
+    if (invoice.BillingReason == StripeConstants.INVOICE_PAYMENT_SUCCEEDED_FOR_SUBSCRIPTION_RENEWAL)
+    {
+      await HandleCustomerSubscriptionRenewedAsync(invoice.SubscriptionId, invoice.Total);
+      return $"Invoice {invoiceId} processed as a subscription renewal ({invoice.SubscriptionId}).";
+    }
+
+    return $"Invoice {invoiceId} was not processed because billing reason '{invoice.BillingReason}' is not handled.";
+  }
+
+  /// <summary>
+  /// Re-runs customer.subscription.deleted processing for a subscription, for events that
+  /// could not be delivered to (or were rejected by) the subscription deleted webhook.
+  /// Refuses to run unless Stripe reports the subscription as canceled.
+  /// </summary>
+  public async Task<string> ReprocessSubscriptionEndedAsync(string subscriptionId)
+  {
+    var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
+    if (status != "canceled")
+    {
+      return $"Subscription {subscriptionId} was not processed because its status is '{status}', not 'canceled'.";
+    }
+
+    await HandleCustomerSubscriptionEndedBySubscriptionIdAsync(subscriptionId);
+    return $"Subscription {subscriptionId} processed as ended.";
+  }
+
+  private async Task HandleNewCustomerSubscriptionAsync(string subscriptionId, decimal paymentAmount)
+  {
+    var newSubscriberIsAlreadyMember = await IsNewCustomerSubscriptionWithEmailAlreadyMember(subscriptionId);
 
     if (newSubscriberIsAlreadyMember)
     {
-      _logger.LogInformation("New subscriber is an existing devBetter member", json);
+      _logger.LogInformation($"New subscriber on subscription {subscriptionId} is an existing devBetter member");
 
-      await HandleNewCustomerSubscriptionWithEmailAlreadyMember(paymentHandlerEvent.SubscriptionId, paymentAmount);
+      await HandleNewCustomerSubscriptionWithEmailAlreadyMember(subscriptionId, paymentAmount);
     }
     else
     {
-      var status = _paymentHandlerSubscription.GetStatus(paymentHandlerEvent.SubscriptionId);
+      var status = _paymentHandlerSubscription.GetStatus(subscriptionId);
       _logger.LogInformation($"Subscription status: {status}");
 
       if (status == "active")
       {
-        var customerId = _paymentHandlerSubscription.GetCustomerId(paymentHandlerEvent.SubscriptionId);
+        var customerId = _paymentHandlerSubscription.GetCustomerId(subscriptionId);
         var paymentHandlerCustomer = _paymentHandlerCustomerService.GetCustomer(customerId);
 
         if (string.IsNullOrEmpty(paymentHandlerCustomer.Email))
@@ -155,7 +225,7 @@ public class WebhookHandlerService : IWebhookHandlerService
           throw new InvalidEmailException();
         }
 
-        Invitation invite = await _newMemberService.CreateInvitationAsync(paymentHandlerCustomer.Email, paymentHandlerEvent.SubscriptionId);
+        Invitation invite = await _newMemberService.CreateInvitationAsync(paymentHandlerCustomer.Email, subscriptionId);
 
         var webhookMessage = $"A new customer with email {paymentHandlerCustomer.Email} has subscribed to DevBetter. They will be receiving a registration email.";
         await _webhook.SendAsync($"Webhook:\n{webhookMessage}");

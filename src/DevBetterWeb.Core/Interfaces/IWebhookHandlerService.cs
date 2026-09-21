@@ -8,4 +8,6 @@ public interface IWebhookHandlerService
   Task HandleCustomerSubscriptionRenewedAsync(string json);
   Task HandleCustomerSubscriptionEndedAsync(string json);
   Task HandleCustomerSubscriptionCancelledAtPeriodEndAsync(string json);
+  Task<string> ReprocessSubscriptionEndedAsync(string subscriptionId);
+  Task<string> ReprocessPaidInvoiceAsync(string invoiceId);
 }

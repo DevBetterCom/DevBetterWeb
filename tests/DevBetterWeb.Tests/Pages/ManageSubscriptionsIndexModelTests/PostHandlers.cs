@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Interfaces;
 using DevBetterWeb.Web.MappingProfiles;
 using DevBetterWeb.Web.Pages.Admin.ManageSubscriptions;
@@ -19,6 +20,7 @@ public class PostHandlers
 {
 	private const string SubscriptionId = "sub_123";
 	private readonly ISubscriptionHandlerService _subscriptionHandlerService = Substitute.For<ISubscriptionHandlerService>();
+	private readonly IWebhookHandlerService _webhookHandlerService = Substitute.For<IWebhookHandlerService>();
 	private readonly IndexModel _pageModel;
 
 	public PostHandlers()
@@ -26,7 +28,7 @@ public class PostHandlers
 		var configuration = new MapperConfiguration(
 			cfg => cfg.AddProfile<SubscriptionProfile>(),
 			NullLoggerFactory.Instance);
-		_pageModel = new IndexModel(_subscriptionHandlerService, configuration.CreateMapper());
+		_pageModel = new IndexModel(_subscriptionHandlerService, _webhookHandlerService, configuration.CreateMapper());
 		_pageModel.PageContext = new PageContext { HttpContext = new DefaultHttpContext() };
 	}
 
@@ -77,6 +79,51 @@ public class PostHandlers
 
 		Assert.IsType<RedirectToPageResult>(result);
 		Assert.Contains("No such subscription", _pageModel.StatusMessage);
+	}
+
+	[Fact]
+	public async Task ReplayPaidInvoiceReprocessesInvoiceAndReportsResult()
+	{
+		_webhookHandlerService.ReprocessPaidInvoiceAsync("in_123").Returns("Invoice in_123 processed as a new subscription (sub_123).");
+
+		var result = await _pageModel.OnPostReplayPaidInvoiceAsync(" in_123 ");
+
+		await _webhookHandlerService.Received(1).ReprocessPaidInvoiceAsync("in_123");
+		Assert.IsType<RedirectToPageResult>(result);
+		Assert.Contains("processed as a new subscription", _pageModel.StatusMessage);
+	}
+
+	[Fact]
+	public async Task ReplayPaidInvoiceErrorIsReportedInStatusMessageNotThrown()
+	{
+		_webhookHandlerService.ReprocessPaidInvoiceAsync("in_123")
+			.Returns<Task<string>>(_ => throw new StripeException("No such invoice"));
+
+		var result = await _pageModel.OnPostReplayPaidInvoiceAsync("in_123");
+
+		Assert.IsType<RedirectToPageResult>(result);
+		Assert.Contains("No such invoice", _pageModel.StatusMessage);
+	}
+
+	[Fact]
+	public async Task ReplayPaidInvoiceRejectsMissingInvoiceId()
+	{
+		var result = await _pageModel.OnPostReplayPaidInvoiceAsync("");
+
+		await _webhookHandlerService.DidNotReceiveWithAnyArgs().ReprocessPaidInvoiceAsync(default!);
+		Assert.IsType<RedirectToPageResult>(result);
+	}
+
+	[Fact]
+	public async Task ReplaySubscriptionEndedProcessesSubscriptionAsEnded()
+	{
+		_webhookHandlerService.ReprocessSubscriptionEndedAsync(SubscriptionId).Returns($"Subscription {SubscriptionId} processed as ended.");
+
+		var result = await _pageModel.OnPostReplaySubscriptionEndedAsync(SubscriptionId);
+
+		await _webhookHandlerService.Received(1).ReprocessSubscriptionEndedAsync(SubscriptionId);
+		Assert.IsType<RedirectToPageResult>(result);
+		Assert.Contains("processed as ended", _pageModel.StatusMessage);
 	}
 
 	[Fact]

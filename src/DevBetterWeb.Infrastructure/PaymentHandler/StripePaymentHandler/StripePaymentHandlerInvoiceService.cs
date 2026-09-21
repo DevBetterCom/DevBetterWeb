@@ -1,10 +1,18 @@
 ﻿using DevBetterWeb.Core.Interfaces;
+using DevBetterWeb.Core.ValueObjects;
 using Stripe;
 
 namespace DevBetterWeb.Infrastructure.PaymentHandler.StripePaymentHandler;
 
 public class StripePaymentHandlerInvoiceService : IPaymentHandlerInvoice
 {
+  private readonly InvoiceService _invoiceService;
+
+  public StripePaymentHandlerInvoiceService(InvoiceService invoiceService)
+  {
+    _invoiceService = invoiceService;
+  }
+
   public string GetBillingReason(string json)
   {
     var stripeEvent = EventUtility.ParseEvent(json);
@@ -43,5 +51,17 @@ public class StripePaymentHandlerInvoiceService : IPaymentHandlerInvoice
     var subscriptionId = invoice!.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty;
 
     return subscriptionId;
+  }
+
+  public PaidInvoiceDetails GetInvoiceDetails(string invoiceId)
+  {
+    var invoice = _invoiceService.Get(invoiceId);
+
+    return new PaidInvoiceDetails(
+      invoice.Id,
+      invoice.Parent?.SubscriptionDetails?.SubscriptionId ?? string.Empty,
+      invoice.BillingReason,
+      invoice.Status,
+      invoice.Total);
   }
 }
