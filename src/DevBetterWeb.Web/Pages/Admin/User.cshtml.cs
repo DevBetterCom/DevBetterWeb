@@ -107,7 +107,7 @@ public class UserModel : PageModel
 			}
 			catch (Exception exception)
 			{
-				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", userId);
+				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", SanitizeForLog(userId));
 			}
 
 			var roles = await _roleManager.Roles.ToListAsync();
@@ -259,6 +259,11 @@ public class UserModel : PageModel
 		await _subscriptionRepository.UpdateAsync(subscriptionEntity);
 
 		return RedirectToPage("./User", new { userId = userId });
+	}
+
+	private static string SanitizeForLog(string? value)
+	{
+		return value?.Replace("\r", string.Empty).Replace("\n", string.Empty) ?? string.Empty;
 	}
 
 	public async Task<IActionResult> OnPostUpdateEmailConfirmationAsync(string userId, bool isEmailConfirmed)
