@@ -119,7 +119,7 @@
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
     <form asp-page-handler="UpdatePersonalInfo">
-      <input type="hidden" name="userId" value="@Model.UserPersonalUpdateModel.UserId" />
+      <input type="hidden" name="userId" value="@Model.UserId" />
       <div class="card">
         <div class="card-header">
           <b>Personal</b>
@@ -128,6 +128,7 @@
           </div>
         </div>
         <div class="card-body">
+          <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
           <div class="form-group">
             <label class="font-weight-bold">Email</label>
             <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
@@ -213,7 +214,7 @@
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
     <form asp-page-handler="UpdateLinks">
-      <input type="hidden" name="userId" value="@Model.UserLinksUpdateModel.UserId" />
+      <input type="hidden" name="userId" value="@Model.UserId" />
       <div class="card">
         <div class="card-header">
           <b>Links</b>
