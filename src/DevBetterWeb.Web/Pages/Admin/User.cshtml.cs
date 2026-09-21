@@ -69,6 +69,9 @@ public class UserModel : PageModel
 	}
 
 
+	// Set from the route before anything else loads so the page's forms always post a userId,
+	// even if a later part of OnGetAsync (e.g. the Stripe invoice lookup) fails.
+	public string UserId { get; set; } = string.Empty;
 	public IdentityUser? IdentityUser { get; set; }
 	public List<IdentityRole> Roles { get; set; } = new List<IdentityRole>();
 	public List<SelectListItem> RolesNotAssignedToUser { get; set; } = new List<SelectListItem>();
@@ -81,6 +84,8 @@ public class UserModel : PageModel
 
 	public async Task<IActionResult> OnGetAsync(string userId)
 	{
+		UserId = userId;
+
 		try
 		{
 			if (string.IsNullOrEmpty(userId))
@@ -95,8 +100,19 @@ public class UserModel : PageModel
 				return BadRequest();
 			}
 
-			var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser!.Email!);
-			Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
+			try
+			{
+				var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser!.Email!);
+				Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
+			}
+			catch (InvalidOperationException exception)
+			{
+				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", userId);
+			}
+			catch (DbUpdateException exception)
+			{
+				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", SanitizeForLog(userId));
+			}
 
 			var roles = await _roleManager.Roles.ToListAsync();
 
@@ -249,6 +265,11 @@ public class UserModel : PageModel
 		return RedirectToPage("./User", new { userId = userId });
 	}
 
+	private static string SanitizeForLog(string? value)
+	{
+		return value?.Replace("\r", string.Empty).Replace("\n", string.Empty) ?? string.Empty;
+	}
+
 	public async Task<IActionResult> OnPostUpdateEmailConfirmationAsync(string userId, bool isEmailConfirmed)
 	{
 		await _userEmailConfirmationService.UpdateUserEmailConfirmationAsync(userId, !isEmailConfirmed);
@@ -258,21 +279,38 @@ public class UserModel : PageModel
 
 	public async Task<IActionResult> OnPostUpdatePersonalInfoAsync(string userId)
 	{
+		// Admins often edit members who have not entered a shipping address yet, so the address
+		// fields are only required once any of them is filled in.
+		bool hasShippingAddress = HasAnyShippingAddressField(UserPersonalUpdateModel);
+		if (!hasShippingAddress)
+		{
+			foreach (var field in ShippingAddressFields)
+			{
+				ModelState.Remove($"{nameof(UserPersonalUpdateModel)}.{field}");
+			}
+		}
+
 		if (!ModelState.IsValid)
 		{
-			ModelState.AddModelError("InvalidUserId", "Bad Data");
-			return BadRequest(ModelState);
+			return await RedisplayPersonalInfoFormAsync(userId);
 		}
 
 		var spec = new MemberByUserIdSpec(userId);
 		var member = await _memberRepository.FirstOrDefaultAsync(spec);
-		if (member is null) throw new MemberNotFoundException(userId);
+		if (member is null)
+		{
+			ModelState.AddModelError(string.Empty, $"No member record exists for user {userId}.");
+			return await RedisplayPersonalInfoFormAsync(userId);
+		}
 
 		member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName, false);
 		member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername, false);
 		member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo, false);
 		member.UpdateAddress(UserPersonalUpdateModel.Address, false);
-		member.UpdateShippingAddress(UserPersonalUpdateModel.Address!, UserPersonalUpdateModel.City!, UserPersonalUpdateModel.State!, UserPersonalUpdateModel.PostalCode!, UserPersonalUpdateModel.Country!, false);
+		if (hasShippingAddress)
+		{
+			member.UpdateShippingAddress(UserPersonalUpdateModel.Address!, UserPersonalUpdateModel.City!, UserPersonalUpdateModel.State!, UserPersonalUpdateModel.PostalCode!, UserPersonalUpdateModel.Country!, false);
+		}
 		member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername, false);
 		member.UpdateEmail(UserPersonalUpdateModel.Email, false);
 
@@ -287,6 +325,32 @@ public class UserModel : PageModel
 
 		return RedirectToPage("./User", new { userId });
 	}
+
+	private static readonly string[] ShippingAddressFields =
+	{
+		nameof(UserPersonalUpdateModel.Address),
+		nameof(UserPersonalUpdateModel.City),
+		nameof(UserPersonalUpdateModel.State),
+		nameof(UserPersonalUpdateModel.Country),
+		nameof(UserPersonalUpdateModel.PostalCode),
+	};
+
+	private static bool HasAnyShippingAddressField(UserPersonalUpdateModel model) =>
+		!string.IsNullOrWhiteSpace(model.Address) ||
+		!string.IsNullOrWhiteSpace(model.City) ||
+		!string.IsNullOrWhiteSpace(model.State) ||
+		!string.IsNullOrWhiteSpace(model.Country) ||
+		!string.IsNullOrWhiteSpace(model.PostalCode);
+
+	// Reloads the page data but keeps the admin's submitted values so validation errors show next to the fields.
+	private async Task<IActionResult> RedisplayPersonalInfoFormAsync(string userId)
+	{
+		var submitted = UserPersonalUpdateModel;
+		var result = await OnGetAsync(userId);
+		UserPersonalUpdateModel = submitted;
+		return result;
+	}
+
 	public async Task<IActionResult> OnPostUpdateLinksAsync(string userId)
 	{
 		var spec = new MemberByUserIdSpec(userId);
