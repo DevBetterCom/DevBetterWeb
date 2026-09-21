@@ -128,6 +128,7 @@
           </div>
         </div>
         <div class="card-body">
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
           <div class="form-group">
             <label class="font-weight-bold">Email</label>
             <input asp-for="UserPersonalUpdateModel.Email" type="text" value="@Model.UserPersonalUpdateModel.Email" class="form-control form-control-sm" />
