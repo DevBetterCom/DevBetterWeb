@@ -105,7 +105,11 @@ public class UserModel : PageModel
 				var invoices = await _invoiceHandlerListService.SearchByEmailAsync(currentUser!.Email!);
 				Invoices = _mapper.Map<List<StripeInvoiceDto>>(invoices);
 			}
-			catch (Exception exception)
+			catch (InvalidOperationException exception)
+			{
+				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", userId);
+			}
+			catch (DbUpdateException exception)
 			{
 				_logger.LogError(exception, "Unable to load Stripe invoices for userId {UserId}", SanitizeForLog(userId));
 			}
