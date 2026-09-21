@@ -116,7 +116,7 @@ public class OnPostUpdatePersonalInfoAsync
   public async Task RedisplaysFormWithErrorGivenNoMemberRecord()
   {
     _memberRepository.FirstOrDefaultAsync(Arg.Any<MemberByUserIdSpec>(), Arg.Any<CancellationToken>())
-      .Returns((Member?)null);
+      .Returns(null);
     _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel { FirstName = "Kajan", LastName = "Smith" };
 
     var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
