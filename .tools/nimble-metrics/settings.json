@@ -1,0 +1,16 @@
+{
+  "rebuildHistory": {
+    "enabled": false,
+    "maxTotalDataPoints": 25,
+    "minimumTimeGranularity": "days"
+  },
+  "concerns": {
+    "enabled": false,
+    "regionRetention": 0
+  },
+  "filters": {
+    "exclude": [
+      "**/wwwroot/**"
+    ]
+  }
+}
