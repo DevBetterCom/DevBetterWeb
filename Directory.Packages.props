@@ -4,7 +4,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="altcover" Version="9.0.102" />
+    <PackageVersion Include="altcover" Version="9.0.145" />
     <PackageVersion Include="Ardalis.ApiClient" Version="0.2.3" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
@@ -17,13 +17,13 @@
     <PackageVersion Include="Ardalis.Specification" Version="9.3.1" />
     <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
     <PackageVersion Include="AutoMapper" Version="16.2.0" />
-    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="coverlet.msbuild" Version="10.0.1">
+    <PackageVersion Include="coverlet.collector" Version="10.1.0" />
+    <PackageVersion Include="coverlet.msbuild" Version="10.1.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.7.0" />
-    <PackageVersion Include="Dapper" Version="2.1.79" />
+    <PackageVersion Include="Dapper" Version="2.1.89" />
     <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.19.2" />
@@ -32,7 +32,7 @@
     <PackageVersion Include="Flurl" Version="4.0.0" />
     <PackageVersion Include="Flurl.Http" Version="4.0.2" />
     <PackageVersion Include="GoogleReCaptcha.V3" Version="1.3.1" />
-    <PackageVersion Include="Markdig" Version="1.3.2" />
+    <PackageVersion Include="Markdig" Version="1.4.0" />
     <PackageVersion Include="MediaInfo.Wrapper.Core" Version="21.9.3" />
     <PackageVersion Include="Mediator.Abstractions" Version="3.0.2" />
     <PackageVersion Include="Mediator.SourceGenerator" Version="3.0.2" />
@@ -44,31 +44,31 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageVersion Include="Microsoft.CodeCoverage" Version="17.8.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
     <PackageVersion Include="NETStandard.Library" Version="2.0.3" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="NimblePros.ApiClient" Version="2.2.0" />
     <PackageVersion Include="NimblePros.Metronome" Version="0.4.1" />
     <PackageVersion Include="NimblePros.Vimeo" Version="2.1.2" />
-    <PackageVersion Include="NSubstitute" Version="6.0.0" />
+    <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="ReportGenerator" Version="5.5.11" />
     <PackageVersion Include="Sendgrid" Version="9.29.3" />
     <PackageVersion Include="Serilog" Version="4.4.0" />
@@ -77,9 +77,11 @@
     <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="10.0.0" />
     <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="5.0.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.13" />
+    <!-- Pinned: 2.x is the last Apache-2.0 release; 3.0+ uses the Six Labors Split License (commercial). Do not upgrade. -->
+    <PackageVersion Include="SixLabors.ImageSharp" Version="[2.1.13]" />
     <PackageVersion Include="SQLite" Version="3.13.0" />
-    <PackageVersion Include="Stripe.net" Version="52.2.0" />
+    <!-- Pinned: each Stripe.net major targets a new Stripe API version; webhook ConstructEvent rejects events from other versions. Upgrade only together with the Stripe webhook endpoint API version. -->
+    <PackageVersion Include="Stripe.net" Version="[52.2.0]" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
@@ -87,7 +89,7 @@
     <PackageVersion Include="TagHelperSamples.Authorization" Version="3.0.56" />
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
     <PackageVersion Include="xunit.runner.console" Version="2.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

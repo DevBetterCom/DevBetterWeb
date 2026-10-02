@@ -13,3 +13,10 @@ updates:
     open-pull-requests-limit: 10
     schedule:
       interval: "daily"
+    ignore:
+      # ImageSharp 3.0+ is under the Six Labors Split License; stay on Apache-2.0 2.x
+      - dependency-name: "SixLabors.ImageSharp"
+        versions: [">= 3.0.0"]
+      # Stripe.net majors change the Stripe API version; upgrade manually with webhook config
+      - dependency-name: "Stripe.net"
+        update-types: ["version-update:semver-major"]
