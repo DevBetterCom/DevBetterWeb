@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
 using DevBetterWeb.Core.Entities;
+using DevBetterWeb.Infrastructure.Data.Config;
 
 namespace DevBetterWeb.Web.Pages.User;
 
@@ -12,13 +13,18 @@ public class UserPersonalUpdateModel
 	[Required]
 	public string? LastName { get; set; }
 	[Required]
+	[StringLength(500)]
 	public string? Address { get; set; }
 	[Required]
+	[StringLength(DataConfigConstants.NAME_COLUMN_WIDTH)]
 	public string? City { get; set; }
+	[StringLength(DataConfigConstants.NAME_COLUMN_WIDTH)]
 	public string? State { get; set; }
 	[Required]
+	[StringLength(DataConfigConstants.NAME_COLUMN_WIDTH)]
 	public string? Country { get; set; }
 	[Required]
+	[StringLength(12)]
 	public string? PostalCode { get; set; }
 	[Range(1, 31)]
   [BirthdayDay]
