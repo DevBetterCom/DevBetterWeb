@@ -279,10 +279,19 @@ public class UserModel : PageModel
 
 	public async Task<IActionResult> OnPostUpdatePersonalInfoAsync(string userId)
 	{
-		// Admins often edit members who have not entered a shipping address yet, so the address
-		// fields are only required once any of them is filled in.
+		var spec = new MemberByUserIdSpec(userId);
+		var member = await _memberRepository.FirstOrDefaultAsync(spec);
+		if (member is null)
+		{
+			ModelState.AddModelError(string.Empty, $"No member record exists for user {userId}.");
+			return await RedisplayPersonalInfoFormAsync(userId);
+		}
+
+		// Admins often edit members whose stored address is missing or incomplete, so the address
+		// fields are only required when the admin changes the address to something non-blank.
 		bool hasShippingAddress = HasAnyShippingAddressField(UserPersonalUpdateModel);
-		if (!hasShippingAddress)
+		bool shippingAddressChanged = HasShippingAddressChanged(UserPersonalUpdateModel, new UserPersonalUpdateModel(member));
+		if (!hasShippingAddress || !shippingAddressChanged)
 		{
 			foreach (var field in ShippingAddressFields)
 			{
@@ -295,21 +304,18 @@ public class UserModel : PageModel
 			return await RedisplayPersonalInfoFormAsync(userId);
 		}
 
-		var spec = new MemberByUserIdSpec(userId);
-		var member = await _memberRepository.FirstOrDefaultAsync(spec);
-		if (member is null)
-		{
-			ModelState.AddModelError(string.Empty, $"No member record exists for user {userId}.");
-			return await RedisplayPersonalInfoFormAsync(userId);
-		}
-
 		member.UpdateName(UserPersonalUpdateModel.FirstName, UserPersonalUpdateModel.LastName, false);
 		member.UpdatePEInfo(UserPersonalUpdateModel.PEFriendCode, UserPersonalUpdateModel.PEUsername, false);
 		member.UpdateAboutInfo(UserPersonalUpdateModel.AboutInfo, false);
-		member.UpdateAddress(UserPersonalUpdateModel.Address, false);
-		if (hasShippingAddress)
+		if (shippingAddressChanged && hasShippingAddress)
 		{
-			member.UpdateShippingAddress(UserPersonalUpdateModel.Address!, UserPersonalUpdateModel.City!, UserPersonalUpdateModel.State!, UserPersonalUpdateModel.PostalCode!, UserPersonalUpdateModel.Country!, false);
+			member.UpdateAddress(UserPersonalUpdateModel.Address, false);
+			// A null State would make EF read the whole owned ShippingAddress back as null.
+			member.UpdateShippingAddress(UserPersonalUpdateModel.Address!, UserPersonalUpdateModel.City!, UserPersonalUpdateModel.State ?? string.Empty, UserPersonalUpdateModel.PostalCode!, UserPersonalUpdateModel.Country!, false);
+		}
+		else if (shippingAddressChanged && member.ShippingAddress is null)
+		{
+			member.UpdateAddress(null, false);
 		}
 		member.UpdateDiscord(UserPersonalUpdateModel.DiscordUsername, false);
 		member.UpdateEmail(UserPersonalUpdateModel.Email, false);
@@ -341,6 +347,17 @@ public class UserModel : PageModel
 		!string.IsNullOrWhiteSpace(model.State) ||
 		!string.IsNullOrWhiteSpace(model.Country) ||
 		!string.IsNullOrWhiteSpace(model.PostalCode);
+
+	private static bool HasShippingAddressChanged(UserPersonalUpdateModel submitted, UserPersonalUpdateModel stored) =>
+		NormalizeAddressField(submitted.Address) != NormalizeAddressField(stored.Address) ||
+		NormalizeAddressField(submitted.City) != NormalizeAddressField(stored.City) ||
+		NormalizeAddressField(submitted.State) != NormalizeAddressField(stored.State) ||
+		NormalizeAddressField(submitted.Country) != NormalizeAddressField(stored.Country) ||
+		NormalizeAddressField(submitted.PostalCode) != NormalizeAddressField(stored.PostalCode);
+
+	// Browsers post textarea line breaks as CRLF, which must not count as an edit to a stored address.
+	private static string NormalizeAddressField(string? value) =>
+		(value ?? string.Empty).ReplaceLineEndings("\n").Trim();
 
 	// Reloads the page data but keeps the admin's submitted values so validation errors show next to the fields.
 	private async Task<IActionResult> RedisplayPersonalInfoFormAsync(string userId)

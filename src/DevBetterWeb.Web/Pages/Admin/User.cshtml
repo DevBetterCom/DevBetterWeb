@@ -118,7 +118,7 @@
 
 <div class="row" style="margin-top: 20px;">
   <div class="col-12">
-    <form asp-page-handler="UpdatePersonalInfo">
+    <form asp-page-handler="UpdatePersonalInfo" id="personalInfoForm">
       <input type="hidden" name="userId" value="@Model.UserId" />
       <div class="card">
         <div class="card-header">
@@ -471,6 +471,7 @@
           <div class="form-group">
             <label asp-for="Subscription.StartDate">Start Date</label>
             <input asp-for="Subscription.StartDate" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+            <span asp-validation-for="Subscription.StartDate" class="text-danger"></span>
           </div>
           <div class="form-group">
             <label asp-for="Subscription.EndDate">End Date</label>
@@ -550,6 +551,7 @@
           <div class="form-group">
             <label asp-for="Subscription.StartDate">Start Date</label>
             <input asp-for="Subscription.StartDate" type="date" id="inputEditSubscriptionStartDate" class="form-control" data-clear-button="true" />
+            <span asp-validation-for="Subscription.StartDate" class="text-danger"></span>
           </div>
           <div class="form-group">
             <label asp-for="Subscription.EndDate">End Date</label>
@@ -593,4 +595,6 @@
 
 @section scripts{
 <script src="~/js/admin.js" asp-append-version="true"></script>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/admin-user.js" asp-append-version="true"></script>
 }
