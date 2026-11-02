@@ -101,6 +101,160 @@ public class OnPostUpdatePersonalInfoAsync
   }
 
   [Fact]
+  public async Task SavesNameGivenUnchangedIncompleteStoredShippingAddress()
+  {
+    _member.UpdateShippingAddress("", "Vavuniya", "", "43000", "Sri Lanka", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      City = "Vavuniya",
+      PostalCode = "43000",
+      Country = "Sri Lanka"
+    };
+    _pageModel.ModelState.AddModelError("UserPersonalUpdateModel.Address", "The Address field is required.");
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("Kajan", _member.FirstName);
+    Assert.Equal("", _member.ShippingAddress!.State);
+    await _memberRepository.Received(1).UpdateAsync(_member, Arg.Any<CancellationToken>());
+  }
+
+  [Fact]
+  public async Task SavesNameAndKeepsLegacyAddressGivenNoShippingAddressRecord()
+  {
+    _member.UpdateAddress("1 Main St, Springfield", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      Address = "1 Main St, Springfield"
+    };
+    GivenBindingErrorsForEmptyAddressFields();
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("1 Main St, Springfield", _member.Address);
+    Assert.Null(_member.ShippingAddress);
+  }
+
+  [Fact]
+  public async Task TreatsLineEndingDifferenceAsUnchangedShippingAddress()
+  {
+    _member.UpdateShippingAddress("1 Main St\nApt 2", "Springfield", "IL", "12345", "US", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      Address = "1 Main St\r\nApt 2",
+      City = "Springfield",
+      State = "IL",
+      PostalCode = "12345",
+      Country = "US"
+    };
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("1 Main St\nApt 2", _member.ShippingAddress!.Street);
+  }
+
+  [Fact]
+  public async Task RedisplaysFormGivenEditToIncompleteStoredShippingAddress()
+  {
+    _member.UpdateShippingAddress("", "Vavuniya", "", "43000", "Sri Lanka", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      City = "Colombo",
+      PostalCode = "43000",
+      Country = "Sri Lanka"
+    };
+    _pageModel.ModelState.AddModelError("UserPersonalUpdateModel.Address", "The Address field is required.");
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<PageResult>(result);
+    Assert.False(_pageModel.ModelState.IsValid);
+    Assert.Equal("Vavuniya", _member.ShippingAddress!.City);
+    await _memberRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+  }
+
+  [Fact]
+  public async Task SavesShippingAddressGivenCompleteNewAddress()
+  {
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      Address = "1 Main St",
+      City = "Springfield",
+      State = "IL",
+      PostalCode = "12345",
+      Country = "US"
+    };
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("1 Main St", _member.ShippingAddress!.Street);
+    Assert.Equal("1 Main St", _member.Address);
+  }
+
+  [Fact]
+  public async Task StoresBlankStateAsEmptyStringGivenEditedShippingAddress()
+  {
+    _member.UpdateShippingAddress("1 Main St", "Springfield", "IL", "12345", "US", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel
+    {
+      FirstName = "Kajan",
+      LastName = "Smith",
+      Address = "2 Main St",
+      City = "Springfield",
+      PostalCode = "12345",
+      Country = "US"
+    };
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("2 Main St", _member.ShippingAddress!.Street);
+    Assert.Equal("", _member.ShippingAddress.State);
+  }
+
+  [Fact]
+  public async Task LeavesAddressesUntouchedGivenAllFieldsBlankedOnExistingShippingAddress()
+  {
+    _member.UpdateAddress("1 Main St", false);
+    _member.UpdateShippingAddress("1 Main St", "Springfield", "IL", "12345", "US", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel { FirstName = "Kajan", LastName = "Smith" };
+    GivenBindingErrorsForEmptyAddressFields();
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Equal("1 Main St", _member.Address);
+    Assert.Equal("1 Main St", _member.ShippingAddress!.Street);
+  }
+
+  [Fact]
+  public async Task ClearsLegacyAddressGivenBlankedAndNoShippingAddressRecord()
+  {
+    _member.UpdateAddress("1 Main St", false);
+    _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel { FirstName = "Kajan", LastName = "Smith" };
+    GivenBindingErrorsForEmptyAddressFields();
+
+    var result = await _pageModel.OnPostUpdatePersonalInfoAsync(UserId);
+
+    Assert.IsType<RedirectToPageResult>(result);
+    Assert.Null(_member.Address);
+  }
+
+  [Fact]
   public async Task RedisplaysFormInsteadOfBadRequestGivenMissingLastName()
   {
     _pageModel.UserPersonalUpdateModel = new UserPersonalUpdateModel { FirstName = "Kajan" };
