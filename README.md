@@ -123,7 +123,7 @@ Notes:
 - The SQL Server container uses a persistent lifetime and data volume, so it keeps running (and keeps its data) after the AppHost stops, which makes subsequent starts fast. Stop or delete the `sql-*` container and its volume from Docker to reset the database.
 - The generated SQL Server `sa` password is stored in the AppHost's user secrets (`Parameters:sql-password`). To connect with a SQL client, use the connection string shown for `devbetterdb` in the dashboard.
 - Other settings (Stripe, Vimeo, Discord, email, etc.) still come from the web project's `appsettings.json`/user secrets, as described above.
-- `DevBetterWeb.ServiceDefaults` adds OpenTelemetry, health checks (`/health` and `/alive`), HTTP resilience, and service discovery to the web project. Telemetry is only exported when an OTLP endpoint is configured (as it is under Aspire), so production behavior is unchanged.
+- `DevBetterWeb.ServiceDefaults` adds OpenTelemetry, health checks (`/health` and `/alive`), HTTP resilience, and service discovery to the web project. OpenTelemetry is only enabled when an OTLP endpoint is configured (as it is under Aspire), so production telemetry (Serilog and Application Insights) is unchanged. HTTP resilience (timeouts, circuit breaker, and retries for safe methods like GET) applies to every `IHttpClientFactory` client in all environments, except the Vimeo clients, which opt out because uploads are long-running.
 
 ### Run with Docker
 

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -44,6 +44,15 @@ public static class Extensions
 
 	public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
 	{
+		// Only wire up OpenTelemetry when an OTLP endpoint is configured (e.g. under the Aspire AppHost).
+		// Application Insights 3.x is itself built on OpenTelemetry, so registering instrumentation
+		// unconditionally would change what production sends to Azure Monitor (extra metrics, and
+		// health check requests filtered out of request telemetry).
+		if (!builder.IsOtlpExporterEnabled())
+		{
+			return builder;
+		}
+
 		builder.Logging.AddOpenTelemetry(logging =>
 		{
 			logging.IncludeFormattedMessage = true;
@@ -67,12 +76,8 @@ public static class Extensions
 							&& !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
 					)
 					.AddHttpClientInstrumentation();
-			});
-
-		if (builder.IsOtlpExporterEnabled())
-		{
-			builder.Services.AddOpenTelemetry().UseOtlpExporter();
-		}
+			})
+			.UseOtlpExporter();
 
 		return builder;
 	}

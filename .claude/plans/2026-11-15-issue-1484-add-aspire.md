@@ -17,6 +17,11 @@ Branch: `issue-1484-add-aspire`
   opt out of the default resilience pipeline.
 - Serilog owns logging; logs are forwarded to OpenTelemetry providers only when an OTLP
   endpoint is configured (i.e. under Aspire), so production logging is unchanged.
+- OpenTelemetry metrics/tracing are only registered when an OTLP endpoint is configured, because
+  Application Insights 3.x is built on OpenTelemetry and would otherwise pick them up in prod.
+- Pre-existing bug found during the smoke run: Mediator 3 registers handlers as singletons by
+  default, so Development DI validation failed (singleton DomainEventHandler<T> consuming scoped
+  IHandle<T>). Fixed by setting Mediator's ServiceLifetime to Scoped.
 - Local migrations currently only run in Development inside a container. The AppHost sets
   `ApplyLocalMigrations=true` so the Development web project migrates the fresh Aspire DB.
 
@@ -43,16 +48,30 @@ Branch: `issue-1484-add-aspire`
       (no containers started) and assert sql/db/web resources, connection-string reference,
       WaitFor, and `ApplyLocalMigrations` env var
 - [x] Unit/functional coverage for `/health` and `/alive` endpoints in Testing environment
-- [x] Existing MigrationServiceExtensions tests still pass
+- [x] Existing MigrationServiceExtensions tests still pass; added `ShouldApplyLocalMigrations` tests
+- [x] Unit test: Vimeo clients have no ResilienceHandler, other clients do
+- [x] Manual smoke run with Docker: sql/devbetterdb/web Healthy, migrations + seed applied,
+      `/health` + `/alive` 200, home page 200, structured logs and traces visible in dashboard
 
 ## Phase 5 — Docs
 - [x] README: "Run with .NET Aspire" section (prereqs: Docker/Podman, `aspire run` or
       `dotnet run --project src/DevBetterWeb.AppHost`)
 
 ## Phase 6 — Independent review
-- [ ] Separate agent reviews full diff vs issue
-- [ ] Address significant findings (record skipped ones here)
+- [x] Separate agent reviews full diff vs issue
+- [x] Address significant findings:
+  - Fixed: OpenTelemetry gated behind OTLP endpoint (App Insights overlap); README now states
+    the production resilience change accurately (reCAPTCHA/Google Maps clients get timeouts,
+    circuit breaker, GET retries)
+  - Fixed: added Vimeo resilience opt-out test and migration-flag unit tests
+  - Skipped (follow-up): `DailyCheckService` / `StartupNotificationService` are prod-only
+    singleton hosted services that inject scoped `IMediator`/`IRepository`; this captive
+    dependency pre-dates this change (handlers were singletons before) and fixing it means
+    reworking those services to use `IServiceScopeFactory` — out of scope for #1484.
 
 ## Phase 7 — Verification
-- [ ] `dotnet BuildTestFormat.cs` clean (build, tests, format)
-- [ ] Open PR with `Fixes #1484`
+- [x] `dotnet BuildTestFormat.cs`: build clean, all tests pass (AppHost 4, Functional 5, Tests 118,
+      Unit 183). Format check fails, but it fails identically on `origin/main` (~11.1k
+      pre-existing WHITESPACE/IMPORTS/IDE0161 diagnostics in untouched files). All new files
+      in this change are `dotnet format`-clean; follow-up: repo-wide format pass.
+- [x] Open PR with `Fixes #1484`

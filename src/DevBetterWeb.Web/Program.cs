@@ -301,7 +301,7 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
 	// Set by the Aspire AppHost so a fresh local SQL Server container gets migrated on startup.
 	bool applyLocalMigrations = webApplication.Configuration.GetValue<bool>("ApplyLocalMigrations");
-	bool shouldApplyMigrations = runningInContainer || applyLocalMigrations;
+	bool shouldApplyMigrations = MigrationServiceExtensions.ShouldApplyLocalMigrations(runningInContainer, applyLocalMigrations);
 
 	await identity.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);
 	await app.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);

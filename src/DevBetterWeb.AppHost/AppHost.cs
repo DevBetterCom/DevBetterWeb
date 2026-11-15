@@ -1,4 +1,4 @@
-using DevBetterWeb.AppHost;
+﻿using DevBetterWeb.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
