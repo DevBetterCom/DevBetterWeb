@@ -42,7 +42,18 @@ Branch: `issue-1486-vimeo-di-cleanup`
 - [x] Merge latest `main` (Aspire AppHost #1488). Resolved the `Program.cs` conflict, keeping the Aspire block and dropping the Autofac comment.
 - [x] Bump `NimblePros.Vimeo` 2.1.2 → 2.3.0 in `Directory.Packages.props`.
 - [x] `dotnet BuildTestFormat.cs`: build OK, 315/315 tests pass (AppHost.Tests 4, FunctionalTests 5, Tests 118, UnitTests 188). The functional tests start the full host, so 2.3.0's startup duplicate-registration check passes. The format failures are the same pre-existing ones as on `main`.
-- Risk outside this PR: `AddServiceDefaults` (#1488) adds `AddStandardResilienceHandler` to every HttpClient, Vimeo ones included. Its default timeouts (10s per attempt, 30s total) override the Vimeo clients' 60-minute timeout and could break large chunk uploads. Tracked separately.
+- Risk outside this PR: `AddServiceDefaults` (#1488) adds `AddStandardResilienceHandler` to every HttpClient, Vimeo ones included. Its default timeouts (10s per attempt, 30s total) override the Vimeo clients' 60-minute timeout and could break large chunk uploads.
+
+## Phase 6 – Vimeo resilience timeout fix (requested by the maintainer)
+
+- [x] Added `AddDevBetterVimeoServices` in `src/DevBetterWeb.Web/VimeoServiceCollectionExtensions.cs`. It calls `AddVimeoServices` and then `RemoveAllResilienceHandlers()` on `VimeoApi`, `VimeoTusApi` and `VimeoOEmbed`, using the `ServiceConstants` names, so the clients' 60-minute timeout applies again. It runs after `AddVimeoServices`, as 2.3.0 requires.
+  - `RemoveAllResilienceHandlers` is marked experimental (EXTEXP0001), so the warning is suppressed with a `#pragma` on that one line. It is the documented way to opt a client out of `ConfigureHttpClientDefaults`. The other options rely on the internal `"{name}-standard"` pipeline naming or mean changing the shared ServiceDefaults.
+- [x] `Program.cs` calls `AddDevBetterVimeoServices`.
+- [x] Tests in `tests/DevBetterWeb.UnitTests/Web/VimeoServiceCollectionExtensionsTests.cs` build the host with `AddServiceDefaults`, as `Program.cs` does, and check:
+  - no `ResilienceHandler` in any Vimeo client's handler chain (these fail without the fix);
+  - each Vimeo client keeps its 60-minute timeout;
+  - other clients keep their resilience handler.
+- [x] `dotnet BuildTestFormat.cs`: build OK, 322/322 tests pass. Running `dotnet format --verify-no-changes` on the solution, limited to the new files, exits 0. The full-solution run still reports one IMPORTS issue at (1,1) of the new Web file, which I could not reproduce in isolation. Every other format issue is pre-existing on `main`.
 
 ## Deferred
 

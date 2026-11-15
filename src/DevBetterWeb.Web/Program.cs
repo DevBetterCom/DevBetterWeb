@@ -28,7 +28,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NimblePros.Metronome;
-using NimblePros.Vimeo.Extensions;
 using Serilog;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
@@ -160,7 +159,7 @@ builder.Services.AddScoped(typeof(ILocalMigrationService<>), typeof(MigrationSer
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
-builder.Services.AddVimeoServices(vimeoSettings.Token);
+builder.Services.AddDevBetterVimeoServices(vimeoSettings.Token);
 
 // list services
 builder.Services.Configure<ServiceConfig>(config =>
