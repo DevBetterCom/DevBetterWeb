@@ -15,7 +15,7 @@ Evidence first, boundaries second, sequencing third. The deliverable is a dated 
 
 Collect, with file paths as evidence:
 
-- **Project + package references**: which SDKs leak where (e.g. Vimeo in Core, MediatR in Core)?
+- **Project + package references**: which SDKs leak where (e.g. Vimeo in Core, Mediator in Core)?
 - **Entity graph**: navigation collections on the largest entity — each collection pointing at another feature is a paved-over module boundary. Count lines; find business logic living on it.
 - **Repository surface**: open-generic `IRepository<T>` registrations = no enforcement point exists.
 - **DbContexts + migration histories** (an existing second context, e.g. Identity, proves the split pattern works).
