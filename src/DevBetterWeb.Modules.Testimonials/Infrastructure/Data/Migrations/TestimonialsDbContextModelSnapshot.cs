@@ -16,7 +16,7 @@ partial class TestimonialsDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261115211322_AddTestimonials";
+    public override string LastMigrationId => "20261115212332_AddTestimonials";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -53,6 +53,12 @@ partial class TestimonialsDbContextModelSnapshot : ModelSnapshot
                 b.Property<string>("ReviewerFeedback")
                     .HasMaxLength(2000)
                     .HasColumnType("nvarchar(2000)");
+
+                b.Property<byte[]>("RowVersion")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("rowversion");
 
                 b.Property<string>("Status")
                     .IsRequired()

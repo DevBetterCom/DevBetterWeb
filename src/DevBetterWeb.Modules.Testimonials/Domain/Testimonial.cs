@@ -51,6 +51,11 @@ internal sealed class Testimonial
 	public bool CanBeSubmitted => CanBeEditedByAuthor;
 	public bool CanBeDeletedByAuthor => Status == TestimonialStatus.Draft;
 
+	/// <summary>
+	/// Concurrency token so simultaneous reviews (e.g. two admins) fail instead of silently overwriting.
+	/// </summary>
+	public byte[] RowVersion { get; private set; } = [];
+
 	public static Testimonial CreateDraft(int memberId, string content, AuthorProfile author, DateTimeOffset now)
 	{
 		Guard.Against.NegativeOrZero(memberId);
@@ -120,6 +125,14 @@ internal sealed class Testimonial
 		Status = TestimonialStatus.Declined;
 		ReviewerFeedback = normalizedReason;
 		MarkReviewed(now);
+	}
+
+	/// <summary>
+	/// Call before removing the testimonial on the author's behalf; only drafts may be deleted.
+	/// </summary>
+	public void EnsureCanBeDeletedByAuthor()
+	{
+		EnsureStatus("delete", TestimonialStatus.Draft);
 	}
 
 	private void MarkReviewed(DateTimeOffset now)

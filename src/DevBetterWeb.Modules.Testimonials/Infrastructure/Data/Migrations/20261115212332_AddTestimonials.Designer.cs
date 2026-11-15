@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevBetterWeb.Modules.Testimonials.Infrastructure.Data.Migrations;
 
 [DbContext(typeof(TestimonialsDbContext))]
-[Migration("20261115211322_AddTestimonials")]
+[Migration("20261115212332_AddTestimonials")]
 partial class AddTestimonials
 {
     /// <inheritdoc />
@@ -51,6 +51,12 @@ partial class AddTestimonials
                 b.Property<string>("ReviewerFeedback")
                     .HasMaxLength(2000)
                     .HasColumnType("nvarchar(2000)");
+
+                b.Property<byte[]>("RowVersion")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("rowversion");
 
                 b.Property<string>("Status")
                     .IsRequired()

@@ -47,6 +47,7 @@ public static class TestimonialsModule
 	/// <summary>
 	/// Applies any pending migrations for the module's DbContext.
 	/// </summary>
+	/// <param name="services">A scoped service provider (the DbContext is scoped).</param>
 	public static async Task ApplyTestimonialsMigrationsAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
 	{
 		var dbContext = services.GetRequiredService<TestimonialsDbContext>();

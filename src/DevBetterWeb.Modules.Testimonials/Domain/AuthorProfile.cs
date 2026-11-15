@@ -31,7 +31,7 @@ internal sealed class AuthorProfile
 	public string? Organization { get; private set; }
 
 	/// <summary>
-	/// Optional absolute http(s) URL overriding the member's avatar. Null means use the avatar.
+	/// Optional absolute https URL overriding the member's avatar. Null means use the avatar.
 	/// </summary>
 	public string? PhotoUrl { get; private set; }
 
@@ -45,9 +45,9 @@ internal sealed class AuthorProfile
 		string? normalizedOrganization = Normalize(organization, MaxOrganizationLength, nameof(organization));
 		string? normalizedPhotoUrl = Normalize(photoUrl, MaxPhotoUrlLength, nameof(photoUrl));
 
-		if (normalizedPhotoUrl is not null && !IsHttpUrl(normalizedPhotoUrl))
+		if (normalizedPhotoUrl is not null && !IsHttpsUrl(normalizedPhotoUrl))
 		{
-			throw new ArgumentException("Photo URL must be an absolute http or https URL.", nameof(photoUrl));
+			throw new ArgumentException("Photo URL must be an absolute https URL.", nameof(photoUrl));
 		}
 
 		return new AuthorProfile(name, normalizedTitle, normalizedOrganization, normalizedPhotoUrl);
@@ -65,7 +65,8 @@ internal sealed class AuthorProfile
 		return trimmed;
 	}
 
-	private static bool IsHttpUrl(string value) =>
+	// https only: avoids mixed content on the site and rules out javascript:/data: schemes.
+	private static bool IsHttpsUrl(string value) =>
 		Uri.TryCreate(value, UriKind.Absolute, out Uri? uri)
-		&& (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
+		&& uri.Scheme == Uri.UriSchemeHttps;
 }

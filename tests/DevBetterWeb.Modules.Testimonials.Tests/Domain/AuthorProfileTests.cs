@@ -68,15 +68,14 @@ public class AuthorProfileTests
 		Should.Throw<ArgumentException>(() => AuthorProfile.Create("Ada", photoUrl: url));
 	}
 
-	[Theory]
-	[InlineData("http://example.com/a.png")]
-	[InlineData("https://example.com/a.png")]
-	public void CreateAcceptsHttpPhotoUrls(string url)
+	[Fact]
+	public void CreateAcceptsHttpsPhotoUrl()
 	{
-		AuthorProfile.Create("Ada", photoUrl: url).PhotoUrl.ShouldBe(url);
+		AuthorProfile.Create("Ada", photoUrl: "https://example.com/a.png").PhotoUrl.ShouldBe("https://example.com/a.png");
 	}
 
 	[Theory]
+	[InlineData("http://example.com/a.png")]
 	[InlineData("javascript:alert(1)")]
 	[InlineData("data:image/png;base64,AAAA")]
 	[InlineData("ftp://example.com/a.png")]

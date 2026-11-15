@@ -17,6 +17,9 @@ public class TestimonialTransitionTests
 	public static TheoryData<TestimonialStatus> NotPendingReview() =>
 		new(Except(TestimonialStatus.PendingReview));
 
+	public static TheoryData<TestimonialStatus> NotDraft() =>
+		new(Except(TestimonialStatus.Draft));
+
 	public static TheoryData<TestimonialStatus> NotAccepted() =>
 		new(Except(TestimonialStatus.Accepted));
 
@@ -224,12 +227,66 @@ public class TestimonialTransitionTests
 	public void ReviewActionsThrowWhenNotPendingReview(TestimonialStatus status)
 	{
 		var testimonial = TestimonialBuilder.InStatus(status);
+		var before = Snapshot(testimonial);
 
 		Should.Throw<InvalidTestimonialStateException>(() => testimonial.Accept(Now));
-		Should.Throw<InvalidTestimonialStateException>(() => testimonial.Decline(Now));
+		Should.Throw<InvalidTestimonialStateException>(() => testimonial.Decline(Now, "feedback"));
 		Should.Throw<InvalidTestimonialStateException>(() => testimonial.RequestChanges("feedback", Now));
-		testimonial.Status.ShouldBe(status);
+		Snapshot(testimonial).ShouldBe(before);
 	}
+
+	[Fact]
+	public void DeclineRejectsFeedbackOverMaxLength()
+	{
+		var testimonial = TestimonialBuilder.InStatus(TestimonialStatus.PendingReview);
+		var before = Snapshot(testimonial);
+
+		Should.Throw<ArgumentException>(() => testimonial.Decline(Now, new string('x', Testimonial.MaxFeedbackLength + 1)));
+		Snapshot(testimonial).ShouldBe(before);
+	}
+
+	[Fact]
+	public void UnpublishRejectsReasonOverMaxLength()
+	{
+		var testimonial = TestimonialBuilder.InStatus(TestimonialStatus.Accepted);
+		var before = Snapshot(testimonial);
+
+		Should.Throw<ArgumentException>(() => testimonial.Unpublish(Now, new string('x', Testimonial.MaxFeedbackLength + 1)));
+		Snapshot(testimonial).ShouldBe(before);
+	}
+
+	[Fact]
+	public void CreateDraftRejectsNullAuthor()
+	{
+		Should.Throw<ArgumentNullException>(() => Testimonial.CreateDraft(1, "text", null!, Now));
+	}
+
+	[Fact]
+	public void EditRejectsNullAuthor()
+	{
+		var testimonial = TestimonialBuilder.Draft();
+
+		Should.Throw<ArgumentNullException>(() => testimonial.Edit("text", null!, Now));
+		testimonial.Content.ShouldBe(TestimonialBuilder.DefaultContent);
+	}
+
+	[Fact]
+	public void EnsureCanBeDeletedByAuthorAllowsDraft()
+	{
+		Should.NotThrow(() => TestimonialBuilder.Draft().EnsureCanBeDeletedByAuthor());
+	}
+
+	[Theory]
+	[MemberData(nameof(NotDraft))]
+	public void EnsureCanBeDeletedByAuthorThrowsWhenNotDraft(TestimonialStatus status)
+	{
+		var testimonial = TestimonialBuilder.InStatus(status);
+
+		Should.Throw<InvalidTestimonialStateException>(() => testimonial.EnsureCanBeDeletedByAuthor());
+	}
+
+	private static (TestimonialStatus, string?, DateTimeOffset, DateTimeOffset?, DateTimeOffset?) Snapshot(Testimonial t) =>
+		(t.Status, t.ReviewerFeedback, t.UpdatedAt, t.SubmittedAt, t.ReviewedAt);
 
 	[Fact]
 	public void UnpublishMovesAcceptedToDeclined()
@@ -268,7 +325,21 @@ public class TestimonialTransitionTests
 	[Fact]
 	public void DeclinedIsTerminal()
 	{
-		var testimonial = TestimonialBuilder.InStatus(TestimonialStatus.Declined);
+		AssertTerminal(TestimonialBuilder.InStatus(TestimonialStatus.Declined));
+	}
+
+	[Fact]
+	public void DeclinedViaUnpublishIsTerminal()
+	{
+		var testimonial = TestimonialBuilder.InStatus(TestimonialStatus.Accepted);
+		testimonial.Unpublish(Now);
+
+		AssertTerminal(testimonial);
+	}
+
+	private static void AssertTerminal(Testimonial testimonial)
+	{
+		testimonial.Status.ShouldBe(TestimonialStatus.Declined);
 
 		Should.Throw<InvalidTestimonialStateException>(() => testimonial.Edit("x", TestimonialBuilder.Author(), Now));
 		Should.Throw<InvalidTestimonialStateException>(() => testimonial.Submit(Now));

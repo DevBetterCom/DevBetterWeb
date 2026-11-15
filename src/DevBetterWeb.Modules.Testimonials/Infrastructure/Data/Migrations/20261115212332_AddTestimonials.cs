@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DevBetterWeb.Modules.Testimonials.Infrastructure.Data.Migrations;
 
 /// <inheritdoc />
-public partial class AddTestimonials : Migration
+internal partial class AddTestimonials : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,8 @@ public partial class AddTestimonials : Migration
 					CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
 					UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
 					SubmittedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-					ReviewedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+					ReviewedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+					RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
 				},
 				constraints: table =>
 				{

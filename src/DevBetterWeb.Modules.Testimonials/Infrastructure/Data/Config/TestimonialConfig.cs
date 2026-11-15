@@ -15,6 +15,7 @@ internal sealed class TestimonialConfig : IEntityTypeConfiguration<Testimonial>
 		builder.Property(t => t.Content).IsRequired().HasMaxLength(Testimonial.MaxContentLength);
 		builder.Property(t => t.Status).IsRequired().HasConversion<string>().HasMaxLength(32);
 		builder.Property(t => t.ReviewerFeedback).HasMaxLength(Testimonial.MaxFeedbackLength);
+		builder.Property(t => t.RowVersion).IsRowVersion();
 
 		builder.OwnsOne(t => t.Author, author =>
 		{
