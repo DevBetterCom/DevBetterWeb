@@ -42,15 +42,30 @@ bool isDevelopment = builder.Environment.IsDevelopment();
 string vimeoToken = builder.Configuration["Vimeo:Token"] ?? "";
 var isTesting = builder.Environment.IsEnvironment("Testing");
 
+// When running under Aspire (an OTLP endpoint is configured), forward Serilog events to the
+// registered logger providers so the OpenTelemetry provider exports them to the dashboard.
+// Serilog already writes to the console/file/SQL sinks, so clear the built-in providers first
+// (Serilog bypasses provider filters when forwarding) and let AddServiceDefaults add OpenTelemetry.
+bool forwardLogsToProviders = builder.IsOtlpExporterEnabled();
+if (forwardLogsToProviders)
+{
+	builder.Logging.ClearProviders();
+}
+
+// Aspire service defaults: OpenTelemetry, health checks, resilience, service discovery
+builder.AddServiceDefaults();
+
 // builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 if (!isTesting)
 {
-	builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
+	builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration),
+		writeToProviders: forwardLogsToProviders);
 }
 else
 {
-	builder.Host.UseSerilog((_, config) => config.MinimumLevel.Information().WriteTo.Console());
+	builder.Host.UseSerilog((_, config) => config.MinimumLevel.Information().WriteTo.Console(),
+		writeToProviders: forwardLogsToProviders);
 }
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -93,6 +108,9 @@ builder.Services.AddInfrastructureServices(isDevelopment, vimeoToken);
 
 builder.Services.AddMediator(options =>
 {
+	// Handlers (e.g. DomainEventHandler<T>) depend on scoped services such as repositories and
+	// DbContexts, so they must not be singletons (Mediator's default lifetime).
+	options.ServiceLifetime = ServiceLifetime.Scoped;
 	options.Assemblies =
 	[
 		typeof(IAggregateRoot),
@@ -156,8 +174,6 @@ builder.Services.Configure<ServiceConfig>(config =>
 
 builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
-builder.Services.AddHealthChecks();
-
 builder.Services.AddMvc()
 	.AddControllersAsServices();
 
@@ -209,7 +225,7 @@ if (app.Environment.IsDevelopment())
 	});
 }
 
-app.MapHealthChecks("/health");
+app.MapDefaultEndpoints();
 
 app.MapRazorPages();
 
@@ -283,9 +299,12 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 
 	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
 	bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var runningInContainer);
+	// Set by the Aspire AppHost so a fresh local SQL Server container gets migrated on startup.
+	bool applyLocalMigrations = webApplication.Configuration.GetValue<bool>("ApplyLocalMigrations");
+	bool shouldApplyMigrations = MigrationServiceExtensions.ShouldApplyLocalMigrations(runningInContainer, applyLocalMigrations);
 
-	await identity.ApplyLocalMigrationAsync(environment, runningInContainer);
-	await app.ApplyLocalMigrationAsync(environment, runningInContainer);
+	await identity.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);
+	await app.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);
 }
 
 // Make the implicit Program.cs class public, so integration tests can reference the correct assembly for host building

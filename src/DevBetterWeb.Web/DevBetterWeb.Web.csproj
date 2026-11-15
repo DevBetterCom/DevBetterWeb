@@ -62,6 +62,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DevBetterWeb.Core\DevBetterWeb.Core.csproj" />
 		<ProjectReference Include="..\DevBetterWeb.Infrastructure\DevBetterWeb.Infrastructure.csproj" />
+		<ProjectReference Include="..\DevBetterWeb.ServiceDefaults\DevBetterWeb.ServiceDefaults.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="Pages\_ViewImports.cshtml">

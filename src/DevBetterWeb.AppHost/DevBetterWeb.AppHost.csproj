@@ -1,0 +1,22 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net11.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<!-- Use the DCP/dashboard NuGet packages rather than requiring the Aspire CLI bundle,
+		     so `dotnet run` and the AppHost tests work without the Aspire CLI installed. -->
+		<NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+		<UserSecretsId>5f0f3c55-6a43-4a0e-9a0b-2f3b1e4d1484</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.SqlServer" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DevBetterWeb.Web\DevBetterWeb.Web.csproj" />
+	</ItemGroup>
+
+</Project>
