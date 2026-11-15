@@ -1,5 +1,7 @@
 {
   "enabledPlugins": {
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "workflow@nimblepros": true,
+    "dotnet@nimblepros": true
   }
 }

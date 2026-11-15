@@ -9,6 +9,7 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Services;
 using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 
 namespace DevBetterWeb.Web.Pages.User;
 
@@ -148,20 +146,8 @@ public class EditAvatarModel : PageModel
 
   private Stream ResizeStream(Stream stream)
   {
-    // see: https://stackoverflow.com/a/55395009/13729
-    var cloneStream = new MemoryStream();
     stream.Position = 0;
-    var image = Image.Load(stream);
-    _logger.LogWarning($"Resizing image. {image.Width} x {image.Height}");
-
-    var jpegEncoder = new JpegEncoder { Quality = 80 };
-    var clone = image.Clone(context => context.Resize(new ResizeOptions
-    {
-      Mode = ResizeMode.Crop,
-      Size = new Size(500, 500)
-    }));
-    clone.Save(cloneStream, jpegEncoder);
-    cloneStream.Position = 0;
-    return cloneStream;
+    _logger.LogInformation("Resizing avatar image.");
+    return AvatarImageResizer.ResizeToJpeg(stream);
   }
 }

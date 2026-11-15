@@ -159,8 +159,7 @@ builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 builder.Services.AddHealthChecks();
 
 builder.Services.AddMvc()
-	.AddControllersAsServices()
-	.AddRazorRuntimeCompilation();
+	.AddControllersAsServices();
 
 builder.Services.AddSwaggerGen(c =>
 {
