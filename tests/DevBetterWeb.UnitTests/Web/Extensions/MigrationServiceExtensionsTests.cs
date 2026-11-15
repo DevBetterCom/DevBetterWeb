@@ -22,4 +22,19 @@ public class MigrationServiceExtensionsTests
 
 		await migrationService.Received(expectedRuns).ApplyDatabaseMigrationsAsync();
 	}
+
+	[Theory]
+	[InlineData(false, false, false)]
+	[InlineData(true, false, true)]
+	[InlineData(false, true, true)]
+	[InlineData(true, true, true)]
+	public void ShouldApplyLocalMigrationsWhenInContainerOrFlagSet(
+		bool runningInContainer,
+		bool applyLocalMigrationsFlag,
+		bool expected)
+	{
+		bool result = MigrationServiceExtensions.ShouldApplyLocalMigrations(runningInContainer, applyLocalMigrationsFlag);
+
+		Assert.Equal(expected, result);
+	}
 }

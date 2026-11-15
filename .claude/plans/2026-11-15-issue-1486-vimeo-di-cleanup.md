@@ -37,7 +37,13 @@ Branch: `issue-1486-vimeo-di-cleanup`
 - [x] `dotnet BuildTestFormat.cs`: build OK, all tests pass (FunctionalTests, Tests, UnitTests).
 - [x] Format step: the failures are pre-existing on `main` (around 11k repo-wide whitespace/imports/charset issues, unchanged by the .NET 11 upgrade). This PR adds no new ones: the new test file is clean and the touched files have fewer issues than on `main`.
 
+## Phase 5 – Package upgrade (2.3.0 published later on 2026-11-15)
+
+- [x] Merge latest `main` (Aspire AppHost #1488). Resolved the `Program.cs` conflict, keeping the Aspire block and dropping the Autofac comment.
+- [x] Bump `NimblePros.Vimeo` 2.1.2 → 2.3.0 in `Directory.Packages.props`.
+- [x] `dotnet BuildTestFormat.cs`: build OK, 315/315 tests pass (AppHost.Tests 4, FunctionalTests 5, Tests 118, UnitTests 188). The functional tests start the full host, so 2.3.0's startup duplicate-registration check passes. The format failures are the same pre-existing ones as on `main`.
+- Risk outside this PR: `AddServiceDefaults` (#1488) adds `AddStandardResilienceHandler` to every HttpClient, Vimeo ones included. Its default timeouts (10s per attempt, 30s total) override the Vimeo clients' 60-minute timeout and could break large chunk uploads. Tracked separately.
+
 ## Deferred
 
-- [ ] Upgrade NimblePros.Vimeo to 2.3.0 once it is published.
 - [ ] Smoke test the admin video flows (upload chunk, update description, delete, details, oEmbed).

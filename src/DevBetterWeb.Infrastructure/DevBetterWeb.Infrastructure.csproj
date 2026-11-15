@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
     <PackageReference Include="Markdig" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
     <PackageReference Include="Mediator.Abstractions" />
     <PackageReference Include="NimblePros.Vimeo" />
     <PackageReference Include="Ardalis.EFCore.Extensions" />
