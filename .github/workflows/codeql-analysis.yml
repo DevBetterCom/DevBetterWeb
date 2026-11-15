@@ -15,7 +15,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v7.0.0
 
-      - name: Install .NET 10
+      - name: Install .NET 11
         uses: actions/setup-dotnet@v6
         with:
          dotnet-version: 11.0.x

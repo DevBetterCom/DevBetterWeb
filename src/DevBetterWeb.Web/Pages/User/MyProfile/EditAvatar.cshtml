@@ -20,8 +20,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="col-md-10">
-                                <label>New Avatar File (.jpg) - Please use a real photo</label>
-                                <input type="file" asp-for="ImageFile" />
+                                <label asp-for="ImageFile">New Avatar File (.jpg or .png) - Please use a real photo</label>
+                                <input type="file" asp-for="ImageFile" accept="image/jpeg,image/png" aria-describedby="ImageFileError" />
+                                <span asp-validation-for="ImageFile" id="ImageFileError" class="text-danger" role="alert"></span>
                             </div>
                         </div>
                     </div>
