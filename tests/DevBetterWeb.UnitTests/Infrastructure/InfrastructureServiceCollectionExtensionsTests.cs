@@ -16,7 +16,23 @@ namespace DevBetterWeb.UnitTests.Infrastructure;
 
 public class InfrastructureServiceCollectionExtensionsTests
 {
-	private static readonly string[] VimeoClientNames = ["VimeoApi", "VimeoOEmbed", "VimeoTusApi"];
+	[Theory]
+	[InlineData("VimeoApi")]
+	[InlineData("VimeoOEmbed")]
+	[InlineData("VimeoTusApi")]
+	public void AddInfrastructureServices_DoesNotConfigureVimeoHttpClient(string clientName)
+	{
+		// NimblePros.Vimeo 2.3.0+ throws at startup if these clients are configured before AddVimeoServices.
+		var services = new ServiceCollection();
+		services.AddOptions();
+
+		services.AddInfrastructureServices(isDevelopment: false);
+
+		using var provider = services.BuildServiceProvider();
+		var options = provider.GetRequiredService<IOptionsMonitor<HttpClientFactoryOptions>>().Get(clientName);
+		options.HttpClientActions.ShouldBeEmpty();
+		options.HttpMessageHandlerBuilderActions.ShouldBeEmpty();
+	}
 
 	[Fact]
 	public void AddInfrastructureServices_DoesNotRegisterVimeoServices()
@@ -25,7 +41,6 @@ public class InfrastructureServiceCollectionExtensionsTests
 
 		services.AddInfrastructureServices(isDevelopment: false);
 
-		ConfiguredHttpClientNames(services).ShouldNotContain(name => VimeoClientNames.Contains(name));
 		services.ShouldNotContain(d => d.ServiceType == typeof(ClientApiConfigurations));
 		services.ShouldNotContain(d => d.ServiceType == typeof(IUploadVideoTusService));
 		services.ShouldNotContain(d => d.ServiceType == typeof(IUploadVideoSessionService));
@@ -41,10 +56,6 @@ public class InfrastructureServiceCollectionExtensionsTests
 		services.AddInfrastructureServices(isDevelopment: false);
 		services.AddVimeoServices("test-token");
 
-		// AddVimeoServices configures VimeoApi more than once itself (base settings, then the token),
-		// so compare distinct names here; the guard against our own duplicate registration is the
-		// AddInfrastructureServices test above.
-		ConfiguredHttpClientNames(services).Distinct().ShouldBe(VimeoClientNames, ignoreOrder: true);
 		services.Count(d => d.ServiceType == typeof(ClientApiConfigurations)).ShouldBe(1);
 		services.Count(d => d.ServiceType == typeof(IUploadVideoTusService)).ShouldBe(1);
 		services.Count(d => d.ServiceType == typeof(IUploadVideoSessionService)).ShouldBe(1);
@@ -55,12 +66,4 @@ public class InfrastructureServiceCollectionExtensionsTests
 		scope.ServiceProvider.GetRequiredService<GetVideoService>().ShouldNotBeNull();
 		scope.ServiceProvider.GetRequiredService<IUploadVideoTusService>().ShouldNotBeNull();
 	}
-
-	private static string[] ConfiguredHttpClientNames(IServiceCollection services) =>
-		services
-			.Where(d => d.ServiceType == typeof(IConfigureOptions<HttpClientFactoryOptions>))
-			.Select(d => d.ImplementationInstance)
-			.OfType<ConfigureNamedOptions<HttpClientFactoryOptions>>()
-			.Select(o => o.Name ?? string.Empty)
-			.ToArray();
 }

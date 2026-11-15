@@ -28,10 +28,14 @@ Branch: `issue-1486-vimeo-di-cleanup`
 
 - [x] Separate agent reviews the full diff against the issue.
 - [x] Address significant findings (or record reasons here).
+  - No blockers. Applied: named-client check now uses `IOptionsMonitor<HttpClientFactoryOptions>`, which catches any configuration style, and the brittle client-name check against package internals was dropped.
+  - Left alone: the `Autofac` entry in `DevBetterWeb.ndproj` (still a transitive dependency of NimblePros.Vimeo) and the unrelated commented-out `DomainEventDispatcher` line.
+  - Wire change: `Accept` and `Tus-Resumable` are no longer sent twice. The Tus client no longer sets a base address or `Accept`, which is harmless because chunk PATCHes use an absolute upload link. The smoke test should still cover chunked upload.
 
 ## Phase 4 – Verification
 
-- [x] `dotnet BuildTestFormat.cs` runs clean.
+- [x] `dotnet BuildTestFormat.cs`: build OK, all tests pass (FunctionalTests, Tests, UnitTests).
+- [x] Format step: the failures are pre-existing on `main` (around 11k repo-wide whitespace/imports/charset issues, unchanged by the .NET 11 upgrade). This PR adds no new ones: the new test file is clean and the touched files have fewer issues than on `main`.
 
 ## Deferred
 
