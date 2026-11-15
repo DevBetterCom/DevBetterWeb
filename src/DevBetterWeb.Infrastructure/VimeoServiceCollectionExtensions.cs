@@ -37,10 +37,15 @@ public static class VimeoServiceCollectionExtensions
 			client.Timeout = TimeSpan.FromMinutes(60);
 		};
 
-		// Register named HttpClients for injection
-		services.AddHttpClient("VimeoApi", configureVimeoApi);
-		services.AddHttpClient("VimeoOEmbed", configureVimeoOEmbed);
-		services.AddHttpClient("VimeoTusApi", configureVimeoTus);
+		// Register named HttpClients for injection.
+		// Vimeo uploads are long-running (60 minute client timeouts) and chunked TUS PATCHes are
+		// not safely retryable, so opt these clients out of the default resilience pipeline that
+		// ServiceDefaults adds to every HttpClient (its 30 second total timeout would break uploads).
+#pragma warning disable EXTEXP0001 // RemoveAllResilienceHandlers is marked experimental
+		services.AddHttpClient("VimeoApi", configureVimeoApi).RemoveAllResilienceHandlers();
+		services.AddHttpClient("VimeoOEmbed", configureVimeoOEmbed).RemoveAllResilienceHandlers();
+		services.AddHttpClient("VimeoTusApi", configureVimeoTus).RemoveAllResilienceHandlers();
+#pragma warning restore EXTEXP0001
 
 		// Register ClientApiConfigurations (used by NimblePros.Vimeo)
 		var clientConfigs = new ClientApiConfigurations()

@@ -45,7 +45,7 @@ Head over to [devBetter.com](https://devbetter.com) to see the live site. Scroll
 
 ### Building and Running the App Locally
 
-You can both run the app manually by running the SQL migrations, or by using `docker-compose` see [this section](#run-with-docker)
+The easiest way to run the app locally is with [.NET Aspire](#run-with-net-aspire), which starts SQL Server for you and applies migrations automatically. You can also run the app manually by running the SQL migrations, or by using `docker-compose` (see [this section](#run-with-docker)).
 
 - Clone (or Fork and Clone) the repository locally
 - Run migrations for both AppDbContext and IdentityDbContext
@@ -92,6 +92,38 @@ Generate Idempotent Update Script (for production)(from the DevBetter.Web folder
 ```powershell
 dotnet ef migrations script -c AppDbContext -i -o migrate.sql -p ../DevBetterWeb.Infrastructure/DevBetterWeb.Infrastructure.csproj -s DevBetterWeb.Web.csproj
 ```
+
+### Run with .NET Aspire
+
+The `DevBetterWeb.AppHost` project orchestrates the app for local development using [.NET Aspire](https://aspire.dev/). It:
+
+- Starts a SQL Server container (`sql`) with a persistent data volume and creates the `DevBetterWeb` database (`devbetterdb`)
+- Runs `DevBetterWeb.Web` in the `Development` environment, passing it `ConnectionStrings:DefaultConnection` and waiting for the database to be ready
+- Applies the EF Core migrations for both `AppDbContext` and `IdentityDbContext` and seeds test data on startup
+- Opens the Aspire dashboard with logs, traces, metrics, and health for every resource
+
+Prerequisites: the .NET 11 SDK and a running container runtime ([Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/)). The [Aspire CLI](https://aspire.dev/get-started/install-cli/) is optional.
+
+From the root of the repo, run either:
+
+```bash
+aspire run
+```
+
+or
+
+```bash
+dotnet run --project src/DevBetterWeb.AppHost
+```
+
+Then open the dashboard login URL printed in the console. The web app is available at `https://localhost:5011` (and `http://localhost:5010`). In Visual Studio or Rider, set `DevBetterWeb.AppHost` as the startup project.
+
+Notes:
+
+- The SQL Server container uses a persistent lifetime and data volume, so it keeps running (and keeps its data) after the AppHost stops, which makes subsequent starts fast. Stop or delete the `sql-*` container and its volume from Docker to reset the database.
+- The generated SQL Server `sa` password is stored in the AppHost's user secrets (`Parameters:sql-password`). To connect with a SQL client, use the connection string shown for `devbetterdb` in the dashboard.
+- Other settings (Stripe, Vimeo, Discord, email, etc.) still come from the web project's `appsettings.json`/user secrets, as described above.
+- `DevBetterWeb.ServiceDefaults` adds OpenTelemetry, health checks (`/health` and `/alive`), HTTP resilience, and service discovery to the web project. Telemetry is only exported when an OTLP endpoint is configured (as it is under Aspire), so production behavior is unchanged.
 
 ### Run with Docker
 

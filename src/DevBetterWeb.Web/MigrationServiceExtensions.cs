@@ -8,11 +8,11 @@ public static class MigrationServiceExtensions {
 	public static async Task ApplyLocalMigrationAsync<TContext>(
 		this ILocalMigrationService<TContext> migrationService,
 		string                                environmentName,
-		bool runningIncontainer)
+		bool shouldApplyMigrations)
 		where TContext : DbContext
 	{
 		if (environmentName is not "Development"
-		    || !runningIncontainer)
+		    || !shouldApplyMigrations)
 		{
 			return;
 		}
