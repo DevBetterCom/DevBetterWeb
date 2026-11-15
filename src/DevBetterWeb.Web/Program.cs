@@ -39,10 +39,7 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
 var isProduction = builder.Environment.IsEnvironment("Production");
 bool isDevelopment = builder.Environment.IsDevelopment();
-string vimeoToken = builder.Configuration["Vimeo:Token"] ?? "";
 var isTesting = builder.Environment.IsEnvironment("Testing");
-
-// builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 if (!isTesting)
 {
@@ -89,7 +86,7 @@ else if (!isTesting)
 
 }
 
-builder.Services.AddInfrastructureServices(isDevelopment, vimeoToken);
+builder.Services.AddInfrastructureServices(isDevelopment);
 
 builder.Services.AddMediator(options =>
 {

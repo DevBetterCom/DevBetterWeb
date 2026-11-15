@@ -19,7 +19,7 @@ namespace DevBetterWeb.Infrastructure;
 
 public static class InfrastructureServiceCollectionExtensions
 {
-	public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, bool isDevelopment, string vimeoToken)
+	public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, bool isDevelopment)
 	{
 		if (isDevelopment)
 		{
@@ -76,9 +76,6 @@ public static class InfrastructureServiceCollectionExtensions
 		services.AddTransient<IIssuingHandlerTransactionListService, StripeIssuingHandlerTransactionListService>();
 		services.AddTransient<IInvoiceHandlerListService, StripeInvoiceHandlerListService>();
 		services.AddTransient<ISubscriptionHandlerService, StripeSubscriptionHandlerService>();
-
-		// Vimeo
-		services.RegisterVimeoServicesDependencies(vimeoToken);
 
 		return services;
 	}
