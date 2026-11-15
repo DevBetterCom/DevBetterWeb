@@ -18,10 +18,10 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v7.0.0
 
-    - name: Setup .NET 10 SDK
+    - name: Setup .NET 11 SDK
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: '11.0.x'
 
     - name: Restore dependencies
       run: dotnet restore DevBetterWeb.slnx

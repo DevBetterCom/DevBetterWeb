@@ -9,6 +9,7 @@ using DevBetterWeb.Core.Exceptions;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Core.Specs;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Web.Services;
 using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 
 namespace DevBetterWeb.Web.Pages.User;
 
@@ -67,24 +65,39 @@ public class EditAvatarModel : PageModel
 
   public async Task<IActionResult> OnPostAsync()
   {
-    if (!ModelState.IsValid)
-    {
-      return Page();
-    }
-
     var currentUserName = User.Identity!.Name;
     var applicationUser = await _userManager.FindByNameAsync(currentUserName!);
 
     AvatarUrl = string.Format(Constants.AVATAR_IMGURL_FORMAT_STRING, applicationUser!.Id);
 
+    if (ImageFile is null || ImageFile.Length == 0)
+    {
+      ModelState.AddModelError(nameof(ImageFile), "Please choose an image file.");
+    }
+
+    if (!ModelState.IsValid)
+    {
+      return Page();
+    }
+
     string fileName = applicationUser.Id + ".jpg";
 
-    using (var stream = ImageFile.OpenReadStream())
+    MemoryStream resizedImage;
+    try
     {
-      string extension = ImageFile.FileName.Split(".").Last();
-      // TODO: validate if extension is correct
+      using var uploadStream = ImageFile!.OpenReadStream();
+      resizedImage = AvatarImageResizer.ResizeToJpeg(uploadStream);
+    }
+    catch (InvalidImageException ex)
+    {
+      _logger.LogWarning(ex, "Rejected avatar upload for user {UserId}.", applicationUser.Id);
+      ModelState.AddModelError(nameof(ImageFile), "Please upload a JPG or PNG image no larger than 10,000 pixels on a side.");
+      return Page();
+    }
 
-      var uploadSuccess = await UploadToBlob(fileName, stream);
+    using (resizedImage)
+    {
+      var uploadSuccess = await UploadToBlob(fileName, resizedImage);
 
       if (uploadSuccess)
       {
@@ -123,19 +136,8 @@ public class EditAvatarModel : PageModel
       // Get a reference to the blob address, then upload the file to the blob.
       CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
 
-      if (stream != null)
-      {
-        var modifiedImageStream = ResizeStream(stream);
-
-        // OPTION B: pass in memory stream directly
-        _logger.LogInformation($"Uploading from Stream.");
-        await cloudBlockBlob.UploadFromStreamAsync(modifiedImageStream);
-      }
-      else
-      {
-        _logger.LogWarning($"Stream is null.");
-        return false;
-      }
+      _logger.LogInformation($"Uploading from Stream.");
+      await cloudBlockBlob.UploadFromStreamAsync(stream);
 
       return true;
     }
@@ -144,24 +146,5 @@ public class EditAvatarModel : PageModel
       _logger.LogError(ex, $"Error uploading file");
       throw new Exception("Error uploading file.", ex);
     }
-  }
-
-  private Stream ResizeStream(Stream stream)
-  {
-    // see: https://stackoverflow.com/a/55395009/13729
-    var cloneStream = new MemoryStream();
-    stream.Position = 0;
-    var image = Image.Load(stream);
-    _logger.LogWarning($"Resizing image. {image.Width} x {image.Height}");
-
-    var jpegEncoder = new JpegEncoder { Quality = 80 };
-    var clone = image.Clone(context => context.Resize(new ResizeOptions
-    {
-      Mode = ResizeMode.Crop,
-      Size = new Size(500, 500)
-    }));
-    clone.Save(cloneStream, jpegEncoder);
-    cloneStream.Position = 0;
-    return cloneStream;
   }
 }
