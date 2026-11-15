@@ -32,15 +32,15 @@ The single highest-leverage design decision is **who owns `Member` and how other
 
 - **3 projects**: `Core` (entities, events, interfaces, specs, some services), `Infrastructure` (EF, Stripe, Vimeo, Discord, email, Identity, event handlers, many services), `Web` (Razor Pages, Ardalis.ApiEndpoints, MVC controllers, more services).
 - **Two DbContexts** on one connection string: `AppDbContext` (13 DbSets + 2 config-only entities, 26 migrations) and `IdentityDbContext` (ASP.NET Identity, 2 migrations).
-- **MediatR is used for notifications only** (`Publish`, no `Send`) — domain events fan out to `IHandle<T>` implementations, almost all of which are Discord loggers in `Infrastructure/Handlers/`.
+- **Mediator is used for notifications only** (`Publish`, no `Send`) — domain events fan out to `IHandle<T>` implementations, almost all of which are Discord loggers in `Infrastructure/Handlers/`.
 
 ### 2.2 Coupling hotspots (evidence the layering isn't holding)
 
-1. **`Member` god aggregate** (`src/DevBetterWeb.Core/Entities/Member.cs`): 6 navigation collections into 4 other candidate modules; billing logic (`AddSubscription`, `ExtendCurrentSubscription`, `AddBillingActivity`, `TotalSubscribedDays`) lives inside the membership entity; a MediatR event handler (`MemberAddressUpdatedHandler`) is nested *inside the entity class* and does Google-Maps JSON parsing.
+1. **`Member` god aggregate** (`src/DevBetterWeb.Core/Entities/Member.cs`): 6 navigation collections into 4 other candidate modules; billing logic (`AddSubscription`, `ExtendCurrentSubscription`, `AddBillingActivity`, `TotalSubscribedDays`) lives inside the membership entity; a Mediator event handler (`MemberAddressUpdatedHandler`) is nested *inside the entity class* and does Google-Maps JSON parsing.
 2. **Every entity is `IAggregateRoot`** (13 of 13) and `IRepository<T>` is open-generic, so any code can load/mutate any module's data. There is no enforcement point.
 3. **`NewMemberService`** (Core) spans Invitations + Stripe + Identity roles + email + member creation + billing activity in one class. **`WebhookHandlerService`** (Infrastructure) has 13 injected dependencies and contains the full subscription-lifecycle orchestration, with hardcoded plan logic.
 4. **60 files in Web have `using DevBetterWeb.Infrastructure.*`** — including Stripe webhook endpoints referencing `StripeOptions` directly. Four Infrastructure-local interfaces return raw `Stripe.*` types, so Stripe flows into the UI layer.
-5. **Vimeo SDK leaks into Core**: `Core.csproj` references `NimblePros.Vimeo`; `CreateVideoService` / `AddCreatedVideoToFolderService` depend on concrete Vimeo classes, not interfaces. Core also references MediatR, `Microsoft.Extensions.Identity.Core`, and Application Insights.
+5. **Vimeo SDK leaks into Core**: `Core.csproj` references `NimblePros.Vimeo`; `CreateVideoService` / `AddCreatedVideoToFolderService` depend on concrete Vimeo classes, not interfaces. Core also references Mediator, `Microsoft.Extensions.Identity.Core`, and Application Insights.
 6. **DI registration is scattered across 6 surfaces** (Program.cs, two Web extension classes, two Infrastructure extension classes, and an `IdentityHostingStartup` assembly attribute) with **duplicate registrations at divergent lifetimes** (Stripe handlers registered Transient in Infrastructure and Scoped in Web; Vimeo registered twice).
 7. **Domain logic lives in the wrong layer everywhere**: graduation policy, invitation ping cadence, and webhook orchestration in Infrastructure; leaderboard ranking, book, and video-details services in Web; Vimeo upload orchestration in Core.
 8. **Cross-context queries baked into specs**: e.g. `ArchiveVideoByVideoIdFullAggregateSpec` eager-loads video → comments → Member authors → replies → progress in one query. These break first under any split and need read-model replacements.
@@ -138,7 +138,7 @@ The open-generic `IRepository<T>` registration is what lets billing code mutate 
 
 ### 4.3 Cross-module communication: events first, queries second
 
-- **Commands/workflows** cross seams via **integration events** (the existing MediatR `Publish` infrastructure is already notification-only — keep it, but formalize an `IntegrationEvent` base in the shared kernel and make handlers module-owned). Each integration event *type* lives in the **publishing module's Contracts project** (see §4.4), so subscribers reference contracts, never implementations.
+- **Commands/workflows** cross seams via **integration events** (the existing Mediator `Publish` infrastructure is already notification-only — keep it, but formalize an `IntegrationEvent` base in the shared kernel and make handlers module-owned). Each integration event *type* lives in the **publishing module's Contracts project** (see §4.4), so subscribers reference contracts, never implementations.
 - The two worst orchestrators are decomposed along event lines:
   - `WebhookHandlerService` (Billing) stops calling Identity roles and Member mutation directly. It records the subscription facts and publishes `SubscriptionActivated` / `SubscriptionEnded`; Membership grants/revokes the `Members` role and updates its own state in response; Notifications sends the emails its module owns.
   - `NewMemberService` becomes Membership's onboarding use case, consuming Billing's subscription-verification query and Identity's role service through their public interfaces only.
@@ -174,7 +174,7 @@ tests/
 
 **Why Contracts projects and not one project per module: circular dependencies.** This codebase already needs two-way communication between Membership and Billing — Membership consumes Billing's tenure/subscription query (graduation policy, `NewMemberService`) and handles Billing's `SubscriptionActivated`/`SubscriptionEnded` events (whose *types* Billing defines), while Billing's admin pages (`UserReports`, `ManageSubscriptions`) display member names via Membership's `MemberSummary`. With one project per module that is a project-reference cycle MSBuild refuses to build, and the escape hatches are all worse: dumping shared DTOs/events into `SharedKernel` (turns the deliberately tiny kernel into a junk drawer) or forbidding sync queries in one direction (distorts the design to satisfy the build). With a Contracts split the graph is acyclic by construction: implementations depend on Contracts projects, and Contracts projects depend on (at most) `SharedKernel`.
 
-A module's Contracts project holds its public query/command interfaces, DTOs/read models, and the integration events it publishes (e.g. `Billing.Contracts`: `IBillingQueries`, `SubscriptionStatusDto`, `SubscriptionActivated`). It must stay dependency-free apart from `SharedKernel` — no EF, no Stripe, no MediatR handler implementations.
+A module's Contracts project holds its public query/command interfaces, DTOs/read models, and the integration events it publishes (e.g. `Billing.Contracts`: `IBillingQueries`, `SubscriptionStatusDto`, `SubscriptionActivated`). It must stay dependency-free apart from `SharedKernel` — no EF, no Stripe, no Mediator handler implementations.
 
 Per-module internal layout (implementation project, folders): `Domain/`, `Application/` (use cases + implementations of the module's own contracts), `Infrastructure/` (EF config, external adapters), `UI/` (Razor pages via `AddRazorPagesOptions` area conventions, ApiEndpoints). Implementation types are **`internal` by default**; the only public surface is `AddXxxModule(IServiceCollection, IConfiguration)` and `MapXxxModule(IEndpointRouteBuilder)` — this replaces today's six scattered DI surfaces and the `IdentityHostingStartup` magic.
 
@@ -202,7 +202,7 @@ Each phase leaves the app releasable. Order chosen so cheap wins build the patte
 
 ### Phase 1 — Composition-root discipline
 1. Introduce `AddXxxModule()` extension per candidate module (still inside existing projects — pure registration regrouping).
-2. Split `Constants.cs` per future module. Remove MediatR/Identity/AppInsights/Vimeo package references from Core (move the two Vimeo services out of Core to Infrastructure as a stopgap).
+2. Split `Constants.cs` per future module. Remove Mediator/Identity/AppInsights/Vimeo package references from Core (move the two Vimeo services out of Core to Infrastructure as a stopgap).
 3. Add architecture tests asserting current *intended* rules so regressions surface during the migration.
 
 ### Phase 2 — First extractions: Books, then Coaching
