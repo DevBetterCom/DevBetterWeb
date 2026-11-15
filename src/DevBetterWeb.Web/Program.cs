@@ -28,7 +28,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using NimblePros.Metronome;
-using NimblePros.Vimeo.Extensions;
 using Serilog;
 
 // 29 Aug 2023 - Getting a nullref in here somewhere maybe? Also a stack overflow during startup somewhere.
@@ -39,7 +38,6 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 Console.WriteLine($"Startup ENV: {builder.Environment.EnvironmentName}");
 var isProduction = builder.Environment.IsEnvironment("Production");
 bool isDevelopment = builder.Environment.IsDevelopment();
-string vimeoToken = builder.Configuration["Vimeo:Token"] ?? "";
 var isTesting = builder.Environment.IsEnvironment("Testing");
 
 // When running under Aspire (an OTLP endpoint is configured), forward Serilog events to the
@@ -54,8 +52,6 @@ if (forwardLogsToProviders)
 
 // Aspire service defaults: OpenTelemetry, health checks, resilience, service discovery
 builder.AddServiceDefaults();
-
-// builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 if (!isTesting)
 {
@@ -104,7 +100,7 @@ else if (!isTesting)
 
 }
 
-builder.Services.AddInfrastructureServices(isDevelopment, vimeoToken);
+builder.Services.AddInfrastructureServices(isDevelopment);
 
 builder.Services.AddMediator(options =>
 {
@@ -163,7 +159,7 @@ builder.Services.AddScoped(typeof(ILocalMigrationService<>), typeof(MigrationSer
 
 VimeoSettings vimeoSettings = builder.Configuration.GetSection(Constants.ConfigKeys.VimeoSettings)!.Get<VimeoSettings>()!;
 builder.Services.AddSingleton(vimeoSettings);
-builder.Services.AddVimeoServices(vimeoSettings.Token);
+builder.Services.AddDevBetterVimeoServices(vimeoSettings.Token);
 
 // list services
 builder.Services.Configure<ServiceConfig>(config =>
