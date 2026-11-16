@@ -10,8 +10,8 @@ namespace DevBetterWeb.Modules.Testimonials.Domain;
 /// </summary>
 internal sealed class Testimonial
 {
-	public const int MaxContentLength = 4000;
-	public const int MaxFeedbackLength = 2000;
+	public const int MaxContentLength = TestimonialLimits.MaxContentLength;
+	public const int MaxFeedbackLength = TestimonialLimits.MaxFeedbackLength;
 
 	// EF Core
 	private Testimonial()
