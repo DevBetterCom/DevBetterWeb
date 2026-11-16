@@ -3,6 +3,7 @@ using System.Linq;
 using DevBetterWeb.Core.Interfaces;
 using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.Identity.Data;
+using DevBetterWeb.Modules.Testimonials;
 using DevBetterWeb.Web;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Models;
@@ -98,6 +99,16 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Progr
 					options.UseInternalServiceProvider(new ServiceCollection()
 						.AddEntityFrameworkInMemoryDatabase()
 						.BuildServiceProvider());
+				});
+
+				string inMemoryTestimonialsDb = Guid.NewGuid().ToString();
+				var testimonialsEfServiceProvider = new ServiceCollection()
+					.AddEntityFrameworkInMemoryDatabase()
+					.BuildServiceProvider();
+				services.AddTestimonialsModule((_, options) =>
+				{
+					options.UseInMemoryDatabase(inMemoryTestimonialsDb);
+					options.UseInternalServiceProvider(testimonialsEfServiceProvider);
 				});
 
 				services.AddIdentityCore<ApplicationUser>(options =>

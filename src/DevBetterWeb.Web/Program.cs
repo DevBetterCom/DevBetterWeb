@@ -11,6 +11,7 @@ using DevBetterWeb.Infrastructure.Data;
 using DevBetterWeb.Infrastructure.DiscordWebooks;
 using DevBetterWeb.Infrastructure.Identity.Data;
 using DevBetterWeb.Infrastructure.Services;
+using DevBetterWeb.Modules.Testimonials;
 using DevBetterWeb.Web;
 using DevBetterWeb.Web.Areas.Identity;
 using DevBetterWeb.Web.Interfaces;
@@ -99,6 +100,13 @@ else if (!isTesting)
 		);
 
 }
+
+// Testing hosts register their own (in-memory) provider for the module's DbContext.
+builder.Services.AddTestimonialsModule(isTesting
+	? null
+	: (provider, options) => options
+		.UseTestimonialsSqlServer(builder.Configuration.GetConnectionString(Constants.DEFAULT_CONNECTION_STRING_NAME))
+		.AddMetronomeDbTracking(provider));
 
 builder.Services.AddInfrastructureServices(isDevelopment);
 
@@ -301,6 +309,11 @@ async Task ApplyLocalMigrationsAsync(WebApplication webApplication)
 
 	await identity.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);
 	await app.ApplyLocalMigrationAsync(environment, shouldApplyMigrations);
+
+	if (environment == "Development" && shouldApplyMigrations)
+	{
+		await scope.ServiceProvider.ApplyTestimonialsMigrationsAsync();
+	}
 }
 
 // Make the implicit Program.cs class public, so integration tests can reference the correct assembly for host building
