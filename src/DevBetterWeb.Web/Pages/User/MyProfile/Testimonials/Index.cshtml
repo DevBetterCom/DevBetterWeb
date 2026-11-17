@@ -1,0 +1,76 @@
+@page
+@using DevBetterWeb.Web.Pages.User.MyProfile.Testimonials
+@model DevBetterWeb.Web.Pages.User.MyProfile.Testimonials.IndexModel
+@{
+	ViewData["Title"] = "My Profile: Testimonials";
+}
+
+<h3>My Profile: Testimonials</h3>
+
+<p>
+	Share what devBetter has meant to you. Testimonials are reviewed by an admin before they appear on the site.
+</p>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+	<div class="alert alert-success" role="status">@Model.StatusMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+	<div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+}
+
+<p>
+	<a class="btn btn-success" asp-page="./Edit">Write a testimonial</a>
+</p>
+
+@if (!Model.Testimonials.Any())
+{
+	<p>You haven't written any testimonials yet.</p>
+}
+
+<div class="row">
+	<div class="col-lg-8">
+		@foreach (var testimonial in Model.Testimonials)
+		{
+			string headingId = $"testimonial-{testimonial.Id}-heading";
+			<div class="card mb-3" data-testimonial-id="@testimonial.Id">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<h4 class="h6 m-0 font-weight-bold" id="@headingId">Testimonial updated @testimonial.UpdatedAt.ToString("MMM d, yyyy")</h4>
+					<span class="@TestimonialDisplay.BadgeClass(testimonial.Status)">@TestimonialDisplay.Label(testimonial.Status)</span>
+				</div>
+				<div class="card-body">
+					<p style="white-space: pre-line">@testimonial.Content</p>
+					<p class="mb-2">&mdash; @TestimonialDisplay.AuthorLine(testimonial)</p>
+					<p class="text-secondary small mb-2">@TestimonialDisplay.Explanation(testimonial.Status)</p>
+					@if (!string.IsNullOrEmpty(testimonial.ReviewerFeedback))
+					{
+						<div class="alert alert-warning">
+							<b>Feedback from the reviewer:</b>
+							<div style="white-space: pre-line">@testimonial.ReviewerFeedback</div>
+						</div>
+					}
+					<div class="d-flex flex-wrap">
+						<a class="btn btn-primary btn-sm mr-2 mb-1" asp-page="./Edit" asp-route-id="@testimonial.Id" aria-describedby="@headingId">@(testimonial.CanEdit ? "Edit" : "View")</a>
+						@if (testimonial.CanSubmit)
+						{
+							<form method="post" asp-page-handler="Submit" asp-route-id="@testimonial.Id" class="mr-2 mb-1">
+								<button type="submit" class="btn btn-success btn-sm" aria-describedby="@headingId">Submit for review</button>
+							</form>
+						}
+						@if (testimonial.CanDelete)
+						{
+							<form method="post" asp-page-handler="Delete" asp-route-id="@testimonial.Id" class="mb-1"
+								  onsubmit="return confirm('Delete this draft? This cannot be undone.');">
+								<button type="submit" class="btn btn-outline-danger btn-sm" aria-describedby="@headingId">Delete draft</button>
+							</form>
+						}
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<a class="btn btn-primary nav-item" asp-page="/User/MyProfile/Index">Back to My Profile</a>
+

@@ -85,20 +85,25 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Progr
 				string inMemoryAppDb = Guid.NewGuid().ToString();
 				string inMemoryIdentityDb = Guid.NewGuid().ToString();
 
+				// Build each EF internal service provider once. The options callbacks run per scope, and a new
+				// provider per scope would give every scope its own empty in-memory database (losing the seed data).
+				var appEfServiceProvider = new ServiceCollection()
+					.AddEntityFrameworkInMemoryDatabase()
+					.BuildServiceProvider();
+				var identityEfServiceProvider = new ServiceCollection()
+					.AddEntityFrameworkInMemoryDatabase()
+					.BuildServiceProvider();
+
 				services.AddDbContext<AppDbContext>(options =>
 				{
 					options.UseInMemoryDatabase(inMemoryAppDb);
-					options.UseInternalServiceProvider(new ServiceCollection()
-						.AddEntityFrameworkInMemoryDatabase()
-						.BuildServiceProvider());
+					options.UseInternalServiceProvider(appEfServiceProvider);
 				});
 
 				services.AddDbContext<IdentityDbContext>(options =>
 				{
 					options.UseInMemoryDatabase(inMemoryIdentityDb);
-					options.UseInternalServiceProvider(new ServiceCollection()
-						.AddEntityFrameworkInMemoryDatabase()
-						.BuildServiceProvider());
+					options.UseInternalServiceProvider(identityEfServiceProvider);
 				});
 
 				string inMemoryTestimonialsDb = Guid.NewGuid().ToString();

@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using DevBetterWeb.Modules.Testimonials.Contracts;
 
 namespace DevBetterWeb.Modules.Testimonials.Domain;
 
@@ -7,10 +8,10 @@ namespace DevBetterWeb.Modules.Testimonials.Domain;
 /// </summary>
 internal sealed class AuthorProfile
 {
-	public const int MaxDisplayNameLength = 100;
-	public const int MaxTitleLength = 100;
-	public const int MaxOrganizationLength = 100;
-	public const int MaxPhotoUrlLength = 500;
+	public const int MaxDisplayNameLength = TestimonialLimits.MaxDisplayNameLength;
+	public const int MaxTitleLength = TestimonialLimits.MaxTitleLength;
+	public const int MaxOrganizationLength = TestimonialLimits.MaxOrganizationLength;
+	public const int MaxPhotoUrlLength = TestimonialLimits.MaxPhotoUrlLength;
 
 	// EF Core
 	private AuthorProfile()
@@ -66,7 +67,7 @@ internal sealed class AuthorProfile
 	}
 
 	// https only: avoids mixed content on the site and rules out javascript:/data: schemes.
-	private static bool IsHttpsUrl(string value) =>
+	internal static bool IsHttpsUrl(string value) =>
 		Uri.TryCreate(value, UriKind.Absolute, out Uri? uri)
 		&& uri.Scheme == Uri.UriSchemeHttps;
 }

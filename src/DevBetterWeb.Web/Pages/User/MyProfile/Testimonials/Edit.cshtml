@@ -1,0 +1,93 @@
+@page "{id:int?}"
+@using DevBetterWeb.Modules.Testimonials.Contracts
+@using DevBetterWeb.Web.Pages.User.MyProfile.Testimonials
+@model DevBetterWeb.Web.Pages.User.MyProfile.Testimonials.EditModel
+@{
+	ViewData["Title"] = Model.IsNew ? "Write a Testimonial" : Model.IsReadOnly ? "View Testimonial" : "Edit Testimonial";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+	<div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+}
+
+<div class="row">
+	<div class="col-lg-8">
+		@if (Model.Testimonial is MemberTestimonialDto current)
+		{
+			<p>
+				Status: <span class="@TestimonialDisplay.BadgeClass(current.Status)" data-testid="testimonial-status">@TestimonialDisplay.Label(current.Status)</span>
+				<span class="text-secondary small ml-2">@TestimonialDisplay.Explanation(current.Status)</span>
+			</p>
+			@if (!string.IsNullOrEmpty(current.ReviewerFeedback))
+			{
+				<div class="alert alert-warning">
+					<b>Feedback from the reviewer:</b>
+					<div style="white-space: pre-line">@current.ReviewerFeedback</div>
+				</div>
+			}
+		}
+
+		@if (Model.IsReadOnly)
+		{
+			<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+			<div class="card mb-3">
+				<div class="card-body">
+					<p style="white-space: pre-line" data-testid="testimonial-content">@Model.Testimonial!.Content</p>
+					<p class="mb-0">&mdash; @TestimonialDisplay.AuthorLine(Model.Testimonial!)</p>
+				</div>
+			</div>
+		}
+		else
+		{
+			<form method="post" asp-route-id="@Model.Testimonial?.Id">
+				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+				<div class="card mb-3">
+					<div class="card-body">
+						<div class="form-group">
+							<label asp-for="Input.Content" class="font-weight-bold"></label>
+							<textarea asp-for="Input.Content" class="form-control" rows="8" aria-describedby="contentHelp"></textarea>
+							<small id="contentHelp" class="form-text text-muted">Up to @TestimonialLimits.MaxContentLength characters.</small>
+							<span asp-validation-for="Input.Content" class="text-danger"></span>
+						</div>
+
+						<h5 class="mt-4">How you want to be known</h5>
+						<div class="form-group">
+							<label asp-for="Input.DisplayName" class="font-weight-bold"></label>
+							<input asp-for="Input.DisplayName" class="form-control" />
+							<span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Input.Title" class="font-weight-bold"></label>
+							<input asp-for="Input.Title" class="form-control" placeholder="e.g. Senior Software Engineer" />
+							<span asp-validation-for="Input.Title" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Input.Organization" class="font-weight-bold"></label>
+							<input asp-for="Input.Organization" class="form-control" />
+							<span asp-validation-for="Input.Organization" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Input.PhotoUrl" class="font-weight-bold"></label>
+							<input asp-for="Input.PhotoUrl" type="url" class="form-control" placeholder="https://" aria-describedby="photoHelp" />
+							<small id="photoHelp" class="form-text text-muted">Optional https:// link to a photo. Leave blank to use your profile avatar.</small>
+							<span asp-validation-for="Input.PhotoUrl" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Save draft</button>
+				<button type="submit" class="btn btn-success" asp-page-handler="SubmitForReview" asp-route-id="@Model.Testimonial?.Id">Save and submit for review</button>
+			</form>
+		}
+
+		<br />
+		<a class="btn btn-secondary" asp-page="./Index">Back to My Testimonials</a>
+	</div>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

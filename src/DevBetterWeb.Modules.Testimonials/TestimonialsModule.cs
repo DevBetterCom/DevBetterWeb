@@ -28,7 +28,9 @@ public static class TestimonialsModule
 			services.AddDbContext<TestimonialsDbContext>(configureDbContext);
 		}
 
+		services.TryAddSingleton(TimeProvider.System);
 		services.TryAddScoped<ITestimonialQueries, TestimonialQueries>();
+		services.TryAddScoped<ITestimonialAuthoring, TestimonialAuthoring>();
 		return services;
 	}
 
